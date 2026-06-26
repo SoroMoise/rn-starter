@@ -1,0 +1,40 @@
+name = "all-currency-converter-api"
+main = "src/index.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+CACHE_TTL_SECONDS = "3600"
+ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "RATE_CACHE"
+id = "3dfd69a70eea478792ea333d9989121d"
+
+[observability]
+enabled = true
+head_sampling_rate = 1
+
+[observability.logs]
+enabled = true
+head_sampling_rate = 1
+persist = true
+invocation_logs = true
+
+[observability.traces]
+enabled = true
+persist = true
+head_sampling_rate = 1
+
+[[kv_namespaces]]
+binding = "ALERTS_KV"
+id = "6524665d5f604763b99490fd9455e939"
+preview_id = "be9f6728fad44fd1a920cd4db1c1b1b0"
+
+[triggers]
+crons = ["*/10 * * * *"]
+
+[[unsafe.bindings]]
+name = "API_RATE_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 30, period = 60 }

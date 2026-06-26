@@ -1,0 +1,47 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+  repositories {
+    google()
+    mavenCentral()
+  }
+  dependencies {
+    classpath('com.android.tools.build:gradle')
+    classpath('com.facebook.react:react-native-gradle-plugin')
+    classpath('org.jetbrains.kotlin:kotlin-gradle-plugin')
+    classpath('com.google.gms:google-services:4.4.2')
+    classpath('com.google.firebase:firebase-crashlytics-gradle:3.0.3')
+  }
+}
+
+allprojects {
+  // Migrate from deprecated monolithic play:core to split libraries (required for targetSdk 34+)
+  // Fixes PlayCoreDialogWrapperActivity NPE crash on null bundle
+  configurations.all {
+    resolutionStrategy.eachDependency { details ->
+      if (details.requested.group == 'com.google.android.play' && details.requested.name == 'core') {
+        details.useVersion '1.10.3'
+        details.because 'Monolithic play:core deprecated; pinning last stable version until full split-library migration'
+      }
+    }
+  }
+
+  repositories {
+    google()
+    mavenCentral()
+    maven { url 'https://www.jitpack.io' }
+  }
+  // Migrate from deprecated monolithic play:core to split libraries (required for targetSdk 34+)
+  // Fixes PlayCoreDialogWrapperActivity NPE crash on null bundle
+  configurations.all {
+    resolutionStrategy.eachDependency { details ->
+      if (details.requested.group == 'com.google.android.play' && details.requested.name == 'core') {
+        details.useVersion '1.10.3'
+        details.because 'Monolithic play:core deprecated; pinning last stable version until full split-library migration'
+      }
+    }
+  }
+}
+
+apply plugin: "expo-root-project"
+apply plugin: "com.facebook.react.rootproject"

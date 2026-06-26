@@ -1,0 +1,33 @@
+{
+  "name": "rn-starter",
+  "private": true,
+  "packageManager": "pnpm@10.32.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "dev:mobile": "turbo dev --filter=mobile",
+    "android": "pnpm --filter mobile android",
+    "ios": "pnpm --filter mobile ios",
+    "dev:api": "turbo dev --filter=api",
+    "build": "turbo build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "deploy:api": "turbo deploy --filter=api"
+  },
+  "devDependencies": {
+    "turbo": "^2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@firebase/util",
+      "esbuild",
+      "protobufjs",
+      "sharp",
+      "unrs-resolver",
+      "workerd"
+    ],
+    "patchedDependencies": {
+      "expo-notifications@0.32.17": "patches/expo-notifications@0.32.17.patch"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+---
+description: Automatic Android prebuild with intelligent versioning from git commits
+alwaysApply: true
+---
+
+# Permanent Rule — Android Prebuild Automation
+
+Whenever the user asks: **"Fais un prebuild Android"**, execute the following steps **BEFORE** running the prebuild command.
+
+## 1. Intelligent Versioning
+
+- Read the `.last_release_commit` file if it exists.
+- If it does not exist, use the initial commit of the repo.
+- Get all commits between `.last_release_commit` and HEAD (see below for order).
+
+## 2. Commit Analysis (Cumulative, convention-based)
+
+The version must reflect **how many** changes of each type landed since the last prebuild, not a single “worst” category for the whole range.
+
+- Read the current semantic version from `app.config.js` (`expo.version`, e.g. `1.2.3`). This is the **starting** `major.minor.patch`.
+- List **every** commit in range `.last_release_commit..HEAD` in **chronological order** (oldest first), e.g. `git log --reverse <from>..HEAD`.
+- For **each** commit, inspect the **subject** and **body** (Conventional Commits). Apply the rules below **in sequence**, updating `major`, `minor`, and `patch` after each commit.
+
+### Classification (per commit)
+
+1. **Breaking change** — if the message contains `BREAKING CHANGE` (subject or body), or the subject matches a breaking conventional form (e.g. `feat!:` or `feat(scope)!:`):  
+   → `major += 1`, then `minor = 0`, `patch = 0`.
+
+2. **`feat`** — if the commit is a feature (subject starts with `feat:` or `feat(` per Conventional Commits, case-sensitive on the type):  
+   → `minor += 1`, then `patch = 0` (semver-style minor bump).
+
+3. **Patch-level types** — if the subject starts with one of: `fix`, `perf`, `refactor`, `chore`, `docs`, `style`, `test`, `build`, `ci`, `revert` (with optional scope):  
+   → `patch += 1`.
+
+4. **Anything else** (merge commits without conventional subject, unknown type, etc.):  
+   → `patch += 1` so work since the last release still advances the version.
+
+Stop after processing all commits in order. The final `major.minor.patch` is the new app version.
+
+**Example:** starting from `1.2.3`, commits in order `[feat, feat, chore]` yield `1.3.0` → `1.4.0` → `1.4.1` = **`1.4.1`**.
+
+- If there are **no** new commits in range → **stop the process** (do not bump version or run the rest of the workflow).
+
+## 3. Version Update
+
+- Modify **only** the `version` field in `app.config.js`.
+- Recalculate `android.versionCode` automatically:
+  ```
+  versionCode = major * 10000 + minor * 100 + patch
+  ```
+- Update only:
+  - `expo.version`
+  - `expo.android.versionCode`
+- **Never modify other fields.**
+
+## 4. Save
+
+- Write the current HEAD commit hash to `.last_release_commit`.
+
+## 5. Tagging (required)
+
+- Create a git tag for the new version: `vX.Y.Z`
+
+## 6. Execution
+
+- for execute next commend place you into apps/mobile with `cd apps/mobile`
+
+- Run: `pnpm preb:android` for android
+- Run: `pnpm preb:ios` for ios
+
+## 7. Push (required)
+
+- Always push the release to `origin` **with the version tag** at the end of the workflow (after prebuild succeeds).
+- Push the current branch and the tag in one step, for example:
+  - `git push origin <branch-name> vX.Y.Z`
+- Do not consider the prebuild release complete until both the branch and `vX.Y.Z` are on the remote.
+
+## 8. Release output
+
+- Write the same content to **`artifacts/play-store-release-notes-vX.Y.Z.md`** (create `artifacts/` if needed) so the notes can be copied from a file.
+- At the end of a successful prebuild, always respond with:
+  - A **version name** intended for the Play Console only (not visible to users). Recommended format: `vX.Y.Z – short summary` (must at least contain the `vX.Y.Z` part).
+  - **Short release notes** formatted for Play Store, using bullet points, in **French (fr-FR)** and **English (en-US)**.
+  - Notes must be short, user-facing, and summarize the main visible changes (no technical jargon). These notes are what end users see on the Play Store.
+
+## Constraints
+
+- Versioning, tagging, and prebuild must run locally.
+- The only remote step is **git push** to `origin` with the release branch and tag (step 7).
+- Never overwrite existing configuration.
+- If any step fails → **stop immediately**.
+- Display a clear summary: old version → new version.

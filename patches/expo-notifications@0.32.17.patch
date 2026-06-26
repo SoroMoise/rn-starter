@@ -1,0 +1,42 @@
+diff --git a/android/src/main/java/expo/modules/notifications/service/NotificationForwarderActivity.kt b/android/src/main/java/expo/modules/notifications/service/NotificationForwarderActivity.kt
+index cefcccfacc3dfbaaf35416e426ae4c34f416c364..b09bc5165ac608faccb796b5846aae6fb8b6ece1 100644
+--- a/android/src/main/java/expo/modules/notifications/service/NotificationForwarderActivity.kt
++++ b/android/src/main/java/expo/modules/notifications/service/NotificationForwarderActivity.kt
+@@ -14,12 +14,31 @@ import expo.modules.notifications.service.delegates.ExpoHandlingDelegate
+ class NotificationForwarderActivity : Activity() {
+   override fun onCreate(savedInstanceState: Bundle?) {
+     super.onCreate(savedInstanceState)
+-    val broadcastIntent =
+-      NotificationsService.createNotificationResponseBroadcastIntent(applicationContext, intent)
+-    val notificationResponse = NotificationsService.getNotificationResponseFromBroadcastIntent(intent)
+-    ExpoHandlingDelegate.openAppToForeground(this, notificationResponse)
+-    sendBroadcast(broadcastIntent)
+-    finish()
++    // The OS may hand back this Activity's intent without the custom Parcelable
++    // extras (notification/action) restored — e.g. classloader/process-death on some
++    // OEM ROMs — which makes createNotificationResponseBroadcastIntent throw and crash
++    // the app on tap. Degrade gracefully by just opening the app instead of crashing.
++    try {
++      val broadcastIntent =
++        NotificationsService.createNotificationResponseBroadcastIntent(applicationContext, intent)
++      val notificationResponse = NotificationsService.getNotificationResponseFromBroadcastIntent(intent)
++      ExpoHandlingDelegate.openAppToForeground(this, notificationResponse)
++      sendBroadcast(broadcastIntent)
++    } catch (e: Exception) {
++      android.util.Log.w(
++        "expo-notifications",
++        "NotificationForwarderActivity: could not handle notification response, opening app instead",
++        e
++      )
++      runCatching {
++        packageManager.getLaunchIntentForPackage(packageName)?.let {
++          it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++          startActivity(it)
++        }
++      }
++    } finally {
++      finish()
++    }
+   }
+ 
+   override fun onNewIntent(intent: Intent?) {

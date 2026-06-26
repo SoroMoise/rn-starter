@@ -1,0 +1,58 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env
+.env*.local
+
+# Cloudflare Workers local dev secrets
+.dev.vars
+
+# Turborepo cache
+.turbo/
+
+# typescript
+*.tsbuildinfo
+
+# Firebase config — provide your own (see the *.example templates)
+google-services.json
+GoogleService-Info.plist
+
+# Android keystores & signing
+*.keystore
+keystore.properties
+
+.superpowers/
+report.html
+
+# Git worktrees
+.worktrees/

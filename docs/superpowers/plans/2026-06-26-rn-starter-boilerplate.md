@@ -2,113 +2,32 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Produire `rn-starter/`, un boilerplate Expo/monorepo, en copiant l'app de production `all-currency-converter` puis en retirant tout le métier « conversion de devises ».
+**Goal:** Produire `rn-starter/`, un boilerplate Expo/monorepo, en copiant l'app de production `all-currency-converter` puis en retirant tout le métier « conversion de devises », tout en conservant et **généralisant** l'infrastructure premium (monétisation, paywall contextuel, notifications, i18n).
 
-**Architecture:** Opération **soustractive**. On part d'une base qui build déjà, et on retire/généralise couche par couche (`shared` → `api` → `mobile`). Comme le projet n'a **aucun test unitaire**, la « boucle rouge/vert » du TDD est remplacée par des **checkpoints de vérification** : `typecheck` + `lint` + `build` doivent être verts à la fin de chaque tâche. Les imports orphelins créés par les suppressions sont détectés par `typecheck` et corrigés dans la même tâche.
+**Architecture:** Opération **soustractive**. On part d'une base qui build déjà, et on retire/généralise couche par couche (`shared` → `api` → `mobile`). Le métier est par endroits **infiltré dans des services génériques** (le paywall contextuel, la cadence des pubs et le rating se déclenchaient « après N conversions ») : ces points sont **découplés et généralisés** (compteur d'actions générique) avant la purge. Comme le projet n'a **aucun test unitaire**, la « boucle rouge/vert » du TDD est remplacée par des **checkpoints de vérification** : `typecheck` + `lint` + `build` verts à la fin de chaque tâche. Les imports orphelins créés par les suppressions sont détectés par `typecheck` et corrigés dans la même tâche.
 
-**Tech Stack:** Expo SDK 54 + Expo Router, React Native, NativeWind v4, Zustand v5, TanStack Query v5, i18next (9 langues), Firebase, AdMob, RevenueCat, Hono + Cloudflare Workers (api), pnpm 10 + Turborepo, TypeScript strict.
+**Tech Stack:** Expo SDK 54 + Expo Router, React Native, NativeWind v4, Zustand v5, TanStack Query v5, i18next (**20 langues**), Firebase (Analytics + Crashlytics), AdMob, RevenueCat, Hono + Cloudflare Workers (api), pnpm 10 + Turborepo, TypeScript strict.
 
 ## Global Constraints
 
-- Dossier cible : `/home/colotcholoman/project/rn-starter/` (créé à la Task 1, historique git neuf).
-- Nom du package racine : `rn-starter`. Package partagé : `@repo/shared`.
-- Ne **jamais** committer de secret/identité réels : `.env`, `.dev.vars`, `google-services.json`, `GoogleService-Info.plist`, `release.keystore`, `keystore.properties`, EAS project id, bundle ids. → placeholders.
+- Dossier cible : `/home/colotcholoman/project/rn-starter/` (créé Task 1, historique git neuf, branche `main`).
+- Nom du package racine : `rn-starter`. Package partagé : `@repo/shared`. Packages applicatifs : `mobile`, `api`.
+- Ne **jamais** committer de secret/identité réels : `.env`, `.dev.vars`, `google-services.json`, `GoogleService-Info.plist`, `release.keystore`, `keystore.properties`, EAS project id, bundle ids → placeholders. (`.gitignore` les couvre déjà depuis Task 1 ; `debug.keystore` est volontairement suivi — clé de debug Android non secrète.)
 - À conserver intact : patches (`expo-notifications`), `apps/mobile/plugins/`, config Turbo/pnpm/EAS.
-- Zones grises tranchées : **alertes conservées** (généralisées, moteur de notifs local), **backup Google Drive retiré**, **export retiré**.
-- Vérification de référence à la fin de chaque tâche mobile : `rg -n 'currency|conversion|exchange|rate' apps/mobile/<zone>` ne doit plus rien renvoyer dans le code traité (hors `node_modules`).
-- Commits : messages en **anglais**, format **Conventional Commits** (`feat:`, `chore:`, `refactor:`, `docs:`…).
-- `git mv`/suppressions via `git rm` pour garder l'index propre.
+- Zones grises tranchées : **alertes conservées** (généralisées en rappels programmés locaux), **backup Google Drive retiré**, **export retiré**.
+- **Décision premium (déclencheurs)** : les déclencheurs aujourd'hui basés sur « N conversions » (paywall contextuel, rating, cadence interstitiels) deviennent un **compteur d'actions générique** porté par `engagementStorage` (`incrementAction()` / `getActionCount()`), que l'intégrateur câble sur ses propres événements à valeur. On garde toute la mécanique premium.
+- **Qualité premium** : les écrans construits (home, settings) utilisent le **design system existant** (`components/ui`, tokens de thème, `GradientButton`, animations Moti/Reanimated) — **jamais** de primitives RN brutes stylées à la main.
+- Vérification de référence à la fin du bloc mobile : `rg -in 'currency|conversion|exchange|rate' apps/mobile --glob '!node_modules'` ne renvoie plus de métier dans le code applicatif.
+- Commits : messages en **anglais**, format **Conventional Commits**. Terminer chaque message par `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
+- Suppressions via `git rm` pour garder l'index propre.
 
 ---
 
-### Task 1: Bootstrap du dépôt `rn-starter`
+### Task 1: Bootstrap du dépôt `rn-starter` — ✅ TERMINÉE (commit 5283b1c)
 
-**Files:**
-- Create: `/home/colotcholoman/project/rn-starter/` (copie filtrée de `all-currency-converter`)
-- Create: `rn-starter/docs/superpowers/specs/2026-06-26-rn-starter-boilerplate-design.md` (copie du spec)
-- Modify: `rn-starter/package.json`, `rn-starter/apps/api/package.json`, `rn-starter/apps/mobile/package.json`, `rn-starter/packages/shared/package.json` (ajout script `typecheck`)
+Déjà réalisée par le contrôleur. Pour mémoire : copie filtrée d'`all-currency-converter` (sans `node_modules`/builds/caches), `git init` sur `main`, scripts `typecheck` ajoutés (racine + 3 packages), `turbo.json` tâche `typecheck`, `apps/api/tsconfig.json` corrigé (`"lib": ["ES2022"]` pour éviter le conflit DOM/Workers), nom racine → `rn-starter`, secrets gitignorés, doc métier retirée, spec + plan copiés dans `docs/superpowers/`. **Baseline verte** : `typecheck` PASS sur `shared` + `api` + `mobile`, `shared build` OK.
 
-**Interfaces:**
-- Produces: les commandes de checkpoint réutilisées par toutes les tâches suivantes :
-  - `pnpm --filter @repo/shared build`
-  - `pnpm --filter @repo/shared typecheck`
-  - `pnpm --filter api typecheck` · `pnpm --filter api build`
-  - `pnpm --filter mobile typecheck` · `pnpm --filter mobile lint`
-
-- [ ] **Step 1: Copier l'app en excluant build/artefacts/git**
-
-```bash
-rsync -a \
-  --exclude '.git' \
-  --exclude 'node_modules' \
-  --exclude '.turbo' \
-  --exclude '.wrangler' \
-  --exclude 'dist' \
-  --exclude 'artifacts' \
-  --exclude '.expo' \
-  --exclude 'apps/mobile/.expo' \
-  --exclude 'apps/mobile/android/build' \
-  --exclude 'apps/mobile/android/app/build' \
-  --exclude 'apps/mobile/android/.gradle' \
-  --exclude 'apps/mobile/ios/Pods' \
-  --exclude 'apps/mobile/ios/build' \
-  --exclude 'apps/mobile/report.html' \
-  /home/colotcholoman/project/all-currency-converter/ \
-  /home/colotcholoman/project/rn-starter/
-```
-
-- [ ] **Step 2: Initialiser un dépôt git neuf**
-
-```bash
-cd /home/colotcholoman/project/rn-starter
-git init
-```
-
-- [ ] **Step 3: Copier le spec dans le nouveau dépôt**
-
-```bash
-mkdir -p /home/colotcholoman/project/rn-starter/docs/superpowers/specs
-cp /home/colotcholoman/project/docs/superpowers/specs/2026-06-26-rn-starter-boilerplate-design.md \
-   /home/colotcholoman/project/rn-starter/docs/superpowers/specs/
-```
-
-- [ ] **Step 4: Ajouter un script `typecheck` à chaque package**
-
-Dans `packages/shared/package.json`, `apps/api/package.json`, `apps/mobile/package.json`, ajouter au bloc `scripts` :
-
-```json
-"typecheck": "tsc --noEmit"
-```
-
-Dans `package.json` (racine), ajouter au bloc `scripts` :
-
-```json
-"typecheck": "turbo run typecheck"
-```
-
-Dans `turbo.json`, ajouter une tâche `typecheck` qui dépend du build des deps :
-
-```json
-"typecheck": { "dependsOn": ["^build"] }
-```
-
-- [ ] **Step 5: Installer les dépendances**
-
-Run: `cd /home/colotcholoman/project/rn-starter && pnpm install`
-Expected: installation OK, lockfile résolu.
-
-- [ ] **Step 6: Checkpoint baseline — l'app copiée doit déjà être verte AVANT tout retrait**
-
-Run: `pnpm --filter @repo/shared build && pnpm typecheck`
-Expected: shared build OK ; typecheck `shared`, `api`, `mobile` PASS (état de référence). Si une erreur préexiste, la noter — elle n'est pas causée par le nettoyage.
-
-- [ ] **Step 7: Commit initial**
-
-```bash
-cd /home/colotcholoman/project/rn-starter
-git add -A
-git commit -m "chore: bootstrap rn-starter from all-currency-converter snapshot"
-```
+**Ne pas réexécuter.** Reprendre à Task 2.
 
 ---
 
@@ -117,11 +36,13 @@ git commit -m "chore: bootstrap rn-starter from all-currency-converter snapshot"
 **Files:**
 - Modify (réécriture complète): `packages/shared/src/types/api.ts`
 - Modify (réécriture complète): `packages/shared/src/index.ts`
-- Delete: `packages/shared/src/constants/currencies.ts`
+- Modify: `packages/shared/tsup.config.ts` (retirer l'entrée `constants/currencies`)
+- Modify: `packages/shared/package.json` (retirer l'export `./constants/currencies`)
+- Delete: `packages/shared/src/constants/currencies.ts` (et le dossier `constants/` s'il devient vide)
 
 **Interfaces:**
 - Consumes: rien.
-- Produces: `@repo/shared` exporte désormais `HealthResponse`, `ApiErrorResponse` (types génériques). Plus aucun export `ExchangeRateResponse`, `HistoricalRatesResponse`, `RateAlert`, `CURRENCY_LIST`, `CurrencyInfo`.
+- Produces: `@repo/shared` exporte `HealthResponse` et `ApiErrorResponse`. Plus aucun export `ExchangeRateResponse`, `HistoricalRatesResponse`, `RateAlert`, `CURRENCY_LIST`, `CurrencyInfo`, ni sous-chemin `./constants/currencies`.
 
 - [ ] **Step 1: Supprimer les constantes métier**
 
@@ -155,12 +76,41 @@ export interface ApiErrorResponse {
 export type { HealthResponse, ApiErrorResponse } from './types/api'
 ```
 
-- [ ] **Step 4: Checkpoint**
+- [ ] **Step 4: Retirer l'entrée currencies de `tsup.config.ts`**
+
+Le fichier liste explicitement les entrées. Le réécrire ainsi :
+
+```ts
+import { defineConfig } from 'tsup'
+
+export default defineConfig({
+  entry: ['src/index.ts', 'src/types/api.ts'],
+  format: ['esm'],
+  dts: true,
+  clean: true,
+  sourcemap: true,
+})
+```
+
+- [ ] **Step 5: Retirer l'export `./constants/currencies` de `package.json`**
+
+Dans `packages/shared/package.json`, supprimer le bloc d'export :
+
+```json
+"./constants/currencies": {
+  "types": "./dist/constants/currencies.d.ts",
+  "import": "./dist/constants/currencies.js"
+}
+```
+
+(garder les exports `.` et `./types/api`).
+
+- [ ] **Step 6: Checkpoint**
 
 Run: `pnpm --filter @repo/shared build && pnpm --filter @repo/shared typecheck`
-Expected: build (tsup) + typecheck PASS.
+Expected: build (tsup) + typecheck PASS, et `dist/constants/` n'est plus généré.
 
-- [ ] **Step 5: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -178,11 +128,12 @@ git commit -m "refactor: strip currency domain types from shared package"
 - Delete: `apps/api/src/utils/supportedCurrencies.ts`, `apps/api/src/utils/alertNormalize.ts`
 - Create: `apps/api/src/routes/example.ts`
 - Modify (réécriture complète): `apps/api/src/index.ts`, `apps/api/src/types.ts`
+- Modify: `apps/api/wrangler.toml`
 - Keep: `apps/api/src/middleware/auth.ts`, `apps/api/src/middleware/rateLimiter.ts`, `apps/api/src/services/fcmService.ts`
 
 **Interfaces:**
 - Consumes: `apiKeyAuth` (middleware/auth), `rateLimiter` (middleware/rateLimiter), `HealthResponse` (`@repo/shared`).
-- Produces: un Worker Hono avec `GET /health` (public) et `GET /example` (protégé par `apiKeyAuth` + `rateLimiter`). `Env` ne contient plus que `API_RATE_LIMITER`, `API_KEY`, `FIREBASE_*`.
+- Produces: Worker Hono avec `GET /health` (public) et `GET /example` (protégé par `rateLimiter` + `apiKeyAuth`). `Env` = `API_RATE_LIMITER`, `API_KEY`, `FIREBASE_*`. Plus de `scheduled`/cron.
 
 - [ ] **Step 1: Supprimer les fichiers métier de l'API**
 
@@ -215,11 +166,11 @@ example.get('/', (c) => c.json({ message: 'authenticated', at: Date.now() }))
 
 ```ts
 import { Hono } from 'hono'
+import type { HealthResponse } from '@repo/shared/types/api'
 import { apiKeyAuth } from './middleware/auth'
 import { rateLimiter } from './middleware/rateLimiter'
 import { example } from './routes/example'
 import type { Env } from './types'
-import type { HealthResponse } from '@repo/shared/types/api'
 
 const app = new Hono<{ Bindings: Env }>()
 
@@ -248,7 +199,7 @@ export default {
 }
 ```
 
-- [ ] **Step 4: Réécrire `types.ts` (retirer les bindings métier)**
+- [ ] **Step 4: Réécrire `types.ts`**
 
 Écraser `apps/api/src/types.ts` avec :
 
@@ -266,11 +217,11 @@ export interface Env {
 }
 ```
 
-- [ ] **Step 5: Nettoyer `wrangler.toml` des bindings métier**
+- [ ] **Step 5: Nettoyer `wrangler.toml`**
 
-Ouvrir `apps/api/wrangler.toml` et retirer les bindings devenus inutiles s'ils y figurent : KV `RATE_CACHE`, KV `ALERTS_KV`, var `EXCHANGE_RATE_API_KEY`, var `CACHE_TTL_SECONDS`, et tout bloc `[triggers]`/`crons` (le cron a été supprimé). Conserver le binding `API_RATE_LIMITER` et la config de déploiement.
+Retirer les bindings devenus inutiles s'ils figurent : KV `RATE_CACHE`, KV `ALERTS_KV`, vars `EXCHANGE_RATE_API_KEY` / `CACHE_TTL_SECONDS`, et tout bloc `[triggers]` / `crons`. Conserver `API_RATE_LIMITER` et la config de déploiement (name, compatibility_date, etc.). Si `name` contient l'identité de l'app, le passer en placeholder (`rn-starter-api`).
 
-- [ ] **Step 6: Vérifier qu'aucun import orphelin ne subsiste**
+- [ ] **Step 6: Vérifier l'absence d'import orphelin**
 
 Run: `rg -n 'exchangeRate|historicalRates|alertNormalize|supportedCurrencies|handleCron|routes/rates|routes/history|routes/alerts' apps/api/src`
 Expected: aucun résultat.
@@ -284,36 +235,116 @@ Expected: typecheck PASS ; `wrangler deploy --dry-run` PASS.
 
 ```bash
 git add -A
-git commit -m "refactor: reduce api to generic health + protected example routes"
+git commit -m "refactor: reduce api to generic health and protected example routes"
 ```
 
 ---
 
-### Task 4: Purge du métier dans `apps/mobile` (components / stores / services / module)
+### Task 4: Découplage premium — généraliser « N conversions » en compteur d'actions
+
+**Contexte précis (vérifié dans le code) :** `services/storage/domains/conversion.ts` (`conversionStorage`) mélange (a) un compteur de conversions réussies — métier — exposé via `getTotalSuccessful()` / `incrementSuccessful()`, et (b) l'état de cadence des interstitiels — générique — exposé via `getAdExecutionCount()` / `getAdLastShown()` / `setAdExecutionCount()` / `setAdLastShown()`. Trois consommateurs **génériques** en dépendent :
+- `services/api/contextualPaywall/index.ts` : `totalConversions: conversionStorage.getTotalSuccessful()` (trigger `after_n_conversions`).
+- `services/api/adService.ts` : lit/écrit la cadence pub (`getAdExecutionCount` / `setAdExecutionCount` / `getAdLastShown` / `setAdLastShown`).
+- `hooks/useConverterRating.ts` : `conversionStorage.incrementSuccessful()` + `getAdLastShown()`.
+
+**Files:**
+- Modify: `apps/mobile/services/storage/domains/engagement.ts` (ajouter le compteur d'actions générique)
+- Create: `apps/mobile/services/storage/domains/ads.ts` (cadence interstitiels générique, extraite de `conversion.ts`)
+- Modify: `apps/mobile/services/api/adService.ts` (pointer vers `adsStorage`)
+- Modify: `apps/mobile/services/api/contextualPaywall/index.ts` (trigger sur le compteur d'actions)
+- Create: `apps/mobile/hooks/useActionRating.ts` ; Delete: `apps/mobile/hooks/useConverterRating.ts`
+- Modify: les consommateurs de `useConverterRating` (les repérer au Step 1)
+
+**Interfaces:**
+- Produces:
+  - `engagementStorage.getActionCount(): number`, `engagementStorage.incrementAction(): number` (retourne le nouveau total), `engagementStorage.resetActionCount(): void`.
+  - `adsStorage.getAdExecutionCount()`, `getAdLastShown()`, `setAdExecutionCount(n: number)`, `setAdLastShown(ts: number)` (signatures identiques à celles retirées de `conversionStorage`).
+  - `useActionRating()` : même contrat que `useConverterRating` mais déclenché par le compteur d'actions, sans aucune notion de conversion.
+  - Le trigger `contextualPaywall` est renommé `after_n_actions` et lit `engagementStorage.getActionCount()`.
+
+- [ ] **Step 1: Cartographier les consommateurs avant de toucher**
+
+Run:
+```bash
+cd /home/colotcholoman/project/rn-starter
+rg -n 'useConverterRating' apps/mobile
+rg -n 'getAdExecutionCount|getAdLastShown|setAdExecutionCount|setAdLastShown|getTotalSuccessful|incrementSuccessful|after_n_conversions|totalConversions' apps/mobile
+```
+Noter chaque emplacement. Inspecter `domains/engagement.ts` et `domains/conversion.ts` pour connaître les clés MMKV (`KEYS`) réellement utilisées.
+
+- [ ] **Step 2: Étendre `engagementStorage` avec le compteur d'actions**
+
+Dans `services/storage/domains/engagement.ts`, ajouter `getActionCount()`, `incrementAction()` (retourne le nouveau total), `resetActionCount()`, persistés via la même mécanique MMKV/`KEYS` que le reste du domain. Ajouter la clé nécessaire dans `services/storage/keys.ts` (ex. `ENGAGEMENT_ACTION_COUNT`).
+
+- [ ] **Step 3: Extraire la cadence interstitiels dans `adsStorage`**
+
+Créer `services/storage/domains/ads.ts` exposant `getAdExecutionCount` / `getAdLastShown` / `setAdExecutionCount` / `setAdLastShown` avec la même implémentation (mêmes clés `KEYS`) que celle actuellement dans `conversion.ts`. Ne pas changer le comportement, seulement l'emplacement (domaine générique).
+
+- [ ] **Step 4: Rebrancher `adService.ts`**
+
+Remplacer dans `services/api/adService.ts` l'import `conversionStorage` par `adsStorage` (`@/services/storage/domains/ads`) et les appels correspondants. Aucun changement de logique.
+
+- [ ] **Step 5: Généraliser le paywall contextuel**
+
+Dans `services/api/contextualPaywall/index.ts`, remplacer `conversionStorage.getTotalSuccessful()` par `engagementStorage.getActionCount()` et renommer le trigger `after_n_conversions` → `after_n_actions` (et le champ `totalConversions` → `totalActions`). Mettre à jour les types/énumérations du module en conséquence.
+
+- [ ] **Step 6: Remplacer `useConverterRating` par `useActionRating`**
+
+Créer `hooks/useActionRating.ts` : copie de `useConverterRating` où `conversionStorage.incrementSuccessful()` devient `engagementStorage.incrementAction()` et `conversionStorage.getAdLastShown()` devient `adsStorage.getAdLastShown()`. Renommer l'export. Supprimer `hooks/useConverterRating.ts` (`git rm`) et mettre à jour ses importateurs repérés au Step 1 (ils seront supprimés en Task 5 s'ils sont métier — dans ce cas, ne pas les recâbler, laisser Task 5 les supprimer ; sinon recâbler vers `useActionRating`).
+
+- [ ] **Step 7: Retirer de `conversionStorage` la partie cadence pub**
+
+Dans `domains/conversion.ts`, supprimer les méthodes `getAdExecutionCount` / `getAdLastShown` / `setAdExecutionCount` / `setAdLastShown` (désormais dans `adsStorage`). `conversionStorage` ne garde que le compteur de conversions métier — il sera supprimé entièrement en Task 5.
+
+- [ ] **Step 8: Checkpoint partiel**
+
+Run: `pnpm --filter mobile typecheck 2>&1 | rg -i 'adService|contextualPaywall|engagement|ads\.ts|useActionRating'`
+Expected: aucune erreur sur ces fichiers. (Des erreurs peuvent subsister ailleurs si des modules métier importaient encore `useConverterRating`/`conversionStorage` — elles seront résolues par leur suppression en Task 5.)
+
+- [ ] **Step 9: Commit**
+
+```bash
+git add -A
+git commit -m "refactor: generalize premium triggers from conversions to a generic action counter"
+```
+
+---
+
+### Task 5: Purge des modules purement métier dans `apps/mobile`
 
 **Files:**
 - Delete (components): `apps/mobile/components/conversion/`, `currency/`, `calculator/`, `charts/`, `statistics/`, `export/`, `widget/`
-- Delete (stores): `apps/mobile/stores/currencyStore.ts`, `quickConversionsStore.ts`, `statisticsStore.ts`, `exportPreferencesStore.ts`, `widgetStore.ts`, `widgetSheetStore.ts`, `backupStore.ts`, `backupTrigger.ts`
-- Delete (services): `apps/mobile/services/api/historicalRatesService.ts`, `exportService.ts`, `services/widget/`, `services/api/googleDriveBackupService.ts`, `googleDriveBackupProvider.ts`, `activeBackupProvider.ts`
-- Delete (module/components/providers backup): `apps/mobile/modules/widget-watchlist/`, `apps/mobile/components/layout/BackupBootstrap.tsx`
+- Delete (stores): `currencyStore.ts`, `quickConversionsStore.ts`, `statisticsStore.ts`, `exportPreferencesStore.ts`, `widgetStore.ts`, `widgetSheetStore.ts`, `backupStore.ts`, `backupTrigger.ts`
+- Delete (services): `services/api/historicalRatesService.ts`, `exportService.ts`, `googleDriveBackupService.ts`, `googleDriveBackupProvider.ts`, `activeBackupProvider.ts`, `googleAuthService.ts` (utilisé uniquement par `backupStore`), `services/widget/`
+- Delete (storage domains métier): `services/storage/domains/conversion.ts`, `rates.ts`, `widget.ts`, `backup.ts`
+- Delete (module/bootstrap): `apps/mobile/modules/widget-watchlist/`, `components/layout/BackupBootstrap.tsx`
 - Delete (route): `apps/mobile/app/statistics.tsx`
-- Keep (généralisé en Task 5): `apps/mobile/stores/alertsStore.ts`, `services/notifications/`, `components/alerts/`, `providers/AlertNotificationProvider.tsx`
+- Keep (généralisés Task 6): `stores/alertsStore.ts`, `services/notifications/`, `components/alerts/`, `providers/AlertNotificationProvider.tsx`, `stores/deepLinkStore.ts`
 
 **Interfaces:**
-- Consumes: rien.
-- Produces: arborescence mobile sans modules de conversion/statistiques/export/backup/widget. `_layout.tsx` et `settings.tsx` auront des imports cassés — réparés en Tasks 6 et 7 ; on ne lance donc le typecheck mobile **complet** qu'après la Task 7. Ici on vérifie seulement que les fichiers supprimés ne sont plus référencés par d'autres modules métier déjà supprimés.
+- Consumes: la généralisation de Task 4 (les services génériques ne dépendent plus des domains métier).
+- Produces: arborescence sans conversion/statistiques/export/backup/widget. `_layout.tsx` et `settings.tsx` auront des imports cassés — réparés Tasks 7 et 8 ; le typecheck mobile **complet** n'est exigé qu'après Task 8.
 
-- [ ] **Step 1: Supprimer les components métier**
+- [ ] **Step 1: Vérifier que les domains métier ne sont plus importés par du générique**
 
+Run:
 ```bash
 cd /home/colotcholoman/project/rn-starter
+rg -n 'domains/(conversion|rates|widget|backup)|conversionStorage|ratesStorage|widgetStorage|backupStorage' apps/mobile \
+  | rg -v 'components/(conversion|currency|calculator|charts|statistics|export|widget)|/(currencyStore|quickConversionsStore|statisticsStore|widgetStore|backupStore|historicalRatesService|exportService)\.|app/(index|statistics)\.tsx|services/storage/domains/(conversion|rates|widget|backup)\.ts'
+```
+Expected: aucune ligne. Si une ligne pointe un fichier **générique** non listé pour suppression, NE PAS supprimer le domain : remonter au contrôleur (couplage non découplé en Task 4).
+
+- [ ] **Step 2: Supprimer les components métier**
+
+```bash
 git rm -r apps/mobile/components/conversion apps/mobile/components/currency \
          apps/mobile/components/calculator apps/mobile/components/charts \
          apps/mobile/components/statistics apps/mobile/components/export \
          apps/mobile/components/widget
 ```
 
-- [ ] **Step 2: Supprimer les stores métier (hors alertsStore)**
+- [ ] **Step 3: Supprimer les stores métier (garder alertsStore, deepLinkStore)**
 
 ```bash
 git rm apps/mobile/stores/currencyStore.ts apps/mobile/stores/quickConversionsStore.ts \
@@ -322,34 +353,37 @@ git rm apps/mobile/stores/currencyStore.ts apps/mobile/stores/quickConversionsSt
        apps/mobile/stores/backupStore.ts apps/mobile/stores/backupTrigger.ts
 ```
 
-- [ ] **Step 3: Supprimer les services métier + backup + export + widget**
+- [ ] **Step 4: Supprimer les services métier + backup + widget + domains métier**
 
 ```bash
 git rm apps/mobile/services/api/historicalRatesService.ts \
        apps/mobile/services/api/exportService.ts \
        apps/mobile/services/api/googleDriveBackupService.ts \
        apps/mobile/services/api/googleDriveBackupProvider.ts \
-       apps/mobile/services/api/activeBackupProvider.ts
+       apps/mobile/services/api/activeBackupProvider.ts \
+       apps/mobile/services/api/googleAuthService.ts
 git rm -r apps/mobile/services/widget
+git rm apps/mobile/services/storage/domains/conversion.ts \
+       apps/mobile/services/storage/domains/rates.ts \
+       apps/mobile/services/storage/domains/widget.ts \
+       apps/mobile/services/storage/domains/backup.ts
 ```
 
-- [ ] **Step 4: Supprimer le module natif widget et le bootstrap de backup**
+- [ ] **Step 5: Supprimer le module natif widget, le bootstrap backup et la route statistics**
 
 ```bash
 git rm -r apps/mobile/modules/widget-watchlist
 git rm apps/mobile/components/layout/BackupBootstrap.tsx
-```
-
-- [ ] **Step 5: Supprimer la route statistics**
-
-```bash
 git rm apps/mobile/app/statistics.tsx
 ```
 
-- [ ] **Step 6: Lister les références orphelines restantes (sera réparé en Tasks 5–7)**
+- [ ] **Step 6: Lister les références orphelines restantes (réparées Tasks 6–8)**
 
-Run: `rg -n 'currencyStore|quickConversionsStore|statisticsStore|exportPreferencesStore|widgetStore|widgetSheetStore|backupStore|backupTrigger|BackupBootstrap|widget-watchlist|googleDriveBackup|activeBackupProvider|historicalRatesService|exportService|components/(conversion|currency|calculator|charts|statistics|export|widget)' apps/mobile`
-Expected: les seuls résultats doivent se trouver dans `apps/mobile/app/_layout.tsx`, `apps/mobile/app/settings.tsx` (réparés Tasks 6–7). Noter cette liste pour les tâches suivantes.
+Run:
+```bash
+rg -n 'currencyStore|quickConversionsStore|statisticsStore|exportPreferencesStore|widgetStore|widgetSheetStore|backupStore|backupTrigger|BackupBootstrap|widget-watchlist|googleDriveBackup|activeBackupProvider|googleAuthService|historicalRatesService|exportService|domains/(conversion|rates|widget|backup)|components/(conversion|currency|calculator|charts|statistics|export|widget)' apps/mobile
+```
+Expected: résultats uniquement dans `app/_layout.tsx`, `app/settings.tsx`, et éventuellement `components/alerts/` (traité Task 6). Tout autre fichier générique encore couplé → remonter au contrôleur.
 
 - [ ] **Step 7: Commit**
 
@@ -360,56 +394,68 @@ git commit -m "refactor: remove conversion, statistics, export, backup and widge
 
 ---
 
-### Task 5: Généralisation des alertes (découplage du domaine « taux »)
+### Task 6: Généralisation des alertes (rappels programmés locaux)
 
 **Files:**
 - Modify: `apps/mobile/stores/alertsStore.ts`
 - Modify: `apps/mobile/providers/AlertNotificationProvider.tsx`
-- Modify: `apps/mobile/services/notifications/scheduleAlert.ts`
+- Modify: `apps/mobile/services/notifications/scheduleAlert.ts` (et les autres fichiers `services/notifications/` qui référencent les taux)
 - Modify: `apps/mobile/components/alerts/` (composants restants)
-- Delete (si présent, service backend de prix): `apps/mobile/services/api/alertsService.ts`
+- Modify: `apps/mobile/services/storage/domains/alerts.ts` (si présent — adapter au modèle générique)
+- Delete (si présent): `apps/mobile/services/api/alertsService.ts` (sync backend des alertes de prix)
 
 **Interfaces:**
-- Consumes: `apps/mobile/services/notifications` (setup/channels/payload), `alertsStore`.
-- Produces: un système d'« alertes/rappels programmés » générique. Les types et champs liés au taux (`fromCurrency`, `toCurrency`, `targetRate`, `triggerType`, `variationPercent`…) sont remplacés par un modèle générique : `{ id: string; title: string; body: string; scheduledAt: number; isActive: boolean }`.
+- Consumes: `services/notifications` (setup/channels/payload), `alertsStore`, `deepLinkStore`.
+- Produces: un système de **rappels programmés** générique. Modèle remplaçant les types liés aux taux :
+  ```ts
+  export interface ScheduledAlert {
+    id: string
+    title: string
+    body: string
+    scheduledAt: number // timestamp unix (ms)
+    isActive: boolean
+  }
+  ```
 
-- [ ] **Step 1: Supprimer le service d'alertes backend (couplé à l'API de taux)**
+- [ ] **Step 1: Repérer le couplage taux dans les alertes**
 
+Run:
 ```bash
 cd /home/colotcholoman/project/rn-starter
-test -f apps/mobile/services/api/alertsService.ts && git rm apps/mobile/services/api/alertsService.ts || echo "absent, rien à faire"
+rg -n 'currency|fromCurrency|toCurrency|targetRate|triggerType|variationPercent|RateAlert|rate' \
+   apps/mobile/stores/alertsStore.ts apps/mobile/services/notifications apps/mobile/components/alerts \
+   apps/mobile/providers/AlertNotificationProvider.tsx apps/mobile/services/storage/domains/alerts.ts 2>/dev/null
 ```
 
-- [ ] **Step 2: Réécrire le modèle de `alertsStore.ts`**
+- [ ] **Step 2: Supprimer le service backend d'alertes (couplé à l'API de taux)**
 
-Remplacer la forme de l'alerte par le modèle générique. Le store expose :
-
-```ts
-export interface ScheduledAlert {
-  id: string
-  title: string
-  body: string
-  scheduledAt: number // timestamp unix (ms)
-  isActive: boolean
-}
+```bash
+test -f apps/mobile/services/api/alertsService.ts && git rm apps/mobile/services/api/alertsService.ts || echo "absent"
 ```
 
-Adapter les actions (`add`, `remove`, `toggle`, `list`) à ce modèle ; retirer toute logique de comparaison de taux / direction / seuil. Conserver la persistance MMKV existante.
+- [ ] **Step 3: Réécrire le modèle de `alertsStore.ts`**
 
-- [ ] **Step 3: Découpler `scheduleAlert.ts`**
+Adopter `ScheduledAlert`. Adapter les actions (`add`, `remove`, `toggle`, `list`) ; retirer toute logique de seuil/direction/variation et toute synchronisation backend. Conserver la persistance MMKV.
 
-Adapter `services/notifications/scheduleAlert.ts` pour programmer une notification locale à partir d'un `ScheduledAlert` (`title`, `body`, `scheduledAt`), sans aucune référence aux taux. S'appuyer sur le `notificationService` générique déjà présent.
+- [ ] **Step 4: Découpler `scheduleAlert.ts` (et le reste de `services/notifications/`)**
 
-- [ ] **Step 4: Adapter `AlertNotificationProvider.tsx` et les composants `components/alerts/`**
+Programmer une notification locale à partir d'un `ScheduledAlert` (`title`, `body`, `scheduledAt`) via le `notificationService` générique. Retirer toute référence aux taux dans `payload.ts` / `backgroundHandler.ts` si présente.
 
-Retirer du provider et des composants toute référence aux devises (sélecteurs de paires, seuils de taux). Les écrans/sheets d'alerte présentent désormais : titre, message, date/heure de programmation, activation.
+- [ ] **Step 5: Adapter `AlertNotificationProvider.tsx` et `components/alerts/`**
 
-- [ ] **Step 5: Vérifier l'absence de référence au domaine taux dans les alertes**
+Retirer les sélecteurs de paires / seuils de taux. Les écrans/sheets présentent : titre, message, date/heure de programmation, activation. Conserver l'UX premium (design system, sheets existants).
 
-Run: `rg -n 'currency|fromCurrency|toCurrency|targetRate|triggerType|variationPercent|rate' apps/mobile/stores/alertsStore.ts apps/mobile/services/notifications apps/mobile/components/alerts apps/mobile/providers/AlertNotificationProvider.tsx`
+- [ ] **Step 6: Vérifier l'absence de référence au domaine taux**
+
+Run:
+```bash
+rg -n 'currency|fromCurrency|toCurrency|targetRate|triggerType|variationPercent|RateAlert' \
+   apps/mobile/stores/alertsStore.ts apps/mobile/services/notifications apps/mobile/components/alerts \
+   apps/mobile/providers/AlertNotificationProvider.tsx
+```
 Expected: aucun résultat.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -418,29 +464,19 @@ git commit -m "refactor: generalize alerts into scheduled local reminders"
 
 ---
 
-### Task 6: `_layout.tsx` + home démo
+### Task 7: `_layout.tsx` + écran d'accueil démo premium
 
 **Files:**
 - Modify (réécriture ciblée): `apps/mobile/app/_layout.tsx`
 - Modify (réécriture complète): `apps/mobile/app/index.tsx`
 
 **Interfaces:**
-- Consumes: providers conservés (`QueryProvider`, `ThemeProvider`, `ToastProvider`, `SubscriptionProvider`, `AdFreeProvider`, `AlertNotificationProvider`), services conservés (analytics, crashlytics, ads, purchase, engagement, notifications, storage/migration), `useThemeColor` (`@/components/Themed`), i18n.
-- Produces: navigation à **2 onglets** (`index`, `settings`) ; un écran d'accueil démo autonome.
+- Consumes: providers conservés (`QueryProvider`, `ThemeProvider`, `ToastProvider`, `SubscriptionProvider`, `AdFreeProvider`, `AlertNotificationProvider`), effets conservés (`TelemetryEffects`, `runStorageMigration`, `RTLRestartBanner`), `PremiumTabBar`, `useThemeColor`, design system `components/ui`, i18n.
+- Produces: navigation à **2 onglets** (`index`, `settings`) ; un home **premium** bâti sur le design system.
 
-- [ ] **Step 1: Retirer de `_layout.tsx` les imports/usages métier**
+- [ ] **Step 1: Nettoyer `_layout.tsx` du métier**
 
-Dans `apps/mobile/app/_layout.tsx`, supprimer ces imports **et tous leurs usages** :
-
-```
-import { BackupBootstrap } from '@/components/layout/BackupBootstrap'
-import { WidgetSettingsSheet } from '@/components/widget/WidgetSettingsSheet'
-import { useCurrencyStore } from '@/stores/currencyStore'
-import { useExportPreferencesStore } from '@/stores/exportPreferencesStore'
-import { useQuickConversionsStore } from '@/stores/quickConversionsStore'
-```
-
-Retirer le `<Tabs.Screen name="statistics" ... />` du `TabLayout`. Le bloc `Tabs` ne garde que `index` et `settings` :
+Retirer imports + usages : `BackupBootstrap`, `WidgetSettingsSheet`, `useCurrencyStore`, `useExportPreferencesStore`, `useQuickConversionsStore`, et tout effet d'init/hydratation lié (currency/export/quickConversions/widget/backup). Réduire le `Tabs` à deux écrans :
 
 ```tsx
 <Tabs
@@ -454,86 +490,42 @@ Retirer le `<Tabs.Screen name="statistics" ... />` du `TabLayout`. Le bloc `Tabs
 </Tabs>
 ```
 
-Retirer tout effet d'initialisation (`useEffect`, hydratation de store) référençant les stores/composants supprimés (`BackupBootstrap`, currency/export/quickConversions/widget).
+Conserver l'ordre du provider tree (storage migration → Telemetry → GestureHandlerRootView → QueryProvider → ThemeProvider → ToastProvider → SubscriptionProvider → AdFreeProvider → AlertNotificationProvider → contenu) et `RTLRestartBanner`.
 
-- [ ] **Step 2: Écrire l'écran d'accueil démo**
+- [ ] **Step 2: Inspecter le design system disponible**
 
-Écraser `apps/mobile/app/index.tsx` avec un home autonome (primitives RN + thème + i18n, sans dépendance à un composant ui dont l'API n'est pas vérifiée) :
+Run: `ls apps/mobile/components/ui && rg -n 'export ' apps/mobile/components/ui/*.tsx | rg -i 'Screen|Text|Card|Button|GradientButton|Badge' | head -40`
+Repérer les composants et leurs props réelles (Screen/Header, Text, Card, GradientButton…). **Utiliser ces composants** ; ne pas styler des primitives à la main.
 
-```tsx
-import { useThemeColor } from '@/components/Themed'
-import { useTranslation } from 'react-i18next'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
+- [ ] **Step 3: Écrire le home démo premium**
 
-export default function HomeScreen() {
-  const colors = useThemeColor()
-  const { t } = useTranslation()
+Réécrire `apps/mobile/app/index.tsx` : un écran d'accueil soigné qui présente le starter, **construit avec le design system** (conteneur `Screen`/layout existant, `Text` tokenisé, une à deux `Card`, un `GradientButton` de CTA), animations d'entrée légères (Moti/Reanimated, déjà dans les deps), respect du thème clair/sombre et du RTL. Toutes les chaînes via i18n (`useTranslation`) avec des clés sous `home.*` (valeurs EN + FR fournies en Task 8). Aucune référence métier.
 
-  return (
-    <SafeAreaView style={[styles.safe, { backgroundColor: colors.screenBackground }]}>
-      <ScrollView contentContainerStyle={styles.content}>
-        <Text style={[styles.title, { color: colors.text }]}>
-          {t('home.title', 'Bienvenue')}
-        </Text>
-        <Text style={[styles.subtitle, { color: colors.textMuted ?? colors.text }]}>
-          {t('home.subtitle', 'Votre nouvelle app démarre ici.')}
-        </Text>
+- [ ] **Step 4: Checkpoint typecheck (settings encore cassé, attendu)**
 
-        <View style={[styles.card, { backgroundColor: colors.card ?? colors.screenBackground }]}>
-          <Text style={[styles.cardTitle, { color: colors.text }]}>
-            {t('home.card.title', 'Prêt à construire')}
-          </Text>
-          <Text style={[styles.cardBody, { color: colors.textMuted ?? colors.text }]}>
-            {t(
-              'home.card.body',
-              'Thème, i18n, paywall, pubs et notifications sont déjà câblés.',
-            )}
-          </Text>
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  )
-}
+Run: `pnpm --filter mobile typecheck 2>&1 | rg -v 'app/settings\.tsx'`
+Expected: aucune erreur hors `app/settings.tsx`. Corriger tout import orphelin résiduel ici.
 
-const styles = StyleSheet.create({
-  safe: { flex: 1 },
-  content: { padding: 20, gap: 12 },
-  title: { fontSize: 28, fontWeight: '700' },
-  subtitle: { fontSize: 16 },
-  card: { marginTop: 16, padding: 16, borderRadius: 16, gap: 8 },
-  cardTitle: { fontSize: 18, fontWeight: '600' },
-  cardBody: { fontSize: 14, lineHeight: 20 },
-})
-```
-
-> Note : si `useThemeColor()` n'expose pas `textMuted`/`card`, les `??` retombent sur des valeurs existantes — aucune clé inventée n'est requise. Le home pourra ensuite être enrichi avec les composants de `components/ui` une fois leurs props vérifiées.
-
-- [ ] **Step 3: Checkpoint typecheck (partiel — settings encore cassé, attendu)**
-
-Run: `pnpm --filter mobile typecheck 2>&1 | rg -v 'app/settings.tsx'`
-Expected: aucune erreur **hors** `app/settings.tsx` (réparé en Task 7). Si une erreur subsiste ailleurs (import orphelin oublié), la corriger ici.
-
-- [ ] **Step 4: Commit**
+- [ ] **Step 5: Commit**
 
 ```bash
 git add -A
-git commit -m "feat: add demo home screen and reduce navigation to two tabs"
+git commit -m "feat: add premium demo home screen and reduce navigation to two tabs"
 ```
 
 ---
 
-### Task 7: `settings` + nettoyage i18n
+### Task 8: `settings` premium + nettoyage i18n (20 langues)
 
 **Files:**
 - Modify: `apps/mobile/app/settings.tsx`
-- Delete: `apps/mobile/components/settings/BackupSection.tsx`, `apps/mobile/components/settings/QuickCurrencyList.tsx`
+- Delete: `apps/mobile/components/settings/BackupSection.tsx`, `QuickCurrencyList.tsx`
 - Keep: `DisplaySection.tsx`, `LegalSupportSection.tsx`, `PremiumBanner.tsx`, `SubscriptionGraceBanner.tsx`, `SettingsSection.tsx`, `AlertsSettingsSection.tsx`, `QuietHoursSheet.tsx`
-- Modify: `apps/mobile/i18n/languages/*.json` (9 fichiers)
+- Modify: `apps/mobile/i18n/languages/*.json` (**20 fichiers** : ar, bn, de, en, es, fr, hi, id, it, ja, ko, nl, pl, pt-BR, ru, sv, tr, vi, zh-CN, zh-TW)
 
 **Interfaces:**
 - Consumes: sections settings conservées, `useTranslation`.
-- Produces: un écran Settings complet et générique (thème, langue, premium/paywall, rewarded ad, alertes, rating, version, liens légaux), sans backup ni devises.
+- Produces: Settings premium générique (thème, langue, premium/paywall, rewarded ad, alertes, rating, version, liens légaux), sans backup ni devises ; clés i18n purgées du métier et complétées pour le home.
 
 - [ ] **Step 1: Supprimer les sections settings métier**
 
@@ -545,25 +537,22 @@ git rm apps/mobile/components/settings/BackupSection.tsx \
 
 - [ ] **Step 2: Élaguer `app/settings.tsx`**
 
-Dans `apps/mobile/app/settings.tsx`, retirer les imports et le rendu de `BackupSection` et `QuickCurrencyList`. Conserver l'ordre et le rendu des sections restantes. Vérifier qu'aucun handler restant ne référence un store supprimé.
+Retirer imports + rendu de `BackupSection` et `QuickCurrencyList` ; retirer tout handler référençant un store supprimé. Conserver l'ordre, le style premium et les sections restantes. Si `LegalSupportSection` importe un domain supprimé (cf. Task 5), recâbler vers une source générique (ex. version d'app via `expo-constants`).
 
-- [ ] **Step 3: Nettoyer les clés i18n métier dans les 9 langues**
+- [ ] **Step 3: Repérer puis purger les clés i18n métier (20 langues)**
 
-Pour chaque fichier de `apps/mobile/i18n/languages/` (`en, fr, es, ru, ar, pl, nl, id, zh-TW`), retirer les blocs de clés liés au métier (conversion, currencies, statistics, export, backup, widget, alertes de taux) et ajouter les clés du home (`home.title`, `home.subtitle`, `home.card.title`, `home.card.body`). Repérer les blocs métier :
-
-Run: `rg -n '"(conversion|currency|currencies|statistics|export|backup|widget)"' apps/mobile/i18n/languages`
-
-Supprimer ces objets dans chaque fichier. Garder les clés génériques (settings, onboarding, paywall, common, alerts génériques).
+Run: `rg -n '"(conversion|converter|currency|currencies|statistics|export|backup|widget|rates?)"\s*:' apps/mobile/i18n/languages`
+Dans **chaque** fichier `i18n/languages/*.json`, supprimer ces blocs métier. Ajouter les clés `home.*` utilisées en Task 7. **Politique de traduction (du CLAUDE.md source) :** fournir des valeurs réelles pour **EN et FR uniquement** (source de vérité) ; pour les 18 autres langues, retirer les clés métier et, pour les nouvelles clés `home.*`, soit reprendre l'anglais en fallback, soit laisser i18next retomber sur la langue par défaut — ne pas inventer de traductions mécaniques.
 
 - [ ] **Step 4: Checkpoint complet mobile**
 
 Run: `pnpm --filter mobile typecheck && pnpm --filter mobile lint`
-Expected: typecheck PASS, lint PASS (0 erreur ESLint/prettier).
+Expected: typecheck PASS, lint PASS (0 erreur ESLint/prettier). Vérifier aussi que chaque JSON reste valide.
 
-- [ ] **Step 5: Vérification finale « zéro métier »**
+- [ ] **Step 5: Vérification finale « zéro métier » (code applicatif)**
 
-Run: `rg -n -i 'currency|conversion|exchange[_ ]?rate' apps/mobile --glob '!node_modules'`
-Expected: aucun résultat dans le code applicatif (ignorer d'éventuels résultats dans `ios/`/`android/` natifs, traités en Task 8).
+Run: `rg -in 'currency|conversion|exchange[_ ]?rate' apps/mobile --glob '!node_modules' --glob '!ios/**' --glob '!android/**'`
+Expected: aucun résultat. (Les dossiers natifs `ios/`/`android/` portent encore l'identité — traités Task 9.)
 
 - [ ] **Step 6: Commit**
 
@@ -574,58 +563,56 @@ git commit -m "refactor: trim settings to generic sections and clean i18n keys"
 
 ---
 
-### Task 8: Outillage template + neutralisation de l'identité/secrets
+### Task 9: Outillage template + neutralisation identité & secrets
 
 **Files:**
-- Create: `scripts/setup.sh` (repris de `rn-starter-app/scripts/setup.sh`)
-- Modify (réécriture): `README.md`, `CLAUDE.md` (repris/adaptés de `rn-starter-app`)
-- Modify: `apps/mobile/app.config.js` (placeholders)
-- Modify/Create: `apps/mobile/.env.example`
-- Delete/placeholder: `apps/mobile/google-services.json`, `apps/mobile/GoogleService-Info.plist`, `apps/mobile/release.keystore`, `apps/mobile/keystore.properties`, `apps/api/.dev.vars`
-- Modify: `.gitignore` (ignorer les secrets réels)
+- Create: `scripts/setup.sh` (repris/adapté de `rn-starter-app/scripts/setup.sh`)
+- Modify (réécriture): `README.md`, `CLAUDE.md`
+- Replace: `apps/mobile/PROJECT_CONTEXT.md` (40 Ko décrivant l'app conversion → version template concise, ou suppression si redondante avec CLAUDE.md)
+- Modify: `apps/mobile/app.config.js`, `apps/mobile/services/storage/mmkv.ts` (id), `apps/mobile/package.json` (script `build:install`)
+- Create: `apps/mobile/google-services.json.example`, `apps/api/.dev.vars.example`
+- Modify: `apps/mobile/.env.example`
+- Modify: dossiers natifs `apps/mobile/ios/` (renommer le projet `allcurencyconverter`) et bundle ids — ou documenter une régénération via `expo prebuild`.
 
 **Interfaces:**
-- Consumes: rien.
-- Produces: un dépôt clonable sans secret, configurable via `scripts/setup.sh`.
+- Produces: dépôt clonable sans secret ni identité de l'app source, configurable via `scripts/setup.sh`.
 
-- [ ] **Step 1: Reprendre l'outillage starter déjà écrit**
+- [ ] **Step 1: Reprendre l'outillage starter existant**
 
 ```bash
 cd /home/colotcholoman/project/rn-starter
 cp /home/colotcholoman/project/rn-starter-app/scripts/setup.sh scripts/setup.sh 2>/dev/null || true
 cp /home/colotcholoman/project/rn-starter-app/apps/mobile/.env.example apps/mobile/.env.example 2>/dev/null || true
-cp /home/colotcholoman/project/rn-starter-app/README.md README.md 2>/dev/null || true
-cp /home/colotcholoman/project/rn-starter-app/CLAUDE.md CLAUDE.md 2>/dev/null || true
 ```
+Lire ces fichiers et les adapter au monorepo **avec API** (le starter récupéré était mobile-only).
 
-Relire chacun et l'adapter au monorepo **avec API** (le starter récupéré était mobile-only) : documenter `apps/api`, `/health`, le `wrangler dev`, et la structure réelle.
+- [ ] **Step 2: Réécrire `README.md` et `CLAUDE.md`**
 
-- [ ] **Step 2: Neutraliser les fichiers de secrets/identité**
+Réécrire entièrement pour décrire le boilerplate `rn-starter` (stack, structure `apps/api` + `apps/mobile` + `packages/shared`, commandes `pnpm dev/typecheck/lint`, `/health`, `wrangler dev`, déclencheurs premium via compteur d'actions, politique i18n EN/FR). **Aucune** mention de conversion de devises. Garder la directive « No tests ».
 
-```bash
-git rm --cached apps/mobile/google-services.json apps/mobile/GoogleService-Info.plist \
-       apps/mobile/release.keystore apps/mobile/keystore.properties apps/api/.dev.vars 2>/dev/null || true
-```
+- [ ] **Step 3: Traiter `PROJECT_CONTEXT.md`**
 
-Créer des gabarits versionnés à la place : `apps/mobile/google-services.json.example`, `apps/api/.dev.vars.example` (avec clés vides), et documenter dans le README.
+Remplacer le contenu métier par une description concise du template, ou le supprimer si CLAUDE.md suffit (et retirer alors sa mention dans CLAUDE.md « Living Documentation »).
 
-- [ ] **Step 3: Mettre des placeholders dans `app.config.js`**
+- [ ] **Step 4: Généraliser l'identité applicative**
 
-Dans `apps/mobile/app.config.js`, remplacer le nom d'app, le `slug`, les bundle ids (`com.codeurdivoire.allcurencyconverter`…), l'EAS `projectId` et les schémas de deep link par des placeholders (`YOUR_APP_NAME`, `com.yourcompany.yourapp`, etc.), ou les lire depuis `process.env` renseigné par `setup.sh`.
+- `apps/mobile/services/storage/mmkv.ts` : `id: 'all-currency-converter'` → `id: 'rn-starter'`.
+- `apps/mobile/app.config.js` : nom, `slug`, bundle ids (`com.codeurdivoire.allcurencyconverter`), EAS `projectId`, schémas de deep link → placeholders (`rn-starter`, `com.yourcompany.yourapp`) ou lecture depuis `process.env` renseigné par `setup.sh`.
+- `apps/mobile/package.json` : réécrire le script `build:install` sans chemin absolu ni bundle id de l'app source (utiliser un chemin relatif et un placeholder, ou retirer ce script).
 
-- [ ] **Step 4: Mettre à jour `.gitignore`**
+- [ ] **Step 5: Gabarits de secrets**
 
-Ajouter (s'ils n'y sont pas) : `google-services.json`, `GoogleService-Info.plist`, `*.keystore`, `keystore.properties`, `.dev.vars`, `.env`.
+Créer `apps/api/.dev.vars.example` (clés vides documentées) et `apps/mobile/google-services.json.example` (gabarit Firebase minimal). Documenter dans le README qu'il faut fournir les vrais fichiers (déjà gitignorés).
 
-- [ ] **Step 5: Checkpoint clone simulé**
+- [ ] **Step 6: Checkpoint clone simulé**
 
 Run:
 ```bash
-rg -n -i 'allcurency|all-currency|codeurdivoire' apps/mobile/app.config.js README.md CLAUDE.md
+rg -in 'allcurency|all-currency|codeurdivoire|converter|devise|exchange' README.md CLAUDE.md apps/mobile/app.config.js apps/mobile/services/storage/mmkv.ts apps/mobile/package.json apps/mobile/PROJECT_CONTEXT.md 2>/dev/null
 ```
-Expected: aucun résidu d'identité de l'app source. Puis `pnpm typecheck` PASS.
+Expected: aucun résidu d'identité/métier. Puis `pnpm typecheck && pnpm --filter mobile lint` PASS.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add -A
@@ -634,17 +621,17 @@ git commit -m "chore: add template tooling and scrub app identity and secrets"
 
 ---
 
-### Task 9: Archivage de l'ancien starter
+### Task 10: Archivage de l'ancien starter
 
 **Files:**
 - Delete: `/home/colotcholoman/project/rn-starter-app/`, `/home/colotcholoman/project/premium-rn-starter-copie/`
 
 **Interfaces:**
-- Consumes: rn-starter validé (Tasks 1–8 vertes).
+- Consumes: `rn-starter` validé (Tasks 1–9 vertes + revue finale).
 
 - [ ] **Step 1: Confirmation explicite de l'utilisateur**
 
-**NE PAS exécuter sans un « oui » explicite.** Vérifier au préalable que tout ce qui devait être récupéré de `rn-starter-app` (Task 8) l'a bien été.
+**NE PAS exécuter sans un « oui » explicite.** Vérifier d'abord que tout ce qui devait être récupéré de `rn-starter-app` (Task 9) l'a bien été.
 
 - [ ] **Step 2: Supprimer les anciens dossiers**
 
@@ -652,7 +639,7 @@ git commit -m "chore: add template tooling and scrub app identity and secrets"
 rm -rf /home/colotcholoman/project/rn-starter-app /home/colotcholoman/project/premium-rn-starter-copie
 ```
 
-- [ ] **Step 3: (Optionnel) tag de version initiale**
+- [ ] **Step 3: Tag de version initiale**
 
 ```bash
 cd /home/colotcholoman/project/rn-starter
@@ -664,17 +651,17 @@ git tag v0.1.0 -m "Initial rn-starter boilerplate"
 ## Self-Review
 
 **Spec coverage:**
-- Stratégie soustractive → Tasks 1–8 ✅
-- Périmètre monorepo complet, API généralisée minimale → Tasks 2, 3 ✅
-- Destination nouveau dossier + git neuf → Task 1 ✅
-- Frontière métier/générique (shared/api/mobile) → Tasks 2–5 ✅
-- Alertes conservées généralisées, backup + export retirés → Tasks 4, 5 ✅
-- Routes : home démo + settings complet + statistics supprimé → Tasks 6, 7 ✅
-- Outillage starter récupéré → Task 8 ✅
-- Secrets/identité neutralisés → Task 8 ✅
-- Archivage sur confirmation → Task 9 ✅
-- Critères de succès (typecheck/lint/build verts, zéro `currency`) → checkpoints Tasks 3, 6, 7 ✅
+- Stratégie soustractive → Tasks 1–9 ✅
+- Monorepo complet, API généralisée minimale → Tasks 2, 3 ✅
+- Métier infiltré dans le générique (paywall/ads/rating) découplé → Task 4 ✅ (décision « compteur d'actions »)
+- Frontière métier/générique (shared/api/mobile, domains) → Tasks 2–6 ✅
+- Alertes généralisées, backup + export retirés → Tasks 5, 6 ✅
+- Routes : home premium + settings complet + statistics supprimé → Tasks 7, 8 ✅
+- i18n 20 langues, politique EN/FR → Task 8 ✅
+- Outillage starter, identité & secrets (mmkv id, app.config, PROJECT_CONTEXT, CLAUDE.md) → Task 9 ✅
+- Archivage sur confirmation → Task 10 ✅
+- Critères de succès (typecheck/lint/build verts, zéro métier) → checkpoints Tasks 3, 7, 8, 9 ✅
 
-**Placeholder scan:** Les instructions « retirer les usages » dans `_layout.tsx`/`settings.tsx` sont bornées par des listes d'imports exacts + un checkpoint typecheck qui prouve l'achèvement — ce ne sont pas des placeholders vagues mais la nature du travail soustractif sur un fichier-hub non entièrement réécrit.
+**Placeholder scan:** Les tâches de découplage (4), d'écrans premium (7) et de réécriture doc (9) décrivent l'intention + signatures cibles + fichiers exacts, en laissant l'implémenteur inspecter l'API réelle du design system / des domains — instructions d'intégration, pas placeholders vagues. Les checkpoints typecheck/lint prouvent l'achèvement.
 
-**Type consistency:** `HealthResponse`/`ApiErrorResponse` (Task 2) sont consommés en Task 3. `ScheduledAlert` (Task 5) remplace le modèle métier de façon cohérente. La navigation 2 onglets (Task 6) correspond au retrait de `statistics` (Task 4).
+**Type consistency:** `HealthResponse`/`ApiErrorResponse` (Task 2) consommés en Task 3. `engagementStorage.getActionCount/incrementAction` + `adsStorage.*` + `useActionRating` (Task 4) consommés par les services génériques avant la purge (Task 5). `ScheduledAlert` (Task 6) remplace le modèle taux. Nav 2 onglets (Task 7) cohérente avec le retrait de `statistics` (Task 5).

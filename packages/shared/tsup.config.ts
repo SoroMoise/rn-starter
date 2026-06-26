@@ -1,11 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: [
-    'src/index.ts',
-    'src/types/api.ts',
-    'src/constants/currencies.ts',
-  ],
+  entry: ['src/index.ts', 'src/types/api.ts'],
   format: ['esm'],
   dts: true,
   clean: true,

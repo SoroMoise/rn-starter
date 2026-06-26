@@ -13,10 +13,6 @@
     "./types/api": {
       "types": "./dist/types/api.d.ts",
       "import": "./dist/types/api.js"
-    },
-    "./constants/currencies": {
-      "types": "./dist/constants/currencies.d.ts",
-      "import": "./dist/constants/currencies.js"
     }
   },
   "scripts": {

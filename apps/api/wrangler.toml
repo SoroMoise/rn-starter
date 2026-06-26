@@ -1,14 +1,9 @@
-name = "all-currency-converter-api"
+name = "rn-starter-api"
 main = "src/index.ts"
 compatibility_date = "2024-01-01"
 
 [vars]
-CACHE_TTL_SECONDS = "3600"
 ENVIRONMENT = "production"
-
-[[kv_namespaces]]
-binding = "RATE_CACHE"
-id = "3dfd69a70eea478792ea333d9989121d"
 
 [observability]
 enabled = true
@@ -24,14 +19,6 @@ invocation_logs = true
 enabled = true
 persist = true
 head_sampling_rate = 1
-
-[[kv_namespaces]]
-binding = "ALERTS_KV"
-id = "6524665d5f604763b99490fd9455e939"
-preview_id = "be9f6728fad44fd1a920cd4db1c1b1b0"
-
-[triggers]
-crons = ["*/10 * * * *"]
 
 [[unsafe.bindings]]
 name = "API_RATE_LIMITER"

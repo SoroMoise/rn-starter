@@ -1,10 +1,8 @@
 import { Hono } from 'hono'
-import { handleCron } from './handlers/cron'
+import type { HealthResponse } from '@repo/shared/types/api'
 import { apiKeyAuth } from './middleware/auth'
 import { rateLimiter } from './middleware/rateLimiter'
-import { alerts } from './routes/alerts'
-import { history } from './routes/history'
-import { rates } from './routes/rates'
+import { example } from './routes/example'
 import type { Env } from './types'
 
 const app = new Hono<{ Bindings: Env }>()
@@ -17,14 +15,13 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal error' }, 500)
 })
 
-app.use('/rates/*', rateLimiter)
-app.use('/rates/*', apiKeyAuth)
-app.route('/rates', rates)
-app.route('/rates', history)
+app.get('/health', (c) =>
+  c.json<HealthResponse>({ status: 'ok', timestamp: Date.now() }),
+)
 
-app.use('/alerts/*', rateLimiter)
-app.use('/alerts/*', apiKeyAuth)
-app.route('/alerts', alerts)
+app.use('/example/*', rateLimiter)
+app.use('/example/*', apiKeyAuth)
+app.route('/example', example)
 
 app.get('/', (c) => c.json({ status: 'ok' }))
 
@@ -32,5 +29,4 @@ export { app }
 
 export default {
   fetch: app.fetch,
-  scheduled: handleCron,
 }

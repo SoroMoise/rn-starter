@@ -1,5 +1,5 @@
 import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
-import { conversionStorage } from '@/services/storage/domains/conversion'
+import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { AdEventType, InterstitialAd } from 'react-native-google-mobile-ads'
 
@@ -90,8 +90,8 @@ class AdServiceClass {
     if (!AD_INTERSTITIAL_ENABLED) return false
     this.ensureInitialized()
 
-    const executionCount = conversionStorage.getAdExecutionCount()
-    const lastShown = conversionStorage.getAdLastShown()
+    const executionCount = adsStorage.getAdExecutionCount()
+    const lastShown = adsStorage.getAdLastShown()
     const threshold = this.getExecutionsThreshold()
 
     const now = Date.now()
@@ -105,8 +105,8 @@ class AdServiceClass {
 
   async recordExecution(): Promise<void> {
     this.ensureInitialized()
-    const currentCount = conversionStorage.getAdExecutionCount()
-    conversionStorage.setAdExecutionCount(currentCount + 1)
+    const currentCount = adsStorage.getAdExecutionCount()
+    adsStorage.setAdExecutionCount(currentCount + 1)
   }
 
   async showInterstitialAd(): Promise<void> {
@@ -117,20 +117,20 @@ class AdServiceClass {
 
     try {
       await this.interstitialAd.show()
-      conversionStorage.setAdExecutionCount(0)
-      conversionStorage.setAdLastShown(Date.now())
+      adsStorage.setAdExecutionCount(0)
+      adsStorage.setAdLastShown(Date.now())
     } catch (error) {
       console.warn('[AdService] Failed to show interstitial:', error)
     }
   }
 
   async resetExecutionCount(): Promise<void> {
-    conversionStorage.setAdExecutionCount(0)
+    adsStorage.setAdExecutionCount(0)
   }
 
   async resetAllAdData(): Promise<void> {
-    conversionStorage.setAdExecutionCount(0)
-    conversionStorage.setAdLastShown(0)
+    adsStorage.setAdExecutionCount(0)
+    adsStorage.setAdLastShown(0)
     engagementStorage.setFirstAppUsage(Date.now())
   }
 }

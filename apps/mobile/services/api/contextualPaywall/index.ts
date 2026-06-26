@@ -1,4 +1,3 @@
-import { conversionStorage } from '@/services/storage/domains/conversion'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
@@ -25,7 +24,7 @@ export const contextualPaywallService = {
       isPremium,
       isOnboardingCompleted,
       sessionCount: engagementStorage.getSessionCount(),
-      totalConversions: conversionStorage.getTotalSuccessful(),
+      totalActions: engagementStorage.getActionCount(),
       contextualShownCount: engagementStorage.getContextualShownCount(),
       lastContextualPaywallAt: engagementStorage.getLastContextualPaywallAt(),
       shownThisSession: promoCoordinator.autoPromoShown(),

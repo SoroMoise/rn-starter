@@ -6,7 +6,7 @@ export type ContextualPaywallState = {
   isPremium: boolean
   isOnboardingCompleted: boolean
   sessionCount: number
-  totalConversions: number
+  totalActions: number
   contextualShownCount: number
   lastContextualPaywallAt: number
   shownThisSession: boolean
@@ -36,7 +36,7 @@ export function evaluateContextualPaywall(
   }
 
   const meetsThreshold =
-    state.sessionCount >= c.minSessions || state.totalConversions >= c.minConversions
+    state.sessionCount >= c.minSessions || state.totalActions >= c.minActions
   if (!meetsThreshold) return { show: false, reason: 'below_threshold' }
 
   return { show: true }

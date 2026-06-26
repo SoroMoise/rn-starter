@@ -3,19 +3,20 @@ import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { requestStoreReview } from '@/services/api/ratingService'
-import { conversionStorage } from '@/services/storage/domains/conversion'
+import { adsStorage } from '@/services/storage/domains/ads'
+import { engagementStorage } from '@/services/storage/domains/engagement'
 import { triggerBackupSync } from '@stores/backupTrigger'
 import { useAppRating } from '@hooks/useAppRating'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Alert } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
-type UseConverterRatingProps = {
+type UseActionRatingProps = {
   conversions: unknown[]
   fromCurrencyCode: string
   amount: string
   isAdFreeActive: boolean
-  conversionActionCount: number
+  actionCount: number
 }
 
 function getAmountRange(amount: number): 'micro' | 'small' | 'medium' | 'large' | 'xlarge' {
@@ -26,22 +27,22 @@ function getAmountRange(amount: number): 'micro' | 'small' | 'medium' | 'large' 
   return 'xlarge'
 }
 
-export function useConverterRating({
+export function useActionRating({
   conversions,
   fromCurrencyCode,
   amount,
   isAdFreeActive,
-  conversionActionCount,
-}: UseConverterRatingProps) {
+  actionCount,
+}: UseActionRatingProps) {
   const { t } = useTranslation()
   const [isRatingModalVisible, setIsRatingModalVisible] = useState(false)
   const [currentRatingConversionCount, setCurrentRatingConversionCount] = useState(0)
 
-  // Cache adLastShown to avoid hitting MMKV on every conversion.
+  // Cache adLastShown to avoid hitting MMKV on every action.
   // Seeded from storage on mount; updated in-memory when an interstitial ad is displayed.
   const adLastShownCacheRef = useRef<number>(0)
 
-  // Mirror values that should not retrigger the conversion effect when they change.
+  // Mirror values that should not retrigger the action effect when they change.
   // The effect reads them through refs, so changes propagate without re-running it.
   const isAdFreeActiveRef = useRef(isAdFreeActive)
   const isRatingModalVisibleRef = useRef(isRatingModalVisible)
@@ -50,7 +51,7 @@ export function useConverterRating({
   const amountRef = useRef(amount)
 
   useEffect(() => {
-    adLastShownCacheRef.current = conversionStorage.getAdLastShown()
+    adLastShownCacheRef.current = adsStorage.getAdLastShown()
   }, [])
 
   useEffect(() => {
@@ -77,7 +78,7 @@ export function useConverterRating({
     useAppRating()
 
   useEffect(() => {
-    if (conversionActionCount === 0) return
+    if (actionCount === 0) return
     if (conversionsRef.current.length === 0) return
     if (!(parseFloat(amountRef.current) > 0)) return
 
@@ -95,14 +96,14 @@ export function useConverterRating({
         } catch (err) {
           crashlyticsService.recordError(
             err instanceof Error ? err : new Error('Ad chain failed'),
-            { source: 'useConverterRating.adChain' }
+            { source: 'useActionRating.adChain' }
           )
         }
       }
 
       if (isRatingModalVisibleRef.current) return
       try {
-        const newTotal = conversionStorage.incrementSuccessful()
+        const newTotal = engagementStorage.incrementAction()
         triggerBackupSync()
         analyticsService.track('conversion_performed', {
           from_currency: fromCurrencyCodeRef.current,
@@ -127,14 +128,14 @@ export function useConverterRating({
       } catch (err) {
         crashlyticsService.recordError(
           err instanceof Error ? err : new Error('Rating check failed'),
-          { source: 'useConverterRating.ratingFlow' }
+          { source: 'useActionRating.ratingFlow' }
         )
       }
     })()
-    // checkAndMaybeShowRating is stable (memoized with []). conversionActionCount is
+    // checkAndMaybeShowRating is stable (memoized with []). actionCount is
     // the sole trigger — other values are read via refs to avoid spurious re-runs.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [conversionActionCount])
+  }, [actionCount])
 
   const handleRateApp = useCallback(
     async (stars: number) => {
@@ -156,7 +157,7 @@ export function useConverterRating({
       } catch (err) {
         crashlyticsService.recordError(
           err instanceof Error ? err : new Error('handleRateApp failed'),
-          { source: 'useConverterRating.handleRateApp' }
+          { source: 'useActionRating.handleRateApp' }
         )
       }
     },
@@ -171,7 +172,7 @@ export function useConverterRating({
     } catch (err) {
       crashlyticsService.recordError(
         err instanceof Error ? err : new Error('handleRateLater failed'),
-        { source: 'useConverterRating.handleRateLater' }
+        { source: 'useActionRating.handleRateLater' }
       )
     }
   }, [currentRatingConversionCount, markAsLater])
@@ -184,7 +185,7 @@ export function useConverterRating({
     } catch (err) {
       crashlyticsService.recordError(
         err instanceof Error ? err : new Error('handleDeclineRating failed'),
-        { source: 'useConverterRating.handleDeclineRating' }
+        { source: 'useActionRating.handleDeclineRating' }
       )
     }
   }, [markAsDeclinedForever])

@@ -61,4 +61,19 @@ export const engagementStorage = {
     mmkv.set(KEYS.CONTEXTUAL_PAYWALL_SHOWN_COUNT, next.toString())
     return next
   },
+
+  getActionCount(): number {
+    const raw = mmkv.getString(KEYS.ENGAGEMENT_ACTION_COUNT)
+    return raw ? parseInt(raw, 10) || 0 : 0
+  },
+
+  incrementAction(): number {
+    const next = engagementStorage.getActionCount() + 1
+    mmkv.set(KEYS.ENGAGEMENT_ACTION_COUNT, next.toString())
+    return next
+  },
+
+  resetActionCount(): void {
+    mmkv.set(KEYS.ENGAGEMENT_ACTION_COUNT, '0')
+  },
 }

@@ -38,6 +38,7 @@ export const KEYS = {
   PAYWALL_SHOWN_COUNT: '@paywall_shown_count',
   CONTEXTUAL_PAYWALL_LAST_AT: '@contextual_paywall_last_at',
   CONTEXTUAL_PAYWALL_SHOWN_COUNT: '@contextual_paywall_shown_count',
+  ENGAGEMENT_ACTION_COUNT: '@engagement_action_count',
 
   // Backup
   BACKUP_LAST_SYNC: '@backup_last_sync',

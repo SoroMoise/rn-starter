@@ -102,7 +102,7 @@ Mutations to user-owned stores call `triggerBackupSync()`. Mutations to `widgetS
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
 - `migration.ts` — one-shot AsyncStorage → MMKV (idempotent; AsyncStorage kept only for this)
-- `domains/` — typed non-Zustand accessors: `adFree`, `alerts`, `backup`, `conversion`, `engagement`, `rates`, `rating`, `subscription`, `userSettings`, `widget`
+- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `alerts`, `backup`, `conversion`, `engagement`, `rates`, `rating`, `subscription`, `userSettings`, `widget`
 
 Notable domains:
 - `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating (used by widget and grace period banner)
@@ -139,7 +139,7 @@ TanStack Query v5 for historical rates. `QueryProvider` uses `PersistQueryClient
 
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active.
 - **RevenueCat** — entitlement `Currency converter Pro`, products `premium:premium-monthly` / `premium:premium-yearly`, 7-day trial. `openPaywall({ source })` from `SubscriptionProvider`. `FORCE_FREE` env for dev.
-- **Contextual paywall** — `contextualPaywallService` evaluates session/conversion count to trigger the paywall at a value moment (`power_action`, `after_n_conversions`, `rewarded_ad_dismissed`). `session_return` only arms the session — it never cold-fires the paywall on launch.
+- **Contextual paywall** — `contextualPaywallService` evaluates session count and generic action count (`engagementStorage.getActionCount()`) to trigger the paywall at a value moment (`power_action`, `after_n_actions`, `rewarded_ad_dismissed`). `session_return` only arms the session — it never cold-fires the paywall on launch. Ad-cadence state lives in `adsStorage` (`domains/ads.ts`).
 - **Promo coordinator** — `services/promo/promoCoordinator.ts` is the single in-memory authority over interruptive promotional surfaces (contextual paywall + Android widget tooltip). It enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`), reset at boot via `contextualPaywallService.resetSession()`. User-initiated paywall opens register their visibility but do not consume the auto-promo budget. The contextual paywall and the widget tooltip both claim through it, so they never collide and the one-time tooltip is never "burned" behind a paywall.
 - **Premium gates**: no ads, Google Drive backup, CSV/PDF export, rate alerts, Android widget.
 - **Subscription grace period** — `subscriptionStorage.derive(now, gracePeriodMs)` grants continued access after expiry. `SubscriptionGraceBanner` warns user.

@@ -113,7 +113,7 @@ apps/mobile/
 │   ├── useContextualPaywall.ts     # Déclenche le paywall contextuel
 │   ├── useConversion.ts
 │   ├── useConverterExport.ts
-│   ├── useConverterRating.ts
+│   ├── useActionRating.ts
 │   ├── useConverterUIState.ts
 │   ├── useCurrencyInitialization.ts
 │   ├── useCurrencyRates.ts
@@ -489,8 +489,8 @@ rq-cache-v1   # TanStack Query persister
 
 ### Contextual Paywall
 - `useContextualPaywall()` expose `maybeTrigger(trigger: ContextualTrigger): boolean`
-- Évaluation via `contextualPaywallService.evaluate()` : cooldown exponentiel, lifetime cap, min sessions/conversions, une seule par session
-- `session_return` **arme** seulement la session — ne déclenche jamais le paywall à froid au lancement ; le tir se fait au 1er moment de valeur (`power_action`, `after_n_conversions`, `rewarded_ad_dismissed`)
+- Évaluation via `contextualPaywallService.evaluate()` : cooldown exponentiel, lifetime cap, min sessions/actions, une seule par session ; lit `engagementStorage.getActionCount()` pour le seuil d'actions
+- `session_return` **arme** seulement la session — ne déclenche jamais le paywall à froid au lancement ; le tir se fait au 1er moment de valeur (`power_action`, `after_n_actions`, `rewarded_ad_dismissed`)
 - Sources analytics mappées via `contextualSource(trigger)`
 
 ### Promo Coordinator (`services/promo/promoCoordinator.ts`)
@@ -572,7 +572,7 @@ Module Expo natif `modules/widget-watchlist/`. Config plugin fail si `widget.api
 | `useConversion` | 1→1, debounce 300ms |
 | `useCurrencyInitialization` | Charge dernière conversion, expose `setAmount`, `updateFromCurrency`, `swapWithTarget`, sauvegarde debounced 500ms, sync statisticsStore |
 | `useCalculator` | Machine d'état complète (`+ − × ÷ %`), max 50 chars |
-| `useConverterRating` | Orchestre rating + interstitials après conversion |
+| `useActionRating` | Orchestre rating + interstitials après chaque action générique |
 | `useAppRating` | 7 gates, thresholds progressifs (7/5/10/20), max 4 prompts, soft reset 30j |
 | `useFilteredCurrencies` | Filtre / tri / priorité / exclusions |
 | `useCurrencyRates` | Auto-fetch + refresh |

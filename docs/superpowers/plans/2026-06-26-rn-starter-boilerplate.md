@@ -17,7 +17,9 @@
 - Zones grises tranchées : **alertes conservées** (généralisées en rappels programmés locaux), **backup Google Drive retiré**, **export retiré**.
 - **Décision premium (déclencheurs)** : les déclencheurs aujourd'hui basés sur « N conversions » (paywall contextuel, rating, cadence interstitiels) deviennent un **compteur d'actions générique** porté par `engagementStorage` (`incrementAction()` / `getActionCount()`), que l'intégrateur câble sur ses propres événements à valeur. On garde toute la mécanique premium.
 - **Qualité premium** : les écrans construits (home, settings) utilisent le **design system existant** (`components/ui`, tokens de thème, `GradientButton`, animations Moti/Reanimated) — **jamais** de primitives RN brutes stylées à la main.
-- Vérification de référence à la fin du bloc mobile : `rg -in 'currency|conversion|exchange|rate' apps/mobile --glob '!node_modules'` ne renvoie plus de métier dans le code applicatif.
+- Vérification « zéro métier » (sémantique, pas littérale) à la fin du bloc mobile : `rg -in 'currency|conversion|exchange|from_currency|to_currency|\brates?\b' apps/mobile --glob '!node_modules' --glob '!ios/**' --glob '!android/**'` ne renvoie rien dans le code applicatif. **Ne pas** flagger le sous-système de *rating* (app-store review : `markAsRated`, `handleRateApp`, `useAppRating`, `ratingService`) — le mot « rate » y est légitime et ce sous-système est générique et conservé.
+- **Découverte (analytics) :** `services/api/analyticsService.ts` définit `AnalyticsEventMap` (catalogue typé d'événements) contenant des événements métier (`conversion_performed`, `from_currency`, `total_conversions`, `conversion_count`), et `hooks/useAppRating.ts` un `CheckRatingContext.totalSuccessfulConversions`. Ces noms sont généralisés en **Task 11** (après la purge).
+- **Ordre d'exécution du bloc mobile :** 4 (fait) → 5 (purge) → 6 (alertes) → 11 (analytics + rating context) → 7 (layout + home) → 8 (settings + i18n, **checkpoint typecheck complet vert ici**) → 9 (outillage) → 10 (archivage). Les tâches mobiles intermédiaires n'ont que des checkpoints *scoped* (le typecheck mobile complet n'est exigé qu'en Task 8).
 - Commits : messages en **anglais**, format **Conventional Commits**. Terminer chaque message par `Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`.
 - Suppressions via `git rm` pour garder l'index propre.
 
@@ -644,6 +646,62 @@ rm -rf /home/colotcholoman/project/rn-starter-app /home/colotcholoman/project/pr
 ```bash
 cd /home/colotcholoman/project/rn-starter
 git tag v0.1.0 -m "Initial rn-starter boilerplate"
+```
+
+---
+
+### Task 11: Généraliser le système analytics et le contexte de rating
+
+**À exécuter APRÈS la purge (Task 5) et les alertes (Task 6)** : la purge supprime la majorité des émetteurs d'événements métier ; ne restent que les usages génériques. Checkpoint *scoped* uniquement (le typecheck complet vient en Task 8).
+
+**Contexte précis :** `services/api/analyticsService.ts` définit `AnalyticsEventMap`, un catalogue typé d'événements Firebase Analytics (`track<K extends keyof AnalyticsEventMap>`). Il contient des événements métier — `conversion_performed` (avec `from_currency` / `to_currency` / `total_conversions`), `conversion_count`, etc. — que des fichiers génériques conservés référencent encore (`hooks/useActionRating.ts`, `hooks/useAppRating.ts` via `CheckRatingContext.totalSuccessfulConversions`, éventuellement `components/settings/LegalSupportSection.tsx`).
+
+**Files:**
+- Modify: `apps/mobile/services/api/analyticsService.ts` (`AnalyticsEventMap`)
+- Modify: `apps/mobile/hooks/useActionRating.ts`
+- Modify: `apps/mobile/hooks/useAppRating.ts` (`CheckRatingContext`)
+- Modify: tout consommateur générique encore présent (repéré au Step 1)
+
+**Interfaces:**
+- Produces: `AnalyticsEventMap` générique — uniquement les événements réellement émis après purge (premium/paywall/ads/rating/onboarding/settings) plus un `action_performed: { total_actions: number }`. `CheckRatingContext` sans champ lié à la conversion (`totalSuccessfulConversions` → `totalActions`).
+
+- [ ] **Step 1: Inventaire post-purge des événements émis**
+
+Run:
+```bash
+cd /home/colotcholoman/project/rn-starter
+rg -n 'analyticsService\.track\(|\btrack<|track\(' apps/mobile --glob '!node_modules'
+rg -n 'CheckRatingContext|totalSuccessfulConversions' apps/mobile
+```
+Lister les clés d'événements réellement référencées (YAGNI : ne garder que celles-là).
+
+- [ ] **Step 2: Réécrire `AnalyticsEventMap`**
+
+Garder/renommer les événements **génériques** émis ; remplacer les événements métier par `action_performed: { total_actions: number }` (et tout autre event générique encore référencé). Retirer `from_currency`/`to_currency`/`total_conversions`/`conversion_count`. Aucun event non émis ne subsiste.
+
+- [ ] **Step 3: Mettre à jour `useActionRating.ts`**
+
+`analyticsService.track('action_performed', { total_actions: newTotal })` (remplace `'conversion_performed'` / `total_conversions`).
+
+- [ ] **Step 4: Généraliser `CheckRatingContext` (`useAppRating.ts`)**
+
+`totalSuccessfulConversions` → `totalActions` ; mettre à jour la logique et les appelants restants (ex. `useActionRating`).
+
+- [ ] **Step 5: Checkpoint scoped**
+
+Run: `pnpm --filter mobile typecheck 2>&1 | rg -i 'analyticsService|useActionRating|useAppRating|LegalSupport'`
+Expected: aucune erreur sur ces fichiers. (Des erreurs ailleurs restent possibles tant que `_layout`/`settings` ne sont pas réparés — normal.)
+
+- [ ] **Step 6: Vérif sémantique**
+
+Run: `rg -in 'currency|conversion|exchange|from_currency|to_currency|total_conversions|conversion_count' apps/mobile/services/api/analyticsService.ts apps/mobile/hooks`
+Expected: aucun résultat. (Le sous-système *rating* « rate app » reste autorisé.)
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add -A
+git commit -m "refactor: generalize analytics event map and rating context"
 ```
 
 ---

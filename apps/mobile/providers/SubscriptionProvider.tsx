@@ -1,6 +1,4 @@
 import { PaywallModal } from '@/components/paywall/PaywallModal'
-import { HowToAddSheet } from '@/components/widget/HowToAddSheet'
-import { PostPurchaseWidgetCard } from '@/components/widget/PostPurchaseWidgetCard'
 import {
   ENTITLEMENT_PREMIUM,
   PlanType,
@@ -15,17 +13,13 @@ import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { purchaseService } from '@/services/api/purchaseService'
-import { conversionStorage } from '@/services/storage/domains/conversion'
+import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
-import { widgetStorage } from '@/services/storage/domains/widget'
-import { widgetService } from '@/services/widget/widgetService'
-import { useOnboardingStore } from '@/stores/onboardingStore'
 import Constants from 'expo-constants'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppState, AppStateStatus, Platform } from 'react-native'
+import { AppState, AppStateStatus } from 'react-native'
 import { CustomerInfo, PurchasesError, PurchasesPackage } from 'react-native-purchases'
-import { WidgetWatchlist } from 'widget-watchlist'
 
 export { SubscriptionContext }
 export type { SubscriptionContextValue }
@@ -78,10 +72,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [annualPackage, setAnnualPackage] = useState<PurchasesPackage | null>(null)
   const [monthlyPackage, setMonthlyPackage] = useState<PurchasesPackage | null>(null)
   const [paywallVisible, setPaywallVisible] = useState(false)
-  const [showPostPurchaseCard, setShowPostPurchaseCard] = useState(false)
-  const [howToSheetVisible, setHowToSheetVisible] = useState(false)
-
-  const isOnboardingCompleted = useOnboardingStore((s) => s.isCompleted)
 
   const appState = useRef(AppState.currentState)
   const paywallSourceRef = useRef<string>('')
@@ -152,115 +142,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     return () => sub.remove()
   }, [syncPremiumState])
 
-  useEffect(() => {
-    const drainNativeAnalytics = async () => {
-      let events: Awaited<ReturnType<typeof WidgetWatchlist.drainAnalytics>> = []
-      try {
-        events = await WidgetWatchlist.drainAnalytics(false)
-      } catch (err) {
-        void crashlyticsService.recordError(err, { source: 'widget_drain_analytics' })
-        return
-      }
-      const now = Date.now()
-      for (const e of events) {
-        try {
-          const at = typeof e.params.at === 'number' ? e.params.at : now
-          const delayMs = Math.max(0, now - at)
-          if (e.event === 'widget_refresh_success') {
-            analyticsService.track('widget_refresh_success', { delay_ms: delayMs })
-          } else if (e.event === 'widget_refresh_fail') {
-            const raw = e.params.error_type
-            const errorType:
-              | 'network'
-              | 'http_4xx'
-              | 'http_429'
-              | 'http_5xx'
-              | 'parse'
-              | 'partial'
-              | 'config' =
-              raw === 'network' ||
-              raw === 'http_4xx' ||
-              raw === 'http_429' ||
-              raw === 'http_5xx' ||
-              raw === 'parse' ||
-              raw === 'partial' ||
-              raw === 'config'
-                ? raw
-                : 'network'
-            analyticsService.track('widget_refresh_fail', {
-              error_type: errorType,
-              delay_ms: delayMs,
-            })
-          }
-        } catch (err) {
-          void crashlyticsService.recordError(err, { source: 'widget_drain_event' })
-        }
-      }
-    }
-
-    const checkWidgetAddedState = async (state: AppStateStatus | string) => {
-      if (state !== 'active') return
-      void drainNativeAnalytics()
-      let added: boolean
-      try {
-        added = await WidgetWatchlist.isWidgetAdded()
-      } catch (err) {
-        if (Math.random() < 0.01) {
-          void crashlyticsService.recordError(err, { source: 'widget_is_added_query' })
-        }
-        return
-      }
-      // The widget only learns about the current Pro state through an explicit
-      // push. Adding a widget (or tapping a stale-locked one) without an
-      // intervening isPremium transition would otherwise leave it rendering
-      // the locked state forever. Re-push on every foreground while a widget
-      // exists so the native lock state always tracks the live subscription.
-      if (added) {
-        void widgetService.syncFromStorage()
-      }
-      const last = widgetStorage.getLastKnownAddedState()
-      if (added === last) return
-      widgetStorage.setLastKnownAddedState(added)
-      if (added) {
-        const sessionCtx = engagementService.getSessionContext()
-        const { paywallCount } = await engagementService.getPaywallContext()
-        analyticsService.track('widget_added', {
-          is_pro: isPremium,
-          days_since_install: sessionCtx?.daysSinceInstall ?? 0,
-          paywall_count: paywallCount,
-        })
-      } else {
-        analyticsService.track('widget_removed', { is_pro: isPremium })
-      }
-    }
-    const sub = AppState.addEventListener('change', checkWidgetAddedState)
-    void checkWidgetAddedState(AppState.currentState)
-    return () => sub.remove()
-  }, [isPremium])
-
-  useEffect(() => {
-    if (!isInitialized) return
-    void widgetService.syncToNative({
-      isPro: isPremium,
-      expiresAtMs: subscriptionStorage.getExpiresAt(),
-      gracePeriodMs: SUBSCRIPTION_GRACE_PERIOD_MS,
-    })
-  }, [isInitialized, isPremium])
-
-  const presentPostPurchaseCard = useCallback(() => {
-    setShowPostPurchaseCard(true)
-    widgetStorage.setPostPurchaseCardShown()
-    analyticsService.track('widget_post_purchase_card_shown')
-  }, [])
-
-  useEffect(() => {
-    if (!isOnboardingCompleted) return
-    if (widgetStorage.hasPostPurchaseCardBeenShown()) return
-    if (!widgetStorage.isPostPurchaseCardPending()) return
-    widgetStorage.clearPostPurchaseCardPending()
-    presentPostPurchaseCard()
-  }, [isOnboardingCompleted, presentPostPurchaseCard])
-
   const handlePurchase = useCallback(
     async ({ pkg, plan }: { pkg: PurchasesPackage | null; plan: PlanType }) => {
       if (!pkg) return
@@ -274,7 +155,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
         const sessionCtx = engagementService.getSessionContext()
         const { paywallCount } = await engagementService.getPaywallContext()
-        const totalConversions = conversionStorage.getTotalSuccessful()
+        const totalConversions = engagementStorage.getActionCount()
         analyticsService.track('purchase_completed', {
           plan,
           revenue_usd: pkg.product.price,
@@ -286,14 +167,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         })
 
         showToast({ message: t('paywall.welcomePro'), type: 'success' })
-
-        if (Platform.OS === 'android' && !widgetStorage.hasPostPurchaseCardBeenShown()) {
-          if (useOnboardingStore.getState().isCompleted) {
-            presentPostPurchaseCard()
-          } else {
-            widgetStorage.setPostPurchaseCardPending()
-          }
-        }
       } catch (e) {
         if (purchaseService.isUserCancelledError(e)) {
           analyticsService.track('purchase_cancelled', { plan })
@@ -308,7 +181,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         setIsLoadingPurchase(false)
       }
     },
-    [showToast, t, syncPremiumState, annualPackage, presentPostPurchaseCard]
+    [showToast, t, syncPremiumState, annualPackage]
   )
 
   const purchaseMonthly = useCallback(
@@ -358,7 +231,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       paywallSourceRef.current = source
       const paywallCount = await engagementService.incrementPaywallCount()
       const sessionCtx = engagementService.getSessionContext()
-      const totalConversions = conversionStorage.getTotalSuccessful()
+      const totalConversions = engagementStorage.getActionCount()
       analyticsService.track('paywall_shown', {
         source,
         session_count: sessionCtx?.sessionCount ?? 0,
@@ -418,22 +291,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         source={paywallSourceRef.current}
         onClose={closePaywall}
       />
-      <PostPurchaseWidgetCard
-        visible={showPostPurchaseCard}
-        onCtaTap={() => {
-          analyticsService.track('widget_post_purchase_card_cta_tap')
-          analyticsService.track('widget_instructions_sheet_shown', {
-            entry_point: 'post_purchase_card',
-          })
-          setShowPostPurchaseCard(false)
-          setHowToSheetVisible(true)
-        }}
-        onDismiss={() => {
-          setShowPostPurchaseCard(false)
-          analyticsService.track('widget_post_purchase_card_dismissed')
-        }}
-      />
-      <HowToAddSheet visible={howToSheetVisible} onClose={() => setHowToSheetVisible(false)} />
     </SubscriptionContext.Provider>
   )
 }

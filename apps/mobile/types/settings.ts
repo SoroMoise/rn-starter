@@ -35,8 +35,6 @@ export interface UserSettings {
   notificationQuietHoursEnd: string
   notificationSound: boolean
   notificationVibration: boolean
-  defaultCurrencyFrom: string
-  defaultCurrencyTo: string
 }
 
 export interface FormatterOptions {

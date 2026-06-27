@@ -1,5 +1,5 @@
 import { Period } from '@/types'
-import { getDeviceCurrencies, getDeviceLanguage } from '@/utils/i18n'
+import { getDeviceLanguage } from '@/utils/i18n'
 import Constants from 'expo-constants'
 
 const appConfig = Constants.expoConfig?.extra
@@ -45,8 +45,6 @@ export const BACKEND_CONFIG = {
   RETRY_DELAY: 1000,
 }
 
-const deviceCurrencies = getDeviceCurrencies()
-
 export const DEFAULT_SETTINGS = {
   theme: 'auto' as const,
   decimals: 3,
@@ -58,8 +56,6 @@ export const DEFAULT_SETTINGS = {
   notificationQuietHoursEnd: '08:00',
   notificationSound: true,
   notificationVibration: true,
-  defaultCurrencyFrom: deviceCurrencies.from,
-  defaultCurrencyTo: deviceCurrencies.to,
 }
 
 export const UI_CONFIG = {

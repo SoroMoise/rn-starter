@@ -1,8 +1,5 @@
-import { CURRENCIES } from '@/constants/currencies'
 import { Language } from '@/types'
 import { getLocales } from 'expo-localization'
-
-const SUPPORTED_CURRENCY_CODES = new Set(CURRENCIES.map((c) => c.code))
 
 const SUPPORTED_LANGUAGES: Language[] = [
   'en',
@@ -50,14 +47,4 @@ export const getDeviceLanguage = (): Language => {
   }
 
   return 'en'
-}
-
-export const getDeviceCurrencies = (): { from: string; to: string } => {
-  const locale = getLocales()[0]
-
-  const raw = locale?.currencyCode ?? null
-  const from = raw && SUPPORTED_CURRENCY_CODES.has(raw) ? raw : 'USD'
-  const to = from === 'EUR' ? 'USD' : from === 'USD' ? 'EUR' : 'USD'
-
-  return { from, to }
 }

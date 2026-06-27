@@ -1,13 +1,4 @@
-import { PERIODS, UI_CONFIG } from '@constants/config'
-import type { Period } from '@/types'
-
-export function isValidCurrencyCode(code: string): boolean {
-  return /^[A-Z]{3}$/.test(code)
-}
-
-export function isValidPeriod(days: number): days is Period {
-  return (PERIODS as readonly number[]).includes(days)
-}
+import { UI_CONFIG } from '@constants/config'
 
 export function isValidAmount(amount: number): boolean {
   return (

@@ -37,8 +37,6 @@ export interface UserSettings {
   notificationVibration: boolean
 }
 
-export type Period = 7 | 30 | 90 | 270 | 365
-
 export interface FormatterOptions {
   decimals: number
   useSeparator: boolean

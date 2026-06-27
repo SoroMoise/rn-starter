@@ -83,7 +83,7 @@ export default () => {
           {
             icon: './assets/notification-icon.png',
             color: '#f59e0b',
-            defaultChannel: 'rate_alerts',
+            defaultChannel: 'reminders',
             mode: 'production',
             enableBackgroundRemoteNotifications: true,
           },
@@ -92,7 +92,6 @@ export default () => {
 
       extra: {
         rtlRestartBannerEnabled: process.env.RTL_RESTART_BANNER_ENABLED !== 'false',
-        apiKey: process.env.EXCHANGE_RATE_API_KEY,
         backendUrl: process.env.BACKEND_URL,
         backendApiKey: process.env.BACKEND_API_KEY,
         websiteUrl: process.env.APP_WEBSITE_URL,

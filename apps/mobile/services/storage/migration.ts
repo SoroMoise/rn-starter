@@ -9,8 +9,7 @@ import { mmkv } from './mmkv'
  *  1. RAW_COPY_KEYS — scalars (timestamps, counters, flags). Byte-copy unchanged.
  *  2. Zustand-persisted stores — old code wrote raw values directly; the new stores use
  *     Zustand's persist envelope `{state, version}`. Format transformation is required,
- *     otherwise Zustand discards the value as malformed and falls back to defaults
- *     (the bug: settings/onboarding/quick conversions all reset on first launch after update).
+ *     otherwise Zustand discards the value as malformed and falls back to defaults.
  *
  * Defensive: never overwrite MMKV keys that already exist. Protects users who installed an
  * intermediate build that wrote to MMKV directly without setting MIGRATION_DONE.
@@ -26,10 +25,6 @@ const RAW_COPY_KEYS: readonly string[] = [
   KEYS.INSTALL_DATE,
   KEYS.AD_EXECUTION_COUNT,
   KEYS.AD_LAST_SHOWN,
-  KEYS.LAST_CONVERSION,
-  KEYS.TOTAL_SUCCESSFUL_CONVERSIONS,
-  KEYS.OFFLINE_RATES,
-  KEYS.INITIAL_DATA_LOADED,
   KEYS.RATING_PROMPT_COUNT,
   KEYS.RATING_LAST_PROMPT_EXECUTION,
   KEYS.RATING_FIRST_USAGE_DATE,
@@ -38,10 +33,6 @@ const RAW_COPY_KEYS: readonly string[] = [
   KEYS.RATING_LAST_PROMPT_DATE,
   KEYS.SESSION_COUNT,
   KEYS.PAYWALL_SHOWN_COUNT,
-  KEYS.BACKUP_LAST_SYNC,
-  KEYS.BACKUP_USER_EMAIL,
-  KEYS.BACKUP_LAST_OFFERED,
-  KEYS.EXPORT_DOWNLOADS_URI,
 ]
 
 const ZUSTAND_PERSIST_VERSION = 0
@@ -78,15 +69,8 @@ export async function runStorageMigration(): Promise<void> {
 
   const onboardingConsumed = await migrateOnboardingStore()
   const settingsConsumed = await migrateSettingsStore()
-  const quickConversionsConsumed = await migrateQuickConversionsStore()
-  const exportPreferencesConsumed = await migrateExportPreferencesStore()
 
-  consumedAsyncStorageKeys.push(
-    ...onboardingConsumed,
-    ...settingsConsumed,
-    ...quickConversionsConsumed,
-    ...exportPreferencesConsumed
-  )
+  consumedAsyncStorageKeys.push(...onboardingConsumed, ...settingsConsumed)
 
   if (consumedAsyncStorageKeys.length > 0) {
     try {
@@ -154,64 +138,4 @@ async function migrateSettingsStore(): Promise<string[]> {
   }
   mmkv.set(KEYS.USER_SETTINGS, JSON.stringify(envelope))
   return [KEYS.USER_SETTINGS]
-}
-
-async function migrateQuickConversionsStore(): Promise<string[]> {
-  if (mmkv.contains(KEYS.QUICK_CONVERSIONS)) return []
-
-  const raw = await AsyncStorage.getItem(KEYS.QUICK_CONVERSIONS).catch(() => null)
-  if (raw === null) return []
-
-  const parsed = tryParseJSON(raw)
-  if (parsed === null) return [KEYS.QUICK_CONVERSIONS]
-
-  if (isAlreadyZustandEnvelope(parsed)) {
-    mmkv.set(KEYS.QUICK_CONVERSIONS, raw)
-    return [KEYS.QUICK_CONVERSIONS]
-  }
-
-  if (!Array.isArray(parsed)) return [KEYS.QUICK_CONVERSIONS]
-
-  const envelope = {
-    state: { quickCurrencies: parsed },
-    version: ZUSTAND_PERSIST_VERSION,
-  }
-  mmkv.set(KEYS.QUICK_CONVERSIONS, JSON.stringify(envelope))
-  return [KEYS.QUICK_CONVERSIONS]
-}
-
-async function migrateExportPreferencesStore(): Promise<string[]> {
-  if (mmkv.contains(KEYS.EXPORT_PREFERENCES)) return []
-
-  const [prefsRaw, lastUsedRaw] = await Promise.all([
-    AsyncStorage.getItem(KEYS.EXPORT_PREFERENCES).catch(() => null),
-    AsyncStorage.getItem(KEYS.EXPORT_LAST_USED).catch(() => null),
-  ])
-
-  if (prefsRaw === null && lastUsedRaw === null) return []
-
-  const parsedPrefs = tryParseJSON(prefsRaw)
-  if (isAlreadyZustandEnvelope(parsedPrefs)) {
-    mmkv.set(KEYS.EXPORT_PREFERENCES, prefsRaw as string)
-    const consumed: string[] = [KEYS.EXPORT_PREFERENCES]
-    if (lastUsedRaw !== null) consumed.push(KEYS.EXPORT_LAST_USED)
-    return consumed
-  }
-
-  const parsedLastUsed = tryParseJSON(lastUsedRaw)
-  const defaults = { conversion: null, historical: null, allRates: null }
-
-  const envelope = {
-    state: {
-      preferences: isPlainObject(parsedPrefs) ? { ...defaults, ...parsedPrefs } : defaults,
-      lastUsed: isPlainObject(parsedLastUsed) ? { ...defaults, ...parsedLastUsed } : defaults,
-    },
-    version: ZUSTAND_PERSIST_VERSION,
-  }
-  mmkv.set(KEYS.EXPORT_PREFERENCES, JSON.stringify(envelope))
-
-  const consumed: string[] = []
-  if (prefsRaw !== null) consumed.push(KEYS.EXPORT_PREFERENCES)
-  if (lastUsedRaw !== null) consumed.push(KEYS.EXPORT_LAST_USED)
-  return consumed
 }

@@ -10,7 +10,7 @@ export function TelemetryEffects() {
   const theme = useSettingsStore((s) => s.settings.theme)
 
   useEffect(() => {
-    analyticsService.logScreenView(pathname === '/' ? '/conversions' : pathname)
+    analyticsService.logScreenView(pathname === '/' ? '/home' : pathname)
   }, [pathname])
 
   useEffect(() => {

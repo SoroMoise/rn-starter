@@ -5,9 +5,6 @@ import { Platform } from 'react-native'
 
 export const ALERTS_CHANNEL_ID = 'reminders'
 
-/** @deprecated Use ALERTS_CHANNEL_ID */
-export const RATE_ALERTS_CHANNEL_ID = ALERTS_CHANNEL_ID
-
 const VIBRATION_PATTERN = [0, 250, 250, 250]
 
 interface ChannelPrefs {

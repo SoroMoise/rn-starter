@@ -155,14 +155,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
         const sessionCtx = engagementService.getSessionContext()
         const { paywallCount } = await engagementService.getPaywallContext()
-        const totalConversions = engagementStorage.getActionCount()
+        const totalActions = engagementStorage.getActionCount()
         analyticsService.track('purchase_completed', {
           plan,
           revenue_usd: pkg.product.price,
           session_count: sessionCtx?.sessionCount ?? 0,
           days_since_install: sessionCtx?.daysSinceInstall ?? 0,
           paywall_count: paywallCount,
-          total_actions: totalConversions,
+          total_actions: totalActions,
           trial_started: plan === 'annual' && !!annualPackage?.product.introPrice,
         })
 
@@ -231,13 +231,13 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       paywallSourceRef.current = source
       const paywallCount = await engagementService.incrementPaywallCount()
       const sessionCtx = engagementService.getSessionContext()
-      const totalConversions = engagementStorage.getActionCount()
+      const totalActions = engagementStorage.getActionCount()
       analyticsService.track('paywall_shown', {
         source,
         session_count: sessionCtx?.sessionCount ?? 0,
         paywall_count: paywallCount,
         has_trial_offer: !!annualPackage?.product.introPrice,
-        total_actions: totalConversions,
+        total_actions: totalActions,
       })
       promoCoordinator.setPaywallVisible(true)
       setPaywallVisible(true)

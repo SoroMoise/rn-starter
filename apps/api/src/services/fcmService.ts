@@ -76,60 +76,26 @@ export async function getAccessToken({
   return data.access_token
 }
 
-export type FCMTriggerContext =
-  | { type: 'threshold'; direction: 'above' | 'below'; targetRate: number }
-  | { type: 'variation'; variationPercent: number; baselineRate: number }
-
 export interface FCMPayloadParams {
   token: string
-  fromCurrency: string
-  toCurrency: string
-  currentRate: number
-  alertId: string
-  triggerContext: FCMTriggerContext
+  title: string
+  body: string
+  /** Optional key/value data delivered alongside the notification. */
+  data?: Record<string, string>
 }
 
 export function buildFCMPayload(params: FCMPayloadParams) {
-  const { token, fromCurrency, toCurrency, currentRate, alertId, triggerContext } = params
-  const currentRateStr = currentRate.toFixed(4)
-  const triggeredAt = new Date().toISOString()
-
-  const baseData = {
-    type: 'rate_alert',
-    alertId,
-    fromCurrency,
-    toCurrency,
-    currentRate: currentRateStr,
-    triggeredAt,
-  }
-
-  const data: Record<string, string> =
-    triggerContext.type === 'threshold'
-      ? {
-          ...baseData,
-          triggerType: 'threshold',
-          direction: triggerContext.direction,
-          targetRate: String(triggerContext.targetRate),
-        }
-      : {
-          ...baseData,
-          triggerType: 'variation',
-          variationPercent: String(triggerContext.variationPercent),
-          baselineRate: String(triggerContext.baselineRate),
-        }
+  const { token, title, body, data } = params
 
   return {
     message: {
       token,
-      data,
+      notification: { title, body },
+      ...(data ? { data } : {}),
       android: { priority: 'high' as const },
       apns: {
         headers: {
-          'apns-priority': '5',
-          'apns-push-type': 'background',
-        },
-        payload: {
-          aps: { 'content-available': 1 },
+          'apns-priority': '10',
         },
       },
     },

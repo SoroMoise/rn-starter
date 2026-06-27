@@ -23,7 +23,7 @@ class AdServiceClass {
     this.initializeInterstitial()
   }
 
-  // Call at app boot to start preloading before the first conversion.
+  // Call at app boot to start preloading before the first ad is shown.
   initialize(): void {
     this.ensureInitialized()
   }

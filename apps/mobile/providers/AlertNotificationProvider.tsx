@@ -33,11 +33,7 @@ export function AlertNotificationProvider({ children }: { children: React.ReactN
 
   const tapAlertDeepLink = useCallback(
     (notification: AlertNotification) => {
-      setPendingAlert({
-        alertId: notification.alertId,
-        fromCurrency: notification.fromCurrency,
-        toCurrency: notification.toCurrency,
-      })
+      setPendingAlert({ alertId: notification.alertId })
       if (pathnameRef.current !== '/') {
         router.navigate('/')
       }

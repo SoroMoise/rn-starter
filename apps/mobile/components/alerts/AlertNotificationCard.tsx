@@ -1,14 +1,11 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ALERT_THEME } from '@/constants/alertTheme'
 import type { AlertNotification } from '@/providers/AlertNotificationProvider'
-import { useSettingsStore } from '@/stores/settingsStore'
-import { formatAlertRate, formatRateLocalized } from '@/utils/formatters'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import React, { useCallback, useEffect, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -32,10 +29,8 @@ interface Props {
 }
 
 export function AlertNotificationCard({ notification, onDismiss, onPress }: Props) {
-  const { t, i18n } = useTranslation()
   const insets = useSafeAreaInsets()
   const isDark = useThemedColor()
-  const decimals = useSettingsStore((s) => s.settings.decimals)
 
   const translateY = useSharedValue(HIDDEN_OFFSET)
   const opacity = useSharedValue(0)
@@ -96,31 +91,6 @@ export function AlertNotificationCard({ notification, onDismiss, onPress }: Prop
     onPress()
   }
 
-  const pair = `${notification.fromCurrency} → ${notification.toCurrency}`
-  let directionLabel: string
-  if (notification.triggerType === 'threshold') {
-    const formattedTarget = formatAlertRate({
-      rate: notification.targetRate,
-      decimals,
-      locale: i18n.language,
-    })
-    directionLabel =
-      notification.direction === 'above'
-        ? t('alerts.cardDescAbove', { rate: formattedTarget })
-        : t('alerts.cardDescBelow', { rate: formattedTarget })
-  } else {
-    const delta =
-      ((notification.currentRate - notification.baselineRate) / notification.baselineRate) * 100
-    directionLabel = t('alerts.cardDescVariation', {
-      delta: formatRateLocalized({ rate: delta, decimals: 2, locale: i18n.language }),
-      baseline: formatAlertRate({
-        rate: notification.baselineRate,
-        decimals,
-        locale: i18n.language,
-      }),
-    })
-  }
-
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View
@@ -137,7 +107,7 @@ export function AlertNotificationCard({ notification, onDismiss, onPress }: Prop
         <Pressable
           onPress={handlePress}
           accessibilityRole="button"
-          accessibilityLabel={`${pair}, ${directionLabel}`}
+          accessibilityLabel={`${notification.title}: ${notification.body}`}
           className={`flex-row items-center gap-3 rounded-2xl px-4 py-3 ${
             isDark ? 'border border-gray-700 bg-gray-900/95' : 'border border-gray-200 bg-white/95'
           }`}
@@ -152,25 +122,14 @@ export function AlertNotificationCard({ notification, onDismiss, onPress }: Prop
             <Ionicons name="notifications" size={22} color={ALERT_THEME.primary} />
           </View>
           <View className="flex-1">
-            <ThemedText variant="label" weight="bold">
-              {pair}
+            <ThemedText variant="label" weight="bold" numberOfLines={1}>
+              {notification.title}
             </ThemedText>
-            <ThemedText variant="caption" color="muted" numberOfLines={1}>
-              {directionLabel}
-            </ThemedText>
-            <ThemedText
-              variant="caption"
-              weight="semibold"
-              color="inherit"
-              className="mt-0.5 text-amber-600 dark:text-amber-400">
-              {t('alerts.cardCurrent', {
-                rate: formatAlertRate({
-                  rate: notification.currentRate,
-                  decimals,
-                  locale: i18n.language,
-                }),
-              })}
-            </ThemedText>
+            {notification.body ? (
+              <ThemedText variant="caption" color="muted" numberOfLines={2}>
+                {notification.body}
+              </ThemedText>
+            ) : null}
           </View>
           <View className="h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
             <DirectionalIcon

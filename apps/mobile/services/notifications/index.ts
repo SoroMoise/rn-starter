@@ -1,15 +1,10 @@
-// The FCM background message handler is registered at the JS entry point (index.js)
-// so its headless task exists in every launch context, including headless launches
-// where route modules never evaluate.
+// The background handler stub is imported at the JS entry point (index.js)
+// so any registration side-effects run in every launch context.
 export {
-  ensureNotificationChannels,
+  ALERTS_CHANNEL_ID,
   RATE_ALERTS_CHANNEL_ID,
-  recreateRateAlertsChannel,
+  ensureNotificationChannels,
+  recreateAlertsChannel,
 } from './channels'
-export {
-  parseAlertPayload,
-  type AlertNotificationData,
-  type ThresholdAlertNotificationData,
-  type VariationAlertNotificationData,
-} from './payload'
+export { parseAlertPayload, type AlertNotificationData } from './payload'
 export { notificationService } from './setup'

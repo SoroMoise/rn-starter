@@ -1,15 +1,14 @@
+import { AlertListItem } from '@/components/alerts/AlertListItem'
 import { AlertPreviewLocked } from '@/components/alerts/AlertPreviewLocked'
 import { AlertsOnboardingCard } from '@/components/alerts/AlertsOnboardingCard'
 import { HubScrollView } from '@/components/alerts/HubScrollView'
-import { PairGroupBlock } from '@/components/alerts/PairGroupBlock'
 import { TriggeredAlertItem } from '@/components/alerts/TriggeredAlertItem'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { SlidingSelector } from '@/components/ui/SlidingSelector'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ALERT_THEME } from '@/constants/alertTheme'
 import { useAlertsOnboarding } from '@/hooks/useAlertsOnboarding'
-import type { PairGroup } from '@/hooks/useAlertsHubData'
-import type { RateAlert } from '@/types'
+import type { ScheduledAlert } from '@/stores/alertsStore'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -21,17 +20,15 @@ export type Tab = 'active' | 'history'
 type Props = {
   isPreview: boolean
   isLoading: boolean
-  alerts: RateAlert[]
-  activeAlerts: RateAlert[]
-  triggeredAlerts: RateAlert[]
-  activeGroups: PairGroup[]
+  alerts: ScheduledAlert[]
+  activeAlerts: ScheduledAlert[]
+  triggeredAlerts: ScheduledAlert[]
   tab: Tab
   onTabChange: (tab: Tab) => void
   onUnlockPress?: () => void
   onCreatePress: () => void
-  onEditAlert: (alert: RateAlert) => void
+  onEditAlert: (alert: ScheduledAlert) => void
   onDeleteAlert: (alertId: string) => void
-  onRecreateAlert: (alert: RateAlert) => void
 }
 
 export function AlertsHub({
@@ -40,14 +37,12 @@ export function AlertsHub({
   alerts,
   activeAlerts,
   triggeredAlerts,
-  activeGroups,
   tab,
   onTabChange,
   onUnlockPress,
   onCreatePress,
   onEditAlert,
   onDeleteAlert,
-  onRecreateAlert,
 }: Props) {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
@@ -125,7 +120,7 @@ export function AlertsHub({
         </View>
 
         {tab === 'active' ? (
-          activeGroups.length === 0 ? (
+          activeAlerts.length === 0 ? (
             <View className="items-center py-10">
               <Ionicons name="notifications-outline" size={36} color="#9ca3af" />
               <ThemedText color="muted" align="center" className="mt-3">
@@ -133,12 +128,12 @@ export function AlertsHub({
               </ThemedText>
             </View>
           ) : (
-            activeGroups.map((group) => (
-              <PairGroupBlock
-                key={`${group.from}-${group.to}`}
-                group={group}
-                onDelete={onDeleteAlert}
-                onEdit={onEditAlert}
+            activeAlerts.map((alert) => (
+              <AlertListItem
+                key={alert.id}
+                alert={alert}
+                onDelete={() => onDeleteAlert(alert.id)}
+                onEdit={() => onEditAlert(alert)}
               />
             ))
           )
@@ -154,7 +149,6 @@ export function AlertsHub({
             <TriggeredAlertItem
               key={alert.id}
               alert={alert}
-              onRecreate={() => onRecreateAlert(alert)}
               onDelete={() => onDeleteAlert(alert.id)}
             />
           ))

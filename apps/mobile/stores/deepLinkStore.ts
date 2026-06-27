@@ -2,8 +2,6 @@ import { create } from 'zustand'
 
 export interface PendingAlertDeepLink {
   alertId: string
-  fromCurrency: string
-  toCurrency: string
 }
 
 interface DeepLinkState {

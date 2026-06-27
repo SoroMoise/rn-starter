@@ -1,179 +1,55 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ALERT_THEME } from '@/constants/alertTheme'
-import { getCurrencyByCode } from '@/constants/currencies'
-import { useCurrencyStore } from '@/stores/currencyStore'
-import { useSettingsStore } from '@/stores/settingsStore'
-import type { RateAlert } from '@/types'
-import { isThresholdAlert, isVariationAlert } from '@/types'
-import { calculateCrossRate } from '@/utils/crossRate'
-import { formatAlertRate, formatRateLocalized } from '@/utils/formatters'
+import type { ScheduledAlert } from '@/stores/alertsStore'
+import { useAlertsStore } from '@/stores/alertsStore'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useMemo } from 'react'
+import { format } from 'date-fns'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View } from 'react-native'
+import { Pressable, Switch, View } from 'react-native'
 
 type Props = {
-  alert: RateAlert
+  alert: ScheduledAlert
   onDelete: () => void
   onEdit?: () => void
-  hideStatusBadge?: boolean
 }
 
-type ProximityTier = 'imminent' | 'close' | 'near' | 'far'
+export function AlertListItem({ alert, onDelete, onEdit }: Props) {
+  const { t } = useTranslation()
+  const toggle = useAlertsStore((s) => s.toggle)
 
-interface ProximityInfo {
-  tier: ProximityTier
-  percent: number
-}
-
-function classifyProximity(distancePercent: number): ProximityInfo {
-  if (distancePercent <= 0) return { tier: 'imminent', percent: 0 }
-  if (distancePercent < 1) return { tier: 'close', percent: distancePercent }
-  if (distancePercent < 3) return { tier: 'near', percent: distancePercent }
-  return { tier: 'far', percent: distancePercent }
-}
-
-function computeProximity(alert: RateAlert, currentRate: number): ProximityInfo | null {
-  if (isThresholdAlert(alert)) {
-    const remaining =
-      alert.direction === 'above' ? alert.targetRate - currentRate : currentRate - alert.targetRate
-    if (remaining <= 0) return { tier: 'imminent', percent: 0 }
-    return classifyProximity((remaining / currentRate) * 100)
-  }
-  if (isVariationAlert(alert)) {
-    if (alert.baselineRate <= 0) return null
-    const upper = alert.baselineRate * (1 + alert.variationPercent / 100)
-    const lower = alert.baselineRate * (1 - alert.variationPercent / 100)
-    if (currentRate >= upper || currentRate <= lower) return { tier: 'imminent', percent: 0 }
-    const distUp = ((upper - currentRate) / currentRate) * 100
-    const distDown = ((currentRate - lower) / currentRate) * 100
-    return classifyProximity(Math.min(distUp, distDown))
-  }
-  return null
-}
-
-const TIER_STYLES: Record<ProximityTier, { dot: string; text: string; bg: string }> = {
-  imminent: {
-    dot: 'bg-emerald-500',
-    text: 'text-emerald-700 dark:text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-  },
-  close: {
-    dot: 'bg-emerald-500',
-    text: 'text-emerald-700 dark:text-emerald-400',
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-  },
-  near: {
-    dot: 'bg-amber-500',
-    text: 'text-amber-700 dark:text-amber-400',
-    bg: 'bg-amber-50 dark:bg-amber-900/20',
-  },
-  far: {
-    dot: 'bg-gray-400',
-    text: 'text-gray-600 dark:text-gray-400',
-    bg: 'bg-gray-100 dark:bg-gray-700/50',
-  },
-}
-
-export function AlertListItem({ alert, onDelete, onEdit, hideStatusBadge = false }: Props) {
-  const { t, i18n } = useTranslation()
-  const from = getCurrencyByCode(alert.fromCurrency)
-  const to = getCurrencyByCode(alert.toCurrency)
-  const rates = useCurrencyStore((s) => s.rates)
-  const decimals = useSettingsStore((s) => s.settings.decimals)
-
-  // Editing targets active, already-synced alerts: triggered ones use "recreate",
-  // and a temp id has no server record to PATCH yet.
-  const canEdit = onEdit != null && alert.isActive && !alert.id.startsWith('temp-')
-
-  const proximity = useMemo(() => {
-    if (!alert.isActive || !rates) return null
-    const currentRate = calculateCrossRate({
-      rates: rates.rates,
-      from: alert.fromCurrency,
-      to: alert.toCurrency,
-    })
-    if (currentRate == null) return null
-    return computeProximity(alert, currentRate)
-  }, [alert, rates])
-
-  const proximityLabel = proximity
-    ? proximity.tier === 'imminent'
-      ? t('alerts.imminentTrigger')
-      : t('alerts.proximity', {
-          percent: formatRateLocalized({
-            rate: proximity.percent,
-            decimals: proximity.percent < 1 ? 2 : 1,
-            locale: i18n.language,
-          }),
-        })
-    : null
-
-  const tierStyle = proximity ? TIER_STYLES[proximity.tier] : null
+  const scheduledDate = new Date(alert.scheduledAt)
+  const isPast = alert.scheduledAt <= Date.now()
+  const formattedDate = format(scheduledDate, 'MMM d, yyyy · HH:mm')
 
   return (
-    <View className="mb-2 rounded-xl bg-white p-2 dark:bg-gray-800">
-      <View className="flex-row items-center justify-between">
+    <View className="mb-2 rounded-xl bg-white p-3 dark:bg-gray-800">
+      <View className="flex-row items-start gap-3">
         <View className="flex-1">
-          <ThemedText variant="label" weight="semibold">
-            {from.flag} {alert.fromCurrency} / {to.flag} {alert.toCurrency}
+          <ThemedText variant="label" weight="semibold" numberOfLines={1}>
+            {alert.title}
           </ThemedText>
-          <View className="mt-0.5 flex-row items-center gap-1">
-            {isThresholdAlert(alert) ? (
-              <>
-                <Ionicons
-                  name={alert.direction === 'above' ? 'arrow-up' : 'arrow-down'}
-                  size={11}
-                  color="#6b7280"
-                />
-                <ThemedText variant="caption" color="muted">
-                  {alert.direction === 'above' ? t('alerts.above') : t('alerts.below')}{' '}
-                  {formatAlertRate({ rate: alert.targetRate, decimals, locale: i18n.language })}
-                </ThemedText>
-              </>
-            ) : (
-              <>
-                <Ionicons name="swap-vertical" size={11} color="#6b7280" />
-                <ThemedText variant="caption" color="muted">
-                  {t('alerts.variationLabel', {
-                    percent: alert.variationPercent,
-                    rate: formatAlertRate({
-                      rate: alert.baselineRate,
-                      decimals,
-                      locale: i18n.language,
-                    }),
-                  })}
-                </ThemedText>
-              </>
-            )}
+          {alert.body ? (
+            <ThemedText variant="caption" color="muted" numberOfLines={2} className="mt-0.5">
+              {alert.body}
+            </ThemedText>
+          ) : null}
+          <View className="mt-1.5 flex-row items-center gap-1">
+            <Ionicons
+              name={isPast ? 'checkmark-circle-outline' : 'time-outline'}
+              size={12}
+              color={isPast ? '#6b7280' : ALERT_THEME.primary}
+            />
+            <ThemedText
+              variant="caption"
+              color="inherit"
+              className={isPast ? 'text-gray-500 dark:text-gray-400' : 'text-amber-600 dark:text-amber-400'}>
+              {formattedDate}
+            </ThemedText>
           </View>
         </View>
 
-        {!hideStatusBadge && (
-          <View className="mx-3 items-center">
-            <View
-              className={`rounded-full px-2 py-0.5 ${
-                alert.isActive
-                  ? 'bg-emerald-100 dark:bg-emerald-900/30'
-                  : 'bg-gray-100 dark:bg-gray-700'
-              }`}>
-              <ThemedText
-                variant="caption"
-                weight="semibold"
-                color="inherit"
-                className={
-                  alert.isActive
-                    ? 'text-emerald-700 dark:text-emerald-400'
-                    : 'text-gray-500 dark:text-gray-400'
-                }>
-                {alert.isActive ? t('alerts.active') : t('alerts.triggered')}
-              </ThemedText>
-            </View>
-          </View>
-        )}
-
         <View className="flex-row items-center gap-2">
-          {canEdit && (
+          {onEdit && (
             <Pressable
               onPress={onEdit}
               hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -195,15 +71,19 @@ export function AlertListItem({ alert, onDelete, onEdit, hideStatusBadge = false
         </View>
       </View>
 
-      {proximity && tierStyle && (
-        <View
-          className={`mt-2 flex-row items-center gap-1.5 self-start rounded-md px-2 py-0.5 ${tierStyle.bg}`}>
-          <View className={`h-1.5 w-1.5 rounded-full ${tierStyle.dot}`} />
-          <ThemedText variant="caption" weight="medium" color="inherit" className={tierStyle.text}>
-            {proximityLabel}
-          </ThemedText>
-        </View>
-      )}
+      <View className="mt-2 flex-row items-center justify-between">
+        <ThemedText variant="caption" color="muted">
+          {alert.isActive ? t('alerts.active') : t('alerts.triggered')}
+        </ThemedText>
+        <Switch
+          value={alert.isActive}
+          onValueChange={() => toggle(alert.id)}
+          trackColor={{ false: '#e5e7eb', true: ALERT_THEME.primary }}
+          thumbColor="#ffffff"
+          accessibilityRole="switch"
+          accessibilityLabel={t('alerts.active')}
+        />
+      </View>
     </View>
   )
 }

@@ -9,20 +9,12 @@ import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 
 type Props = {
-  fromCurrency: string
-  toCurrency: string
   onGranted: () => void
   onSkipped: () => void
   onDenied: () => void
 }
 
-export function PermissionView({
-  fromCurrency,
-  toCurrency,
-  onGranted,
-  onSkipped,
-  onDenied,
-}: Props) {
+export function PermissionView({ onGranted, onSkipped, onDenied }: Props) {
   const { t } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -51,7 +43,7 @@ export function PermissionView({
       </ThemedText>
 
       <ThemedText variant="body" color="muted" align="center" className="mb-8 leading-relaxed">
-        {t('alerts.permissionDescription', { pair: `${fromCurrency}/${toCurrency}` })}
+        {t('alerts.permissionDescription', { pair: '' })}
       </ThemedText>
 
       <GradientButton

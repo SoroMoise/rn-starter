@@ -1,53 +1,34 @@
-import i18n from '@/i18n/service'
-import { formatRateLocalized } from '@/utils/formatters'
+import type { ScheduledAlert } from '@/stores/alertsStore'
 import * as Notifications from 'expo-notifications'
-import type { AlertNotificationData } from './payload'
-import { RATE_ALERTS_CHANNEL_ID } from './channels'
+import { ALERTS_CHANNEL_ID } from './channels'
 
 interface ScheduleParams {
-  payload: AlertNotificationData
-  data: Record<string, unknown>
-  decimals: number
+  alert: ScheduledAlert
   sound: boolean
-  lng: string
 }
 
-export async function scheduleAlertNotification({
-  payload,
-  data,
-  decimals,
-  sound,
-  lng,
-}: ScheduleParams): Promise<void> {
-  const t = (key: string, opts?: Record<string, unknown>) => i18n.t(key, { lng, ...opts })
-
-  const pair = `${payload.fromCurrency} → ${payload.toCurrency}`
-  const currentStr = formatRateLocalized({ rate: payload.currentRate, decimals, locale: lng })
-
-  let body: string
-  if (payload.triggerType === 'threshold') {
-    const rateStr = formatRateLocalized({ rate: payload.targetRate, decimals, locale: lng })
-    body =
-      payload.direction === 'above'
-        ? t('alerts.notif.bodyAbove', { rate: rateStr, current: currentStr })
-        : t('alerts.notif.bodyBelow', { rate: rateStr, current: currentStr })
-  } else {
-    const delta = ((payload.currentRate - payload.baselineRate) / payload.baselineRate) * 100
-    body = t('alerts.notif.bodyVariation', {
-      delta: delta.toFixed(2),
-      baseline: formatRateLocalized({ rate: payload.baselineRate, decimals, locale: lng }),
-      current: currentStr,
-    })
-  }
-
+export async function scheduleAlertNotification({ alert, sound }: ScheduleParams): Promise<void> {
   await Notifications.scheduleNotificationAsync({
-    identifier: payload.alertId,
+    identifier: alert.id,
     content: {
-      title: t('alerts.notif.title', { pair }),
-      body,
-      data,
+      title: alert.title,
+      body: alert.body,
       sound,
+      data: {
+        type: 'reminder',
+        alertId: alert.id,
+        title: alert.title,
+        body: alert.body,
+      },
     },
-    trigger: { channelId: RATE_ALERTS_CHANNEL_ID },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.DATE,
+      date: new Date(alert.scheduledAt),
+      channelId: ALERTS_CHANNEL_ID,
+    },
   })
+}
+
+export async function cancelAlertNotification(alertId: string): Promise<void> {
+  await Notifications.cancelScheduledNotificationAsync(alertId).catch(() => {})
 }

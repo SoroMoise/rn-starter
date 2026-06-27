@@ -3,7 +3,10 @@ import { readUserSettingsFromStorage } from '@/services/storage/domains/userSett
 import * as Notifications from 'expo-notifications'
 import { Platform } from 'react-native'
 
-export const RATE_ALERTS_CHANNEL_ID = 'rate_alerts'
+export const ALERTS_CHANNEL_ID = 'reminders'
+
+/** @deprecated Use ALERTS_CHANNEL_ID */
+export const RATE_ALERTS_CHANNEL_ID = ALERTS_CHANNEL_ID
 
 const VIBRATION_PATTERN = [0, 250, 250, 250]
 
@@ -15,11 +18,11 @@ interface ChannelPrefs {
 async function applyChannel(prefs: ChannelPrefs): Promise<void> {
   const lng = ensureLanguageLoaded(getActiveLanguageFromStorage())
 
-  await Notifications.setNotificationChannelAsync(RATE_ALERTS_CHANNEL_ID, {
-    name: i18n.t('alerts.channelName', { lng, defaultValue: 'Rate alerts' }),
+  await Notifications.setNotificationChannelAsync(ALERTS_CHANNEL_ID, {
+    name: i18n.t('alerts.channelName', { lng, defaultValue: 'Reminders' }),
     description: i18n.t('alerts.channelDescription', {
       lng,
-      defaultValue: 'Notifications when your currency pairs hit your targets',
+      defaultValue: 'Scheduled local reminders',
     }),
     importance: Notifications.AndroidImportance.HIGH,
     sound: prefs.sound ? 'default' : null,
@@ -39,11 +42,11 @@ export async function ensureNotificationChannels(): Promise<void> {
   })
 }
 
-export async function recreateRateAlertsChannel(prefs: ChannelPrefs): Promise<void> {
+export async function recreateAlertsChannel(prefs: ChannelPrefs): Promise<void> {
   if (Platform.OS !== 'android') return
 
   try {
-    await Notifications.deleteNotificationChannelAsync(RATE_ALERTS_CHANNEL_ID)
+    await Notifications.deleteNotificationChannelAsync(ALERTS_CHANNEL_ID)
   } catch {}
 
   await applyChannel(prefs)

@@ -11,7 +11,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { ALERT_THEME } from '@/constants/alertTheme'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
-import { notificationService, recreateRateAlertsChannel } from '@/services/notifications'
+import { notificationService, recreateAlertsChannel } from '@/services/notifications'
 import { useAlertsStore } from '@/stores/alertsStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { triggerLight } from '@/utils/haptics'
@@ -113,7 +113,7 @@ export function AlertsSettingsSection() {
     (value: boolean) => {
       analyticsService.track('notif_pref_sound_toggled', { enabled: value })
       updateSetting('notificationSound', value)
-      void recreateRateAlertsChannel({
+      void recreateAlertsChannel({
         sound: value,
         vibration: settings.notificationVibration,
       })
@@ -125,7 +125,7 @@ export function AlertsSettingsSection() {
     (value: boolean) => {
       analyticsService.track('notif_pref_vibration_toggled', { enabled: value })
       updateSetting('notificationVibration', value)
-      void recreateRateAlertsChannel({
+      void recreateAlertsChannel({
         sound: settings.notificationSound,
         vibration: value,
       })

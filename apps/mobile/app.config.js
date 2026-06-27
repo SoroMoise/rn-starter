@@ -1,7 +1,7 @@
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
 
 export default () => {
-  const version = '1.409.2'
+  const version = '1.0.0'
 
   const [major, minor, patch] = version.split('.').map(Number)
 
@@ -9,10 +9,10 @@ export default () => {
 
   return {
     expo: {
-      name: 'All Currency Converter',
-      slug: 'All curency converter',
+      name: 'RN Starter',
+      slug: 'rn-starter',
       version,
-      scheme: 'allcurencyconverter',
+      scheme: 'rnstarter',
       jsEngine: 'hermes',
 
       experiments: {
@@ -32,7 +32,7 @@ export default () => {
       assetBundlePatterns: ['assets/images/*'],
       ios: {
         supportsTablet: true,
-        bundleIdentifier: 'com.codeurdivoire.allcurencyconverter',
+        bundleIdentifier: 'com.yourcompany.rnstarter',
         infoPlist: {
           NSUserTrackingUsageDescription:
             'This identifier will be used to deliver personalized ads to you.',
@@ -43,7 +43,7 @@ export default () => {
       },
       android: {
         versionCode,
-        package: 'com.codeurdivoire.allcurencyconverter',
+        package: 'com.yourcompany.rnstarter',
         googleServicesFile: './google-services.json',
         adaptiveIcon: {
           foregroundImage: './assets/images/icon.png',

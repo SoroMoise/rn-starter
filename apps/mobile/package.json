@@ -13,7 +13,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\" && prettier -c \"**/*.{js,jsx,ts,tsx,json}\"",
     "format": "eslint \"**/*.{js,jsx,ts,tsx}\" --fix && prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "build:install": "cd android/ && ./gradlew assembleRelease && cd .. && adb uninstall com.codeurdivoire.allcurencyconverter && adb install /home/colotcholoman/project/all-currency-converter/apps/mobile/android/app/build/outputs/apk/release/app-release.apk",
+    "build:install": "cd android/ && ./gradlew assembleRelease && cd .. && adb uninstall com.yourcompany.rnstarter; adb install android/app/build/outputs/apk/release/app-release.apk",
     "analyze": "rm -rf dist && expo export --platform android --no-bytecode --source-maps && sh -c 'JS=$(ls dist/_expo/static/js/android/entry-*.js | head -1) && cp \"$JS\" dist/index.android.bundle && cp \"${JS}.map\" dist/index.android.bundle.map' && source-map-explorer dist/index.android.bundle dist/index.android.bundle.map --html report.html --no-border-checks"
   },
   "dependencies": {

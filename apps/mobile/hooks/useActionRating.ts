@@ -12,8 +12,8 @@ import { Alert } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 type UseActionRatingProps = {
-  conversions: unknown[]
-  fromCurrencyCode: string
+  actions: unknown[]
+  sourceLabel: string
   amount: string
   isAdFreeActive: boolean
   actionCount: number
@@ -28,15 +28,15 @@ function getAmountRange(amount: number): 'micro' | 'small' | 'medium' | 'large' 
 }
 
 export function useActionRating({
-  conversions,
-  fromCurrencyCode,
+  actions,
+  sourceLabel,
   amount,
   isAdFreeActive,
   actionCount,
 }: UseActionRatingProps) {
   const { t } = useTranslation()
   const [isRatingModalVisible, setIsRatingModalVisible] = useState(false)
-  const [currentRatingConversionCount, setCurrentRatingConversionCount] = useState(0)
+  const [currentRatingActionCount, setCurrentRatingActionCount] = useState(0)
 
   // Cache adLastShown to avoid hitting MMKV on every action.
   // Seeded from storage on mount; updated in-memory when an interstitial ad is displayed.
@@ -46,8 +46,8 @@ export function useActionRating({
   // The effect reads them through refs, so changes propagate without re-running it.
   const isAdFreeActiveRef = useRef(isAdFreeActive)
   const isRatingModalVisibleRef = useRef(isRatingModalVisible)
-  const conversionsRef = useRef(conversions)
-  const fromCurrencyCodeRef = useRef(fromCurrencyCode)
+  const actionsRef = useRef(actions)
+  const sourceLabelRef = useRef(sourceLabel)
   const amountRef = useRef(amount)
 
   useEffect(() => {
@@ -63,12 +63,12 @@ export function useActionRating({
   }, [isRatingModalVisible])
 
   useEffect(() => {
-    conversionsRef.current = conversions
-  }, [conversions])
+    actionsRef.current = actions
+  }, [actions])
 
   useEffect(() => {
-    fromCurrencyCodeRef.current = fromCurrencyCode
-  }, [fromCurrencyCode])
+    sourceLabelRef.current = sourceLabel
+  }, [sourceLabel])
 
   useEffect(() => {
     amountRef.current = amount
@@ -79,7 +79,7 @@ export function useActionRating({
 
   useEffect(() => {
     if (actionCount === 0) return
-    if (conversionsRef.current.length === 0) return
+    if (actionsRef.current.length === 0) return
     if (!(parseFloat(amountRef.current) > 0)) return
 
     // Ad and rating paths run sequentially: the ad must resolve first so that
@@ -106,9 +106,9 @@ export function useActionRating({
         const newTotal = engagementStorage.incrementAction()
         triggerBackupSync()
         analyticsService.track('conversion_performed', {
-          from_currency: fromCurrencyCodeRef.current,
+          from_currency: sourceLabelRef.current,
           amount_range: getAmountRange(parseFloat(amountRef.current)),
-          target_count: conversionsRef.current.length,
+          target_count: actionsRef.current.length,
           total_conversions: newTotal,
         })
         const shouldShowRating = await checkAndMaybeShowRating({
@@ -118,7 +118,7 @@ export function useActionRating({
           lastInterstitialShownAt: adLastShownCacheRef.current,
         })
         if (shouldShowRating) {
-          setCurrentRatingConversionCount(newTotal)
+          setCurrentRatingActionCount(newTotal)
           setIsRatingModalVisible(true)
           analyticsService.track('rating_modal_shown', {
             source: 'auto',
@@ -143,7 +143,7 @@ export function useActionRating({
       analyticsService.track('rating_submitted', {
         stars,
         source: 'auto',
-        conversion_count: currentRatingConversionCount,
+        conversion_count: currentRatingActionCount,
       })
       try {
         await markAsRated()
@@ -161,21 +161,21 @@ export function useActionRating({
         )
       }
     },
-    [markAsRated, t, currentRatingConversionCount]
+    [markAsRated, t, currentRatingActionCount]
   )
 
   const handleRateLater = useCallback(async () => {
     setIsRatingModalVisible(false)
     analyticsService.track('rating_later', { source: 'auto' })
     try {
-      await markAsLater(currentRatingConversionCount)
+      await markAsLater(currentRatingActionCount)
     } catch (err) {
       crashlyticsService.recordError(
         err instanceof Error ? err : new Error('handleRateLater failed'),
         { source: 'useActionRating.handleRateLater' }
       )
     }
-  }, [currentRatingConversionCount, markAsLater])
+  }, [currentRatingActionCount, markAsLater])
 
   const handleDeclineRating = useCallback(async () => {
     setIsRatingModalVisible(false)

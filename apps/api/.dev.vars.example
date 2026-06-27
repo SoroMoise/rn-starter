@@ -1,0 +1,13 @@
+# Cloudflare Workers local dev secrets
+# Copy this file to .dev.vars and fill in the values.
+# .dev.vars is gitignored — never commit real secrets.
+
+# API authentication key (used by the mobile app to authenticate requests)
+API_KEY=
+
+# Firebase Admin SDK credentials
+# Get these from: Firebase Console → Project Settings → Service Accounts → Generate new private key
+# The downloaded JSON file contains: project_id, client_email, private_key
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=

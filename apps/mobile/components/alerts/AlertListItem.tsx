@@ -42,7 +42,9 @@ export function AlertListItem({ alert, onDelete, onEdit }: Props) {
             <ThemedText
               variant="caption"
               color="inherit"
-              className={isPast ? 'text-gray-500 dark:text-gray-400' : 'text-amber-600 dark:text-amber-400'}>
+              className={
+                isPast ? 'text-gray-500 dark:text-gray-400' : 'text-amber-600 dark:text-amber-400'
+              }>
               {formattedDate}
             </ThemedText>
           </View>

@@ -1,12 +1,5 @@
 import { Toast, ToastType } from '@/components/ui/Toast'
-import React, {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 interface ToastParams {
   message: string

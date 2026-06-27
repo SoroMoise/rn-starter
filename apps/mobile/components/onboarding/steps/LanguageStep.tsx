@@ -67,8 +67,8 @@ export function LanguageStep({ onSelect }: LanguageStepProps) {
                 className={`mb-2 flex-row items-center gap-3 rounded-2xl px-4 py-3 ${
                   currentLanguage === item.code
                     ? isDark
-                      ? 'bg-indigo-500/25 border border-indigo-400/40'
-                      : 'bg-indigo-500/10 border border-indigo-400/30'
+                      ? 'border border-indigo-400/40 bg-indigo-500/25'
+                      : 'border border-indigo-400/30 bg-indigo-500/10'
                     : isDark
                       ? 'bg-white/5'
                       : 'bg-black/[0.04]'

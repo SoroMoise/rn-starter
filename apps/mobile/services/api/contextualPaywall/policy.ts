@@ -35,8 +35,7 @@ export function evaluateContextualPaywall(
     return { show: false, reason: 'cooldown' }
   }
 
-  const meetsThreshold =
-    state.sessionCount >= c.minSessions || state.totalActions >= c.minActions
+  const meetsThreshold = state.sessionCount >= c.minSessions || state.totalActions >= c.minActions
   if (!meetsThreshold) return { show: false, reason: 'below_threshold' }
 
   return { show: true }

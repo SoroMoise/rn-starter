@@ -4,7 +4,10 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { WheelPicker } from '@/components/ui/WheelPicker'
 import { ALERT_THEME } from '@/constants/alertTheme'
 import { useToast } from '@/providers/ToastProvider'
-import { scheduleAlertNotification, cancelAlertNotification } from '@/services/notifications/scheduleAlert'
+import {
+  scheduleAlertNotification,
+  cancelAlertNotification,
+} from '@/services/notifications/scheduleAlert'
 import { useAlertsStore, type ScheduledAlert } from '@/stores/alertsStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { triggerError, triggerSuccess } from '@/utils/haptics'
@@ -18,7 +21,15 @@ type Props = {
   editingAlert?: ScheduledAlert
 }
 
-function buildScheduledAt(dayOffset: number, hour: number, minute: number): number {
+function buildScheduledAt({
+  dayOffset,
+  hour,
+  minute,
+}: {
+  dayOffset: number
+  hour: number
+  minute: number
+}): number {
   const base = startOfDay(new Date())
   const d = addDays(base, dayOffset)
   return setMinutes(setHours(d, hour), minute).getTime()
@@ -28,12 +39,7 @@ function makeDayOptions(): { value: number; label: string }[] {
   const today = new Date()
   return [0, 1, 2, 3, 7, 14, 30].map((offset) => {
     const d = addDays(today, offset)
-    const label =
-      offset === 0
-        ? 'Today'
-        : offset === 1
-          ? 'Tomorrow'
-          : format(d, 'EEE, MMM d')
+    const label = offset === 0 ? 'Today' : offset === 1 ? 'Tomorrow' : format(d, 'EEE, MMM d')
     return { value: offset, label }
   })
 }
@@ -84,7 +90,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
 
   const dayOptions = useMemo(() => makeDayOptions(), [])
 
-  const scheduledAt = buildScheduledAt(dayOffset, hour, minute)
+  const scheduledAt = buildScheduledAt({ dayOffset, hour, minute })
 
   const handleSubmit = async () => {
     const trimmedTitle = title.trim()
@@ -144,7 +150,6 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
       showsVerticalScrollIndicator={false}
       keyboardShouldPersistTaps="handled"
       keyboardDismissMode="on-drag">
-
       {/* Title */}
       <View className="mb-4">
         <ThemedText variant="label" color="muted" className="mb-2">
@@ -212,12 +217,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
               <ThemedText variant="caption" color="muted" className="mb-1">
                 Hour
               </ThemedText>
-              <WheelPicker
-                options={HOUR_OPTIONS}
-                value={hour}
-                onChange={setHour}
-                width={60}
-              />
+              <WheelPicker options={HOUR_OPTIONS} value={hour} onChange={setHour} width={60} />
             </View>
 
             <ThemedText variant="heading" weight="bold" color="muted">

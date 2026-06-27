@@ -34,7 +34,6 @@ export default function HomeScreen() {
       <ScrollView
         contentContainerStyle={{ paddingBottom: tabBarPadding }}
         showsVerticalScrollIndicator={false}>
-
         <MotiView
           from={{ opacity: 0, translateY: 12 }}
           animate={{ opacity: 1, translateY: 0 }}
@@ -101,7 +100,6 @@ export default function HomeScreen() {
             </ThemedText>
           </View>
         </MotiView>
-
       </ScrollView>
     </ScreenContainer>
   )

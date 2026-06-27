@@ -8,7 +8,7 @@ import { RatingModal } from '@/components/ui/RatingModal'
 import { MIN_STARS_FOR_STORE_REDIRECT } from '@/constants/rating'
 import { LEGAL_URLS } from '@/constants/legal'
 import { analyticsService } from '@/services/api/analyticsService'
-import { conversionStorage } from '@/services/storage/domains/conversion'
+import { engagementStorage } from '@/services/storage/domains/engagement'
 import { requestStoreReview } from '@/services/api/ratingService'
 import { SettingsLinkRow, type SettingsLinkRowProps } from '@components/ui/SettingsLinkRow'
 import { openExternalLink } from '@/utils/linking'
@@ -37,11 +37,11 @@ export function LegalSupportSection() {
   const handleRatingSubmit = useCallback(
     async (stars: number) => {
       closeRatingModal()
-      const conversionCount = conversionStorage.getTotalSuccessful()
+      const actionCount = engagementStorage.getActionCount()
       analyticsService.track('rating_submitted', {
         stars,
         source: 'manual',
-        conversion_count: conversionCount,
+        conversion_count: actionCount,
       })
       if (stars >= MIN_STARS_FOR_STORE_REDIRECT) {
         await requestStoreReview()

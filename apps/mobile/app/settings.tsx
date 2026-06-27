@@ -1,6 +1,5 @@
 import { AdBanner } from '@/components/ads/AdBanner'
 import { RewardedAdButton } from '@/components/ads/RewardedAdButton'
-import { BackupSectionGate } from '@/components/premium-gates'
 import { AlertsSettingsSection } from '@/components/settings/AlertsSettingsSection'
 import { DisplaySection } from '@/components/settings/DisplaySection'
 import { LegalSupportSection } from '@/components/settings/LegalSupportSection'
@@ -20,7 +19,6 @@ import { useAdFree } from '@/providers/AdFreeProvider'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useSettingsStore } from '@/stores/settingsStore'
-import { useWidgetSheetStore } from '@/stores/widgetSheetStore'
 import { useShallow } from 'zustand/react/shallow'
 import type { Language, ThemeMode, ThemeOption } from '@/types'
 import { openExternalLink } from '@/utils/linking'
@@ -30,14 +28,11 @@ import { ScreenHeading } from '@components/ui/ScreenHeading'
 import { SlidingSelector } from '@components/ui/SlidingSelector'
 import { RTL_RESTART_BANNER_ENABLED } from '@constants/config'
 import { getAppWebsiteUrl } from '@constants/legal'
-import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import { UI_COLORS } from '@/constants/uiColors'
 import { useTabBarPadding } from '@hooks/useTabBarPadding'
 import Constants from 'expo-constants'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, TouchableOpacity, View } from 'react-native'
+import { ScrollView, TouchableOpacity } from 'react-native'
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation()
@@ -141,47 +136,6 @@ export default function SettingsScreen() {
         )}
 
         <AlertsSettingsSection />
-
-        <Section>
-          <SectionHeader>{t('settings.widget.sectionLabel')}</SectionHeader>
-          <SectionContent>
-            <TouchableOpacity
-              onPress={() => {
-                analyticsService.track('widget_settings_entry_tapped', { is_pro: isPremium })
-                useWidgetSheetStore.getState().open()
-              }}
-              activeOpacity={0.7}
-              accessibilityRole="button"
-              accessibilityLabel={t('settings.widget.title')}
-              className="flex-row items-center gap-3 px-4 py-3.5">
-              <View className="h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-900/30">
-                <Ionicons name="phone-portrait-outline" size={18} color="#f59e0b" />
-              </View>
-              <View className="flex-1">
-                <ThemedText variant="body" weight="medium">
-                  {t('settings.widget.title')}
-                </ThemedText>
-                <ThemedText variant="caption" color="muted">
-                  {t('settings.widget.description')}
-                </ThemedText>
-              </View>
-              {!isPremium && (
-                <View className="rounded-full bg-violet-100 px-2 py-0.5 dark:bg-violet-900/40">
-                  <ThemedText
-                    variant="caption"
-                    weight="semibold"
-                    color="inherit"
-                    className="text-violet-700 dark:text-violet-300">
-                    PRO
-                  </ThemedText>
-                </View>
-              )}
-              <DirectionalIcon name="chevron-forward" size={16} color={UI_COLORS.chevron} />
-            </TouchableOpacity>
-          </SectionContent>
-        </Section>
-
-        <BackupSectionGate />
 
         <LegalSupportSection />
 

@@ -1,5 +1,4 @@
 export * from './api'
-export * from './backup'
 export * from './currency'
 export * from './settings'
 export * from './statistics'

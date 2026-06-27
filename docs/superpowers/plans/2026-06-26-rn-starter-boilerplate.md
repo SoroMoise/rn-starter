@@ -680,7 +680,7 @@ Lister les clés d'événements réellement référencées (YAGNI : ne garder qu
 
 - [ ] **Step 2: Réécrire `AnalyticsEventMap`**
 
-Garder/renommer les événements **génériques** émis ; remplacer les événements métier par `action_performed: { total_actions: number }` (et tout autre event générique encore référencé). Retirer `from_currency`/`to_currency`/`total_conversions`/`conversion_count`. Aucun event non émis ne subsiste.
+Garder/renommer les événements **génériques** émis ; remplacer les événements métier par `action_performed: { total_actions: number }` (et tout autre event générique encore référencé). Retirer `from_currency`/`to_currency`/`total_conversions`/`conversion_count`. **Retirer aussi les 5 types d'événements widget morts** laissés par la Task 5 (`widget_added`, `widget_removed`, `widget_pair_tap`, `widget_refresh_success`, `widget_refresh_fail`) — leurs émetteurs ont été supprimés. Aucun event non émis ne subsiste.
 
 - [ ] **Step 3: Mettre à jour `useActionRating.ts`**
 

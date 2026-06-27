@@ -1,6 +1,5 @@
 // apps/mobile/hooks/useAppRating.ts
 import { ratingStorage } from '@/services/storage/domains/rating'
-import { triggerBackupSync } from '@stores/backupTrigger'
 import { useCallback } from 'react'
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000
@@ -75,7 +74,6 @@ export function useAppRating(): UseAppRatingReturn {
 
       if (!firstUsageDate) {
         ratingStorage.setFirstUsageDate(now)
-        triggerBackupSync()
         return false
       }
 
@@ -102,7 +100,6 @@ export function useAppRating(): UseAppRatingReturn {
         ratingStorage.setPromptCount(promptCount)
         ratingStorage.setLastPromptExecution(lastPromptExecution)
         ratingStorage.setLastPromptDate(now)
-        triggerBackupSync()
       }
 
       if (promptCount >= NO_MORE_PROMPT_COUNT) return false
@@ -120,12 +117,10 @@ export function useAppRating(): UseAppRatingReturn {
 
   const markAsRated = useCallback(async () => {
     ratingStorage.setHasRated(true)
-    triggerBackupSync()
   }, [])
 
   const markAsDeclinedForever = useCallback(async () => {
     ratingStorage.setDeclinedForever(true)
-    triggerBackupSync()
   }, [])
 
   const markAsLater = useCallback(async (currentConversionCount: number) => {
@@ -134,7 +129,6 @@ export function useAppRating(): UseAppRatingReturn {
     ratingStorage.setPromptCount(promptCount + 1)
     ratingStorage.setLastPromptExecution(currentConversionCount)
     ratingStorage.setLastPromptDate(now)
-    triggerBackupSync()
   }, [])
 
   return { checkAndMaybeShowRating, markAsRated, markAsDeclinedForever, markAsLater }

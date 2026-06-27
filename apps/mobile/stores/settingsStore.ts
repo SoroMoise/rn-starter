@@ -9,17 +9,6 @@ import { I18nManager } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
-import { triggerBackupSync } from './backupTrigger'
-
-// Lazy dynamic import breaks the settingsStore <-> widgetService init cycle:
-// importing widgetService at module scope re-enters this store while it is still
-// initializing (the "Require cycle" Metro warning). The module is resolved on a
-// microtask, after init. Keep it lazy — do not hoist to a top import.
-function syncWidgetFromStorage(): void {
-  void import('@/services/widget/widgetService')
-    .then(({ widgetService }) => widgetService.syncFromStorage())
-    .catch(() => undefined)
-}
 
 interface SettingsStore {
   settings: UserSettings
@@ -41,10 +30,6 @@ export const useSettingsStore = create<SettingsStore>()(
 
       updateSetting: <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
         set({ settings: { ...get().settings, [key]: value } })
-        triggerBackupSync()
-        if (key === 'defaultCurrencyFrom' || key === 'decimals') {
-          syncWidgetFromStorage()
-        }
       },
 
       setLanguage: (language: Language) => {
@@ -54,8 +39,6 @@ export const useSettingsStore = create<SettingsStore>()(
         set({ settings: { ...get().settings, language } })
         loadLanguage(language)
         i18n.changeLanguage(language)
-        syncWidgetFromStorage()
-        triggerBackupSync()
 
         if (currentIsRTL !== newIsRTL) {
           I18nManager.forceRTL(newIsRTL)
@@ -78,8 +61,6 @@ export const useSettingsStore = create<SettingsStore>()(
 
       resetSettings: () => {
         set({ settings: DEFAULT_SETTINGS })
-        triggerBackupSync()
-        syncWidgetFromStorage()
       },
     }),
     {

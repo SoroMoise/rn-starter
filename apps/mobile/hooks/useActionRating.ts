@@ -5,7 +5,6 @@ import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { requestStoreReview } from '@/services/api/ratingService'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
-import { triggerBackupSync } from '@stores/backupTrigger'
 import { useAppRating } from '@hooks/useAppRating'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Alert } from 'react-native'
@@ -104,7 +103,6 @@ export function useActionRating({
       if (isRatingModalVisibleRef.current) return
       try {
         const newTotal = engagementStorage.incrementAction()
-        triggerBackupSync()
         analyticsService.track('conversion_performed', {
           from_currency: sourceLabelRef.current,
           amount_range: getAmountRange(parseFloat(amountRef.current)),

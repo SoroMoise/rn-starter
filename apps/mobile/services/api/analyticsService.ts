@@ -7,7 +7,6 @@ import {
   setUserId as setAnalyticsUserId,
   setUserProperty as setAnalyticsUserProperty,
 } from '@react-native-firebase/analytics'
-import type { ExportFormat, ExportType } from '@stores/exportPreferencesStore'
 import Constants from 'expo-constants'
 
 let _analytics: ReturnType<typeof getAnalytics> | null = null
@@ -218,14 +217,6 @@ export type AnalyticsEventMap = {
     error_type: 'network' | 'http_4xx' | 'http_429' | 'http_5xx' | 'parse' | 'partial' | 'config'
     delay_ms: number
   }
-
-  // Export
-  export_started: { export_type: ExportType; format: ExportFormat; source: string }
-  export_completed: { export_type: ExportType; format: ExportFormat; duration_ms: number }
-  export_failed: { export_type: ExportType; format: ExportFormat; error_message: string }
-  export_format_preference_saved: { export_type: ExportType; format: ExportFormat }
-  export_bottom_sheet_shown: { export_type: ExportType }
-  export_dropdown_opened: undefined
 }
 
 export const analyticsService = {
@@ -336,44 +327,5 @@ export const analyticsService = {
 
   logAppInitializationFailed(errorMessage: string): void {
     this.track('app_init_failed', { error_message: errorMessage.slice(0, 100) })
-  },
-
-  logExportStarted(params: { type: ExportType; format: ExportFormat; source: string }) {
-    this.track('export_started', {
-      export_type: params.type,
-      format: params.format,
-      source: params.source,
-    })
-  },
-
-  logExportCompleted(params: { type: ExportType; format: ExportFormat; durationMs: number }) {
-    this.track('export_completed', {
-      export_type: params.type,
-      format: params.format,
-      duration_ms: params.durationMs,
-    })
-  },
-
-  logExportFailed(params: { type: ExportType; format: ExportFormat; error: string }) {
-    this.track('export_failed', {
-      export_type: params.type,
-      format: params.format,
-      error_message: params.error.slice(0, 100),
-    })
-  },
-
-  logExportFormatPreferenceSaved(params: { type: ExportType; format: ExportFormat }) {
-    this.track('export_format_preference_saved', {
-      export_type: params.type,
-      format: params.format,
-    })
-  },
-
-  logExportBottomSheetShown(params: { type: ExportType }) {
-    this.track('export_bottom_sheet_shown', { export_type: params.type })
-  },
-
-  logExportDropdownOpened() {
-    this.track('export_dropdown_opened')
   },
 }

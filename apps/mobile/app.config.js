@@ -59,13 +59,6 @@ export default () => {
       plugins: [
         withAndroidFontFilter,
         [
-          'widget-watchlist',
-          {
-            baseUrl: process.env.BACKEND_URL,
-            apiKey: process.env.BACKEND_API_KEY,
-          },
-        ],
-        [
           'expo-build-properties',
           {
             android: {

@@ -28,8 +28,6 @@
     "back": "Quay lại"
   },
   "tabs": {
-    "converter": "Chuyển đổi",
-    "statistics": "Thống kê",
     "settings": "Cài đặt"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "Nâng cấp lên Pro",
     "premiumDescription": "Xóa quảng cáo · Sao lưu và xuất dữ liệu",
     "premiumActive": "Bạn là thành viên Pro",
-    "widget": {
-      "sectionLabel": "Widget màn hình chính",
-      "title": "Widget Watchlist",
-      "description": "Theo dõi tỷ giá yêu thích của bạn ngay từ màn hình chính",
-      "screenTitle": "Widget Watchlist",
-      "howToAdd": "Cách thêm widget",
-      "proPitchHeadline": "Tỷ giá của bạn, không cần mở ứng dụng.",
-      "proPitchBullet1": "Tối đa 3 cặp tùy chọn trên màn hình chính",
-      "proPitchBullet2": "Sparkline và biến động theo khoảng thời gian bạn chọn",
-      "proPitchBullet3": "Tự động cập nhật trong nền",
-      "proCta": "Mở khóa Pro",
-      "periodLabel": "Khoảng thời gian biến động",
-      "howToSheet": {
-        "title": "Thêm widget chỉ với 4 bước",
-        "step1": "Nhấn giữ vào vùng trống trên màn hình chính của bạn.",
-        "step2": "Chạm vào \"Widget\" trong menu.",
-        "step3": "Tìm \"All Currency Converter\" và kéo widget vào màn hình chính.",
-        "step4": "Mở ứng dụng một lần để widget có thể đồng bộ các cặp của bạn."
-      },
-      "close": "Đóng"
-    },
     "premiumActiveUntil": "Hoạt động đến {{date}}",
     "premiumLifetime": "Truy cập trọn đời",
     "currenciesAdded_one": "Đã thêm {{count}} tiền tệ",
@@ -134,106 +111,11 @@
       "cta": "Bắt đầu",
       "reassurance": "Miễn phí · Không cần tài khoản"
     },
-    "persona": {
-      "title": "Một chút — điều gì đưa bạn đến đây?",
-      "subtitle": "Chúng tôi sẽ tùy biến phần còn lại cho bạn.",
-      "traveler": {
-        "label": "Du lịch & sống ở nước ngoài",
-        "desc": "Tiền tệ trên mọi nẻo đường"
-      },
-      "trader": {
-        "label": "Trading & theo dõi",
-        "desc": "Cảnh báo cặp tiền theo thời gian thực"
-      },
-      "freelancer": {
-        "label": "Kinh doanh quốc tế",
-        "desc": "Hóa đơn, xuất file, sao lưu"
-      },
-      "general": {
-        "label": "Quy đổi hằng ngày",
-        "desc": "Nhanh và đáng tin, không rườm rà"
-      }
-    },
-    "currencyPicker": {
-      "title": "Tiền tệ chính của bạn",
-      "subtitle": "Dùng làm cơ sở cho mọi quy đổi.",
-      "detectedHint": "Đã phát hiện từ thiết bị của bạn",
-      "ctaWithCode": "Tiếp tục với {{code}}",
-      "searchPlaceholder": "Tìm tiền tệ...",
-      "showAll": "Hiện tất cả"
-    },
-    "aha": {
-      "title": "Thử ngay — kéo để quy đổi",
-      "subtitle": "Quy đổi trực tiếp trên 3 tiền tệ.",
-      "cta": "Tiếp tục",
-      "hook": "Xem ngay trong thực tế",
-      "reveal1": "✓ Cập nhật theo thời gian thực",
-      "reveal2": "✓ Hoạt động ngoại tuyến",
-      "reveal3": "✓ Có sẵn 170+ tiền tệ"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Được tạo cho những người yêu du lịch như bạn",
-        "heroCaption": "Widget của bạn trên màn hình chính"
-      },
-      "trader": {
-        "headline": "Được tạo cho trader như bạn",
-        "heroCaption": "Cảnh báo theo thời gian thực trên các cặp tiền"
-      },
-      "freelancer": {
-        "headline": "Được tạo cho kinh doanh quốc tế",
-        "heroCaption": "Xuất CSV & PDF cho kế toán"
-      },
-      "general": {
-        "headline": "Thiết kế cho việc quy đổi hằng ngày",
-        "heroCaption": "Ứng dụng gọn gàng + widget màn hình chính"
-      },
-      "secondary": {
-        "noAds": "Không bao giờ có quảng cáo",
-        "offline": "Hoạt động hoàn toàn ngoại tuyến",
-        "homeWidget": "Widget màn hình chính",
-        "rateAlerts": "Cảnh báo tỷ giá theo thời gian thực",
-        "backup": "Sao lưu đám mây tự động",
-        "export": "Xuất CSV & PDF",
-        "statistics": "Thống kê & biểu đồ"
-      },
-      "secondaryShort": {
-        "noAds": "Không quảng cáo",
-        "offline": "Ngoại tuyến",
-        "homeWidget": "Widget",
-        "rateAlerts": "Cảnh báo",
-        "backup": "Sao lưu",
-        "export": "Xuất",
-        "statistics": "Thống kê"
-      },
-      "timelineHeader": "Cách dùng thử của bạn hoạt động",
-      "day0": "Ngày 0 — Mở khóa Pro",
-      "day5": "Ngày 5 — Nhắc trước khi kết thúc",
-      "day7": "Ngày 7 — Bắt đầu tính phí, hủy bất cứ lúc nào",
-      "ctaStart": "Bắt đầu dùng thử miễn phí 7 ngày",
-      "ctaSkip": "Tiếp tục với bản miễn phí",
-      "fineprint": "{{price}}/năm sau khi dùng thử · Tiết kiệm {{percent}}%",
-      "fineprintNoSavings": "{{price}}/năm sau khi dùng thử",
-      "reassurance": "Không tính phí trong thời gian dùng thử",
-      "restore": "Khôi phục đã mua",
-      "mock": {
-        "reportTitle": "Báo cáo quy đổi",
-        "syncedToDrive": "Đã đồng bộ lên Drive",
-        "ad": "Quảng cáo",
-        "alertTarget": "EUR/USD đã đạt mục tiêu 1,0950 của bạn 🎯",
-        "alertVariation": "GBP/USD tăng 0,8% sáng nay 📈"
-      }
-    },
     "exitIntent": {
       "title": "Khoan đã — thử Pro miễn phí",
       "body": "7 ngày miễn phí, hôm nay không tính phí.\nHủy bằng 1 chạm, bất cứ lúc nào.",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
       "ctaSkip": "Không, tiếp tục bản miễn phí"
-    },
-    "proActive": {
-      "cta": "Bắt đầu thôi",
-      "subtitle": "Mọi tính năng đã được mở khóa trên thiết bị này.",
-      "title": "Bạn là Pro"
     },
     "proWelcome": {
       "body": "Chúng tôi tìm thấy gói Pro của bạn — đã được kích hoạt trên thiết bị này.",

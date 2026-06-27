@@ -28,8 +28,6 @@
     "back": "Voltar"
   },
   "tabs": {
-    "converter": "Conversor",
-    "statistics": "Estatísticas",
     "settings": "Configurações"
   },
   "settings": {
@@ -103,27 +101,6 @@
     "goPremium": "Fazer upgrade para Pro",
     "premiumDescription": "Remover anúncios · Backup e exportação",
     "premiumActive": "Você é membro Pro",
-    "widget": {
-      "sectionLabel": "Widget da tela inicial",
-      "title": "Widget Watchlist",
-      "description": "Acompanhe suas taxas favoritas direto da tela inicial",
-      "screenTitle": "Widget Watchlist",
-      "howToAdd": "Como adicionar o widget",
-      "proPitchHeadline": "Suas taxas, sem abrir o app.",
-      "proPitchBullet1": "Até 3 pares de sua escolha na tela inicial",
-      "proPitchBullet2": "Sparkline e variação no período escolhido",
-      "proPitchBullet3": "Atualização automática em segundo plano",
-      "proCta": "Desbloquear Pro",
-      "periodLabel": "Período de variação",
-      "howToSheet": {
-        "title": "Adicione o widget em 4 passos",
-        "step1": "Toque e mantenha pressionada uma área vazia da tela inicial.",
-        "step2": "Toque em “Widgets” no menu.",
-        "step3": "Procure “All Currency Converter” e arraste o widget para a tela inicial.",
-        "step4": "Abra o app uma vez para que o widget sincronize seus pares."
-      },
-      "close": "Fechar"
-    },
     "premiumActiveUntil": "Ativo até {{date}}",
     "premiumLifetime": "Acesso vitalício"
   },
@@ -136,106 +113,11 @@
       "cta": "Começar",
       "reassurance": "Grátis · Sem conta"
     },
-    "persona": {
-      "title": "Um instante — o que te traz aqui?",
-      "subtitle": "A gente ajusta o resto pra você.",
-      "traveler": {
-        "label": "Viagens e vida no exterior",
-        "desc": "Moedas em qualquer lugar"
-      },
-      "trader": {
-        "label": "Trading e monitoramento",
-        "desc": "Alertas de pares em tempo real"
-      },
-      "freelancer": {
-        "label": "Negócios internacionais",
-        "desc": "Faturas, exports, backup"
-      },
-      "general": {
-        "label": "Conversões do dia a dia",
-        "desc": "Rápido e confiável, sem complicação"
-      }
-    },
-    "currencyPicker": {
-      "title": "Sua moeda principal",
-      "subtitle": "Usada como base para todas as conversões.",
-      "detectedHint": "Detectada no seu aparelho",
-      "ctaWithCode": "Continuar com {{code}}",
-      "searchPlaceholder": "Buscar moedas...",
-      "showAll": "Mostrar todas"
-    },
-    "aha": {
-      "title": "Experimenta — arraste para converter",
-      "subtitle": "Conversão ao vivo em 3 moedas.",
-      "cta": "Continuar",
-      "hook": "Veja em ação",
-      "reveal1": "✓ Atualizado em tempo real",
-      "reveal2": "✓ Funciona offline",
-      "reveal3": "✓ 170+ moedas disponíveis"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Feito pra viajantes como você",
-        "heroCaption": "Seu widget na tela inicial"
-      },
-      "trader": {
-        "headline": "Feito pra traders como você",
-        "heroCaption": "Alertas em tempo real nos seus pares"
-      },
-      "freelancer": {
-        "headline": "Feito pra negócios internacionais",
-        "heroCaption": "Export CSV e PDF pra contabilidade"
-      },
-      "general": {
-        "headline": "Pensado pras conversões do dia a dia",
-        "heroCaption": "App limpo + widget na tela inicial"
-      },
-      "secondary": {
-        "noAds": "Sem anúncios, nunca",
-        "offline": "Funciona totalmente offline",
-        "homeWidget": "Widget na tela inicial",
-        "rateAlerts": "Alertas de taxa em tempo real",
-        "backup": "Backup automático na nuvem",
-        "export": "Export CSV e PDF",
-        "statistics": "Estatísticas e gráficos"
-      },
-      "secondaryShort": {
-        "noAds": "Sem anúncios",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Alertas",
-        "backup": "Backup",
-        "export": "Exportar",
-        "statistics": "Estatísticas"
-      },
-      "timelineHeader": "Como funciona seu teste",
-      "day0": "Dia 0 — Pro liberado",
-      "day5": "Dia 5 — Lembrete antes do fim",
-      "day7": "Dia 7 — Cobrança começa, cancele quando quiser",
-      "ctaStart": "Começar meu teste grátis de 7 dias",
-      "ctaSkip": "Continuar com a versão grátis",
-      "fineprint": "{{price}}/ano após o teste · Economize {{percent}}%",
-      "fineprintNoSavings": "{{price}}/ano após o teste",
-      "reassurance": "Sem cobrança durante o teste",
-      "restore": "Restaurar compras",
-      "mock": {
-        "reportTitle": "Relatório de conversões",
-        "syncedToDrive": "Sincronizado no Drive",
-        "ad": "Anúncio",
-        "alertTarget": "EUR/USD atingiu sua meta de 1,0950 🎯",
-        "alertVariation": "GBP/USD +0,8% hoje de manhã 📈"
-      }
-    },
     "exitIntent": {
       "title": "Espera — experimente Pro grátis",
       "body": "7 dias grátis, sem cobrança hoje.\nCancele com 1 toque, a qualquer hora.",
       "ctaStart": "Sim, começar meu teste grátis",
       "ctaSkip": "Não, obrigado, seguir grátis"
-    },
-    "proActive": {
-      "cta": "Vamos lá",
-      "subtitle": "Tudo desbloqueado neste dispositivo.",
-      "title": "Você é Pro"
     },
     "proWelcome": {
       "body": "Encontramos sua assinatura Pro — ela já está ativa neste dispositivo.",

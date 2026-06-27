@@ -28,8 +28,6 @@
     "back": "Indietro"
   },
   "tabs": {
-    "converter": "Convertitore",
-    "statistics": "Statistiche",
     "settings": "Impostazioni"
   },
   "settings": {
@@ -103,27 +101,6 @@
     "goPremium": "Passa a Pro",
     "premiumDescription": "Rimuovi pubblicità · Backup & esporta",
     "premiumActive": "Sei un membro Pro",
-    "widget": {
-      "sectionLabel": "Widget schermata Home",
-      "title": "Widget Watchlist",
-      "description": "Tieni d'occhio i tuoi tassi preferiti dalla schermata Home",
-      "screenTitle": "Widget Watchlist",
-      "howToAdd": "Come aggiungere il widget",
-      "proPitchHeadline": "I tuoi tassi, senza aprire l'app.",
-      "proPitchBullet1": "Fino a 3 coppie a tua scelta sulla schermata Home",
-      "proPitchBullet2": "Sparkline e variazione sul periodo scelto",
-      "proPitchBullet3": "Aggiornamento automatico in background",
-      "proCta": "Sblocca Pro",
-      "periodLabel": "Periodo di variazione",
-      "howToSheet": {
-        "title": "Aggiungi il widget in 4 passaggi",
-        "step1": "Tieni premuto su un'area vuota della schermata Home.",
-        "step2": "Tocca «Widget» nel menu.",
-        "step3": "Cerca «All Currency Converter» e trascina il widget sulla schermata Home.",
-        "step4": "Apri l'app una volta per permettere al widget di sincronizzare le tue coppie."
-      },
-      "close": "Chiudi"
-    },
     "premiumActiveUntil": "Attivo fino al {{date}}",
     "premiumLifetime": "Accesso a vita"
   },
@@ -136,106 +113,11 @@
       "cta": "Inizia",
       "reassurance": "Gratis · Senza account"
     },
-    "persona": {
-      "title": "Un attimo — cosa ti porta qui?",
-      "subtitle": "Adattiamo il resto a te.",
-      "traveler": {
-        "label": "Viaggi e vita all'estero",
-        "desc": "Valute sempre con te"
-      },
-      "trader": {
-        "label": "Trading e monitoraggio",
-        "desc": "Avvisi in tempo reale sulle coppie"
-      },
-      "freelancer": {
-        "label": "Business internazionale",
-        "desc": "Fatture, export, backup"
-      },
-      "general": {
-        "label": "Conversioni di tutti i giorni",
-        "desc": "Veloce e affidabile, senza fronzoli"
-      }
-    },
-    "currencyPicker": {
-      "title": "La tua valuta principale",
-      "subtitle": "Usata come base per tutte le conversioni.",
-      "detectedHint": "Rilevata dal tuo dispositivo",
-      "ctaWithCode": "Continua con {{code}}",
-      "searchPlaceholder": "Cerca valute...",
-      "showAll": "Mostra tutte"
-    },
-    "aha": {
-      "title": "Provala — trascina per convertire",
-      "subtitle": "Conversione in tempo reale in 3 valute.",
-      "cta": "Continua",
-      "hook": "Guarda come funziona",
-      "reveal1": "✓ Aggiornato in tempo reale",
-      "reveal2": "✓ Funziona offline",
-      "reveal3": "✓ 170+ valute disponibili"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Pensato per chi viaggia come te",
-        "heroCaption": "Il tuo widget sulla schermata Home"
-      },
-      "trader": {
-        "headline": "Pensato per i trader come te",
-        "heroCaption": "Avvisi in tempo reale sulle tue coppie"
-      },
-      "freelancer": {
-        "headline": "Pensato per il business internazionale",
-        "heroCaption": "Export CSV e PDF per la contabilità"
-      },
-      "general": {
-        "headline": "Pensato per le conversioni di tutti i giorni",
-        "heroCaption": "App pulita + widget sulla Home"
-      },
-      "secondary": {
-        "noAds": "Nessuna pubblicità, mai",
-        "offline": "Funziona del tutto offline",
-        "homeWidget": "Widget sulla schermata Home",
-        "rateAlerts": "Avvisi sui tassi in tempo reale",
-        "backup": "Backup automatico sul cloud",
-        "export": "Export CSV e PDF",
-        "statistics": "Statistiche e grafici"
-      },
-      "secondaryShort": {
-        "noAds": "Niente pubblicità",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Avvisi",
-        "backup": "Backup",
-        "export": "Export",
-        "statistics": "Statistiche"
-      },
-      "timelineHeader": "Come funziona la prova",
-      "day0": "Giorno 0 — Pro attivato",
-      "day5": "Giorno 5 — Promemoria prima della fine",
-      "day7": "Giorno 7 — Inizia l'addebito, annulli quando vuoi",
-      "ctaStart": "Inizia la mia prova gratuita di 7 giorni",
-      "ctaSkip": "Continua con la versione gratuita",
-      "fineprint": "{{price}}/anno dopo la prova · Risparmi {{percent}}%",
-      "fineprintNoSavings": "{{price}}/anno dopo la prova",
-      "reassurance": "Nessun addebito durante la prova",
-      "restore": "Ripristina acquisti",
-      "mock": {
-        "reportTitle": "Report conversioni",
-        "syncedToDrive": "Sincronizzato su Drive",
-        "ad": "Annuncio",
-        "alertTarget": "EUR/USD ha raggiunto il tuo obiettivo di 1,0950 🎯",
-        "alertVariation": "GBP/USD +0,8% stamattina 📈"
-      }
-    },
     "exitIntent": {
       "title": "Un attimo — prova Pro gratis",
       "body": "7 giorni gratis, nessun addebito oggi.\nAnnulli in 1 tocco, quando vuoi.",
       "ctaStart": "Sì, inizio la prova gratuita",
       "ctaSkip": "No grazie, continuo con il gratuito"
-    },
-    "proActive": {
-      "cta": "Andiamo",
-      "subtitle": "Tutto è sbloccato su questo dispositivo.",
-      "title": "Sei Pro"
     },
     "proWelcome": {
       "body": "Abbiamo trovato il tuo abbonamento Pro — è già attivo su questo dispositivo.",

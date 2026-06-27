@@ -28,8 +28,6 @@
     "back": "返回"
   },
   "tabs": {
-    "converter": "转换器",
-    "statistics": "统计",
     "settings": "设置"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "升级到 Pro",
     "premiumDescription": "去除广告 · 备份与导出",
     "premiumActive": "您是 Pro 会员",
-    "widget": {
-      "sectionLabel": "主屏幕小组件",
-      "title": "Watchlist 小组件",
-      "description": "在主屏幕上随时查看您关注的汇率",
-      "screenTitle": "Watchlist 小组件",
-      "howToAdd": "如何添加小组件",
-      "proPitchHeadline": "无需打开应用，即可查看汇率。",
-      "proPitchBullet1": "主屏幕上最多 3 个您选择的货币对",
-      "proPitchBullet2": "所选周期内的迷你图和涨跌幅",
-      "proPitchBullet3": "后台自动刷新",
-      "proCta": "解锁 Pro",
-      "periodLabel": "涨跌幅周期",
-      "howToSheet": {
-        "title": "分 4 步添加小组件",
-        "step1": "长按主屏幕的空白区域。",
-        "step2": "在菜单中点击“小组件”。",
-        "step3": "找到“All Currency Converter”，并将小组件拖到主屏幕。",
-        "step4": "打开一次应用，让小组件同步您的货币对。"
-      },
-      "close": "关闭"
-    },
     "premiumActiveUntil": "有效至 {{date}}",
     "premiumLifetime": "永久访问",
     "currenciesAdded_one": "已添加 {{count}} 种货币",
@@ -134,106 +111,11 @@
       "cta": "开始使用",
       "reassurance": "免费 · 无需账号"
     },
-    "persona": {
-      "title": "请问 — 你来这里的目的是?",
-      "subtitle": "我们会为你定制其余体验。",
-      "traveler": {
-        "label": "旅行与海外生活",
-        "desc": "随时随地换算货币"
-      },
-      "trader": {
-        "label": "交易与监控",
-        "desc": "实时货币对提醒"
-      },
-      "freelancer": {
-        "label": "国际业务",
-        "desc": "发票、导出、备份"
-      },
-      "general": {
-        "label": "日常换算",
-        "desc": "快速可靠,简单纯粹"
-      }
-    },
-    "currencyPicker": {
-      "title": "你的主货币",
-      "subtitle": "作为所有换算的基准。",
-      "detectedHint": "已从你的设备检测",
-      "ctaWithCode": "使用 {{code}} 继续",
-      "searchPlaceholder": "搜索货币...",
-      "showAll": "显示全部"
-    },
-    "aha": {
-      "title": "试试看 — 拖动即可换算",
-      "subtitle": "在 3 种货币中实时换算。",
-      "cta": "继续",
-      "hook": "看它如何运作",
-      "reveal1": "✓ 实时更新",
-      "reveal2": "✓ 离线可用",
-      "reveal3": "✓ 170+ 种货币可选"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "专为像你这样的旅行者打造",
-        "heroCaption": "主屏幕上的你的小组件"
-      },
-      "trader": {
-        "headline": "专为像你这样的交易者打造",
-        "heroCaption": "你的货币对实时提醒"
-      },
-      "freelancer": {
-        "headline": "专为国际业务打造",
-        "heroCaption": "CSV 与 PDF 导出供财务使用"
-      },
-      "general": {
-        "headline": "为日常换算精心设计",
-        "heroCaption": "简洁的应用 + 主屏小组件"
-      },
-      "secondary": {
-        "noAds": "永远没有广告",
-        "offline": "完全离线可用",
-        "homeWidget": "主屏幕小组件",
-        "rateAlerts": "实时汇率提醒",
-        "backup": "云端自动备份",
-        "export": "CSV 与 PDF 导出",
-        "statistics": "统计与图表"
-      },
-      "secondaryShort": {
-        "noAds": "无广告",
-        "offline": "离线",
-        "homeWidget": "小组件",
-        "rateAlerts": "提醒",
-        "backup": "备份",
-        "export": "导出",
-        "statistics": "统计"
-      },
-      "timelineHeader": "试用如何进行",
-      "day0": "第 0 天 — 解锁 Pro",
-      "day5": "第 5 天 — 试用结束前提醒",
-      "day7": "第 7 天 — 开始计费,随时取消",
-      "ctaStart": "开始我的 7 天免费试用",
-      "ctaSkip": "继续使用免费版",
-      "fineprint": "试用后 {{price}}/年 · 节省 {{percent}}%",
-      "fineprintNoSavings": "试用后 {{price}}/年",
-      "reassurance": "试用期间不扣费",
-      "restore": "恢复购买",
-      "mock": {
-        "reportTitle": "换算报告",
-        "syncedToDrive": "已同步到 Drive",
-        "ad": "广告",
-        "alertTarget": "EUR/USD 已达到你的目标 1.0950 🎯",
-        "alertVariation": "GBP/USD 今早上涨 0.8% 📈"
-      }
-    },
     "exitIntent": {
       "title": "等等 — 免费试用 Pro",
       "body": "7 天免费,今日不扣费。\n1 次轻点即可取消,随时可取消。",
       "ctaStart": "好的,开始我的免费试用",
       "ctaSkip": "不用了,继续免费版"
-    },
-    "proActive": {
-      "cta": "出发",
-      "subtitle": "此设备上的所有功能已解锁。",
-      "title": "你已是 Pro 用户"
     },
     "proWelcome": {
       "body": "我们找到了你的 Pro 订阅 — 已在此设备上激活。",

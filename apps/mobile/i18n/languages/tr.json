@@ -28,8 +28,6 @@
     "back": "Geri"
   },
   "tabs": {
-    "converter": "Dönüştürücü",
-    "statistics": "İstatistikler",
     "settings": "Ayarlar"
   },
   "settings": {
@@ -101,27 +99,6 @@
     "goPremium": "Pro'ya yükselt",
     "premiumDescription": "Reklamları kaldır · Yedek ve dışa aktarım",
     "premiumActive": "Pro üyesisiniz",
-    "widget": {
-      "sectionLabel": "Ana ekran widget'ı",
-      "title": "Watchlist widget'ı",
-      "description": "Favori kurlarınızı ana ekrandan takip edin",
-      "screenTitle": "Watchlist widget'ı",
-      "howToAdd": "Widget nasıl eklenir",
-      "proPitchHeadline": "Uygulamayı açmadan kurlarınız.",
-      "proPitchBullet1": "Ana ekranınızda seçtiğiniz 3 çifte kadar",
-      "proPitchBullet2": "Seçtiğiniz dönem için sparkline ve değişim",
-      "proPitchBullet3": "Arka planda otomatik yenileme",
-      "proCta": "Pro'yu Aç",
-      "periodLabel": "Değişim dönemi",
-      "howToSheet": {
-        "title": "Widget'ı 4 adımda ekleyin",
-        "step1": "Ana ekranınızda boş bir alana uzun basın.",
-        "step2": "Menüden “Widget'lar”a dokunun.",
-        "step3": "“All Currency Converter”ı bulun ve widget'ı ana ekranınıza sürükleyin.",
-        "step4": "Widget'ın çiftlerinizi senkronize etmesi için uygulamayı bir kez açın."
-      },
-      "close": "Kapat"
-    },
     "premiumActiveUntil": "{{date}} tarihine kadar aktif",
     "premiumLifetime": "Ömür boyu erişim"
   },
@@ -134,106 +111,11 @@
       "cta": "Başla",
       "reassurance": "Ücretsiz · Hesap gerekmiyor"
     },
-    "persona": {
-      "title": "Bir saniye — seni buraya ne getirdi?",
-      "subtitle": "Gerisini sana göre ayarlayalım.",
-      "traveler": {
-        "label": "Seyahat ve yurt dışı yaşam",
-        "desc": "Yolda para birimleri"
-      },
-      "trader": {
-        "label": "Trading ve izleme",
-        "desc": "Paritelerde gerçek zamanlı uyarılar"
-      },
-      "freelancer": {
-        "label": "Uluslararası iş",
-        "desc": "Faturalar, dışa aktarma, yedekleme"
-      },
-      "general": {
-        "label": "Günlük dönüşümler",
-        "desc": "Hızlı ve güvenilir, derdi yok"
-      }
-    },
-    "currencyPicker": {
-      "title": "Ana para birimin",
-      "subtitle": "Tüm dönüşümler için temel olarak kullanılır.",
-      "detectedHint": "Cihazından algılandı",
-      "ctaWithCode": "{{code}} ile devam",
-      "searchPlaceholder": "Para birimi ara...",
-      "showAll": "Tümünü göster"
-    },
-    "aha": {
-      "title": "Dene — dönüşüm için sürükle",
-      "subtitle": "3 para biriminde canlı dönüşüm.",
-      "cta": "Devam",
-      "hook": "Aksiyonda gör",
-      "reveal1": "✓ Gerçek zamanlı güncellenir",
-      "reveal2": "✓ Çevrimdışı çalışır",
-      "reveal3": "✓ 170+ para birimi mevcut"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Senin gibi gezginler için tasarlandı",
-        "heroCaption": "Ana ekranındaki widget'ın"
-      },
-      "trader": {
-        "headline": "Senin gibi yatırımcılar için tasarlandı",
-        "heroCaption": "Paritelerinde gerçek zamanlı uyarılar"
-      },
-      "freelancer": {
-        "headline": "Uluslararası iş için tasarlandı",
-        "heroCaption": "Muhasebe için CSV ve PDF dışa aktarma"
-      },
-      "general": {
-        "headline": "Günlük dönüşümler için tasarlandı",
-        "heroCaption": "Sade uygulama + ana ekran widget'ı"
-      },
-      "secondary": {
-        "noAds": "Reklam yok, hiçbir zaman",
-        "offline": "Tamamen çevrimdışı çalışır",
-        "homeWidget": "Ana ekran widget'ı",
-        "rateAlerts": "Gerçek zamanlı kur uyarıları",
-        "backup": "Otomatik bulut yedekleme",
-        "export": "CSV ve PDF dışa aktarma",
-        "statistics": "İstatistikler ve grafikler"
-      },
-      "secondaryShort": {
-        "noAds": "Reklamsız",
-        "offline": "Çevrimdışı",
-        "homeWidget": "Widget",
-        "rateAlerts": "Uyarılar",
-        "backup": "Yedekleme",
-        "export": "Dışa aktar",
-        "statistics": "İstatistik"
-      },
-      "timelineHeader": "Deneme sürecin nasıl işliyor",
-      "day0": "0. Gün — Pro açıldı",
-      "day5": "5. Gün — Bitmeden önce hatırlatma",
-      "day7": "7. Gün — Ödeme başlar, istediğinde iptal edebilirsin",
-      "ctaStart": "7 günlük ücretsiz denememi başlat",
-      "ctaSkip": "Ücretsiz sürümle devam et",
-      "fineprint": "Denemenin ardından {{price}}/yıl · %{{percent}} tasarruf",
-      "fineprintNoSavings": "Denemenin ardından {{price}}/yıl",
-      "reassurance": "Deneme süresince ücret alınmaz",
-      "restore": "Satın alımları geri yükle",
-      "mock": {
-        "reportTitle": "Dönüşüm raporu",
-        "syncedToDrive": "Drive'a senkronlandı",
-        "ad": "Reklam",
-        "alertTarget": "EUR/USD 1,0950 hedefine ulaştı 🎯",
-        "alertVariation": "GBP/USD bu sabah %0,8 yükseldi 📈"
-      }
-    },
     "exitIntent": {
       "title": "Bekle — Pro'yu ücretsiz dene",
       "body": "7 gün ücretsiz, bugün ödeme yok.\n1 dokunuşla, istediğin zaman iptal.",
       "ctaStart": "Evet, ücretsiz denememi başlat",
       "ctaSkip": "Hayır teşekkürler, ücretsiz devam"
-    },
-    "proActive": {
-      "cta": "Hadi başlayalım",
-      "subtitle": "Bu cihazdaki her şeyin kilidi açıldı.",
-      "title": "Pro üyesiniz"
     },
     "proWelcome": {
       "body": "Pro aboneliğinizi bulduk — bu cihazda zaten aktif.",

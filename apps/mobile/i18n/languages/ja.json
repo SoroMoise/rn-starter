@@ -28,8 +28,6 @@
     "back": "戻る"
   },
   "tabs": {
-    "converter": "コンバーター",
-    "statistics": "統計",
     "settings": "設定"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "Proにアップグレード",
     "premiumDescription": "広告なし · バックアップ＆エクスポート",
     "premiumActive": "Proメンバーです",
-    "widget": {
-      "sectionLabel": "ホーム画面ウィジェット",
-      "title": "Watchlistウィジェット",
-      "description": "ホーム画面からお気に入りのレートをチェック",
-      "screenTitle": "Watchlistウィジェット",
-      "howToAdd": "ウィジェットの追加方法",
-      "proPitchHeadline": "アプリを開かずに、あなたのレートを。",
-      "proPitchBullet1": "ホーム画面に好きなペアを最大3つ",
-      "proPitchBullet2": "選択した期間のスパークラインと変動率",
-      "proPitchBullet3": "バックグラウンドで自動更新",
-      "proCta": "Pro をアンロック",
-      "periodLabel": "変動期間",
-      "howToSheet": {
-        "title": "ウィジェットを4ステップで追加",
-        "step1": "ホーム画面の空いている場所を長押しします。",
-        "step2": "メニューから「ウィジェット」をタップします。",
-        "step3": "「All Currency Converter」を探し、ウィジェットをホーム画面にドラッグします。",
-        "step4": "ウィジェットがペアを同期できるよう、一度アプリを開いてください。"
-      },
-      "close": "閉じる"
-    },
     "premiumActiveUntil": "{{date}}まで有効",
     "premiumLifetime": "永久アクセス",
     "currenciesAdded_one": "{{count}}種類の通貨を追加",
@@ -134,106 +111,11 @@
       "cta": "はじめる",
       "reassurance": "無料 · アカウント不要"
     },
-    "persona": {
-      "title": "少しだけ — 利用の目的は?",
-      "subtitle": "残りはあなたに合わせて最適化します。",
-      "traveler": {
-        "label": "旅行 & 海外生活",
-        "desc": "移動中も通貨換算"
-      },
-      "trader": {
-        "label": "トレード & モニタリング",
-        "desc": "ペアのリアルタイム通知"
-      },
-      "freelancer": {
-        "label": "国際ビジネス",
-        "desc": "請求書、エクスポート、バックアップ"
-      },
-      "general": {
-        "label": "日常の換算",
-        "desc": "速くて確か、手間なし"
-      }
-    },
-    "currencyPicker": {
-      "title": "メイン通貨",
-      "subtitle": "すべての換算の基準として使われます。",
-      "detectedHint": "お使いの端末から検出されました",
-      "ctaWithCode": "{{code}} で続ける",
-      "searchPlaceholder": "通貨を検索...",
-      "showAll": "すべて表示"
-    },
-    "aha": {
-      "title": "試してみよう — ドラッグで換算",
-      "subtitle": "3 つの通貨をリアルタイムで換算。",
-      "cta": "続ける",
-      "hook": "動きを見てみる",
-      "reveal1": "✓ リアルタイム更新",
-      "reveal2": "✓ オフラインで動作",
-      "reveal3": "✓ 170+ の通貨に対応"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "あなたのような旅行者のために",
-        "heroCaption": "ホーム画面に置けるウィジェット"
-      },
-      "trader": {
-        "headline": "あなたのようなトレーダーのために",
-        "heroCaption": "ペアのリアルタイム通知"
-      },
-      "freelancer": {
-        "headline": "国際ビジネスのために",
-        "heroCaption": "経理用に CSV & PDF でエクスポート"
-      },
-      "general": {
-        "headline": "日常の換算のために設計",
-        "heroCaption": "シンプルなアプリ + ホーム画面ウィジェット"
-      },
-      "secondary": {
-        "noAds": "広告なし、ずっと",
-        "offline": "完全オフライン対応",
-        "homeWidget": "ホーム画面ウィジェット",
-        "rateAlerts": "リアルタイムのレート通知",
-        "backup": "自動クラウドバックアップ",
-        "export": "CSV & PDF エクスポート",
-        "statistics": "統計 & グラフ"
-      },
-      "secondaryShort": {
-        "noAds": "広告なし",
-        "offline": "オフライン",
-        "homeWidget": "ウィジェット",
-        "rateAlerts": "通知",
-        "backup": "バックアップ",
-        "export": "エクスポート",
-        "statistics": "統計"
-      },
-      "timelineHeader": "無料トライアルの流れ",
-      "day0": "0日目 — Pro を解放",
-      "day5": "5日目 — 終了前のお知らせ",
-      "day7": "7日目 — 課金開始、いつでも解約可",
-      "ctaStart": "7日間の無料トライアルを開始",
-      "ctaSkip": "無料版で続ける",
-      "fineprint": "トライアル後は {{price}}/年 · {{percent}}% お得",
-      "fineprintNoSavings": "トライアル後は {{price}}/年",
-      "reassurance": "トライアル中の請求はなし",
-      "restore": "購入を復元",
-      "mock": {
-        "reportTitle": "換算レポート",
-        "syncedToDrive": "Drive に同期済み",
-        "ad": "広告",
-        "alertTarget": "EUR/USD が目標の 1.0950 に到達 🎯",
-        "alertVariation": "GBP/USD は今朝 0.8% 上昇 📈"
-      }
-    },
     "exitIntent": {
       "title": "少しだけお待ちを — Pro を無料で",
       "body": "7日間無料、今日は請求なし。\nワンタップでいつでも解約。",
       "ctaStart": "はい、無料トライアルを開始",
       "ctaSkip": "いいえ、無料版で続ける"
-    },
-    "proActive": {
-      "cta": "始めましょう",
-      "subtitle": "このデバイスですべての機能が解放されています。",
-      "title": "Proになりました"
     },
     "proWelcome": {
       "body": "Proサブスクリプションが見つかりました — このデバイスですでに有効です。",

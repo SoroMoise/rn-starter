@@ -28,8 +28,6 @@
     "back": "뒤로"
   },
   "tabs": {
-    "converter": "변환기",
-    "statistics": "통계",
     "settings": "설정"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "Pro로 업그레이드",
     "premiumDescription": "광고 제거 · 백업 및 내보내기",
     "premiumActive": "Pro 회원입니다",
-    "widget": {
-      "sectionLabel": "홈 화면 위젯",
-      "title": "Watchlist 위젯",
-      "description": "홈 화면에서 즐겨찾는 환율을 확인하세요",
-      "screenTitle": "Watchlist 위젯",
-      "howToAdd": "위젯 추가 방법",
-      "proPitchHeadline": "앱을 열지 않아도 환율을 확인하세요.",
-      "proPitchBullet1": "홈 화면에 원하는 통화쌍 최대 3개",
-      "proPitchBullet2": "선택한 기간의 스파크라인과 변동률",
-      "proPitchBullet3": "백그라운드 자동 새로고침",
-      "proCta": "Pro 잠금 해제",
-      "periodLabel": "변동 기간",
-      "howToSheet": {
-        "title": "4단계로 위젯 추가하기",
-        "step1": "홈 화면의 빈 공간을 길게 누르세요.",
-        "step2": "메뉴에서 \"위젯\"을 탭하세요.",
-        "step3": "\"All Currency Converter\"를 찾아 위젯을 홈 화면으로 드래그하세요.",
-        "step4": "위젯이 통화쌍을 동기화할 수 있도록 앱을 한 번 열어주세요."
-      },
-      "close": "닫기"
-    },
     "premiumActiveUntil": "{{date}}까지 활성",
     "premiumLifetime": "평생 이용",
     "currenciesAdded_one": "{{count}}개의 통화 추가됨",
@@ -134,106 +111,11 @@
       "cta": "시작하기",
       "reassurance": "무료 · 계정 필요 없음"
     },
-    "persona": {
-      "title": "잠깐 — 무엇 때문에 오셨나요?",
-      "subtitle": "나머지는 맞춤으로 준비할게요.",
-      "traveler": {
-        "label": "여행 & 해외 생활",
-        "desc": "이동 중에도 통화 환산"
-      },
-      "trader": {
-        "label": "트레이딩 & 모니터링",
-        "desc": "페어 실시간 알림"
-      },
-      "freelancer": {
-        "label": "국제 비즈니스",
-        "desc": "청구서, 내보내기, 백업"
-      },
-      "general": {
-        "label": "일상 환산",
-        "desc": "빠르고 정확하게, 군더더기 없이"
-      }
-    },
-    "currencyPicker": {
-      "title": "주 통화",
-      "subtitle": "모든 환산의 기준으로 사용됩니다.",
-      "detectedHint": "기기에서 자동 감지됨",
-      "ctaWithCode": "{{code}}(으)로 계속",
-      "searchPlaceholder": "통화 검색...",
-      "showAll": "모두 보기"
-    },
-    "aha": {
-      "title": "지금 해보기 — 끌어서 환산",
-      "subtitle": "3개 통화에서 실시간으로 환산.",
-      "cta": "계속",
-      "hook": "직접 확인해보세요",
-      "reveal1": "✓ 실시간 업데이트",
-      "reveal2": "✓ 오프라인에서도 작동",
-      "reveal3": "✓ 170+ 통화 지원"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "여행자를 위해 만든 앱",
-        "heroCaption": "홈 화면에 위젯을 추가하세요"
-      },
-      "trader": {
-        "headline": "트레이더를 위해 만든 앱",
-        "heroCaption": "관심 페어 실시간 알림"
-      },
-      "freelancer": {
-        "headline": "국제 비즈니스를 위해 만든 앱",
-        "heroCaption": "회계용 CSV & PDF 내보내기"
-      },
-      "general": {
-        "headline": "일상 환산을 위해 설계됨",
-        "heroCaption": "깔끔한 앱 + 홈 화면 위젯"
-      },
-      "secondary": {
-        "noAds": "광고 없음, 영원히",
-        "offline": "완전한 오프라인 지원",
-        "homeWidget": "홈 화면 위젯",
-        "rateAlerts": "실시간 환율 알림",
-        "backup": "자동 클라우드 백업",
-        "export": "CSV & PDF 내보내기",
-        "statistics": "통계 & 차트"
-      },
-      "secondaryShort": {
-        "noAds": "광고 없음",
-        "offline": "오프라인",
-        "homeWidget": "위젯",
-        "rateAlerts": "알림",
-        "backup": "백업",
-        "export": "내보내기",
-        "statistics": "통계"
-      },
-      "timelineHeader": "체험 기간 안내",
-      "day0": "0일차 — Pro 잠금 해제",
-      "day5": "5일차 — 종료 전 알림",
-      "day7": "7일차 — 결제 시작, 언제든 해지 가능",
-      "ctaStart": "7일 무료 체험 시작",
-      "ctaSkip": "무료 버전으로 계속",
-      "fineprint": "체험 후 {{price}}/년 · {{percent}}% 절약",
-      "fineprintNoSavings": "체험 후 {{price}}/년",
-      "reassurance": "체험 기간 동안 청구 없음",
-      "restore": "구매 복원",
-      "mock": {
-        "reportTitle": "환산 보고서",
-        "syncedToDrive": "Drive에 동기화됨",
-        "ad": "광고",
-        "alertTarget": "EUR/USD가 목표 1.0950에 도달 🎯",
-        "alertVariation": "GBP/USD 오늘 아침 0.8% 상승 📈"
-      }
-    },
     "exitIntent": {
       "title": "잠깐만요 — Pro를 무료로 체험해 보세요",
       "body": "7일 무료, 오늘은 청구 없음.\n1번의 탭으로 언제든지 해지.",
       "ctaStart": "네, 무료 체험을 시작할게요",
       "ctaSkip": "괜찮아요, 무료로 계속할게요"
-    },
-    "proActive": {
-      "cta": "시작하기",
-      "subtitle": "이 기기의 모든 기능이 잠금 해제되었습니다.",
-      "title": "Pro 회원입니다"
     },
     "proWelcome": {
       "body": "Pro 구독을 찾았습니다 — 이 기기에서 이미 활성화되어 있습니다.",

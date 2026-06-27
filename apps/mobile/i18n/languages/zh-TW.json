@@ -28,8 +28,6 @@
     "back": "返回"
   },
   "tabs": {
-    "converter": "轉換器",
-    "statistics": "統計",
     "settings": "設定"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "升級到 Pro",
     "premiumDescription": "去除廣告 · 備份與匯出",
     "premiumActive": "您是 Pro 會員",
-    "widget": {
-      "sectionLabel": "主畫面小工具",
-      "title": "Watchlist 小工具",
-      "description": "在主畫面隨時掌握您關注的匯率",
-      "screenTitle": "Watchlist 小工具",
-      "howToAdd": "如何新增小工具",
-      "proPitchHeadline": "不用打開應用程式，也能看匯率。",
-      "proPitchBullet1": "主畫面最多可放 3 組您選擇的貨幣對",
-      "proPitchBullet2": "依您選擇的期間顯示走勢圖與漲跌幅",
-      "proPitchBullet3": "背景自動更新",
-      "proCta": "解鎖 Pro",
-      "periodLabel": "漲跌幅期間",
-      "howToSheet": {
-        "title": "分 4 步新增小工具",
-        "step1": "長按主畫面的空白區域。",
-        "step2": "在選單中點選「小工具」。",
-        "step3": "找到「All Currency Converter」，將小工具拖曳到主畫面。",
-        "step4": "開啟一次應用程式，讓小工具同步您的貨幣對。"
-      },
-      "close": "關閉"
-    },
     "premiumActiveUntil": "有效至 {{date}}",
     "premiumLifetime": "終身存取",
     "currenciesAdded_one": "已新增 {{count}} 種貨幣",
@@ -134,106 +111,11 @@
       "cta": "開始使用",
       "reassurance": "免費 · 無需帳號"
     },
-    "persona": {
-      "title": "稍等一下 — 你來這裡的目的是?",
-      "subtitle": "其餘體驗,我們為你量身打造。",
-      "traveler": {
-        "label": "旅行與海外生活",
-        "desc": "走到哪換到哪"
-      },
-      "trader": {
-        "label": "交易與監控",
-        "desc": "即時貨幣對提醒"
-      },
-      "freelancer": {
-        "label": "國際業務",
-        "desc": "發票、匯出、備份"
-      },
-      "general": {
-        "label": "日常換算",
-        "desc": "快速可靠,毫不囉嗦"
-      }
-    },
-    "currencyPicker": {
-      "title": "你的主要貨幣",
-      "subtitle": "作為所有換算的基準。",
-      "detectedHint": "已從你的裝置偵測",
-      "ctaWithCode": "以 {{code}} 繼續",
-      "searchPlaceholder": "搜尋貨幣...",
-      "showAll": "顯示全部"
-    },
-    "aha": {
-      "title": "試試看 — 拖曳即可換算",
-      "subtitle": "在 3 種貨幣間即時換算。",
-      "cta": "繼續",
-      "hook": "看看實際運作",
-      "reveal1": "✓ 即時更新",
-      "reveal2": "✓ 離線可用",
-      "reveal3": "✓ 170+ 種貨幣可選"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "為像你這樣的旅人打造",
-        "heroCaption": "主畫面上的小工具,專屬於你"
-      },
-      "trader": {
-        "headline": "為像你這樣的交易者打造",
-        "heroCaption": "在你的貨幣對上即時提醒"
-      },
-      "freelancer": {
-        "headline": "為國際業務打造",
-        "heroCaption": "匯出 CSV 與 PDF 給會計使用"
-      },
-      "general": {
-        "headline": "為日常換算精心設計",
-        "heroCaption": "簡潔 App + 主畫面小工具"
-      },
-      "secondary": {
-        "noAds": "永遠沒有廣告",
-        "offline": "完全離線可用",
-        "homeWidget": "主畫面小工具",
-        "rateAlerts": "即時匯率提醒",
-        "backup": "自動雲端備份",
-        "export": "匯出 CSV 與 PDF",
-        "statistics": "統計與圖表"
-      },
-      "secondaryShort": {
-        "noAds": "無廣告",
-        "offline": "離線",
-        "homeWidget": "小工具",
-        "rateAlerts": "提醒",
-        "backup": "備份",
-        "export": "匯出",
-        "statistics": "統計"
-      },
-      "timelineHeader": "試用方案怎麼運作",
-      "day0": "第 0 天 — 解鎖 Pro",
-      "day5": "第 5 天 — 試用結束前提醒",
-      "day7": "第 7 天 — 開始扣款,隨時可取消",
-      "ctaStart": "開始我的 7 天免費試用",
-      "ctaSkip": "繼續使用免費版",
-      "fineprint": "試用後 {{price}}/年 · 省下 {{percent}}%",
-      "fineprintNoSavings": "試用後 {{price}}/年",
-      "reassurance": "試用期間不會扣款",
-      "restore": "還原購買",
-      "mock": {
-        "reportTitle": "換算報告",
-        "syncedToDrive": "已同步到 Drive",
-        "ad": "廣告",
-        "alertTarget": "EUR/USD 已達到你的目標 1.0950 🎯",
-        "alertVariation": "GBP/USD 今早上漲 0.8% 📈"
-      }
-    },
     "exitIntent": {
       "title": "等一下 — 免費試用 Pro",
       "body": "7 天免費,今天不扣款。\n1 鍵即可取消,隨時都行。",
       "ctaStart": "好的,開始我的免費試用",
       "ctaSkip": "不用了,繼續使用免費版"
-    },
-    "proActive": {
-      "cta": "出發",
-      "subtitle": "此裝置上的所有功能已解鎖。",
-      "title": "你已是 Pro 用戶"
     },
     "proWelcome": {
       "body": "我們找到了你的 Pro 訂閱 — 已在此裝置上啟用。",

@@ -28,8 +28,6 @@
     "back": "Tillbaka"
   },
   "tabs": {
-    "converter": "Omvandlare",
-    "statistics": "Statistik",
     "settings": "Inställningar"
   },
   "settings": {
@@ -101,27 +99,6 @@
     "goPremium": "Uppgradera till Pro",
     "premiumDescription": "Inga annonser · Backup & export",
     "premiumActive": "Du är Pro-medlem",
-    "widget": {
-      "sectionLabel": "Widget för hemskärmen",
-      "title": "Watchlist-widget",
-      "description": "Håll koll på dina favoritkurser från hemskärmen",
-      "screenTitle": "Watchlist-widget",
-      "howToAdd": "Lägg till widgeten",
-      "proPitchHeadline": "Dina kurser, utan att öppna appen.",
-      "proPitchBullet1": "Upp till 3 par du själv väljer på hemskärmen",
-      "proPitchBullet2": "Sparkline och förändring över vald period",
-      "proPitchBullet3": "Automatisk uppdatering i bakgrunden",
-      "proCta": "Lås upp Pro",
-      "periodLabel": "Period för förändring",
-      "howToSheet": {
-        "title": "Lägg till widgeten i 4 steg",
-        "step1": "Tryck och håll på en tom yta på hemskärmen.",
-        "step2": "Tryck på ”Widgetar” i menyn.",
-        "step3": "Hitta ”All Currency Converter” och dra widgeten till hemskärmen.",
-        "step4": "Öppna appen en gång så att widgeten kan synka dina par."
-      },
-      "close": "Stäng"
-    },
     "premiumActiveUntil": "Aktiv till {{date}}",
     "premiumLifetime": "Livstidsåtkomst"
   },
@@ -134,106 +111,11 @@
       "cta": "Kom igång",
       "reassurance": "Gratis · Inget konto behövs"
     },
-    "persona": {
-      "title": "En sekund — vad för dig hit?",
-      "subtitle": "Vi anpassar resten efter dig.",
-      "traveler": {
-        "label": "Resor & liv utomlands",
-        "desc": "Valutor på språng"
-      },
-      "trader": {
-        "label": "Trading & bevakning",
-        "desc": "Realtidsaviseringar på par"
-      },
-      "freelancer": {
-        "label": "Internationella affärer",
-        "desc": "Fakturor, export, säkerhetskopia"
-      },
-      "general": {
-        "label": "Vardagsväxlingar",
-        "desc": "Snabbt och pålitligt, utan krångel"
-      }
-    },
-    "currencyPicker": {
-      "title": "Din huvudvaluta",
-      "subtitle": "Används som bas för alla växlingar.",
-      "detectedHint": "Identifierad från din enhet",
-      "ctaWithCode": "Fortsätt med {{code}}",
-      "searchPlaceholder": "Sök valutor...",
-      "showAll": "Visa alla"
-    },
-    "aha": {
-      "title": "Testa — dra för att växla",
-      "subtitle": "Live-växling i 3 valutor.",
-      "cta": "Fortsätt",
-      "hook": "Se det i praktiken",
-      "reveal1": "✓ Uppdateras i realtid",
-      "reveal2": "✓ Fungerar offline",
-      "reveal3": "✓ 170+ valutor tillgängliga"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Skapad för resenärer som dig",
-        "heroCaption": "Din widget på hemskärmen"
-      },
-      "trader": {
-        "headline": "Skapad för traders som dig",
-        "heroCaption": "Realtidsaviseringar på dina par"
-      },
-      "freelancer": {
-        "headline": "Skapad för internationella affärer",
-        "heroCaption": "Export till CSV & PDF för bokföring"
-      },
-      "general": {
-        "headline": "Designad för vardagliga växlingar",
-        "heroCaption": "Ren app + widget på hemskärmen"
-      },
-      "secondary": {
-        "noAds": "Aldrig några annonser",
-        "offline": "Fungerar helt offline",
-        "homeWidget": "Widget på hemskärmen",
-        "rateAlerts": "Realtidsaviseringar på kurser",
-        "backup": "Automatisk säkerhetskopia i molnet",
-        "export": "Export till CSV & PDF",
-        "statistics": "Statistik & diagram"
-      },
-      "secondaryShort": {
-        "noAds": "Inga annonser",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Aviseringar",
-        "backup": "Backup",
-        "export": "Export",
-        "statistics": "Statistik"
-      },
-      "timelineHeader": "Så fungerar din provperiod",
-      "day0": "Dag 0 — Pro upplåst",
-      "day5": "Dag 5 — Påminnelse innan slut",
-      "day7": "Dag 7 — Faktureringen startar, säg upp när du vill",
-      "ctaStart": "Starta min gratis 7-dagars provperiod",
-      "ctaSkip": "Fortsätt med gratisversionen",
-      "fineprint": "{{price}}/år efter provperioden · Spara {{percent}}%",
-      "fineprintNoSavings": "{{price}}/år efter provperioden",
-      "reassurance": "Ingen debitering under provperioden",
-      "restore": "Återställ köp",
-      "mock": {
-        "reportTitle": "Omvandlingsrapport",
-        "syncedToDrive": "Synkad med Drive",
-        "ad": "Annons",
-        "alertTarget": "EUR/USD nådde ditt mål på 1,0950 🎯",
-        "alertVariation": "GBP/USD +0,8 % i morse 📈"
-      }
-    },
     "exitIntent": {
       "title": "Vänta — testa Pro gratis",
       "body": "7 dagar gratis, ingen debitering idag.\nSäg upp med 1 tryck, när som helst.",
       "ctaStart": "Ja, starta min gratis provperiod",
       "ctaSkip": "Nej tack, fortsätt gratis"
-    },
-    "proActive": {
-      "cta": "Kör igång",
-      "subtitle": "Allt är upplåst på den här enheten.",
-      "title": "Du är Pro"
     },
     "proWelcome": {
       "body": "Vi hittade din Pro-prenumeration — den är redan aktiv på den här enheten.",

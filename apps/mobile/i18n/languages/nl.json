@@ -28,8 +28,6 @@
     "back": "Terug"
   },
   "tabs": {
-    "converter": "Converter",
-    "statistics": "Statistieken",
     "settings": "Instellingen"
   },
   "settings": {
@@ -101,27 +99,6 @@
     "goPremium": "Upgraden naar Pro",
     "premiumDescription": "Geen advertenties · Back-up & export",
     "premiumActive": "Je bent een Pro-lid",
-    "widget": {
-      "sectionLabel": "Widget op het startscherm",
-      "title": "Watchlist-widget",
-      "description": "Volg je favoriete koersen vanaf het startscherm",
-      "screenTitle": "Watchlist-widget",
-      "howToAdd": "Widget toevoegen",
-      "proPitchHeadline": "Je koersen, zonder de app te openen.",
-      "proPitchBullet1": "Tot 3 paren van je keuze op je startscherm",
-      "proPitchBullet2": "Sparkline en verandering over de gekozen periode",
-      "proPitchBullet3": "Automatische update op de achtergrond",
-      "proCta": "Pro ontgrendelen",
-      "periodLabel": "Periode voor verandering",
-      "howToSheet": {
-        "title": "Widget toevoegen in 4 stappen",
-        "step1": "Houd een leeg gedeelte van je startscherm ingedrukt.",
-        "step2": "Tik op „Widgets” in het menu.",
-        "step3": "Zoek „All Currency Converter” en sleep de widget naar je startscherm.",
-        "step4": "Open de app één keer zodat de widget je paren kan synchroniseren."
-      },
-      "close": "Sluiten"
-    },
     "premiumActiveUntil": "Actief tot {{date}}",
     "premiumLifetime": "Levenslange toegang"
   },
@@ -134,106 +111,11 @@
       "cta": "Beginnen",
       "reassurance": "Gratis · Geen account nodig"
     },
-    "persona": {
-      "title": "Even kort — wat brengt je hier?",
-      "subtitle": "We stemmen de rest op jou af.",
-      "traveler": {
-        "label": "Reizen & leven in het buitenland",
-        "desc": "Valuta's onderweg"
-      },
-      "trader": {
-        "label": "Trading & monitoring",
-        "desc": "Realtime meldingen op koersen"
-      },
-      "freelancer": {
-        "label": "Internationale business",
-        "desc": "Facturen, exports, back-up"
-      },
-      "general": {
-        "label": "Alledaagse omrekeningen",
-        "desc": "Snel en betrouwbaar, geen gedoe"
-      }
-    },
-    "currencyPicker": {
-      "title": "Je hoofdvaluta",
-      "subtitle": "Wordt als basis gebruikt voor alle omrekeningen.",
-      "detectedHint": "Gedetecteerd op je apparaat",
-      "ctaWithCode": "Doorgaan met {{code}}",
-      "searchPlaceholder": "Valuta zoeken...",
-      "showAll": "Toon alle"
-    },
-    "aha": {
-      "title": "Probeer het — sleep om om te rekenen",
-      "subtitle": "Live omrekening in 3 valuta's.",
-      "cta": "Doorgaan",
-      "hook": "Zie het in actie",
-      "reveal1": "✓ Realtime bijgewerkt",
-      "reveal2": "✓ Werkt offline",
-      "reveal3": "✓ 170+ valuta's beschikbaar"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Gemaakt voor reizigers zoals jij",
-        "heroCaption": "Je widget op het beginscherm"
-      },
-      "trader": {
-        "headline": "Gemaakt voor traders zoals jij",
-        "heroCaption": "Realtime meldingen op je koersen"
-      },
-      "freelancer": {
-        "headline": "Gemaakt voor internationale business",
-        "heroCaption": "Export naar CSV & PDF voor de boekhouding"
-      },
-      "general": {
-        "headline": "Voor je alledaagse omrekeningen",
-        "heroCaption": "Strakke app + widget op het beginscherm"
-      },
-      "secondary": {
-        "noAds": "Nooit advertenties",
-        "offline": "Volledig offline beschikbaar",
-        "homeWidget": "Widget op het beginscherm",
-        "rateAlerts": "Realtime koersmeldingen",
-        "backup": "Automatische cloud-back-up",
-        "export": "Export naar CSV & PDF",
-        "statistics": "Statistieken & grafieken"
-      },
-      "secondaryShort": {
-        "noAds": "Geen reclame",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Meldingen",
-        "backup": "Back-up",
-        "export": "Export",
-        "statistics": "Statistiek"
-      },
-      "timelineHeader": "Zo werkt je proefperiode",
-      "day0": "Dag 0 — Pro ontgrendeld",
-      "day5": "Dag 5 — Herinnering voor het einde",
-      "day7": "Dag 7 — Facturatie start, altijd opzegbaar",
-      "ctaStart": "Start mijn gratis proef van 7 dagen",
-      "ctaSkip": "Verdergaan met de gratis versie",
-      "fineprint": "{{price}}/jaar na de proef · Bespaar {{percent}}%",
-      "fineprintNoSavings": "{{price}}/jaar na de proef",
-      "reassurance": "Geen betaling tijdens de proef",
-      "restore": "Aankopen herstellen",
-      "mock": {
-        "reportTitle": "Conversierapport",
-        "syncedToDrive": "Gesynchroniseerd met Drive",
-        "ad": "Advertentie",
-        "alertTarget": "EUR/USD heeft je doel van 1,0950 bereikt 🎯",
-        "alertVariation": "GBP/USD +0,8% vanochtend 📈"
-      }
-    },
     "exitIntent": {
       "title": "Wacht even — probeer Pro gratis",
       "body": "7 dagen gratis, vandaag geen betaling.\nMet 1 tik opzegbaar, wanneer je wilt.",
       "ctaStart": "Ja, start mijn gratis proef",
       "ctaSkip": "Nee, bedankt, gratis verdergaan"
-    },
-    "proActive": {
-      "cta": "Aan de slag",
-      "subtitle": "Alles is ontgrendeld op dit apparaat.",
-      "title": "Je bent Pro"
     },
     "proWelcome": {
       "body": "We hebben je Pro-abonnement gevonden — het is al actief op dit apparaat.",

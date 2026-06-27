@@ -28,8 +28,6 @@
     "back": "Kembali"
   },
   "tabs": {
-    "converter": "Konverter",
-    "statistics": "Statistik",
     "settings": "Pengaturan"
   },
   "settings": {
@@ -99,27 +97,6 @@
     "goPremium": "Upgrade ke Pro",
     "premiumDescription": "Hapus iklan · Backup & ekspor",
     "premiumActive": "Anda adalah anggota Pro",
-    "widget": {
-      "sectionLabel": "Widget layar utama",
-      "title": "Widget Watchlist",
-      "description": "Pantau kurs favorit Anda dari layar utama",
-      "screenTitle": "Widget Watchlist",
-      "howToAdd": "Cara menambahkan widget",
-      "proPitchHeadline": "Kurs Anda, tanpa membuka aplikasi.",
-      "proPitchBullet1": "Hingga 3 pasangan pilihan Anda di layar utama",
-      "proPitchBullet2": "Sparkline dan variasi sesuai periode pilihan Anda",
-      "proPitchBullet3": "Refresh otomatis di latar belakang",
-      "proCta": "Buka Pro",
-      "periodLabel": "Periode variasi",
-      "howToSheet": {
-        "title": "Tambahkan widget dalam 4 langkah",
-        "step1": "Tekan lama area kosong di layar utama Anda.",
-        "step2": "Ketuk \"Widget\" pada menu.",
-        "step3": "Cari \"All Currency Converter\" dan seret widget ke layar utama Anda.",
-        "step4": "Buka aplikasi sekali agar widget dapat menyinkronkan pasangan Anda."
-      },
-      "close": "Tutup"
-    },
     "premiumActiveUntil": "Aktif hingga {{date}}",
     "premiumLifetime": "Akses seumur hidup",
     "currenciesAdded_one": "{{count}} mata uang ditambahkan",
@@ -134,106 +111,11 @@
       "cta": "Mulai",
       "reassurance": "Gratis · Tanpa akun"
     },
-    "persona": {
-      "title": "Sebentar — apa yang membawamu ke sini?",
-      "subtitle": "Kami sesuaikan sisanya buatmu.",
-      "traveler": {
-        "label": "Perjalanan & hidup di luar negeri",
-        "desc": "Mata uang saat bepergian"
-      },
-      "trader": {
-        "label": "Trading & pemantauan",
-        "desc": "Alert pasangan secara real-time"
-      },
-      "freelancer": {
-        "label": "Bisnis internasional",
-        "desc": "Faktur, ekspor, backup"
-      },
-      "general": {
-        "label": "Konversi sehari-hari",
-        "desc": "Cepat & andal, tanpa ribet"
-      }
-    },
-    "currencyPicker": {
-      "title": "Mata uang utamamu",
-      "subtitle": "Dipakai sebagai dasar untuk semua konversi.",
-      "detectedHint": "Terdeteksi dari perangkatmu",
-      "ctaWithCode": "Lanjut dengan {{code}}",
-      "searchPlaceholder": "Cari mata uang...",
-      "showAll": "Tampilkan semua"
-    },
-    "aha": {
-      "title": "Coba — geser untuk mengonversi",
-      "subtitle": "Konversi langsung di 3 mata uang.",
-      "cta": "Lanjut",
-      "hook": "Lihat aksinya",
-      "reveal1": "✓ Diperbarui real-time",
-      "reveal2": "✓ Berfungsi offline",
-      "reveal3": "✓ 170+ mata uang tersedia"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Dibuat untuk pelancong sepertimu",
-        "heroCaption": "Widget-mu di layar utama"
-      },
-      "trader": {
-        "headline": "Dibuat untuk trader sepertimu",
-        "heroCaption": "Alert real-time di pasanganmu"
-      },
-      "freelancer": {
-        "headline": "Dibuat untuk bisnis internasional",
-        "heroCaption": "Ekspor CSV & PDF untuk akuntansi"
-      },
-      "general": {
-        "headline": "Dirancang untuk konversi sehari-hari",
-        "heroCaption": "Aplikasi bersih + widget layar utama"
-      },
-      "secondary": {
-        "noAds": "Tanpa iklan, selamanya",
-        "offline": "Berfungsi penuh offline",
-        "homeWidget": "Widget layar utama",
-        "rateAlerts": "Alert kurs real-time",
-        "backup": "Backup cloud otomatis",
-        "export": "Ekspor CSV & PDF",
-        "statistics": "Statistik & grafik"
-      },
-      "secondaryShort": {
-        "noAds": "Tanpa iklan",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Alert",
-        "backup": "Backup",
-        "export": "Ekspor",
-        "statistics": "Statistik"
-      },
-      "timelineHeader": "Cara kerja uji cobamu",
-      "day0": "Hari 0 — Pro aktif",
-      "day5": "Hari 5 — Pengingat sebelum berakhir",
-      "day7": "Hari 7 — Tagihan dimulai, batalkan kapan saja",
-      "ctaStart": "Mulai uji coba gratis 7 hari",
-      "ctaSkip": "Lanjut dengan versi gratis",
-      "fineprint": "{{price}}/tahun setelah uji coba · Hemat {{percent}}%",
-      "fineprintNoSavings": "{{price}}/tahun setelah uji coba",
-      "reassurance": "Tidak ada biaya selama uji coba",
-      "restore": "Pulihkan pembelian",
-      "mock": {
-        "reportTitle": "Laporan konversi",
-        "syncedToDrive": "Tersinkron ke Drive",
-        "ad": "Iklan",
-        "alertTarget": "EUR/USD mencapai target kamu 1,0950 🎯",
-        "alertVariation": "GBP/USD naik 0,8% pagi ini 📈"
-      }
-    },
     "exitIntent": {
       "title": "Sebentar — coba Pro gratis",
       "body": "7 hari gratis, tanpa biaya hari ini.\nBatalkan dengan 1 ketukan, kapan saja.",
       "ctaStart": "Ya, mulai uji coba gratis",
       "ctaSkip": "Tidak, lanjut gratis saja"
-    },
-    "proActive": {
-      "cta": "Ayo mulai",
-      "subtitle": "Semua fitur terbuka di perangkat ini.",
-      "title": "Kamu adalah Pro"
     },
     "proWelcome": {
       "body": "Kami menemukan langganan Pro kamu — sudah aktif di perangkat ini.",

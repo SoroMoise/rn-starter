@@ -28,8 +28,6 @@
     "back": "Wstecz"
   },
   "tabs": {
-    "converter": "Konwerter",
-    "statistics": "Statystyki",
     "settings": "Ustawienia"
   },
   "settings": {
@@ -105,27 +103,6 @@
     "goPremium": "Przejdź na Pro",
     "premiumDescription": "Bez reklam · Kopia i eksport",
     "premiumActive": "Jesteś członkiem Pro",
-    "widget": {
-      "sectionLabel": "Widżet ekranu głównego",
-      "title": "Widżet Watchlist",
-      "description": "Śledź swoje ulubione kursy z ekranu głównego",
-      "screenTitle": "Widżet Watchlist",
-      "howToAdd": "Jak dodać widżet",
-      "proPitchHeadline": "Twoje kursy bez otwierania aplikacji.",
-      "proPitchBullet1": "Do 3 wybranych par na ekranie głównym",
-      "proPitchBullet2": "Wykres i zmiana w wybranym okresie",
-      "proPitchBullet3": "Automatyczne odświeżanie w tle",
-      "proCta": "Odblokuj Pro",
-      "periodLabel": "Okres zmiany",
-      "howToSheet": {
-        "title": "Dodaj widżet w 4 krokach",
-        "step1": "Naciśnij i przytrzymaj pusty obszar ekranu głównego.",
-        "step2": "Stuknij „Widżety” w menu.",
-        "step3": "Znajdź „All Currency Converter” i przeciągnij widżet na ekran główny.",
-        "step4": "Otwórz aplikację raz, aby widżet mógł zsynchronizować Twoje pary."
-      },
-      "close": "Zamknij"
-    },
     "premiumActiveUntil": "Aktywny do {{date}}",
     "premiumLifetime": "Dożywotni dostęp"
   },
@@ -138,106 +115,11 @@
       "cta": "Zaczynamy",
       "reassurance": "Za darmo · Bez konta"
     },
-    "persona": {
-      "title": "Chwila — co Cię tu sprowadza?",
-      "subtitle": "Dopasujemy resztę do Ciebie.",
-      "traveler": {
-        "label": "Podróże i życie za granicą",
-        "desc": "Waluty w podróży"
-      },
-      "trader": {
-        "label": "Trading i monitoring",
-        "desc": "Alerty par w czasie rzeczywistym"
-      },
-      "freelancer": {
-        "label": "Biznes międzynarodowy",
-        "desc": "Faktury, eksporty, kopia zapasowa"
-      },
-      "general": {
-        "label": "Codzienne przeliczenia",
-        "desc": "Szybko i niezawodnie, bez kombinowania"
-      }
-    },
-    "currencyPicker": {
-      "title": "Twoja główna waluta",
-      "subtitle": "Używana jako podstawa wszystkich przeliczeń.",
-      "detectedHint": "Wykryta na Twoim urządzeniu",
-      "ctaWithCode": "Dalej z {{code}}",
-      "searchPlaceholder": "Szukaj walut...",
-      "showAll": "Pokaż wszystkie"
-    },
-    "aha": {
-      "title": "Spróbuj — przeciągnij, by przeliczyć",
-      "subtitle": "Przeliczanie na żywo w 3 walutach.",
-      "cta": "Dalej",
-      "hook": "Zobacz w akcji",
-      "reveal1": "✓ Aktualizowane w czasie rzeczywistym",
-      "reveal2": "✓ Działa offline",
-      "reveal3": "✓ 170+ walut dostępnych"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Stworzone dla podróżników takich jak Ty",
-        "heroCaption": "Twój widżet na ekranie głównym"
-      },
-      "trader": {
-        "headline": "Stworzone dla traderów takich jak Ty",
-        "heroCaption": "Alerty w czasie rzeczywistym na Twoich parach"
-      },
-      "freelancer": {
-        "headline": "Stworzone dla biznesu międzynarodowego",
-        "heroCaption": "Eksport CSV i PDF do księgowości"
-      },
-      "general": {
-        "headline": "Zaprojektowane do codziennych przeliczeń",
-        "heroCaption": "Czysta aplikacja + widżet ekranu głównego"
-      },
-      "secondary": {
-        "noAds": "Bez reklam, nigdy",
-        "offline": "W pełni offline",
-        "homeWidget": "Widżet ekranu głównego",
-        "rateAlerts": "Alerty kursów w czasie rzeczywistym",
-        "backup": "Automatyczna kopia w chmurze",
-        "export": "Eksport CSV i PDF",
-        "statistics": "Statystyki i wykresy"
-      },
-      "secondaryShort": {
-        "noAds": "Bez reklam",
-        "offline": "Offline",
-        "homeWidget": "Widżet",
-        "rateAlerts": "Alerty",
-        "backup": "Kopia",
-        "export": "Eksport",
-        "statistics": "Statystyki"
-      },
-      "timelineHeader": "Jak działa Twój okres próbny",
-      "day0": "Dzień 0 — Pro odblokowane",
-      "day5": "Dzień 5 — Przypomnienie przed końcem",
-      "day7": "Dzień 7 — Start płatności, anulujesz kiedy chcesz",
-      "ctaStart": "Rozpocznij darmowy 7-dniowy okres próbny",
-      "ctaSkip": "Kontynuuj z wersją darmową",
-      "fineprint": "{{price}}/rok po okresie próbnym · Oszczędzasz {{percent}}%",
-      "fineprintNoSavings": "{{price}}/rok po okresie próbnym",
-      "reassurance": "Brak opłat w okresie próbnym",
-      "restore": "Przywróć zakupy",
-      "mock": {
-        "reportTitle": "Raport przeliczeń",
-        "syncedToDrive": "Zsynchronizowano z Drive",
-        "ad": "Reklama",
-        "alertTarget": "EUR/USD osiągnął Twój cel 1,0950 🎯",
-        "alertVariation": "GBP/USD +0,8% dziś rano 📈"
-      }
-    },
     "exitIntent": {
       "title": "Chwila — wypróbuj Pro za darmo",
       "body": "7 dni za darmo, dziś bez opłaty.\nAnulujesz 1 dotknięciem, w każdej chwili.",
       "ctaStart": "Tak, zacznij darmowy okres próbny",
       "ctaSkip": "Nie, dziękuję, zostaję na darmowej"
-    },
-    "proActive": {
-      "cta": "Zaczynamy",
-      "subtitle": "Wszystko odblokowane na tym urządzeniu.",
-      "title": "Jesteś Pro"
     },
     "proWelcome": {
       "body": "Znaleźliśmy Twoją subskrypcję Pro — jest już aktywna na tym urządzeniu.",

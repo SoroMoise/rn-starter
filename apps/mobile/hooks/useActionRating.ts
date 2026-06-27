@@ -12,23 +12,13 @@ import { useTranslation } from 'react-i18next'
 
 type UseActionRatingProps = {
   actions: unknown[]
-  sourceLabel: string
   amount: string
   isAdFreeActive: boolean
   actionCount: number
 }
 
-function getAmountRange(amount: number): 'micro' | 'small' | 'medium' | 'large' | 'xlarge' {
-  if (amount < 10) return 'micro'
-  if (amount < 100) return 'small'
-  if (amount < 1000) return 'medium'
-  if (amount < 10000) return 'large'
-  return 'xlarge'
-}
-
 export function useActionRating({
   actions,
-  sourceLabel,
   amount,
   isAdFreeActive,
   actionCount,
@@ -46,7 +36,6 @@ export function useActionRating({
   const isAdFreeActiveRef = useRef(isAdFreeActive)
   const isRatingModalVisibleRef = useRef(isRatingModalVisible)
   const actionsRef = useRef(actions)
-  const sourceLabelRef = useRef(sourceLabel)
   const amountRef = useRef(amount)
 
   useEffect(() => {
@@ -64,10 +53,6 @@ export function useActionRating({
   useEffect(() => {
     actionsRef.current = actions
   }, [actions])
-
-  useEffect(() => {
-    sourceLabelRef.current = sourceLabel
-  }, [sourceLabel])
 
   useEffect(() => {
     amountRef.current = amount
@@ -103,15 +88,12 @@ export function useActionRating({
       if (isRatingModalVisibleRef.current) return
       try {
         const newTotal = engagementStorage.incrementAction()
-        analyticsService.track('conversion_performed', {
-          from_currency: sourceLabelRef.current,
-          amount_range: getAmountRange(parseFloat(amountRef.current)),
-          target_count: actionsRef.current.length,
-          total_conversions: newTotal,
+        analyticsService.track('action_performed', {
+          total_actions: newTotal,
         })
         const shouldShowRating = await checkAndMaybeShowRating({
           wasSuccessful: true,
-          totalSuccessfulConversions: newTotal,
+          totalActions: newTotal,
           hasFavorites: true,
           lastInterstitialShownAt: adLastShownCacheRef.current,
         })
@@ -120,7 +102,7 @@ export function useActionRating({
           setIsRatingModalVisible(true)
           analyticsService.track('rating_modal_shown', {
             source: 'auto',
-            conversion_count: newTotal,
+            action_count: newTotal,
           })
         }
       } catch (err) {
@@ -141,7 +123,7 @@ export function useActionRating({
       analyticsService.track('rating_submitted', {
         stars,
         source: 'auto',
-        conversion_count: currentRatingActionCount,
+        action_count: currentRatingActionCount,
       })
       try {
         await markAsRated()

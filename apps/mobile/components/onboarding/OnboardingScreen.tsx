@@ -70,7 +70,7 @@ export function OnboardingScreen() {
     setProWelcomeVisible(true)
     markProWelcomeSeen()
     analyticsService.track('onboarding_pro_detected', {
-      step: stepName(currentStep) as 'welcome' | 'persona' | 'currency' | 'aha' | 'pitch',
+      step: stepName(currentStep),
     })
   }, [isSubscriptionInitialized, isPremium, hasSeenProWelcome, currentStep, markProWelcomeSeen])
 
@@ -94,7 +94,6 @@ export function OnboardingScreen() {
 
   const handleComplete = useCallback(() => {
     analyticsService.track('onboarding_completed', {
-      currency: '',
       duration_s: Math.round((Date.now() - onboardingStartTimeRef.current) / 1000),
     })
     markCompleted()
@@ -128,7 +127,6 @@ export function OnboardingScreen() {
     }
     markAttemptedSkipTrial()
     analyticsService.track('onboarding_exit_intent_shown', {
-      persona: 'none',
       time_on_pitch_s: Math.round((Date.now() - premiumEnteredAtRef.current) / 1000),
     })
     setExitIntentVisible(true)
@@ -138,7 +136,6 @@ export function OnboardingScreen() {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'recovered_to_trial',
-      persona: 'none',
     })
     handleComplete()
   }, [handleComplete])
@@ -147,7 +144,6 @@ export function OnboardingScreen() {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'confirmed_skip',
-      persona: 'none',
     })
     goToStep(STEP_INDEX.language)
   }, [goToStep])
@@ -156,7 +152,6 @@ export function OnboardingScreen() {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'dismissed_outside',
-      persona: 'none',
     })
     goToStep(STEP_INDEX.language)
   }, [goToStep])

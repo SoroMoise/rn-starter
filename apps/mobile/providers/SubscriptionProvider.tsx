@@ -162,7 +162,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           session_count: sessionCtx?.sessionCount ?? 0,
           days_since_install: sessionCtx?.daysSinceInstall ?? 0,
           paywall_count: paywallCount,
-          total_conversions: totalConversions,
+          total_actions: totalConversions,
           trial_started: plan === 'annual' && !!annualPackage?.product.introPrice,
         })
 
@@ -237,7 +237,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         session_count: sessionCtx?.sessionCount ?? 0,
         paywall_count: paywallCount,
         has_trial_offer: !!annualPackage?.product.introPrice,
-        total_conversions: totalConversions,
+        total_actions: totalConversions,
       })
       promoCoordinator.setPaywallVisible(true)
       setPaywallVisible(true)

@@ -41,7 +41,7 @@ export function LegalSupportSection() {
       analyticsService.track('rating_submitted', {
         stars,
         source: 'manual',
-        conversion_count: actionCount,
+        action_count: actionCount,
       })
       if (stars >= MIN_STARS_FOR_STORE_REDIRECT) {
         await requestStoreReview()
@@ -89,7 +89,7 @@ export function LegalSupportSection() {
         label: t('settings.rateApp'),
         onPress: () => {
           analyticsService.track('rate_app_clicked')
-          analyticsService.track('rating_modal_shown', { source: 'manual', conversion_count: 0 })
+          analyticsService.track('rating_modal_shown', { source: 'manual', action_count: 0 })
           setRatingModalVisible(true)
         },
       },

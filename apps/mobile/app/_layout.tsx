@@ -79,13 +79,10 @@ function AppContent() {
       analyticsService.track('app_session_started', {
         language,
         theme,
-        currencies_count: 0,
         is_ad_free_active: isAdFreeActive,
         is_premium: isPremium,
         platform: Platform.OS,
         app_version: appVersion,
-        source_currency: '',
-        target_currencies: '',
         session_count: sessionCtx.sessionCount,
         days_since_install: sessionCtx.daysSinceInstall,
       })

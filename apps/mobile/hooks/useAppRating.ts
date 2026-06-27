@@ -7,8 +7,8 @@ const DAY_IN_MS = 24 * 60 * 60 * 1000
 /** Minimum days since first app open before we can show the prompt at all. */
 const MIN_DAYS_BEFORE_PROMPT = 2
 
-/** Minimum number of successful conversions before we can ever show the prompt. */
-const MIN_SUCCESSFUL_CONVERSIONS = 4
+/** Minimum number of successful actions before we can ever show the prompt. */
+const MIN_SUCCESSFUL_ACTIONS = 4
 
 /** After this many dismissals (Later / Decline), we never show the prompt again. */
 const NO_MORE_PROMPT_COUNT = 4
@@ -20,8 +20,8 @@ const NO_MORE_PROMPT_COUNT = 4
 const SOFT_RESET_INACTIVITY_MS = 30 * DAY_IN_MS
 
 /**
- * How many successful conversions must happen SINCE the last prompt.
- * 1st prompt: after 7 conversions since install
+ * How many successful actions must happen SINCE the last prompt.
+ * 1st prompt: after 7 actions since install
  * 2nd prompt: after 5 more  (user clicked "Later")
  * 3rd prompt: after 10 more
  * 4th prompt: after 20 more  (last chance)
@@ -44,7 +44,7 @@ function getThresholdByPromptCount(promptCount: number): number | null {
 
 export type CheckRatingContext = {
   wasSuccessful: boolean
-  totalSuccessfulConversions: number
+  totalActions: number
   hasFavorites: boolean
   lastInterstitialShownAt?: number
 }
@@ -53,7 +53,7 @@ export type UseAppRatingReturn = {
   checkAndMaybeShowRating: (context: CheckRatingContext) => Promise<boolean>
   markAsRated: () => Promise<void>
   markAsDeclinedForever: () => Promise<void>
-  markAsLater: (currentConversionCount: number) => Promise<void>
+  markAsLater: (currentActionCount: number) => Promise<void>
 }
 
 export function useAppRating(): UseAppRatingReturn {
@@ -61,7 +61,7 @@ export function useAppRating(): UseAppRatingReturn {
     async (context: CheckRatingContext): Promise<boolean> => {
       if (!context.wasSuccessful) return false
 
-      if (context.totalSuccessfulConversions < MIN_SUCCESSFUL_CONVERSIONS) return false
+      if (context.totalActions < MIN_SUCCESSFUL_ACTIONS) return false
 
       const hasRated = ratingStorage.getHasRated()
       if (hasRated) return false
@@ -96,7 +96,7 @@ export function useAppRating(): UseAppRatingReturn {
         now - lastPromptDate >= SOFT_RESET_INACTIVITY_MS
       ) {
         promptCount = 1
-        lastPromptExecution = context.totalSuccessfulConversions
+        lastPromptExecution = context.totalActions
         ratingStorage.setPromptCount(promptCount)
         ratingStorage.setLastPromptExecution(lastPromptExecution)
         ratingStorage.setLastPromptDate(now)
@@ -107,8 +107,8 @@ export function useAppRating(): UseAppRatingReturn {
       const threshold = getThresholdByPromptCount(promptCount)
       if (threshold === null) return false
 
-      const conversionsSinceLastPrompt = context.totalSuccessfulConversions - lastPromptExecution
-      if (conversionsSinceLastPrompt < threshold) return false
+      const actionsSinceLastPrompt = context.totalActions - lastPromptExecution
+      if (actionsSinceLastPrompt < threshold) return false
 
       return true
     },
@@ -123,11 +123,11 @@ export function useAppRating(): UseAppRatingReturn {
     ratingStorage.setDeclinedForever(true)
   }, [])
 
-  const markAsLater = useCallback(async (currentConversionCount: number) => {
+  const markAsLater = useCallback(async (currentActionCount: number) => {
     const promptCount = ratingStorage.getPromptCount()
     const now = Date.now()
     ratingStorage.setPromptCount(promptCount + 1)
-    ratingStorage.setLastPromptExecution(currentConversionCount)
+    ratingStorage.setLastPromptExecution(currentActionCount)
     ratingStorage.setLastPromptDate(now)
   }, [])
 

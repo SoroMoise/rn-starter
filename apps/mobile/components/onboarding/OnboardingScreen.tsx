@@ -2,8 +2,6 @@ import { AppSystemBars } from '@/components/AppSystemBars'
 import { OnboardingBackButton } from '@/components/onboarding/components/OnboardingBackButton'
 import { OnboardingProgressBar } from '@/components/onboarding/components/OnboardingProgressBar'
 import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
-import { AhaMomentStep } from '@/components/onboarding/steps/AhaMomentStep'
-import { CurrencyPickerStep } from '@/components/onboarding/steps/CurrencyPickerStep'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
 import { PersonaQuestionStep } from '@/components/onboarding/steps/PersonaQuestionStep'
 import { PitchProStep } from '@/components/onboarding/steps/PitchProStep'
@@ -17,10 +15,8 @@ import { getLanguageByCode } from '@/constants/languages'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useOnboardingStore, type Persona } from '@/stores/onboardingStore'
-import { useQuickConversionsStore } from '@/stores/quickConversionsStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import type { Language } from '@/types'
-import { getDeviceCurrencies } from '@/utils'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
@@ -30,14 +26,12 @@ import { Pressable, TouchableOpacity, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const STEPS = ['welcome', 'persona', 'currency', 'aha', 'pitch'] as const
+const STEPS = ['welcome', 'persona', 'pitch'] as const
 type StepKind = (typeof STEPS)[number]
 const STEP_INDEX: Record<StepKind, number> = {
   welcome: 0,
   persona: 1,
-  currency: 2,
-  aha: 3,
-  pitch: 4,
+  pitch: 2,
 }
 const TOTAL_STEPS = STEPS.length
 
@@ -51,11 +45,9 @@ export function OnboardingScreen() {
   const isDark = useThemedColor()
 
   const [currentStep, setCurrentStep] = useState(0)
-  const [selectedCurrency, setSelectedCurrency] = useState(() => getDeviceCurrencies().from)
   const [showLanguagePicker, setShowLanguagePicker] = useState(false)
   const [exitIntentVisible, setExitIntentVisible] = useState(false)
   const [proWelcomeVisible, setProWelcomeVisible] = useState(false)
-  const detectedCurrencyRef = useRef(selectedCurrency)
   const onboardingStartTimeRef = useRef(Date.now())
   const slideStartTimeRef = useRef(Date.now())
   const pitchEnteredAtRef = useRef(0)
@@ -69,10 +61,8 @@ export function OnboardingScreen() {
   const hasSeenProWelcome = useOnboardingStore((s) => s.hasSeenProWelcome)
   const markProWelcomeSeen = useOnboardingStore((s) => s.markProWelcomeSeen)
 
-  const updateSetting = useSettingsStore((s) => s.updateSetting)
   const setLanguage = useSettingsStore((s) => s.setLanguage)
   const currentLanguage = useSettingsStore((s) => s.settings.language)
-  const addQuickCurrency = useQuickConversionsStore((s) => s.addCurrency)
 
   const { isPremium, isInitialized: isSubscriptionInitialized } = usePremium()
 
@@ -113,15 +103,13 @@ export function OnboardingScreen() {
   )
 
   const handleComplete = useCallback(() => {
-    updateSetting('defaultCurrencyFrom', selectedCurrency)
-    addQuickCurrency(selectedCurrency)
-    analyticsService.logOnboardingCompleted({
-      currencySelected: selectedCurrency,
-      durationMs: Date.now() - onboardingStartTimeRef.current,
+    analyticsService.track('onboarding_completed', {
+      currency: '',
+      duration_s: Math.round((Date.now() - onboardingStartTimeRef.current) / 1000),
     })
     markCompleted()
     triggerSuccess()
-  }, [selectedCurrency, updateSetting, addQuickCurrency, markCompleted])
+  }, [markCompleted])
 
   const handleProWelcomeContinue = useCallback(() => {
     triggerLight()
@@ -147,7 +135,7 @@ export function OnboardingScreen() {
         persona: selected,
         time_on_step_s: elapsedS,
       })
-      goToStep(STEP_INDEX.currency)
+      goToStep(STEP_INDEX.pitch)
     },
     [setPersonaStore, goToStep]
   )
@@ -156,41 +144,8 @@ export function OnboardingScreen() {
     const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
     analyticsService.logOnboardingStepSkipped({ fromStep: 1, timeOnStepS: elapsedS })
     setPersonaStore('general')
-    goToStep(STEP_INDEX.currency)
-  }, [setPersonaStore, goToStep])
-
-  const handleCurrencyContinue = useCallback(() => {
-    analyticsService.track('onboarding_currency_chosen', {
-      selected_code: selectedCurrency,
-      detected_code: detectedCurrencyRef.current,
-      kept_detected: selectedCurrency === detectedCurrencyRef.current,
-    })
-    goToStep(STEP_INDEX.aha)
-  }, [selectedCurrency, goToStep])
-
-  const handleSkipCurrency = useCallback(() => {
-    const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
-    analyticsService.logOnboardingStepSkipped({ fromStep: 2, timeOnStepS: elapsedS })
-    setSelectedCurrency(detectedCurrencyRef.current)
-    goToStep(STEP_INDEX.aha)
-  }, [goToStep])
-
-  const handleAhaInteractionsResolved = useCallback(
-    ({ interactions, highestAmount }: { interactions: number; highestAmount: number }) => {
-      analyticsService.track('onboarding_aha_interaction', {
-        interactions_count: interactions,
-        persona: persona ?? 'none',
-        highest_amount_tried: highestAmount,
-      })
-    },
-    [persona]
-  )
-
-  const handleSkipAha = useCallback(() => {
-    const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
-    analyticsService.logOnboardingStepSkipped({ fromStep: 3, timeOnStepS: elapsedS })
     goToStep(STEP_INDEX.pitch)
-  }, [goToStep])
+  }, [setPersonaStore, goToStep])
 
   const openExitIntent = useCallback(() => {
     if (attemptedSkipTrial) {
@@ -253,10 +208,8 @@ export function OnboardingScreen() {
   const handleSkipGeneric = useCallback(() => {
     const name = stepName(currentStep)
     if (name === 'persona') return handleSkipPersona()
-    if (name === 'currency') return handleSkipCurrency()
-    if (name === 'aha') return handleSkipAha()
     if (name === 'pitch') return openExitIntent()
-  }, [currentStep, handleSkipPersona, handleSkipCurrency, handleSkipAha, openExitIntent])
+  }, [currentStep, handleSkipPersona, openExitIntent])
 
   const isFirstStep = currentStep === 0
   const stepKind = stepName(currentStep)
@@ -326,19 +279,6 @@ export function OnboardingScreen() {
         {stepKind === 'persona' && (
           <PersonaQuestionStep selectedPersona={persona} onSelect={handlePersonaSelect} />
         )}
-        {stepKind === 'currency' && (
-          <CurrencyPickerStep
-            selectedCurrency={selectedCurrency}
-            onSelectCurrency={setSelectedCurrency}
-          />
-        )}
-        {stepKind === 'aha' && (
-          <AhaMomentStep
-            source={selectedCurrency}
-            persona={persona}
-            onInteractionsResolved={handleAhaInteractionsResolved}
-          />
-        )}
         {stepKind === 'pitch' &&
           (isSubscriptionInitialized && isPremium ? (
             <ProActiveStep onFinish={handleComplete} />
@@ -363,40 +303,6 @@ export function OnboardingScreen() {
                 accessibilityLabel={t('onboarding.welcome.cta')}>
                 <ThemedText variant="buttonLarge" color="inverse">
                   {t('onboarding.welcome.cta')}
-                </ThemedText>
-                <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-              </GradientButton>
-            )}
-
-            {stepKind === 'currency' && (
-              <GradientButton
-                onPress={handleCurrencyContinue}
-                colors={['#3b82f6', '#6366f1']}
-                style={{ height: 58, flex: 1, borderRadius: 16 }}
-                gradientStyle={{ height: '100%', gap: 12 }}
-                pressScale={0}
-                pressOpacity={0.75}
-                accessibilityLabel={t('onboarding.currencyPicker.ctaWithCode', {
-                  code: selectedCurrency,
-                })}>
-                <ThemedText variant="buttonLarge" color="inverse">
-                  {t('onboarding.currencyPicker.ctaWithCode', { code: selectedCurrency })}
-                </ThemedText>
-                <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-              </GradientButton>
-            )}
-
-            {stepKind === 'aha' && (
-              <GradientButton
-                onPress={() => goToStep(STEP_INDEX.pitch)}
-                colors={['#3b82f6', '#6366f1']}
-                style={{ height: 58, flex: 1, borderRadius: 16 }}
-                gradientStyle={{ height: '100%', gap: 12 }}
-                pressScale={0}
-                pressOpacity={0.75}
-                accessibilityLabel={t('onboarding.aha.cta')}>
-                <ThemedText variant="buttonLarge" color="inverse">
-                  {t('onboarding.aha.cta')}
                 </ThemedText>
                 <Ionicons name="arrow-forward" size={20} color="#ffffff" />
               </GradientButton>

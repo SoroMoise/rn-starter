@@ -28,9 +28,43 @@
     "back": "Back"
   },
   "tabs": {
+    "home": "Home",
     "converter": "Converter",
     "statistics": "Statistics",
     "settings": "Settings"
+  },
+  "home": {
+    "hero": {
+      "title": "Premium Starter",
+      "subtitle": "Ship a polished, monetized React Native app — theme, i18n, paywall, ads, and push notifications already wired."
+    },
+    "features": {
+      "title": "What ships with this starter",
+      "theme": {
+        "label": "Theme system",
+        "desc": "Light & dark mode with NativeWind tokens and design-system components."
+      },
+      "i18n": {
+        "label": "Internationalization",
+        "desc": "20 languages, RTL support, and lazy-loaded translation files."
+      },
+      "paywall": {
+        "label": "Paywall & subscriptions",
+        "desc": "RevenueCat integration with a 7-day free trial and premium gating."
+      },
+      "ads": {
+        "label": "Ads (AdMob)",
+        "desc": "Banners, interstitials, and rewarded ads — disabled for premium users."
+      },
+      "notifications": {
+        "label": "Push notifications",
+        "desc": "FCM setup with foreground banners and background tap handlers."
+      }
+    },
+    "cta": {
+      "label": "Try Premium",
+      "sub": "7-day free trial · Cancel anytime"
+    }
   },
   "conversion": {
     "title": "Currency Converter",

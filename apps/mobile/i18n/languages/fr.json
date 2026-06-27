@@ -28,9 +28,43 @@
     "back": "Retour"
   },
   "tabs": {
+    "home": "Accueil",
     "converter": "Convertisseur",
     "statistics": "Statistiques",
     "settings": "Paramètres"
+  },
+  "home": {
+    "hero": {
+      "title": "Starter Premium",
+      "subtitle": "Publiez une app React Native soignée et monétisée — thème, i18n, paywall, pubs et notifications déjà configurés."
+    },
+    "features": {
+      "title": "Ce qui est inclus",
+      "theme": {
+        "label": "Système de thème",
+        "desc": "Mode clair & sombre avec tokens NativeWind et composants design system."
+      },
+      "i18n": {
+        "label": "Internationalisation",
+        "desc": "20 langues, support RTL et fichiers de traduction chargés à la demande."
+      },
+      "paywall": {
+        "label": "Paywall & abonnements",
+        "desc": "Intégration RevenueCat avec essai gratuit de 7 jours et accès premium."
+      },
+      "ads": {
+        "label": "Pubs (AdMob)",
+        "desc": "Bannières, interstitiels et pubs récompensées — désactivées pour les abonnés."
+      },
+      "notifications": {
+        "label": "Notifications push",
+        "desc": "Configuration FCM avec bannières en avant-plan et gestion des taps en arrière-plan."
+      }
+    },
+    "cta": {
+      "label": "Essayer Premium",
+      "sub": "Essai gratuit de 7 jours · Résiliable à tout moment"
+    }
   },
   "conversion": {
     "title": "Convertisseur de devises",

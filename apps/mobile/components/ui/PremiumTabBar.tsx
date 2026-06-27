@@ -29,14 +29,9 @@ type IconName = ComponentProps<typeof Ionicons>['name']
 
 const TAB_CONFIG: Record<string, { focused: IconName; unfocused: IconName; labelKey: string }> = {
   index: {
-    focused: 'swap-horizontal',
-    unfocused: 'swap-horizontal-outline',
-    labelKey: 'tabs.converter',
-  },
-  statistics: {
-    focused: 'stats-chart',
-    unfocused: 'stats-chart-outline',
-    labelKey: 'tabs.statistics',
+    focused: 'home',
+    unfocused: 'home-outline',
+    labelKey: 'tabs.home',
   },
   settings: {
     focused: 'settings',

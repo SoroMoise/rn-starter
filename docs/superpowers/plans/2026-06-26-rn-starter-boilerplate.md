@@ -466,15 +466,18 @@ git commit -m "refactor: generalize alerts into scheduled local reminders"
 
 ---
 
-### Task 7: `_layout.tsx` + écran d'accueil démo premium
+### Task 7: `_layout.tsx` + écran d'accueil démo premium + onboarding générique
 
 **Files:**
 - Modify (réécriture ciblée): `apps/mobile/app/_layout.tsx`
 - Modify (réécriture complète): `apps/mobile/app/index.tsx`
+- Modify (généralisation): `apps/mobile/components/onboarding/OnboardingScreen.tsx` (et ses sous-composants si couplés aux devises)
 
 **Interfaces:**
 - Consumes: providers conservés (`QueryProvider`, `ThemeProvider`, `ToastProvider`, `SubscriptionProvider`, `AdFreeProvider`, `AlertNotificationProvider`), effets conservés (`TelemetryEffects`, `runStorageMigration`, `RTLRestartBanner`), `PremiumTabBar`, `useThemeColor`, design system `components/ui`, i18n.
-- Produces: navigation à **2 onglets** (`index`, `settings`) ; un home **premium** bâti sur le design system.
+- Produces: navigation à **2 onglets** (`index`, `settings`) ; un home **premium** bâti sur le design system ; un onboarding générique.
+
+**Note onboarding (découvert en Task 5) :** `OnboardingScreen.tsx` est aujourd'hui un **onboarding de sélection de devise** (`selectedCurrency`, `defaultCurrencyFrom`, `addQuickCurrency` depuis le supprimé `quickConversionsStore`, currency picker). Le généraliser : retirer la sélection de devise et le couplage `quickConversionsStore`, conserver le carrousel/slides + la sélection de **langue** (générique) + le flux premium/onboarding completed. Garder l'UX premium (animations, design system). Aucune référence devise.
 
 - [ ] **Step 1: Nettoyer `_layout.tsx` du métier**
 

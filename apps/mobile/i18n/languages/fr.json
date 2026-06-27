@@ -29,8 +29,6 @@
   },
   "tabs": {
     "home": "Accueil",
-    "converter": "Convertisseur",
-    "statistics": "Statistiques",
     "settings": "Paramètres"
   },
   "home": {
@@ -138,127 +136,37 @@
     "termsOfService": "Conditions d'utilisation",
     "support": "Support",
     "rateApp": "Noter cette application",
-    "languageChanged": "Langue mise à jour avec succès",
-    "widget": {
-      "sectionLabel": "Widget écran d'accueil",
-      "title": "Widget Watchlist",
-      "description": "Suivez vos taux préférés depuis l'écran d'accueil",
-      "screenTitle": "Widget Watchlist",
-      "howToAdd": "Comment ajouter le widget",
-      "proPitchHeadline": "Vos taux, sans ouvrir l'app.",
-      "proPitchBullet1": "Jusqu'à 3 paires de votre choix sur l'écran d'accueil",
-      "proPitchBullet2": "Sparkline et variation sur la période choisie",
-      "proPitchBullet3": "Mise à jour automatique en arrière-plan",
-      "proCta": "Débloquer Pro",
-      "periodLabel": "Période de variation",
-      "howToSheet": {
-        "title": "Ajouter le widget en 4 étapes",
-        "step1": "Appuyez longuement sur une zone vide de votre écran d'accueil.",
-        "step2": "Appuyez sur « Widgets » dans le menu.",
-        "step3": "Cherchez « All Currency Converter » et glissez le widget sur votre écran.",
-        "step4": "Ouvrez l'app une fois pour que le widget synchronise vos paires."
-      },
-      "close": "Fermer"
-    }
+    "languageChanged": "Langue mise à jour avec succès"
   },
   "onboarding": {
     "skip": "Passer",
     "next": "Continuer",
     "previous": "Retour",
     "welcome": {
-      "subtitle": "Le moyen le plus rapide de convertir 170+ devises — gratuit, instantané, toujours avec toi.",
+      "subtitle": "Tout ce qu'il faut, soigneusement construit et prêt à publier.",
       "cta": "Commencer",
       "reassurance": "Gratuit · Sans compte"
     },
-    "persona": {
-      "title": "Un instant — qu'est-ce qui t'amène ?",
-      "subtitle": "On adapte l'expérience pour toi.",
-      "traveler": {
-        "label": "Voyage & vie à l'étranger",
-        "desc": "Devises en déplacement"
-      },
-      "trader": {
-        "label": "Trading & monitoring",
-        "desc": "Alertes temps réel sur tes paires"
-      },
-      "freelancer": {
-        "label": "Business international",
-        "desc": "Factures, exports & sauvegarde"
-      },
-      "general": {
-        "label": "Conversions du quotidien",
-        "desc": "Rapide et fiable, sans superflu"
-      }
-    },
-    "currencyPicker": {
-      "title": "Ta devise principale",
-      "subtitle": "Utilisée comme base pour toutes les conversions.",
-      "detectedHint": "Détectée depuis ton appareil",
-      "ctaWithCode": "Continuer avec {{code}}",
-      "searchPlaceholder": "Rechercher une devise...",
-      "showAll": "Tout afficher"
-    },
-    "aha": {
-      "title": "Essaie — fais glisser pour convertir",
-      "subtitle": "Conversion en direct dans 3 devises.",
-      "cta": "Continuer",
-      "hook": "Vois-le en action",
-      "reveal1": "✓ Mise à jour en temps réel",
-      "reveal2": "✓ Fonctionne hors-ligne",
-      "reveal3": "✓ 170+ devises disponibles"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Conçu pour les voyageurs comme toi",
-        "heroCaption": "Ton widget sur l'écran d'accueil"
-      },
-      "trader": {
-        "headline": "Pensé pour les traders comme toi",
-        "heroCaption": "Alertes en temps réel sur tes paires"
-      },
-      "freelancer": {
-        "headline": "Conçu pour le business international",
-        "heroCaption": "Export CSV & PDF pour ta compta"
-      },
-      "general": {
-        "headline": "Pour les conversions du quotidien",
-        "heroCaption": "App sans pub + widget d'accueil"
-      },
-      "secondary": {
+    "premium": {
+      "headline": "Allez plus loin avec Pro",
+      "benefit": {
         "noAds": "Aucune publicité, jamais",
-        "offline": "Fonctionne hors-ligne",
-        "homeWidget": "Widget d'écran d'accueil",
-        "rateAlerts": "Alertes en temps réel",
-        "backup": "Sauvegarde cloud automatique",
-        "export": "Export CSV & PDF",
-        "statistics": "Statistiques & graphiques"
-      },
-      "secondaryShort": {
-        "noAds": "Sans pub",
-        "offline": "Hors-ligne",
-        "homeWidget": "Widget",
-        "rateAlerts": "Alertes",
-        "backup": "Backup",
-        "export": "Export",
-        "statistics": "Stats"
+        "notifications": "Notifications push programmées",
+        "premium": "Toutes les fonctionnalités premium",
+        "widget": "Widget sur l'écran d'accueil"
       },
       "timelineHeader": "Comment fonctionne l'essai",
-      "day0": "Jour 0 — Pro débloqué",
-      "day5": "Jour 5 — Rappel avant la fin",
+      "day0": "Jour 0 — Pro débloqué instantanément",
+      "day5": "Jour 5 — Rappel avant la fin de l'essai",
       "day7": "Jour 7 — Facturation, annulable à tout moment",
       "ctaStart": "Démarrer mon essai gratuit de 7 jours",
       "ctaSkip": "Continuer gratuitement",
-      "fineprint": "{{price}}/an après essai · -{{percent}}%",
-      "fineprintNoSavings": "{{price}}/an après essai",
-      "reassurance": "Aucun débit pendant l'essai",
-      "restore": "Restaurer mes achats",
-      "mock": {
-        "reportTitle": "Rapport de conversions",
-        "syncedToDrive": "Synchronisé sur Drive",
-        "ad": "Pub",
-        "alertTarget": "EUR/USD a atteint ta cible de 1,0950 🎯",
-        "alertVariation": "GBP/USD +0,8 % ce matin 📈"
-      }
+      "restore": "Restaurer mes achats"
+    },
+    "language": {
+      "title": "Choisissez votre langue",
+      "subtitle": "Vous pouvez modifier cela à tout moment dans les paramètres.",
+      "cta": "Commencer"
     },
     "exitIntent": {
       "title": "Un instant — essaie Pro gratuitement",
@@ -271,11 +179,6 @@
       "body": "On a retrouvé ton abonnement Pro — il est déjà actif sur cet appareil.",
       "ctaSkip": "Passer l'intro",
       "ctaContinue": "Continuer la visite"
-    },
-    "proActive": {
-      "title": "Tu es Pro",
-      "subtitle": "Tout est débloqué sur cet appareil.",
-      "cta": "C'est parti"
     }
   },
   "tutorial": {

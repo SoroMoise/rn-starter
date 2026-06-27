@@ -29,8 +29,6 @@
   },
   "tabs": {
     "home": "Home",
-    "converter": "Converter",
-    "statistics": "Statistics",
     "settings": "Settings"
   },
   "home": {
@@ -136,127 +134,37 @@
     "termsOfService": "Terms of Service",
     "support": "Support",
     "rateApp": "Rate this app",
-    "languageChanged": "Language updated successfully",
-    "widget": {
-      "sectionLabel": "Home screen widget",
-      "title": "Watchlist widget",
-      "description": "Track your favorite rates from the home screen",
-      "screenTitle": "Watchlist widget",
-      "howToAdd": "How to add the widget",
-      "proPitchHeadline": "Your rates, without opening the app.",
-      "proPitchBullet1": "Up to 3 pairs of your choice on your home screen",
-      "proPitchBullet2": "Sparkline and variation over your chosen period",
-      "proPitchBullet3": "Auto refresh in background",
-      "proCta": "Unlock Pro",
-      "periodLabel": "Variation period",
-      "howToSheet": {
-        "title": "Add the widget in 4 steps",
-        "step1": "Long-press an empty area of your home screen.",
-        "step2": "Tap “Widgets” in the menu.",
-        "step3": "Find “All Currency Converter” and drag the widget to your home screen.",
-        "step4": "Open the app once so the widget can sync your pairs."
-      },
-      "close": "Close"
-    }
+    "languageChanged": "Language updated successfully"
   },
   "onboarding": {
     "skip": "Skip",
     "next": "Continue",
     "previous": "Back",
     "welcome": {
-      "subtitle": "The fastest way to convert 170+ currencies — free, instant, always with you.",
+      "subtitle": "Everything you need, beautifully built and ready to ship.",
       "cta": "Get Started",
       "reassurance": "Free · No account needed"
     },
-    "persona": {
-      "title": "Quick — what brings you here?",
-      "subtitle": "We tailor the rest for you.",
-      "traveler": {
-        "label": "Travel & life abroad",
-        "desc": "Currencies on the go"
-      },
-      "trader": {
-        "label": "Trading & monitoring",
-        "desc": "Real-time alerts on pairs"
-      },
-      "freelancer": {
-        "label": "International business",
-        "desc": "Invoices, exports, backup"
-      },
-      "general": {
-        "label": "Everyday conversions",
-        "desc": "Quick & reliable, no fuss"
-      }
-    },
-    "currencyPicker": {
-      "title": "Your main currency",
-      "subtitle": "Used as the base for all conversions.",
-      "detectedHint": "Detected from your device",
-      "ctaWithCode": "Continue with {{code}}",
-      "searchPlaceholder": "Search currencies...",
-      "showAll": "Show all"
-    },
-    "aha": {
-      "title": "Try it — drag to convert",
-      "subtitle": "Live conversion in 3 currencies.",
-      "cta": "Continue",
-      "hook": "See it in action",
-      "reveal1": "✓ Updated in real time",
-      "reveal2": "✓ Works offline",
-      "reveal3": "✓ 170+ currencies available"
-    },
-    "pitch": {
-      "traveler": {
-        "headline": "Built for travelers like you",
-        "heroCaption": "Your widget on Home Screen"
-      },
-      "trader": {
-        "headline": "Built for traders like you",
-        "heroCaption": "Real-time alerts on your pairs"
-      },
-      "freelancer": {
-        "headline": "Built for international business",
-        "heroCaption": "Export to CSV & PDF for accounting"
-      },
-      "general": {
-        "headline": "Designed for everyday converters",
-        "heroCaption": "Clean app + Home Screen widget"
-      },
-      "secondary": {
+    "premium": {
+      "headline": "Go further with Pro",
+      "benefit": {
         "noAds": "No ads, ever",
-        "offline": "Works fully offline",
-        "homeWidget": "Home Screen widget",
-        "rateAlerts": "Real-time rate alerts",
-        "backup": "Automatic cloud backup",
-        "export": "CSV & PDF export",
-        "statistics": "Statistics & charts"
-      },
-      "secondaryShort": {
-        "noAds": "No ads",
-        "offline": "Offline",
-        "homeWidget": "Widget",
-        "rateAlerts": "Alerts",
-        "backup": "Backup",
-        "export": "Export",
-        "statistics": "Stats"
+        "notifications": "Scheduled push notifications",
+        "premium": "Unlock all premium features",
+        "widget": "Home screen widget"
       },
       "timelineHeader": "How your trial works",
-      "day0": "Day 0 — Pro unlocked",
+      "day0": "Day 0 — Pro unlocked instantly",
       "day5": "Day 5 — Reminder before trial ends",
       "day7": "Day 7 — Billing starts, cancel anytime",
       "ctaStart": "Start my 7-day free trial",
       "ctaSkip": "Continue for free",
-      "fineprint": "{{price}}/yr after trial · Save {{percent}}%",
-      "fineprintNoSavings": "{{price}}/yr after trial",
-      "reassurance": "No charge during trial",
-      "restore": "Restore purchases",
-      "mock": {
-        "reportTitle": "Conversions Report",
-        "syncedToDrive": "Synced to Drive",
-        "ad": "Ad",
-        "alertTarget": "EUR/USD hit your 1.0950 target 🎯",
-        "alertVariation": "GBP/USD up 0.8% this morning 📈"
-      }
+      "restore": "Restore purchases"
+    },
+    "language": {
+      "title": "Choose your language",
+      "subtitle": "You can change this anytime in Settings.",
+      "cta": "Get Started"
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",
@@ -269,11 +177,6 @@
       "body": "We found your Pro subscription — it's already active on this device.",
       "ctaSkip": "Skip the intro",
       "ctaContinue": "Keep exploring"
-    },
-    "proActive": {
-      "title": "You're Pro",
-      "subtitle": "Everything's unlocked on this device.",
-      "cta": "Let's go"
     }
   },
   "tutorial": {

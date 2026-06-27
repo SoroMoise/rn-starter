@@ -3,18 +3,14 @@ import { OnboardingBackButton } from '@/components/onboarding/components/Onboard
 import { OnboardingProgressBar } from '@/components/onboarding/components/OnboardingProgressBar'
 import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
-import { PersonaQuestionStep } from '@/components/onboarding/steps/PersonaQuestionStep'
-import { PitchProStep } from '@/components/onboarding/steps/PitchProStep'
-import { ProActiveStep } from '@/components/onboarding/steps/ProActiveStep'
+import { LanguageStep } from '@/components/onboarding/steps/LanguageStep'
+import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
 import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
 import { GradientButton } from '@/components/ui/GradientButton'
-import { LanguagePicker } from '@/components/ui/LanguagePicker'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { PERSONA_CONTENT } from '@/constants/personaContent'
-import { getLanguageByCode } from '@/constants/languages'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
-import { useOnboardingStore, type Persona } from '@/stores/onboardingStore'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import type { Language } from '@/types'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
@@ -22,16 +18,16 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, TouchableOpacity, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const STEPS = ['welcome', 'persona', 'pitch'] as const
+const STEPS = ['welcome', 'premium', 'language'] as const
 type StepKind = (typeof STEPS)[number]
 const STEP_INDEX: Record<StepKind, number> = {
   welcome: 0,
-  persona: 1,
-  pitch: 2,
+  premium: 1,
+  language: 2,
 }
 const TOTAL_STEPS = STEPS.length
 
@@ -45,16 +41,13 @@ export function OnboardingScreen() {
   const isDark = useThemedColor()
 
   const [currentStep, setCurrentStep] = useState(0)
-  const [showLanguagePicker, setShowLanguagePicker] = useState(false)
   const [exitIntentVisible, setExitIntentVisible] = useState(false)
   const [proWelcomeVisible, setProWelcomeVisible] = useState(false)
   const onboardingStartTimeRef = useRef(Date.now())
   const slideStartTimeRef = useRef(Date.now())
-  const pitchEnteredAtRef = useRef(0)
+  const premiumEnteredAtRef = useRef(0)
 
-  const persona = useOnboardingStore((s) => s.persona)
   const attemptedSkipTrial = useOnboardingStore((s) => s.attemptedSkipTrial)
-  const setPersonaStore = useOnboardingStore((s) => s.setPersona)
   const markAttemptedSkipTrial = useOnboardingStore((s) => s.markAttemptedSkipTrial)
   const markCompleted = useOnboardingStore((s) => s.markCompleted)
   const setCurrentSlide = useOnboardingStore((s) => s.setCurrentSlide)
@@ -73,10 +66,12 @@ export function OnboardingScreen() {
 
   useEffect(() => {
     if (!isSubscriptionInitialized || !isPremium || hasSeenProWelcome) return
-    if (currentStep >= STEP_INDEX.pitch) return
+    if (currentStep >= STEP_INDEX.premium) return
     setProWelcomeVisible(true)
     markProWelcomeSeen()
-    analyticsService.track('onboarding_pro_detected', { step: stepName(currentStep) })
+    analyticsService.track('onboarding_pro_detected', {
+      step: stepName(currentStep) as 'welcome' | 'persona' | 'currency' | 'aha' | 'pitch',
+    })
   }, [isSubscriptionInitialized, isPremium, hasSeenProWelcome, currentStep, markProWelcomeSeen])
 
   const goToStep = useCallback(
@@ -90,16 +85,11 @@ export function OnboardingScreen() {
         stepIndex: step,
         timeOnPreviousStepS: elapsedS,
       })
-      if (stepName(step) === 'pitch') {
-        pitchEnteredAtRef.current = Date.now()
-        const personaKey: Persona = persona ?? 'general'
-        analyticsService.track('onboarding_pitch_viewed', {
-          persona: persona ?? 'none',
-          hero_feature: PERSONA_CONTENT[personaKey].pitch.heroFeatureKey,
-        })
+      if (stepName(step) === 'premium') {
+        premiumEnteredAtRef.current = Date.now()
       }
     },
-    [persona, setCurrentSlide]
+    [setCurrentSlide]
   )
 
   const handleComplete = useCallback(() => {
@@ -124,68 +114,52 @@ export function OnboardingScreen() {
   }, [handleComplete])
 
   const handleNextFromWelcome = useCallback(() => {
-    goToStep(STEP_INDEX.persona)
+    goToStep(STEP_INDEX.premium)
   }, [goToStep])
 
-  const handlePersonaSelect = useCallback(
-    (selected: Persona) => {
-      const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
-      setPersonaStore(selected)
-      analyticsService.track('onboarding_persona_selected', {
-        persona: selected,
-        time_on_step_s: elapsedS,
-      })
-      goToStep(STEP_INDEX.pitch)
-    },
-    [setPersonaStore, goToStep]
-  )
-
-  const handleSkipPersona = useCallback(() => {
-    const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
-    analyticsService.logOnboardingStepSkipped({ fromStep: 1, timeOnStepS: elapsedS })
-    setPersonaStore('general')
-    goToStep(STEP_INDEX.pitch)
-  }, [setPersonaStore, goToStep])
+  const handleNextFromLanguage = useCallback(() => {
+    handleComplete()
+  }, [handleComplete])
 
   const openExitIntent = useCallback(() => {
     if (attemptedSkipTrial) {
-      handleComplete()
+      goToStep(STEP_INDEX.language)
       return
     }
     markAttemptedSkipTrial()
     analyticsService.track('onboarding_exit_intent_shown', {
-      persona: persona ?? 'none',
-      time_on_pitch_s: Math.round((Date.now() - pitchEnteredAtRef.current) / 1000),
+      persona: 'none',
+      time_on_pitch_s: Math.round((Date.now() - premiumEnteredAtRef.current) / 1000),
     })
     setExitIntentVisible(true)
-  }, [attemptedSkipTrial, markAttemptedSkipTrial, persona, handleComplete])
+  }, [attemptedSkipTrial, markAttemptedSkipTrial, goToStep])
 
   const handleExitRecovered = useCallback(() => {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'recovered_to_trial',
-      persona: persona ?? 'none',
+      persona: 'none',
     })
     handleComplete()
-  }, [persona, handleComplete])
+  }, [handleComplete])
 
   const handleExitConfirmedSkip = useCallback(() => {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'confirmed_skip',
-      persona: persona ?? 'none',
+      persona: 'none',
     })
-    handleComplete()
-  }, [persona, handleComplete])
+    goToStep(STEP_INDEX.language)
+  }, [goToStep])
 
   const handleExitDismissedOutside = useCallback(() => {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'dismissed_outside',
-      persona: persona ?? 'none',
+      persona: 'none',
     })
-    handleComplete()
-  }, [persona, handleComplete])
+    goToStep(STEP_INDEX.language)
+  }, [goToStep])
 
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
@@ -205,15 +179,8 @@ export function OnboardingScreen() {
     [setLanguage, currentLanguage]
   )
 
-  const handleSkipGeneric = useCallback(() => {
-    const name = stepName(currentStep)
-    if (name === 'persona') return handleSkipPersona()
-    if (name === 'pitch') return openExitIntent()
-  }, [currentStep, handleSkipPersona, openExitIntent])
-
   const isFirstStep = currentStep === 0
   const stepKind = stepName(currentStep)
-  const currentLangConfig = getLanguageByCode(currentLanguage)
 
   return (
     <View className={`flex-1 ${isDark ? 'bg-[#0f0c29]' : 'bg-[#f8faff]'}`}>
@@ -226,44 +193,13 @@ export function OnboardingScreen() {
         <OnboardingProgressBar totalSteps={TOTAL_STEPS} currentStep={currentStep} />
       </View>
 
-      {isFirstStep && (
-        <Animated.View
-          entering={FadeIn.duration(300)}
-          className="absolute left-6 z-30"
-          style={{ top: insets.top + 24 }}>
-          <TouchableOpacity
-            onPress={() => {
-              triggerLight()
-              setShowLanguagePicker(true)
-            }}
-            className={`flex-row items-center gap-1.5 rounded-full px-3 py-1.5 ${
-              isDark ? 'border border-white/15 bg-white/10' : 'bg-black/6 border border-black/10'
-            }`}
-            activeOpacity={0.5}
-            accessibilityRole="button"
-            accessibilityLabel={t('a11y.selectLanguage')}>
-            <ThemedText color="inherit" className="text-sm">
-              {currentLangConfig?.flag}
-            </ThemedText>
-            <ThemedText variant="label" color="muted" weight="medium">
-              {currentLangConfig?.nativeName}
-            </ThemedText>
-            <Ionicons
-              name="chevron-down"
-              size={12}
-              color={isDark ? 'rgba(255,255,255,0.35)' : 'rgba(0,0,0,0.25)'}
-            />
-          </TouchableOpacity>
-        </Animated.View>
-      )}
-
-      {!isFirstStep && stepKind !== 'pitch' && (
+      {!isFirstStep && stepKind !== 'premium' && (
         <Animated.View
           entering={FadeIn.duration(300)}
           className="absolute right-6 z-30"
           style={{ top: insets.top + 24 }}>
           <Pressable
-            onPress={handleSkipGeneric}
+            onPress={handleNextFromLanguage}
             className="px-4 py-2"
             accessibilityRole="button"
             accessibilityLabel={t('onboarding.skip')}>
@@ -276,18 +212,11 @@ export function OnboardingScreen() {
 
       <Animated.View key={currentStep} entering={FadeIn.duration(300)} className="flex-1">
         {stepKind === 'welcome' && <WelcomeStep />}
-        {stepKind === 'persona' && (
-          <PersonaQuestionStep selectedPersona={persona} onSelect={handlePersonaSelect} />
-        )}
-        {stepKind === 'pitch' &&
-          (isSubscriptionInitialized && isPremium ? (
-            <ProActiveStep onFinish={handleComplete} />
-          ) : (
-            <PitchProStep persona={persona} onTriggerSkip={openExitIntent} />
-          ))}
+        {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
+        {stepKind === 'language' && <LanguageStep onSelect={handleLanguageChange} />}
       </Animated.View>
 
-      {stepKind !== 'pitch' && stepKind !== 'persona' && (
+      {stepKind !== 'premium' && (
         <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
           <View className="flex-row items-center gap-3">
             {!isFirstStep && <OnboardingBackButton onPress={handlePrevious} />}
@@ -307,6 +236,21 @@ export function OnboardingScreen() {
                 <Ionicons name="arrow-forward" size={20} color="#ffffff" />
               </GradientButton>
             )}
+
+            {stepKind === 'language' && (
+              <GradientButton
+                onPress={handleNextFromLanguage}
+                colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+                style={{ height: 58, flex: 1, borderRadius: 16 }}
+                gradientStyle={{ height: '100%', gap: 12 }}
+                pressScale={0}
+                pressOpacity={0.75}
+                accessibilityLabel={t('onboarding.language.cta')}>
+                <ThemedText variant="buttonLarge" color="inverse">
+                  {t('onboarding.language.cta')}
+                </ThemedText>
+              </GradientButton>
+            )}
           </View>
 
           {stepKind === 'welcome' && (
@@ -317,15 +261,7 @@ export function OnboardingScreen() {
         </View>
       )}
 
-      {stepKind === 'persona' && (
-        <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
-          <View className="flex-row items-center">
-            {!isFirstStep && <OnboardingBackButton onPress={handlePrevious} />}
-          </View>
-        </View>
-      )}
-
-      {stepKind === 'pitch' && (
+      {stepKind === 'premium' && (
         <View className="absolute left-6 z-30" style={{ top: insets.top + 24 }}>
           <OnboardingBackButton onPress={handlePrevious} />
         </View>
@@ -342,13 +278,6 @@ export function OnboardingScreen() {
         visible={proWelcomeVisible}
         onSkip={handleProWelcomeSkip}
         onContinue={handleProWelcomeContinue}
-      />
-
-      <LanguagePicker
-        visible={showLanguagePicker}
-        onClose={() => setShowLanguagePicker(false)}
-        onSelect={handleLanguageChange}
-        selectedLanguage={currentLanguage}
       />
     </View>
   )

@@ -1,4 +1,3 @@
-import type { Currency } from '@/types'
 import { FormatterOptions } from '@/types'
 
 export interface FormatAmountParams {
@@ -21,23 +20,6 @@ export function formatAmount({
     maximumFractionDigits: decimals,
     useGrouping: useSeparator,
   })
-}
-
-export interface FormatCurrencyParams {
-  amount: number
-  currency: Currency
-  options: FormatterOptions
-}
-
-export function formatCurrency({ amount, currency, options }: FormatCurrencyParams): string {
-  const formattedAmount = formatAmount({
-    amount,
-    decimals: options.decimals,
-    useSeparator: options.useSeparator,
-    locale: options.locale,
-  })
-
-  return `${currency.symbol} ${formattedAmount}`
 }
 
 export function formatRate(rate: number, decimals: number = 4): string {

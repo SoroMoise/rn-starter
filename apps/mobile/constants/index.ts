@@ -1,4 +1,3 @@
-export * from './currencies'
 export * from './config'
 export * from './admob'
 export * from './legal'

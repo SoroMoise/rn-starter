@@ -1,3 +1,8 @@
+export interface HistoricalRate {
+  date: string
+  rate: number
+}
+
 export interface ExchangeRateApiResponse {
   result: string
   documentation: string

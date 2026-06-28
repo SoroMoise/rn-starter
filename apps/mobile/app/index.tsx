@@ -9,9 +9,8 @@ import { useTabBarPadding } from '@/hooks/useTabBarPadding'
 import { useAdFree } from '@/providers/AdFreeProvider'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { MotiView } from 'moti'
-import { Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 
 type IoniconName = React.ComponentProps<typeof Ionicons>['name']
 

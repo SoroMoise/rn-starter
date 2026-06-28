@@ -29,7 +29,8 @@ type UseActionRatingProps = {
 export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { t } = useTranslation()
   const { maybeTrigger } = useContextualPaywall()
-  const { checkAndMaybeShowRating, markAsDeclinedForever, markAsLater, markAsRated } = useAppRating()
+  const { checkAndMaybeShowRating, markAsDeclinedForever, markAsLater, markAsRated } =
+    useAppRating()
 
   const [isRatingModalVisible, setIsRatingModalVisible] = useState(false)
   const [currentRatingActionCount, setCurrentRatingActionCount] = useState(0)

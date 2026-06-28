@@ -35,11 +35,18 @@ function buildScheduledAt({
   return setMinutes(setHours(d, hour), minute).getTime()
 }
 
-function makeDayOptions(): { value: number; label: string }[] {
+const DAY_OFFSETS = [0, 1, 2, 3, 7, 14, 30] as const
+
+function makeDayOptions(t: (key: string) => string): { value: number; label: string }[] {
   const today = new Date()
-  return [0, 1, 2, 3, 7, 14, 30].map((offset) => {
+  return DAY_OFFSETS.map((offset) => {
     const d = addDays(today, offset)
-    const label = offset === 0 ? 'Today' : offset === 1 ? 'Tomorrow' : format(d, 'EEE, MMM d')
+    const label =
+      offset === 0
+        ? t('alerts.today')
+        : offset === 1
+          ? t('alerts.tomorrow')
+          : format(d, 'EEE, MMM d')
     return { value: offset, label }
   })
 }
@@ -58,9 +65,7 @@ function resolveInitialDay(ts: number): number {
   const today = startOfDay(new Date())
   const target = startOfDay(new Date(ts))
   const diff = Math.round((target.getTime() - today.getTime()) / 86400000)
-  const dayOptions = makeDayOptions()
-  const found = dayOptions.find((d) => d.value === diff)
-  return found ? diff : 0
+  return (DAY_OFFSETS as readonly number[]).includes(diff) ? diff : 0
 }
 
 export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
@@ -88,7 +93,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const dayOptions = useMemo(() => makeDayOptions(), [])
+  const dayOptions = useMemo(() => makeDayOptions(t), [t])
 
   const scheduledAt = buildScheduledAt({ dayOffset, hour, minute })
 
@@ -96,12 +101,12 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
     const trimmedTitle = title.trim()
     if (!trimmedTitle) {
       triggerError()
-      setError(t('error.invalidAmount', { defaultValue: 'Please enter a title.' }))
+      setError(t('alerts.errorTitleRequired'))
       return
     }
     if (scheduledAt <= Date.now() && isActive) {
       triggerError()
-      setError('Scheduled time must be in the future for an active reminder.')
+      setError(t('alerts.errorFutureRequired'))
       return
     }
 
@@ -124,7 +129,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
 
       triggerSuccess()
       showToast({
-        message: isEditing ? t('alerts.updateSuccess', { pair: '' }) : t('alerts.create'),
+        message: isEditing ? t('alerts.updateSuccess') : t('alerts.createSuccess'),
         type: 'success',
       })
       onSuccess()
@@ -153,7 +158,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
       {/* Title */}
       <View className="mb-4">
         <ThemedText variant="label" color="muted" className="mb-2">
-          {t('alerts.title', { defaultValue: 'Title' })}
+          {t('alerts.titleLabel')}
         </ThemedText>
         <TextInput
           value={title}
@@ -162,7 +167,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
             setError(null)
           }}
           onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
-          placeholder="Reminder title"
+          placeholder={t('alerts.titlePlaceholder')}
           maxLength={64}
           returnKeyType={Platform.OS === 'ios' ? 'done' : 'next'}
           onSubmitEditing={Keyboard.dismiss}
@@ -173,16 +178,16 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
       {/* Body */}
       <View className="mb-4">
         <ThemedText variant="label" color="muted" className="mb-2">
-          Message{' '}
+          {t('alerts.messageLabel')}{' '}
           <ThemedText variant="caption" color="muted">
-            (optional)
+            {t('alerts.messageOptional')}
           </ThemedText>
         </ThemedText>
         <TextInput
           value={body}
           onChangeText={setBody}
           onFocus={() => scrollRef.current?.scrollToEnd({ animated: true })}
-          placeholder="Optional message"
+          placeholder={t('alerts.messagePlaceholder')}
           maxLength={256}
           multiline
           numberOfLines={3}
@@ -195,14 +200,14 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
       {/* Date & time picker */}
       <View className="mb-4">
         <ThemedText variant="label" color="muted" className="mb-3">
-          When
+          {t('alerts.whenLabel')}
         </ThemedText>
         <View className="overflow-hidden rounded-2xl border border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800">
           <View className="flex-row items-center justify-center gap-3 px-4 py-2">
             {/* Day */}
             <View className="flex-1 items-center">
               <ThemedText variant="caption" color="muted" className="mb-1">
-                Day
+                {t('alerts.dayLabel')}
               </ThemedText>
               <WheelPicker
                 options={dayOptions}
@@ -215,7 +220,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
             {/* Hour */}
             <View className="items-center">
               <ThemedText variant="caption" color="muted" className="mb-1">
-                Hour
+                {t('alerts.hourLabel')}
               </ThemedText>
               <WheelPicker options={HOUR_OPTIONS} value={hour} onChange={setHour} width={60} />
             </View>
@@ -227,7 +232,7 @@ export function CreateAlertForm({ onSuccess, editingAlert }: Props) {
             {/* Minute */}
             <View className="items-center">
               <ThemedText variant="caption" color="muted" className="mb-1">
-                Min
+                {t('alerts.minuteLabel')}
               </ThemedText>
               <WheelPicker
                 options={MINUTE_OPTIONS}

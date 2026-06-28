@@ -6,116 +6,99 @@ import { requestStoreReview } from '@/services/api/ratingService'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { useAppRating } from '@hooks/useAppRating'
+import { useContextualPaywall } from '@hooks/useContextualPaywall'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { Alert } from 'react-native'
 import { useTranslation } from 'react-i18next'
 
 type UseActionRatingProps = {
-  actions: unknown[]
-  amount: string
   isAdFreeActive: boolean
-  actionCount: number
 }
 
-export function useActionRating({
-  actions,
-  amount,
-  isAdFreeActive,
-  actionCount,
-}: UseActionRatingProps) {
+/**
+ * Premium engagement loop driven by a GENERIC action counter.
+ *
+ * Call `recordAction()` from any meaningful user interaction. Each call:
+ *   1. increments the persistent action counter (`engagementStorage`),
+ *   2. shows an interstitial ad when due (unless an ad-free session is active),
+ *   3. evaluates the contextual paywall (`after_n_actions` trigger),
+ *   4. evaluates the app-store rating prompt.
+ *
+ * This is the integration point a new app wires into its own value moments.
+ */
+export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { t } = useTranslation()
+  const { maybeTrigger } = useContextualPaywall()
+  const { checkAndMaybeShowRating, markAsDeclinedForever, markAsLater, markAsRated } = useAppRating()
+
   const [isRatingModalVisible, setIsRatingModalVisible] = useState(false)
   const [currentRatingActionCount, setCurrentRatingActionCount] = useState(0)
 
-  // Cache adLastShown to avoid hitting MMKV on every action.
-  // Seeded from storage on mount; updated in-memory when an interstitial ad is displayed.
+  // Cache adLastShown to avoid hitting MMKV on every action; seeded on mount,
+  // refreshed in-memory whenever an interstitial is displayed.
   const adLastShownCacheRef = useRef<number>(0)
-
-  // Mirror values that should not retrigger the action effect when they change.
-  // The effect reads them through refs, so changes propagate without re-running it.
-  const isAdFreeActiveRef = useRef(isAdFreeActive)
   const isRatingModalVisibleRef = useRef(isRatingModalVisible)
-  const actionsRef = useRef(actions)
-  const amountRef = useRef(amount)
 
   useEffect(() => {
     adLastShownCacheRef.current = adsStorage.getAdLastShown()
   }, [])
 
   useEffect(() => {
-    isAdFreeActiveRef.current = isAdFreeActive
-  }, [isAdFreeActive])
-
-  useEffect(() => {
     isRatingModalVisibleRef.current = isRatingModalVisible
   }, [isRatingModalVisible])
 
-  useEffect(() => {
-    actionsRef.current = actions
-  }, [actions])
-
-  useEffect(() => {
-    amountRef.current = amount
-  }, [amount])
-
-  const { checkAndMaybeShowRating, markAsDeclinedForever, markAsLater, markAsRated } =
-    useAppRating()
-
-  useEffect(() => {
-    if (actionCount === 0) return
-    if (actionsRef.current.length === 0) return
-    if (!(parseFloat(amountRef.current) > 0)) return
-
-    // Ad and rating paths run sequentially: the ad must resolve first so that
-    // adLastShownCacheRef.current is up-to-date when the rating gate reads it.
-    void (async () => {
-      if (!isAdFreeActiveRef.current) {
-        try {
-          await AdService.recordExecution()
-          const shouldShow = await AdService.shouldShowInterstitialAd()
-          if (shouldShow) {
-            await AdService.showInterstitialAd()
-            adLastShownCacheRef.current = Date.now()
-          }
-        } catch (err) {
-          crashlyticsService.recordError(
-            err instanceof Error ? err : new Error('Ad chain failed'),
-            { source: 'useActionRating.adChain' }
-          )
-        }
-      }
-
-      if (isRatingModalVisibleRef.current) return
+  const recordAction = useCallback(async () => {
+    // Ad and rating paths run sequentially so adLastShownCacheRef is up-to-date
+    // when the rating gate reads it.
+    if (!isAdFreeActive) {
       try {
-        const newTotal = engagementStorage.incrementAction()
-        analyticsService.track('action_performed', {
-          total_actions: newTotal,
-        })
-        const shouldShowRating = await checkAndMaybeShowRating({
-          wasSuccessful: true,
-          totalActions: newTotal,
-          hasFavorites: true,
-          lastInterstitialShownAt: adLastShownCacheRef.current,
-        })
-        if (shouldShowRating) {
-          setCurrentRatingActionCount(newTotal)
-          setIsRatingModalVisible(true)
-          analyticsService.track('rating_modal_shown', {
-            source: 'auto',
-            action_count: newTotal,
-          })
+        await AdService.recordExecution()
+        if (await AdService.shouldShowInterstitialAd()) {
+          await AdService.showInterstitialAd()
+          adLastShownCacheRef.current = Date.now()
         }
       } catch (err) {
-        crashlyticsService.recordError(
-          err instanceof Error ? err : new Error('Rating check failed'),
-          { source: 'useActionRating.ratingFlow' }
-        )
+        crashlyticsService.recordError(err instanceof Error ? err : new Error('Ad chain failed'), {
+          source: 'useActionRating.adChain',
+        })
       }
-    })()
-    // checkAndMaybeShowRating is stable (memoized with []). actionCount is
-    // the sole trigger — other values are read via refs to avoid spurious re-runs.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionCount])
+    }
+
+    let newTotal = 0
+    try {
+      newTotal = engagementStorage.incrementAction()
+      analyticsService.track('action_performed', { total_actions: newTotal })
+    } catch (err) {
+      crashlyticsService.recordError(
+        err instanceof Error ? err : new Error('Action increment failed'),
+        { source: 'useActionRating.increment' }
+      )
+      return
+    }
+
+    // The contextual paywall claims the one auto-promo slot first; only fall
+    // through to the rating prompt when it does not fire.
+    if (maybeTrigger('after_n_actions')) return
+
+    if (isRatingModalVisibleRef.current) return
+    try {
+      const shouldShowRating = await checkAndMaybeShowRating({
+        wasSuccessful: true,
+        totalActions: newTotal,
+        lastInterstitialShownAt: adLastShownCacheRef.current,
+      })
+      if (shouldShowRating) {
+        setCurrentRatingActionCount(newTotal)
+        setIsRatingModalVisible(true)
+        analyticsService.track('rating_modal_shown', { source: 'auto', action_count: newTotal })
+      }
+    } catch (err) {
+      crashlyticsService.recordError(
+        err instanceof Error ? err : new Error('Rating check failed'),
+        { source: 'useActionRating.ratingFlow' }
+      )
+    }
+  }, [isAdFreeActive, maybeTrigger, checkAndMaybeShowRating])
 
   const handleRateApp = useCallback(
     async (stars: number) => {
@@ -171,6 +154,7 @@ export function useActionRating({
   }, [markAsDeclinedForever])
 
   return {
+    recordAction,
     isRatingModalVisible,
     handleRateApp,
     handleRateLater,

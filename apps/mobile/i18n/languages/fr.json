@@ -62,6 +62,10 @@
     "cta": {
       "label": "Essayer Premium",
       "sub": "Essai gratuit de 7 jours · Résiliable à tout moment"
+    },
+    "demoAction": {
+      "label": "Effectuer une action d'exemple",
+      "sub": "Chaque action incrémente le compteur d'engagement qui pilote le paywall contextuel et la demande d'avis."
     }
   },
   "settings": {

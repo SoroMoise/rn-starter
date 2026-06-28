@@ -62,6 +62,10 @@
     "cta": {
       "label": "Try Premium",
       "sub": "7-day free trial · Cancel anytime"
+    },
+    "demoAction": {
+      "label": "Perform a sample action",
+      "sub": "Each action increments the engagement counter that drives the contextual paywall and rating prompt."
     }
   },
   "settings": {

@@ -45,7 +45,6 @@ function getThresholdByPromptCount(promptCount: number): number | null {
 export type CheckRatingContext = {
   wasSuccessful: boolean
   totalActions: number
-  hasFavorites: boolean
   lastInterstitialShownAt?: number
 }
 

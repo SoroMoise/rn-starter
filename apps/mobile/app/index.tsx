@@ -1,11 +1,15 @@
 import { GradientButton } from '@/components/ui/GradientButton'
+import { RatingModal } from '@/components/ui/RatingModal'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { useActionRating } from '@/hooks/useActionRating'
 import { usePremium } from '@/hooks/usePremium'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
+import { useAdFree } from '@/providers/AdFreeProvider'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { MotiView } from 'moti'
+import { Pressable } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 
@@ -27,7 +31,12 @@ const FEATURE_ITEMS: FeatureItem[] = [
 export default function HomeScreen() {
   const { t } = useTranslation()
   const { openPaywall } = usePremium()
+  const { isAdFreeActive } = useAdFree()
   const tabBarPadding = useTabBarPadding(24)
+
+  const { recordAction, isRatingModalVisible, handleRateApp, handleRateLater } = useActionRating({
+    isAdFreeActive,
+  })
 
   return (
     <ScreenContainer>
@@ -98,9 +107,29 @@ export default function HomeScreen() {
             <ThemedText variant="caption" color="muted" align="center" className="mt-2">
               {t('home.cta.sub')}
             </ThemedText>
+
+            <Pressable
+              onPress={() => void recordAction()}
+              accessibilityRole="button"
+              accessibilityLabel={t('home.demoAction.label')}
+              className="mt-4 flex-row items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3.5 active:opacity-70 dark:border-gray-700">
+              <Ionicons name="sparkles-outline" size={18} color="#6366f1" />
+              <ThemedText variant="label" weight="semibold">
+                {t('home.demoAction.label')}
+              </ThemedText>
+            </Pressable>
+            <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+              {t('home.demoAction.sub')}
+            </ThemedText>
           </View>
         </MotiView>
       </ScrollView>
+
+      <RatingModal
+        visible={isRatingModalVisible}
+        onRate={handleRateApp}
+        onLater={handleRateLater}
+      />
     </ScreenContainer>
   )
 }

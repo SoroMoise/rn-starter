@@ -108,7 +108,6 @@ export default () => {
         },
         admob: {
           bannerIndexEnabled: process.env.AD_BANNER_INDEX_ENABLED !== 'false',
-          bannerStatisticsEnabled: process.env.AD_BANNER_STATISTICS_ENABLED !== 'false',
           bannerSettingsEnabled: process.env.AD_BANNER_SETTINGS_ENABLED !== 'false',
           interstitialEnabled: process.env.AD_INTERSTITIAL_ENABLED !== 'false',
           rewardedEnabled: process.env.AD_REWARDED_ENABLED !== 'false',
@@ -117,12 +116,10 @@ export default () => {
             10
           ),
           androidBannerIndexId: process.env.ADMOB_ANDROID_BANNER_INDEX_ID,
-          androidBannerStatisticsId: process.env.ADMOB_ANDROID_BANNER_STATISTICS_ID,
           androidBannerSettingsId: process.env.ADMOB_ANDROID_BANNER_SETTINGS_ID,
           androidInterstitialId: process.env.ADMOB_ANDROID_INTERSTITIAL_ID,
           androidRewardedId: process.env.ADMOB_ANDROID_REWARDED_ID,
           iosBannerIndexId: process.env.ADMOB_IOS_BANNER_INDEX_ID,
-          iosBannerStatisticsId: process.env.ADMOB_IOS_BANNER_STATISTICS_ID,
           iosBannerSettingsId: process.env.ADMOB_IOS_BANNER_SETTINGS_ID,
           iosInterstitialId: process.env.ADMOB_IOS_INTERSTITIAL_ID,
           iosRewardedId: process.env.ADMOB_IOS_REWARDED_ID,

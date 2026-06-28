@@ -16,11 +16,6 @@ export const ADMOB_INDEX_BANNER_ID = getBannerIdForPlatform(
   admobConfig.iosBannerIndexId
 )
 
-export const ADMOB_STATISTICS_BANNER_ID = getBannerIdForPlatform(
-  admobConfig.androidBannerStatisticsId,
-  admobConfig.iosBannerStatisticsId
-)
-
 export const ADMOB_SETTINGS_BANNER_ID = getBannerIdForPlatform(
   admobConfig.androidBannerSettingsId,
   admobConfig.iosBannerSettingsId
@@ -39,7 +34,6 @@ export const ADMOB_REWARDED_ID = __DEV__
     : admobConfig.iosRewardedId || ''
 
 export const AD_BANNER_INDEX_ENABLED = admobConfig.bannerIndexEnabled !== false
-export const AD_BANNER_STATISTICS_ENABLED = admobConfig.bannerStatisticsEnabled !== false
 export const AD_BANNER_SETTINGS_ENABLED = admobConfig.bannerSettingsEnabled !== false
 export const AD_INTERSTITIAL_ENABLED = admobConfig.interstitialEnabled !== false
 export const AD_REWARDED_ENABLED = admobConfig.rewardedEnabled !== false

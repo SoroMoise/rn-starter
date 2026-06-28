@@ -1,4 +1,0 @@
----
-alwaysApply: true
----
-Comments should only be placed where necessary, as the code should be self-documenting.

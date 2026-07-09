@@ -195,7 +195,6 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 - **ADMOB_*** — AdMob app IDs and ad unit IDs (banner / interstitial / rewarded per platform)
 - **REVENUECAT_*** — API keys, entitlement ID, product IDs
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
-- **GOOGLE_WEB_CLIENT_ID** — OAuth 2.0 Web Client ID (Google Sign-In)
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 - **STORE_URL_*** — App Store and Play Store URLs for rating fallback
 

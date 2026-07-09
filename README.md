@@ -82,7 +82,7 @@ apps/mobile/
 │   │                    #   ratingService, rewardedAdService
 │   ├── notifications/   # setup, channels, payload, scheduleAlert, backgroundHandler
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
-│   └── storage/         # mmkv, adapter, keys, migration, domains/
+│   └── storage/         # mmkv, adapter, keys, domains/
 ├── stores/              # alertsStore, deepLinkStore, onboardingStore, settingsStore
 └── types/               # app-wide TypeScript types
 ```

@@ -1,7 +1,4 @@
 export const KEYS = {
-  // Migration
-  MIGRATION_DONE: '@migration_done',
-
   // Ad-free reward
   AD_FREE_UNTIL: '@ad_free_until',
 
@@ -32,10 +29,9 @@ export const KEYS = {
   CONTEXTUAL_PAYWALL_SHOWN_COUNT: '@contextual_paywall_shown_count',
   ENGAGEMENT_ACTION_COUNT: '@engagement_action_count',
 
-  // Stores using direct AsyncStorage (legacy keys to migrate AS-IS)
+  // Zustand-persisted stores
   USER_SETTINGS: 'user_settings',
   ONBOARDING_SEEN: 'onboarding_seen',
-  PULL_TO_REFRESH_TUTORIAL_SEEN: 'pull_to_refresh_tutorial_seen',
 
   // Alerts
   ALERTS: '@alerts',

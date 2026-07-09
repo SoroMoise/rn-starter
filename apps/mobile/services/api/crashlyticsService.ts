@@ -39,17 +39,11 @@ export const crashlyticsService = {
     }
   },
 
-  async setUserAttributes(attrs: {
-    language?: string
-    theme?: string
-    currenciesCount?: number
-  }): Promise<void> {
+  async setUserAttributes(attrs: { language?: string; theme?: string }): Promise<void> {
     try {
       const normalized: Record<string, string> = {}
       if (attrs.language !== undefined) normalized.language = attrs.language
       if (attrs.theme !== undefined) normalized.theme = attrs.theme
-      if (attrs.currenciesCount !== undefined)
-        normalized.currencies_count = String(attrs.currenciesCount)
 
       if (Object.keys(normalized).length === 0) return
 

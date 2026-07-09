@@ -58,7 +58,7 @@ Composition in `app/_layout.tsx` (outer → inner):
 
 ```
 SafeAreaProvider
-  > RootLayoutContent          <- runs storage migration before anything
+  > RootLayoutContent
       TelemetryEffects         <- side-effect, outside provider tree
       GestureHandlerRootView
         > QueryProvider
@@ -71,7 +71,7 @@ SafeAreaProvider
       RTLRestartBanner         <- outside provider tree
 ```
 
-`RootLayoutContent` runs `runStorageMigration()` (AsyncStorage -> MMKV) then forces `persist.rehydrate()` on all Zustand stores if migration just ran.
+Persisted Zustand stores use MMKV via `mmkvStateStorage`, a synchronous `StateStorage`, so they hydrate synchronously at module import — no async gate or forced rehydration is needed at boot.
 
 ### State Management
 
@@ -88,7 +88,6 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `mmkv.ts` — single MMKV instance
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
-- `migration.ts` — one-shot AsyncStorage -> MMKV (idempotent; AsyncStorage kept only for this)
 - `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `rating`, `subscription`, `userSettings`
 
 Notable domains:

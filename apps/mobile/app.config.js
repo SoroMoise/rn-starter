@@ -70,7 +70,6 @@ export default () => {
         ],
         '@react-native-firebase/app',
         '@react-native-firebase/crashlytics',
-        '@react-native-google-signin/google-signin',
         [
           'react-native-google-mobile-ads',
           {
@@ -95,7 +94,6 @@ export default () => {
         backendUrl: process.env.BACKEND_URL,
         backendApiKey: process.env.BACKEND_API_KEY,
         websiteUrl: process.env.APP_WEBSITE_URL,
-        googleWebClientId: process.env.GOOGLE_WEB_CLIENT_ID,
         legal: {
           privacyPolicyUrl: process.env.LEGAL_PRIVACY_POLICY_URL,
           termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,

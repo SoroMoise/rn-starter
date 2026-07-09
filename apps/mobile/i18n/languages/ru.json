@@ -50,8 +50,6 @@
     "notifications": "Уведомления",
     "enableNotifications": "Включить уведомления",
     "validate": "Подтвердить",
-    "currenciesSelected_few": "Выбрано {{count}} валюты",
-    "currenciesAdded_few": "Добавлено {{count}} валюты",
     "ads": "Реклама",
     "premium": "Премиум",
     "removeAds": "Убрать Рекламу",
@@ -87,7 +85,6 @@
     "next": "Продолжить",
     "previous": "Назад",
     "welcome": {
-      "subtitle": "Самый быстрый способ конвертировать 170+ валют — бесплатно, мгновенно, всегда с тобой.",
       "cta": "Начать",
       "reassurance": "Бесплатно · Без аккаунта"
     },

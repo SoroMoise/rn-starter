@@ -6,10 +6,8 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, View } from 'react-native'
 
-type GatedFeature = 'rateAlerts' | 'backup' | 'export'
-
 type PremiumGateProps = {
-  feature: GatedFeature
+  feature: string
   source: string
   children: React.ReactNode
 }

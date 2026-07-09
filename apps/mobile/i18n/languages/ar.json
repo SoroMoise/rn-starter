@@ -50,12 +50,6 @@
     "notifications": "الإشعارات",
     "enableNotifications": "تفعيل الإشعارات",
     "validate": "تأكيد",
-    "currenciesSelected_zero": "لم يتم اختيار أي عملة",
-    "currenciesSelected_two": "تم اختيار عملتين",
-    "currenciesSelected_few": "تم اختيار {{count}} عملات",
-    "currenciesAdded_zero": "لم تتم إضافة أي عملة",
-    "currenciesAdded_two": "تمت إضافة عملتين",
-    "currenciesAdded_few": "تمت إضافة {{count}} عملات",
     "ads": "الإعلانات",
     "premium": "بريميوم",
     "removeAds": "إزالة الإعلانات",
@@ -91,7 +85,6 @@
     "next": "متابعة",
     "previous": "رجوع",
     "welcome": {
-      "subtitle": "أسرع طريقة لتحويل أكثر من 170 عملة — مجاناً، فوراً، دائماً معك.",
       "cta": "ابدأ الآن",
       "reassurance": "مجاناً · بدون حساب"
     },

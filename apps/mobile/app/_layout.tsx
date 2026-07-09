@@ -1,5 +1,4 @@
 import { useThemeColor } from '@/components/Themed'
-import { MigrationLoadingScreen } from '@/components/layout/MigrationLoadingScreen'
 import { TelemetryEffects } from '@/components/layout/TelemetryEffects'
 import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
 import { PremiumTabBar } from '@/components/ui/PremiumTabBar'
@@ -18,18 +17,14 @@ import { ToastProvider } from '@/providers/ToastProvider'
 import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { contextualPaywallService } from '@/services/api/contextualPaywall'
-import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
 import { ensureNotificationChannels, notificationService } from '@/services/notifications'
-import { mmkv } from '@/services/storage'
-import { KEYS } from '@/services/storage/keys'
-import { runStorageMigration } from '@/services/storage/migration'
 import { useAlertsStore } from '@/stores/alertsStore'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Constants from 'expo-constants'
 import { Tabs } from 'expo-router'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -118,33 +113,6 @@ function AppContent() {
 
 function RootLayoutContent() {
   const colors = useThemeColor()
-  const [isMigrationDone, setMigrationDone] = useState(false)
-
-  useEffect(() => {
-    // Zustand persist with MMKV hydrates synchronously at module import, before this effect
-    // runs. If MMKV is empty (first boot after migration), stores initialize with defaults.
-    // After migration writes the data, we must force rehydration so stores pick it up.
-    const needsRehydration = mmkv.getBoolean(KEYS.MIGRATION_DONE) !== true
-
-    runStorageMigration()
-      .then(() => {
-        if (needsRehydration) {
-          useOnboardingStore.persist.rehydrate()
-          useSettingsStore.persist.rehydrate()
-        }
-      })
-      .catch((err) => {
-        crashlyticsService.recordError(
-          err instanceof Error ? err : new Error('Storage migration failed'),
-          { source: '_layout.runStorageMigration' }
-        )
-      })
-      .finally(() => setMigrationDone(true))
-  }, [])
-
-  if (!isMigrationDone) {
-    return <MigrationLoadingScreen />
-  }
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.screenBackground }}>

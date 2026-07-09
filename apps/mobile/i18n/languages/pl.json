@@ -50,8 +50,6 @@
     "notifications": "Powiadomienia",
     "enableNotifications": "Włącz powiadomienia",
     "validate": "Potwierdź",
-    "currenciesSelected_few": "Wybrano {{count}} waluty",
-    "currenciesAdded_few": "Dodano {{count}} waluty",
     "ads": "Reklamy",
     "premium": "Premium",
     "removeAds": "Usuń Reklamy",
@@ -87,7 +85,6 @@
     "next": "Dalej",
     "previous": "Wstecz",
     "welcome": {
-      "subtitle": "Najszybszy sposób na przeliczanie 170+ walut — za darmo, natychmiast, zawsze pod ręką.",
       "cta": "Zaczynamy",
       "reassurance": "Za darmo · Bez konta"
     },

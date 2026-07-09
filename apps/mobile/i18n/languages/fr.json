@@ -120,7 +120,6 @@
     "languageChanged": "Langue mise à jour avec succès"
   },
   "onboarding": {
-    "skip": "Passer",
     "next": "Continuer",
     "previous": "Retour",
     "welcome": {
@@ -142,11 +141,6 @@
       "ctaStart": "Démarrer mon essai gratuit de 7 jours",
       "ctaSkip": "Continuer gratuitement",
       "restore": "Restaurer mes achats"
-    },
-    "language": {
-      "title": "Choisissez votre langue",
-      "subtitle": "Vous pouvez modifier cela à tout moment dans les paramètres.",
-      "cta": "Commencer"
     },
     "exitIntent": {
       "title": "Un instant — essaie Pro gratuitement",

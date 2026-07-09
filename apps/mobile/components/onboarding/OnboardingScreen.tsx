@@ -3,10 +3,10 @@ import { OnboardingBackButton } from '@/components/onboarding/components/Onboard
 import { OnboardingProgressBar } from '@/components/onboarding/components/OnboardingProgressBar'
 import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
-import { LanguageStep } from '@/components/onboarding/steps/LanguageStep'
 import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
 import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
 import { GradientButton } from '@/components/ui/GradientButton'
+import { LanguagePicker } from '@/components/ui/LanguagePicker'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -14,6 +14,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import type { Language } from '@/types'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
+import { getLanguageByCode } from '@constants/languages'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -22,12 +23,11 @@ import { Pressable, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const STEPS = ['welcome', 'premium', 'language'] as const
+const STEPS = ['welcome', 'premium'] as const
 type StepKind = (typeof STEPS)[number]
 const STEP_INDEX: Record<StepKind, number> = {
   welcome: 0,
   premium: 1,
-  language: 2,
 }
 const TOTAL_STEPS = STEPS.length
 
@@ -43,6 +43,7 @@ export function OnboardingScreen() {
   const [currentStep, setCurrentStep] = useState(0)
   const [exitIntentVisible, setExitIntentVisible] = useState(false)
   const [proWelcomeVisible, setProWelcomeVisible] = useState(false)
+  const [languagePickerVisible, setLanguagePickerVisible] = useState(false)
   const onboardingStartTimeRef = useRef(Date.now())
   const slideStartTimeRef = useRef(Date.now())
   const premiumEnteredAtRef = useRef(0)
@@ -116,13 +117,14 @@ export function OnboardingScreen() {
     goToStep(STEP_INDEX.premium)
   }, [goToStep])
 
-  const handleNextFromLanguage = useCallback(() => {
-    handleComplete()
-  }, [handleComplete])
+  const openLanguagePicker = useCallback(() => {
+    triggerLight()
+    setLanguagePickerVisible(true)
+  }, [])
 
   const openExitIntent = useCallback(() => {
     if (attemptedSkipTrial) {
-      goToStep(STEP_INDEX.language)
+      handleComplete()
       return
     }
     markAttemptedSkipTrial()
@@ -130,7 +132,7 @@ export function OnboardingScreen() {
       time_on_pitch_s: Math.round((Date.now() - premiumEnteredAtRef.current) / 1000),
     })
     setExitIntentVisible(true)
-  }, [attemptedSkipTrial, markAttemptedSkipTrial, goToStep])
+  }, [attemptedSkipTrial, markAttemptedSkipTrial, handleComplete])
 
   const handleExitRecovered = useCallback(() => {
     setExitIntentVisible(false)
@@ -145,16 +147,16 @@ export function OnboardingScreen() {
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'confirmed_skip',
     })
-    goToStep(STEP_INDEX.language)
-  }, [goToStep])
+    handleComplete()
+  }, [handleComplete])
 
   const handleExitDismissedOutside = useCallback(() => {
     setExitIntentVisible(false)
     analyticsService.track('onboarding_exit_intent_outcome', {
       outcome: 'dismissed_outside',
     })
-    goToStep(STEP_INDEX.language)
-  }, [goToStep])
+    handleComplete()
+  }, [handleComplete])
 
   const handlePrevious = useCallback(() => {
     if (currentStep > 0) {
@@ -174,8 +176,8 @@ export function OnboardingScreen() {
     [setLanguage, currentLanguage]
   )
 
-  const isFirstStep = currentStep === 0
   const stepKind = stepName(currentStep)
+  const activeLanguage = getLanguageByCode(currentLanguage)
 
   return (
     <View className={`flex-1 ${isDark ? 'bg-[#0f0c29]' : 'bg-[#f8faff]'}`}>
@@ -188,19 +190,25 @@ export function OnboardingScreen() {
         <OnboardingProgressBar totalSteps={TOTAL_STEPS} currentStep={currentStep} />
       </View>
 
-      {!isFirstStep && stepKind !== 'premium' && (
+      {stepKind === 'welcome' && (
         <Animated.View
           entering={FadeIn.duration(300)}
-          className="absolute right-6 z-30"
-          style={{ top: insets.top + 24 }}>
+          className="absolute left-6 z-30"
+          style={{ top: insets.top + 44 }}>
           <Pressable
-            onPress={handleNextFromLanguage}
-            className="px-4 py-2"
+            onPress={openLanguagePicker}
+            className={`flex-row items-center gap-2 rounded-full px-3 py-2 ${
+              isDark ? 'bg-white/10' : 'bg-black/[0.05]'
+            }`}
             accessibilityRole="button"
-            accessibilityLabel={t('onboarding.skip')}>
-            <ThemedText variant="label" color="muted">
-              {t('onboarding.skip')}
+            accessibilityLabel={t('settings.selectLanguage')}>
+            <ThemedText variant="label" color="inherit">
+              {activeLanguage?.flag}
             </ThemedText>
+            <ThemedText variant="label" weight="medium">
+              {activeLanguage?.nativeName}
+            </ThemedText>
+            <Ionicons name="chevron-down" size={14} color={isDark ? '#cbd5e1' : '#475569'} />
           </Pressable>
         </Animated.View>
       )}
@@ -208,51 +216,27 @@ export function OnboardingScreen() {
       <Animated.View key={currentStep} entering={FadeIn.duration(300)} className="flex-1">
         {stepKind === 'welcome' && <WelcomeStep />}
         {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
-        {stepKind === 'language' && <LanguageStep onSelect={handleLanguageChange} />}
       </Animated.View>
 
-      {stepKind !== 'premium' && (
+      {stepKind === 'welcome' && (
         <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
-          <View className="flex-row items-center gap-3">
-            {!isFirstStep && <OnboardingBackButton onPress={handlePrevious} />}
-
-            {stepKind === 'welcome' && (
-              <GradientButton
-                onPress={handleNextFromWelcome}
-                colors={['#3b82f6', '#6366f1', '#8b5cf6']}
-                style={{ height: 58, flex: 1, borderRadius: 16 }}
-                gradientStyle={{ height: '100%', gap: 12 }}
-                pressScale={0}
-                pressOpacity={0.75}
-                accessibilityLabel={t('onboarding.welcome.cta')}>
-                <ThemedText variant="buttonLarge" color="inverse">
-                  {t('onboarding.welcome.cta')}
-                </ThemedText>
-                <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-              </GradientButton>
-            )}
-
-            {stepKind === 'language' && (
-              <GradientButton
-                onPress={handleNextFromLanguage}
-                colors={['#3b82f6', '#6366f1', '#8b5cf6']}
-                style={{ height: 58, flex: 1, borderRadius: 16 }}
-                gradientStyle={{ height: '100%', gap: 12 }}
-                pressScale={0}
-                pressOpacity={0.75}
-                accessibilityLabel={t('onboarding.language.cta')}>
-                <ThemedText variant="buttonLarge" color="inverse">
-                  {t('onboarding.language.cta')}
-                </ThemedText>
-              </GradientButton>
-            )}
-          </View>
-
-          {stepKind === 'welcome' && (
-            <ThemedText variant="caption" color="muted" align="center" className="mt-2">
-              {t('onboarding.welcome.reassurance')}
+          <GradientButton
+            onPress={handleNextFromWelcome}
+            colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+            style={{ height: 58, borderRadius: 16 }}
+            gradientStyle={{ height: '100%', gap: 12 }}
+            pressScale={0}
+            pressOpacity={0.75}
+            accessibilityLabel={t('onboarding.welcome.cta')}>
+            <ThemedText variant="buttonLarge" color="inverse">
+              {t('onboarding.welcome.cta')}
             </ThemedText>
-          )}
+            <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+          </GradientButton>
+
+          <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+            {t('onboarding.welcome.reassurance')}
+          </ThemedText>
         </View>
       )}
 
@@ -273,6 +257,13 @@ export function OnboardingScreen() {
         visible={proWelcomeVisible}
         onSkip={handleProWelcomeSkip}
         onContinue={handleProWelcomeContinue}
+      />
+
+      <LanguagePicker
+        visible={languagePickerVisible}
+        onClose={() => setLanguagePickerVisible(false)}
+        onSelect={handleLanguageChange}
+        selectedLanguage={currentLanguage}
       />
     </View>
   )

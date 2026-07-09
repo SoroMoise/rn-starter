@@ -42,7 +42,7 @@ SafeAreaProvider
 |---|---|---|
 | `/(tabs)/index` | `app/index.tsx` | Home — premium feature showcase, paywall CTA |
 | `/(tabs)/settings` | `app/settings.tsx` | Settings — theme, language, premium, ads, alerts, legal |
-| Onboarding | `components/onboarding/OnboardingScreen.tsx` | 3-step flow: welcome → premium value → language picker |
+| Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2-step flow: welcome → premium value (welcome has a top-left language selector) |
 | Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet |
 
 ---
@@ -141,10 +141,9 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 ## Onboarding
 
-3-step flow in `OnboardingScreen.tsx`:
-1. `WelcomeStep` — app introduction
-2. `PremiumValueStep` — premium pitch (triggers paywall/trial)
-3. `LanguageStep` — language selection
+2-step flow in `OnboardingScreen.tsx`:
+1. `WelcomeStep` — app introduction. A top-left pill opens the shared `LanguagePicker` bottom sheet for language selection.
+2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding.
 
 After completion, `onboardingStore.markCompleted()` is called and `AppContent` renders the tabs.
 

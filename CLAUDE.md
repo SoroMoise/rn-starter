@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 Monorepo boilerplate for a premium React Native / Expo app:
 
-- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, push notifications (FCM + local scheduled reminders), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium → language).
+- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, push notifications (FCM + local scheduled reminders), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -50,7 +50,7 @@ Expo Router file-based routing in `apps/mobile/app/`:
 - `index` — Home screen (premium feature showcase + paywall CTA)
 - `settings` — Settings screen (theme, language, premium, ads, notifications, legal)
 
-Onboarding flow (3 steps: welcome → premium value → language picker) is gated in `AppContent` before tabs are shown. Custom `PremiumTabBar` with blur and haptics.
+Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` before tabs are shown. The welcome step exposes a top-left language selector that opens the shared `LanguagePicker` bottom sheet. Custom `PremiumTabBar` with blur and haptics.
 
 ### Provider Tree
 

@@ -120,7 +120,6 @@
     "languageChanged": "Language updated successfully"
   },
   "onboarding": {
-    "skip": "Skip",
     "next": "Continue",
     "previous": "Back",
     "welcome": {
@@ -142,11 +141,6 @@
       "ctaStart": "Start my 7-day free trial",
       "ctaSkip": "Continue for free",
       "restore": "Restore purchases"
-    },
-    "language": {
-      "title": "Choose your language",
-      "subtitle": "You can change this anytime in Settings.",
-      "cta": "Get Started"
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",

@@ -12,7 +12,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Contextual paywall** — triggers on generic action count (`engagementStorage.getActionCount / incrementAction`) and session signals — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
-- **Push notifications** — FCM + `expo-notifications`; scheduled local reminders via `expo-notifications` trigger API
+- **Notification system** — FCM + `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
 - **App-store rating prompt** — `expo-store-review` with store URL fallback
 - **Onboarding flow** — welcome → premium value pitch → language picker
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
@@ -70,20 +70,20 @@ apps/mobile/
 │   ├── _layout.tsx      # Root layout — providers + tab navigator
 │   ├── index.tsx        # Home tab (premium demo)
 │   └── settings.tsx     # Settings tab
-├── components/          # ads/, alerts/, layout/, onboarding/, paywall/, settings/, ui/
+├── components/          # ads/, layout/, onboarding/, paywall/, settings/, ui/
 ├── constants/           # admob, config, legal, rating
 ├── hooks/               # usePremium, useTabBarPadding, useThemedColor, ...
 ├── i18n/                # service.ts + languages/ (20 JSON files)
-├── providers/           # AdFreeProvider, AlertNotificationProvider, QueryProvider,
+├── providers/           # AdFreeProvider, QueryProvider,
 │                        #   SubscriptionProvider, ThemeProvider, ToastProvider
 ├── services/
 │   ├── api/             # adService, analyticsService, contextualPaywall/,
 │   │                    #   crashlyticsService, engagementService, purchaseService,
 │   │                    #   ratingService, rewardedAdService
-│   ├── notifications/   # setup, channels, payload, scheduleAlert, backgroundHandler
+│   ├── notifications/   # setup, channels, backgroundHandler
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
-│   └── storage/         # mmkv, adapter, keys, migration, domains/
-├── stores/              # alertsStore, deepLinkStore, onboardingStore, settingsStore
+│   └── storage/         # mmkv, adapter, keys, domains/
+├── stores/              # onboardingStore, settingsStore
 └── types/               # app-wide TypeScript types
 ```
 
@@ -195,7 +195,6 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 - **ADMOB_*** — AdMob app IDs and ad unit IDs (banner / interstitial / rewarded per platform)
 - **REVENUECAT_*** — API keys, entitlement ID, product IDs
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
-- **GOOGLE_WEB_CLIENT_ID** — OAuth 2.0 Web Client ID (Google Sign-In)
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 - **STORE_URL_*** — App Store and Play Store URLs for rating fallback
 

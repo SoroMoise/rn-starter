@@ -3,7 +3,7 @@ import { readUserSettingsFromStorage } from '@/services/storage/domains/userSett
 import * as Notifications from 'expo-notifications'
 import { Platform } from 'react-native'
 
-export const ALERTS_CHANNEL_ID = 'reminders'
+export const NOTIFICATION_CHANNEL_ID = 'reminders'
 
 const VIBRATION_PATTERN = [0, 250, 250, 250]
 
@@ -15,9 +15,9 @@ interface ChannelPrefs {
 async function applyChannel(prefs: ChannelPrefs): Promise<void> {
   const lng = ensureLanguageLoaded(getActiveLanguageFromStorage())
 
-  await Notifications.setNotificationChannelAsync(ALERTS_CHANNEL_ID, {
-    name: i18n.t('alerts.channelName', { lng, defaultValue: 'Reminders' }),
-    description: i18n.t('alerts.channelDescription', {
+  await Notifications.setNotificationChannelAsync(NOTIFICATION_CHANNEL_ID, {
+    name: i18n.t('notifications.channelName', { lng, defaultValue: 'Reminders' }),
+    description: i18n.t('notifications.channelDescription', {
       lng,
       defaultValue: 'Scheduled local reminders',
     }),
@@ -37,14 +37,4 @@ export async function ensureNotificationChannels(): Promise<void> {
     sound: settings.notificationSound,
     vibration: settings.notificationVibration,
   })
-}
-
-export async function recreateAlertsChannel(prefs: ChannelPrefs): Promise<void> {
-  if (Platform.OS !== 'android') return
-
-  try {
-    await Notifications.deleteNotificationChannelAsync(ALERTS_CHANNEL_ID)
-  } catch {}
-
-  await applyChannel(prefs)
 }

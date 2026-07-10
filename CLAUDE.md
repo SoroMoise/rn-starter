@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 Monorepo boilerplate for a premium React Native / Expo app:
 
-- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, push notifications (FCM + local scheduled reminders), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
+- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable notification system (FCM permissions + Android channels, ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -48,7 +48,7 @@ Native `ios/` and `android/` are NOT committed (Continuous Native Generation). R
 
 Expo Router file-based routing in `apps/mobile/app/`:
 - `index` — Home screen (premium feature showcase + paywall CTA)
-- `settings` — Settings screen (theme, language, premium, ads, notifications, legal)
+- `settings` — Settings screen (theme, language, premium, ads, legal)
 
 Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` before tabs are shown. The welcome step exposes a top-left language selector that opens the shared `LanguagePicker` bottom sheet. Custom `PremiumTabBar` with blur and haptics.
 
@@ -58,7 +58,7 @@ Composition in `app/_layout.tsx` (outer → inner):
 
 ```
 SafeAreaProvider
-  > RootLayoutContent          <- runs storage migration before anything
+  > RootLayoutContent
       TelemetryEffects         <- side-effect, outside provider tree
       GestureHandlerRootView
         > QueryProvider
@@ -66,12 +66,11 @@ SafeAreaProvider
             > ToastProvider
               > SubscriptionProvider
                 > AdFreeProvider
-                  > AlertNotificationProvider
-                    > AppContent
+                  > AppContent
       RTLRestartBanner         <- outside provider tree
 ```
 
-`RootLayoutContent` runs `runStorageMigration()` (AsyncStorage -> MMKV) then forces `persist.rehydrate()` on all Zustand stores if migration just ran.
+Persisted Zustand stores use MMKV via `mmkvStateStorage`, a synchronous `StateStorage`, so they hydrate synchronously at module import — no async gate or forced rehydration is needed at boot.
 
 ### State Management
 
@@ -79,8 +78,6 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 
 - `settingsStore` — user preferences (theme, language) + RTL restart state
 - `onboardingStore` — first-launch tracking, persona, onboarding step
-- `alertsStore` — scheduled local notification alerts (persisted, local-only)
-- `deepLinkStore` — in-memory only; holds a pending alert deep-link until consumed
 
 ### Storage
 
@@ -88,7 +85,6 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `mmkv.ts` — single MMKV instance
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
-- `migration.ts` — one-shot AsyncStorage -> MMKV (idempotent; AsyncStorage kept only for this)
 - `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `rating`, `subscription`, `userSettings`
 
 Notable domains:
@@ -108,7 +104,7 @@ Notable domains:
 - `ratingService` — `expo-store-review` + store URL fallback
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 
-`apps/mobile/services/notifications/` — FCM setup (`notificationService`), channels, payload parsing, background handler, `scheduleAlertNotification` (local scheduled reminders via `expo-notifications` DATE trigger).
+`apps/mobile/services/notifications/` — reusable notification system: FCM permission handling + foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`), background handler stub. Ready to wire up push or local scheduled notifications for your own features.
 
 `apps/mobile/services/promo/promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces (contextual paywall). Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`), reset at boot via `contextualPaywallService.resetSession()`.
 

@@ -26,8 +26,6 @@ export type Language =
 
 export interface UserSettings {
   theme: ThemeMode
-  decimals: number
-  thousandSeparator: boolean
   language: Language
   notifications: boolean
   notificationQuietHoursEnabled: boolean
@@ -35,12 +33,6 @@ export interface UserSettings {
   notificationQuietHoursEnd: string
   notificationSound: boolean
   notificationVibration: boolean
-}
-
-export interface FormatterOptions {
-  decimals: number
-  useSeparator: boolean
-  locale: string
 }
 
 export interface ThemeOption {

@@ -69,13 +69,6 @@ export type AnalyticsEventMap = {
   // Settings
   settings_theme_changed: { theme: string; previous_theme: string }
   settings_language_changed: { language_code: string; previous_language: string }
-  settings_decimals_changed: { decimals: number; previous_decimals: number }
-  settings_separator_toggled: { enabled: boolean }
-  notif_pref_master_toggled: { enabled: boolean }
-  notif_pref_quiet_hours_toggled: { enabled: boolean }
-  notif_pref_quiet_hours_saved: { start: string; end: string }
-  notif_pref_sound_toggled: { enabled: boolean }
-  notif_pref_vibration_toggled: { enabled: boolean }
   external_link_opened: { link_type: 'privacy_policy' | 'terms_of_service' | 'support' }
 
   // Ads

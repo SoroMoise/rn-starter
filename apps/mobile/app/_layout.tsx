@@ -6,10 +6,6 @@ import { RTLRestartBanner } from '@/components/ui/RTLRestartBanner'
 import { usePremium } from '@/hooks/usePremium'
 import '@/i18n/service'
 import { AdFreeProvider, useAdFree } from '@/providers/AdFreeProvider'
-import {
-  AlertNotificationProvider,
-  useAlertNotification,
-} from '@/providers/AlertNotificationProvider'
 import { QueryProvider } from '@/providers/QueryProvider'
 import { SubscriptionProvider } from '@/providers/SubscriptionProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
@@ -18,8 +14,7 @@ import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { contextualPaywallService } from '@/services/api/contextualPaywall'
 import { engagementService } from '@/services/api/engagementService'
-import { ensureNotificationChannels, notificationService } from '@/services/notifications'
-import { useAlertsStore } from '@/stores/alertsStore'
+import { ensureNotificationChannels } from '@/services/notifications'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Constants from 'expo-constants'
@@ -53,9 +48,6 @@ function AppContent() {
   const theme = useSettingsStore((s) => s.settings.theme)
 
   const isOnboardingCompleted = useOnboardingStore((s) => s.isCompleted)
-
-  const fetchAlerts = useAlertsStore((s) => s.fetchAlerts)
-  const { tapAlertDeepLink } = useAlertNotification()
 
   useEffect(() => {
     if (!isSubscriptionInitialized) return
@@ -93,18 +85,9 @@ function AppContent() {
   }, [isOnboardingCompleted])
 
   useEffect(() => {
-    if (!isOnboardingCompleted || !isPremium || !isSubscriptionInitialized) return
-
-    void fetchAlerts()
+    if (!isOnboardingCompleted) return
     void ensureNotificationChannels()
-
-    notificationService.setup({
-      onTapAlert: (data) => {
-        tapAlertDeepLink(data)
-        void fetchAlerts()
-      },
-    })
-  }, [isOnboardingCompleted, isPremium, isSubscriptionInitialized]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isOnboardingCompleted])
 
   if (!isOnboardingCompleted) return <OnboardingScreen />
 
@@ -122,9 +105,7 @@ function RootLayoutContent() {
           <ToastProvider>
             <SubscriptionProvider>
               <AdFreeProvider>
-                <AlertNotificationProvider>
-                  <AppContent />
-                </AlertNotificationProvider>
+                <AppContent />
               </AdFreeProvider>
             </SubscriptionProvider>
           </ToastProvider>

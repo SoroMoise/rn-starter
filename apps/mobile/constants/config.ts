@@ -13,8 +13,6 @@ export const BACKEND_CONFIG = {
 
 export const DEFAULT_SETTINGS = {
   theme: 'auto' as const,
-  decimals: 3,
-  thousandSeparator: true,
   language: getDeviceLanguage(),
   notifications: true,
   notificationQuietHoursEnabled: false,
@@ -27,9 +25,6 @@ export const DEFAULT_SETTINGS = {
 export const UI_CONFIG = {
   ANIMATION_DURATION: 300, // ms
   DEBOUNCE_DELAY: 300, // ms
-
-  MIN_DECIMALS: 0,
-  MAX_DECIMALS: 6,
 
   MAX_AMOUNT: 999999999999,
   MIN_AMOUNT: 0.000001,

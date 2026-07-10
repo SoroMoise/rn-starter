@@ -24,8 +24,8 @@ import { useTranslation } from 'react-i18next'
 import { Image, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-const heroLight = require('../../assets/images/paywall-illustration-light.png')
-const heroDark = require('../../assets/images/paywall-illustration-dark.png')
+const heroLight = require('../../assets/images/paywall-illustration-light.webp')
+const heroDark = require('../../assets/images/paywall-illustration-dark.webp')
 
 type PaywallModalProps = {
   visible: boolean

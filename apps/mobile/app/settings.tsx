@@ -1,6 +1,5 @@
 import { AdBanner } from '@/components/ads/AdBanner'
 import { RewardedAdButton } from '@/components/ads/RewardedAdButton'
-import { AlertsSettingsSection } from '@/components/settings/AlertsSettingsSection'
 import { DisplaySection } from '@/components/settings/DisplaySection'
 import { LegalSupportSection } from '@/components/settings/LegalSupportSection'
 import { PremiumBanner } from '@/components/settings/PremiumBanner'
@@ -134,8 +133,6 @@ export default function SettingsScreen() {
             </SectionContent>
           </Section>
         )}
-
-        <AlertsSettingsSection />
 
         <LegalSupportSection />
 

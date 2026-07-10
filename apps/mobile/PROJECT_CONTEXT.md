@@ -27,8 +27,7 @@ SafeAreaProvider
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
               > SubscriptionProvider   <- RevenueCat, grace period, PostPurchaseModal
                 > AdFreeProvider       <- ad-free session window tracking
-                  > AlertNotificationProvider  <- foreground banners + deep-link nav
-                    > AppContent       <- onboarding gate, then TabLayout
+                  > AppContent         <- onboarding gate, then TabLayout
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -41,7 +40,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | Route | File | Description |
 |---|---|---|
 | `/(tabs)/index` | `app/index.tsx` | Home — premium feature showcase, paywall CTA |
-| `/(tabs)/settings` | `app/settings.tsx` | Settings — theme, language, premium, ads, alerts, legal |
+| `/(tabs)/settings` | `app/settings.tsx` | Settings — theme, language, premium, ads, legal |
 | Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2-step flow: welcome → premium value (welcome has a top-left language selector) |
 | Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet |
 
@@ -55,8 +54,6 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 |---|---|---|
 | `settingsStore` | Yes | User preferences (theme, language), RTL restart state |
 | `onboardingStore` | Yes | Onboarding completion, current step, persona, pro welcome seen |
-| `alertsStore` | Yes | Scheduled local notification alerts (local-only, no backend) |
-| `deepLinkStore` | No | Holds a pending alert deep-link until consumed by `AlertNotificationProvider` |
 
 ---
 
@@ -79,10 +76,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 | File | Description |
 |---|---|
-| `setup.ts` | `notificationService` — permission request, foreground handler, tap listener |
-| `channels.ts` | Android notification channels (`ALERTS_CHANNEL_ID`, `RATE_ALERTS_CHANNEL_ID`) |
-| `payload.ts` | `parseAlertPayload` — typed notification data extraction |
-| `scheduleAlert.ts` | `scheduleAlertNotification` / `cancelAlertNotification` — local DATE-triggered reminders |
+| `setup.ts` | `notificationService` — permission request/primer, foreground presentation handler |
+| `channels.ts` | Android notification channel setup (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) |
 | `backgroundHandler.ts` | Registered at entry point (`index.js`) for background FCM handling |
 
 ### `services/promo/`

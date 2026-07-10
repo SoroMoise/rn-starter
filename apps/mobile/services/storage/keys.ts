@@ -33,8 +33,6 @@ export const KEYS = {
   USER_SETTINGS: 'user_settings',
   ONBOARDING_SEEN: 'onboarding_seen',
 
-  // Alerts
-  ALERTS: '@alerts',
+  // Notifications
   NOTIFICATION_PERMISSION_REQUESTED: '@notification_permission_requested',
-  ALERTS_ONBOARDING_SEEN: '@alerts_onboarding_seen',
 } as const

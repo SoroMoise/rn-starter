@@ -12,6 +12,8 @@ Monorepo boilerplate for a premium React Native / Expo app:
 
 Workspace tooling: pnpm workspaces + Turborepo. App identity placeholders: name `RN Starter`, slug `rn-starter`, bundle ID `com.yourcompany.rnstarter`, scheme `rnstarter`.
 
+**`scripts/setup.sh` is what removes them, and it must stay exhaustive.** `app.config.js` only *declares* the identity; it is also written into `constants/config.ts`, `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json` and all twenty translation files. A sweep that stops at the config ships an app calling itself "RN Starter" in twenty languages, with a store URL pointing at the template's package id. Anything new that hardcodes the name, the slug or the bundle id belongs in the sweep in the same change.
+
 ## Living Documentation
 
 `CLAUDE.md` (this file) and `apps/mobile/PROJECT_CONTEXT.md` must stay in sync with the code. Whenever a change alters something either file documents — navigation/routes, provider tree, stores, services, hooks, storage keys, premium gates, i18n policy, conventions — **update both files as part of the same change, without being asked**. Keep edits surgical: touch only the sections the change affects.

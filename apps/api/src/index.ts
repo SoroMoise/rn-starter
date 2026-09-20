@@ -15,9 +15,7 @@ app.onError((err, c) => {
   return c.json({ error: 'Internal error' }, 500)
 })
 
-app.get('/health', (c) =>
-  c.json<HealthResponse>({ status: 'ok', timestamp: Date.now() }),
-)
+app.get('/health', (c) => c.json<HealthResponse>({ status: 'ok', timestamp: Date.now() }))
 
 app.use('/example/*', rateLimiter)
 app.use('/example/*', apiKeyAuth)

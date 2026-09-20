@@ -135,6 +135,10 @@ Notable domains:
 
 **Attempts are spaced, never spent once.** `markReviewFlowLaunched` records an attempt rather than a conclusion — it does not set `hasRated`, so a call swallowed by the quota is retried later. `ratingStorage.hasRated` survives as a read-only legacy gate for installs that predate the split. `SOFT_RESET_INACTIVITY_MS` **must** stay above `MIN_DAYS_BETWEEN_PROMPTS`, or every re-ask would land past the reset, rewind the counter, and the cap would never be reached.
 
+### Safe area
+
+**One surface owns the bottom inset, and it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`.
+
 ### Large screens
 
 **Resizing must never recreate the activity.** `withAndroidConfigChanges` adds `smallestScreenSize` to `MainActivity`'s `configChanges` — the Expo template omits it where React Native's own manifest declares it, so unfolding a foldable or resizing a freeform window destroyed and rebuilt the activity. React Native only refuses to dismiss a `Modal`'s `Dialog` when the activity `isFinishing`; a destroy-without-finish leaves it dismissing a `DecorView` the WindowManager has already detached, which crashes the app whenever a sheet was open. The guard is still missing upstream, so the manifest is the only lever. Android 16 ignores `screenOrientation` above 600 dp, so tablets, open foldables and freeform windows reach this path on their own.

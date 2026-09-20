@@ -135,6 +135,10 @@ Notable domains:
 
 **Attempts are spaced, never spent once.** `markReviewFlowLaunched` records an attempt rather than a conclusion — it does not set `hasRated`, so a call swallowed by the quota is retried later. `ratingStorage.hasRated` survives as a read-only legacy gate for installs that predate the split. `SOFT_RESET_INACTIVITY_MS` **must** stay above `MIN_DAYS_BETWEEN_PROMPTS`, or every re-ask would land past the reset, rewind the counter, and the cap would never be reached.
 
+### Large screens
+
+**Resizing must never recreate the activity.** `withAndroidConfigChanges` adds `smallestScreenSize` to `MainActivity`'s `configChanges` — the Expo template omits it where React Native's own manifest declares it, so unfolding a foldable or resizing a freeform window destroyed and rebuilt the activity. React Native only refuses to dismiss a `Modal`'s `Dialog` when the activity `isFinishing`; a destroy-without-finish leaves it dismissing a `DecorView` the WindowManager has already detached, which crashes the app whenever a sheet was open. The guard is still missing upstream, so the manifest is the only lever. Android 16 ignores `screenOrientation` above 600 dp, so tablets, open foldables and freeform windows reach this path on their own.
+
 ### Styling
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti.

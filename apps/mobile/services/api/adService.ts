@@ -1,4 +1,5 @@
 import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
+import { consentService } from '@/services/api/consentService'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { AdEventType, InterstitialAd } from 'react-native-google-mobile-ads'
@@ -19,6 +20,9 @@ class AdServiceClass {
   private ensureInitialized() {
     if (this.isInitialized) return
     if (!AD_INTERSTITIAL_ENABLED) return
+    // An ad served ahead of the UMP form is the violation itself, not a missed
+    // impression: it carries data the user has not agreed to hand over.
+    if (!consentService.canRequestAds()) return
     this.isInitialized = true
     this.initializeInterstitial()
   }

@@ -1,3 +1,4 @@
+import { useAdsConsent } from '@/hooks/useAdsConsent'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
 import { usePremium } from '@/hooks/usePremium'
 import { useAdFree } from '@/providers/AdFreeProvider'
@@ -14,9 +15,10 @@ interface AdBannerProps {
 export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerProps) {
   const { isAdFreeActive } = useAdFree()
   const { isPremium, isInitialized } = usePremium()
+  const { canRequestAds } = useAdsConsent()
   const tabBarPadding = useTabBarPadding() + 8
 
-  if (!enabled || !isInitialized || isAdFreeActive || isPremium) return null
+  if (!enabled || !isInitialized || isAdFreeActive || isPremium || !canRequestAds) return null
 
   return (
     <View style={[styles.container, { bottom: tabBarPadding }]} key={`ad-banner-${screenName}`}>

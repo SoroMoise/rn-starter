@@ -114,7 +114,8 @@
     "termsOfService": "Conditions d'utilisation",
     "support": "Support",
     "rateApp": "Noter cette application",
-    "languageChanged": "Langue mise à jour avec succès"
+    "languageChanged": "Langue mise à jour avec succès",
+    "adPrivacy": "Confidentialité publicitaire"
   },
   "onboarding": {
     "next": "Continuer",

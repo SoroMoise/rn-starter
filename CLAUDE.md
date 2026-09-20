@@ -102,6 +102,7 @@ Notable domains:
 - `engagementService` — session init, paywall counter
 - `purchaseService` — RevenueCat
 - `ratingService` — `requestNativeReview()` (automatic flows only) / `openStoreListing({ reason })` (every explicit tap, and every fallback)
+- `consentService` — Google's UMP consent gate, and the only caller of `mobileAds().initialize()`
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 
 `apps/mobile/services/notifications/` — reusable notification system: FCM permission handling + foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`), background handler stub. Ready to wire up push or local scheduled notifications for your own features.
@@ -111,6 +112,7 @@ Notable domains:
 ### Monetization
 
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active.
+- **Nothing requests an ad before consent does.** `consentService` runs Google's UMP flow and is the **only** caller of `mobileAds().initialize()` — starting the SDK is what makes a request possible, so it cannot happen where the consent state is unknown. An ad served ahead of the form is the violation itself, not a missed impression: it carries data the user has not agreed to hand over, and the penalty lands on the AdMob account rather than on the release. So the default is `canRequestAds: false`, `AdBanner` and both ad services read it, and the form is gathered at the frame the onboarding ends on — where the first ad can appear, never earlier, and never for a subscriber who will not be shown one. Where Google requires the choice to be reopenable (`arePrivacyOptionsRequired`), Settings grows a row for it; where it does not, the row is absent rather than opening nothing.
 - **RevenueCat** — `REVENUECAT_ENTITLEMENT_ID` controls the premium gate. `openPaywall({ source })` from `SubscriptionProvider`. `FORCE_FREE` env var for dev.
 - **Contextual paywall** — `contextualPaywallService` evaluates session count and generic action count (`engagementStorage.getActionCount()`) to trigger the paywall at a value moment. `power_action` / `after_n_actions` / `rewarded_ad_dismissed` triggers. `session_return` only arms the session — it never cold-fires the paywall on launch.
 - **The grace period after a failed payment belongs to the store, not to the app.** Play and Apple keep a lapsed subscription giving access for the window they define, so RevenueCat still reports the entitlement as active and every gate follows on its own. Granting a local window *on top of that* handed every cancelling subscriber a free week. `persistFromEntitlement` therefore writes only what a CustomerInfo the store actually answered with says — "no active entitlement" is a verified answer and clears the cache.

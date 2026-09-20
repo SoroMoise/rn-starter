@@ -114,7 +114,8 @@
     "termsOfService": "Terms of Service",
     "support": "Support",
     "rateApp": "Rate this app",
-    "languageChanged": "Language updated successfully"
+    "languageChanged": "Language updated successfully",
+    "adPrivacy": "Ad privacy settings"
   },
   "onboarding": {
     "next": "Continue",

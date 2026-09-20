@@ -6,6 +6,8 @@ import {
 } from '@/components/settings/SettingsSection'
 import { LEGAL_URLS } from '@/constants/legal'
 import { analyticsService } from '@/services/api/analyticsService'
+import { consentService } from '@/services/api/consentService'
+import { useAdsConsent } from '@/hooks/useAdsConsent'
 import { openStoreListing } from '@/services/api/ratingService'
 import { SettingsLinkRow, type SettingsLinkRowProps } from '@components/ui/SettingsLinkRow'
 import { openExternalLink } from '@/utils/linking'
@@ -21,6 +23,7 @@ type LegalSupportItem = {
 
 export function LegalSupportSection() {
   const { t } = useTranslation()
+  const { arePrivacyOptionsRequired } = useAdsConsent()
   const legalSupportItems = useMemo<LegalSupportItem[]>(
     () => [
       {
@@ -61,8 +64,23 @@ export function LegalSupportSection() {
           void openStoreListing({ reason: 'settings' })
         },
       },
+      // Rendered only where Google requires the choice to be reopenable — absent
+      // rather than opening nothing.
+      ...(arePrivacyOptionsRequired
+        ? [
+            {
+              id: 'adPrivacy',
+              icon: 'options-outline' as const,
+              label: t('settings.adPrivacy'),
+              onPress: () => {
+                analyticsService.track('ad_privacy_options_opened')
+                void consentService.showPrivacyOptions()
+              },
+            },
+          ]
+        : []),
     ],
-    [t]
+    [t, arePrivacyOptionsRequired]
   )
 
   return (

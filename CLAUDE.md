@@ -113,7 +113,9 @@ Notable domains:
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active.
 - **RevenueCat** — `REVENUECAT_ENTITLEMENT_ID` controls the premium gate. `openPaywall({ source })` from `SubscriptionProvider`. `FORCE_FREE` env var for dev.
 - **Contextual paywall** — `contextualPaywallService` evaluates session count and generic action count (`engagementStorage.getActionCount()`) to trigger the paywall at a value moment. `power_action` / `after_n_actions` / `rewarded_ad_dismissed` triggers. `session_return` only arms the session — it never cold-fires the paywall on launch.
-- **Subscription grace period** — `subscriptionStorage.derive(now, gracePeriodMs)` grants continued access after expiry. `SubscriptionGraceBanner` warns user.
+- **The grace period after a failed payment belongs to the store, not to the app.** Play and Apple keep a lapsed subscription giving access for the window they define, so RevenueCat still reports the entitlement as active and every gate follows on its own. Granting a local window *on top of that* handed every cancelling subscriber a free week. `persistFromEntitlement` therefore writes only what a CustomerInfo the store actually answered with says — "no active entitlement" is a verified answer and clears the cache.
+- **`subscriptionStorage.derive(now, gracePeriodMs)` is the offline allowance, not an extension.** It is read only from `unverifiedFlags()`, i.e. inside the `catch` of a `getCustomerInfo` that could not reach the store at all: a subscriber on a plane keeps their Pro, and `SubscriptionGraceBanner` says the clock is running. Never read it on a path where the store answered.
+- **`applyCustomerInfo` is the single place a CustomerInfo becomes the app's tier** — boot, foreground sync, purchase and restore all go through it, so they cannot disagree and none of them re-asks the network for what it was just told.
 
 ### Styling
 

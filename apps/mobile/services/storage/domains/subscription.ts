@@ -29,32 +29,28 @@ export const subscriptionStorage = {
     }
   },
 
+  // Only ever fed a CustomerInfo the store actually answered with, so "no active
+  // entitlement" is a verified answer and clears the cache. Play's and Apple's own
+  // grace and billing-retry windows are already inside `entitlements.active`.
   persistFromEntitlement(args: {
     isPremiumActive: boolean
     expirationDateMillis: number | null
-    isOnline: boolean
-    gracePeriodMs: number
   }): void {
-    if (args.isPremiumActive) {
-      if (args.expirationDateMillis != null) {
-        this.setExpiresAt(args.expirationDateMillis)
-        this.setIsLifetime(false)
-      } else {
-        this.setIsLifetime(true)
-      }
+    if (!args.isPremiumActive) {
+      this.clear()
       return
     }
-    // Keep the local expiry intact while the user is still in their grace
-    // window — online or offline — so derive() can continue granting access
-    // and the grace banner remains visible.
-    if (args.isOnline) {
-      const derived = this.derive(Date.now(), args.gracePeriodMs)
-      if (!derived.isInGracePeriod) {
-        this.clear()
-      }
+
+    if (args.expirationDateMillis != null) {
+      this.setExpiresAt(args.expirationDateMillis)
+      this.setIsLifetime(false)
+      return
     }
+
+    this.setIsLifetime(true)
   },
 
+  // The offline allowance — read only when the store could not be reached at all.
   derive(
     nowMs: number,
     gracePeriodMs: number

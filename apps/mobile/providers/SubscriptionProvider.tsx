@@ -6,7 +6,6 @@ import {
   SUBSCRIPTION_GRACE_PERIOD_MS,
 } from '@/constants/purchases'
 import { SubscriptionContext, type SubscriptionContextValue } from '@/contexts/SubscriptionContext'
-import { getIsOnline } from '@/hooks/useNetworkStatus'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
@@ -30,28 +29,12 @@ function deriveActiveSubscription(customerInfo: CustomerInfo): PlanType | null {
   return active.productIdentifier === PRODUCT_IDS.ANNUAL ? 'annual' : 'monthly'
 }
 
-function applyEntitlement(customerInfo: CustomerInfo, nowPremium: boolean): void {
-  const entitlement = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
-  subscriptionStorage.persistFromEntitlement({
-    isPremiumActive: nowPremium,
-    expirationDateMillis: entitlement?.expirationDateMillis ?? null,
-    isOnline: getIsOnline(),
-    gracePeriodMs: SUBSCRIPTION_GRACE_PERIOD_MS,
-  })
-}
-
-function resolvePremiumFlags(nowPremium: boolean): {
-  isPremium: boolean
-  isInGracePeriod: boolean
-} {
-  if (nowPremium) return { isPremium: true, isInGracePeriod: false }
-  // Even online, let derive() decide: the local expiry is preserved while the
-  // user is in their grace window, so the banner shows and Pro access holds.
+// Reached only when the store could not be asked at all — a subscriber on a plane
+// keeps their Pro while the banner says the clock is running. A response that
+// reports no active entitlement is a verified answer and never lands here.
+function unverifiedFlags(): { isPremium: boolean; isInGracePeriod: boolean } {
   const derived = subscriptionStorage.derive(Date.now(), SUBSCRIPTION_GRACE_PERIOD_MS)
-  if (derived.isInGracePeriod) {
-    return { isPremium: true, isInGracePeriod: true }
-  }
-  return { isPremium: false, isInGracePeriod: false }
+  return { isPremium: derived.isPremium, isInGracePeriod: derived.isInGracePeriod }
 }
 
 export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
@@ -76,29 +59,54 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const appState = useRef(AppState.currentState)
   const paywallSourceRef = useRef<string>('')
 
+  // The single place a CustomerInfo becomes the app's tier, so the boot read, the
+  // foreground sync, a purchase and a restore cannot disagree.
+  const applyCustomerInfo = useCallback(
+    (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanType | null } => {
+      if (forceFree) {
+        setIsPremium(false)
+        setIsInGracePeriod(false)
+        setActiveSubscription(null)
+        analyticsService.updateContext({ isPremium: false })
+        return { isPremium: false, plan: null }
+      }
+
+      const isActive = purchaseService.isPremiumActive({ customerInfo })
+      const entitlement = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
+      const plan = deriveActiveSubscription(customerInfo)
+
+      subscriptionStorage.persistFromEntitlement({
+        isPremiumActive: isActive,
+        expirationDateMillis: entitlement?.expirationDateMillis ?? null,
+      })
+
+      setIsPremium(isActive)
+      setIsInGracePeriod(false)
+      setActiveSubscription(plan)
+      analyticsService.updateContext({ isPremium: isActive })
+
+      return { isPremium: isActive, plan }
+    },
+    [forceFree]
+  )
+
   const syncPremiumState = useCallback(async () => {
     try {
-      const customerInfo = await purchaseService.getCustomerInfo()
-      const rcPremium = forceFree ? false : purchaseService.isPremiumActive({ customerInfo })
-      const plan = forceFree ? null : deriveActiveSubscription(customerInfo)
-
-      if (!forceFree) applyEntitlement(customerInfo, rcPremium)
-      const flags = forceFree
-        ? { isPremium: false, isInGracePeriod: false }
-        : resolvePremiumFlags(rcPremium)
-      setIsPremium(flags.isPremium)
-      setActiveSubscription(plan)
-      setIsInGracePeriod(flags.isInGracePeriod)
+      const applied = applyCustomerInfo(await purchaseService.getCustomerInfo())
 
       analyticsService.track('subscription_synced', {
-        is_premium: flags.isPremium,
-        plan: plan ?? 'none',
+        is_premium: applied.isPremium,
+        plan: applied.plan ?? 'none',
       })
-      analyticsService.updateContext({ isPremium: flags.isPremium })
     } catch (err) {
+      if (!forceFree) {
+        const flags = unverifiedFlags()
+        setIsPremium(flags.isPremium)
+        setIsInGracePeriod(flags.isInGracePeriod)
+      }
       void crashlyticsService.recordError(err, { source: 'subscription_sync' })
     }
-  }, [forceFree])
+  }, [applyCustomerInfo, forceFree])
 
   useEffect(() => {
     const init = async () => {
@@ -108,29 +116,25 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           purchaseService.getCustomerInfo(),
           purchaseService.getOfferings(),
         ])
-        const rcPremium = forceFree ? false : purchaseService.isPremiumActive({ customerInfo })
-        const plan = forceFree ? null : deriveActiveSubscription(customerInfo)
-
-        if (!forceFree) applyEntitlement(customerInfo, rcPremium)
-        const flags = forceFree
-          ? { isPremium: false, isInGracePeriod: false }
-          : resolvePremiumFlags(rcPremium)
-        setIsPremium(flags.isPremium)
-        setActiveSubscription(plan)
-        setIsInGracePeriod(flags.isInGracePeriod)
+        applyCustomerInfo(customerInfo)
 
         const offering = offerings.current ?? Object.values(offerings.all)[0] ?? null
         const packages = offering?.availablePackages ?? []
         setMonthlyPackage(packages.find((p) => p.product.subscriptionPeriod === 'P1M') ?? null)
         setAnnualPackage(packages.find((p) => p.product.subscriptionPeriod === 'P1Y') ?? null)
       } catch (err) {
+        if (!forceFree) {
+          const flags = unverifiedFlags()
+          setIsPremium(flags.isPremium)
+          setIsInGracePeriod(flags.isInGracePeriod)
+        }
         void crashlyticsService.recordError(err, { source: 'subscription_init' })
       } finally {
         setIsInitialized(true)
       }
     }
     void init()
-  }, [forceFree])
+  }, [applyCustomerInfo, forceFree])
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
@@ -202,12 +206,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
     try {
       const customerInfo = await purchaseService.restorePurchases()
-      const nowPremium = purchaseService.isPremiumActive({ customerInfo })
-
-      applyEntitlement(customerInfo, nowPremium)
-      setIsPremium(nowPremium)
-      setActiveSubscription(deriveActiveSubscription(customerInfo))
-      setIsInGracePeriod(false)
+      const { isPremium: nowPremium } = applyCustomerInfo(customerInfo)
 
       analyticsService.track('purchase_restored', { had_active_sub: wasAlreadyPremium })
 
@@ -224,7 +223,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     } finally {
       setIsLoadingPurchase(false)
     }
-  }, [isPremium, showToast, t])
+  }, [applyCustomerInfo, isPremium, showToast, t])
 
   const openPaywall = useCallback(
     async ({ source }: { source: string }) => {

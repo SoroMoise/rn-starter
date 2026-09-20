@@ -133,12 +133,13 @@
         "premium": "Unlock all premium features"
       },
       "timelineHeader": "How your trial works",
-      "day0": "Day 0 — Pro unlocked instantly",
-      "day5": "Day 5 — Reminder before trial ends",
-      "day7": "Day 7 — Billing starts, cancel anytime",
-      "ctaStart": "Start my 7-day free trial",
       "ctaSkip": "Continue for free",
-      "restore": "Restore purchases"
+      "restore": "Restore purchases",
+      "dayUnlock": "Day 0 — Pro unlocked instantly",
+      "dayReminder": "Day {{day}} — Reminder before your trial ends",
+      "dayBilling": "Day {{day}} — Billing starts, cancel anytime",
+      "ctaStartTrial": "Start my {{days}}-day free trial",
+      "ctaStartNoTrial": "Unlock Pro"
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",

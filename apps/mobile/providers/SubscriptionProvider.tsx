@@ -14,6 +14,7 @@ import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { purchaseService } from '@/services/api/purchaseService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
+import { getFreeTrialDays } from '@/utils/trialOffer'
 import Constants from 'expo-constants'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -167,7 +168,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           days_since_install: sessionCtx?.daysSinceInstall ?? 0,
           paywall_count: paywallCount,
           total_actions: totalActions,
-          trial_started: plan === 'annual' && !!annualPackage?.product.introPrice,
+          trial_started: plan === 'annual' && getFreeTrialDays(annualPackage) !== null,
         })
 
         showToast({ message: t('paywall.welcomePro'), type: 'success' })
@@ -235,7 +236,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         source,
         session_count: sessionCtx?.sessionCount ?? 0,
         paywall_count: paywallCount,
-        has_trial_offer: !!annualPackage?.product.introPrice,
+        has_trial_offer: getFreeTrialDays(annualPackage) !== null,
         total_actions: totalActions,
       })
       promoCoordinator.setPaywallVisible(true)

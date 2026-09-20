@@ -133,12 +133,13 @@
         "premium": "Toutes les fonctionnalités premium"
       },
       "timelineHeader": "Comment fonctionne l'essai",
-      "day0": "Jour 0 — Pro débloqué instantanément",
-      "day5": "Jour 5 — Rappel avant la fin de l'essai",
-      "day7": "Jour 7 — Facturation, annulable à tout moment",
-      "ctaStart": "Démarrer mon essai gratuit de 7 jours",
       "ctaSkip": "Continuer gratuitement",
-      "restore": "Restaurer mes achats"
+      "restore": "Restaurer mes achats",
+      "dayUnlock": "Jour 0 — Pro débloqué immédiatement",
+      "dayReminder": "Jour {{day}} — Rappel avant la fin de l’essai",
+      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment",
+      "ctaStartTrial": "Démarrer mon essai gratuit de {{days}} jours",
+      "ctaStartNoTrial": "Débloquer Pro"
     },
     "exitIntent": {
       "title": "Un instant — essaie Pro gratuitement",

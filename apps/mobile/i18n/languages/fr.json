@@ -183,8 +183,6 @@
   "appRating": {
     "title": "Vous aimez RN Starter ?",
     "message": "Une note 5 étoiles nous aide à garder l'app gratuite 😊 et à continuer de l'améliorer.",
-    "settingsTitle": "Vous appréciez l'application ?",
-    "settingsMessage": "Votre note nous aide à garder l'app gratuite et à l'améliorer. Si vous l'aimez, une note 5 étoiles nous ferait vraiment plaisir 😊 !",
     "rateButton": "Noter maintenant",
     "laterButton": "Plus tard",
     "declineButton": "Non merci",

@@ -101,7 +101,7 @@ Notable domains:
 - `crashlyticsService` — Firebase Crashlytics
 - `engagementService` — session init, paywall counter
 - `purchaseService` — RevenueCat
-- `ratingService` — `expo-store-review` + store URL fallback
+- `ratingService` — `requestNativeReview()` (automatic flows only) / `openStoreListing({ reason })` (every explicit tap, and every fallback)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 
 `apps/mobile/services/notifications/` — reusable notification system: FCM permission handling + foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`), background handler stub. Ready to wire up push or local scheduled notifications for your own features.
@@ -116,6 +116,16 @@ Notable domains:
 - **The grace period after a failed payment belongs to the store, not to the app.** Play and Apple keep a lapsed subscription giving access for the window they define, so RevenueCat still reports the entitlement as active and every gate follows on its own. Granting a local window *on top of that* handed every cancelling subscriber a free week. `persistFromEntitlement` therefore writes only what a CustomerInfo the store actually answered with says — "no active entitlement" is a verified answer and clears the cache.
 - **`subscriptionStorage.derive(now, gracePeriodMs)` is the offline allowance, not an extension.** It is read only from `unverifiedFlags()`, i.e. inside the `catch` of a `getCustomerInfo` that could not reach the store at all: a subscriber on a plane keeps their Pro, and `SubscriptionGraceBanner` says the clock is running. Never read it on a path where the store answered.
 - **`applyCustomerInfo` is the single place a CustomerInfo becomes the app's tier** — boot, foreground sync, purchase and restore all go through it, so they cannot disagree and none of them re-asks the network for what it was just told.
+
+### App Rating
+
+**Play forbids pre-filtering the review.** Asking anything before the review card — an opinion question ("Do you like the app?") or a predictive one (a star picker) — is against Play's in-app review guidelines, and the old star gate did both. A qualifying moment now calls `requestNativeReview()` directly and Play's card is the whole ask. The sentiment path stays wired and compiling behind `SENTIMENT_GATE_ENABLED` (off); `AppRatingModal` is kept mounted-nowhere for it.
+
+**The two store paths are split and not interchangeable** (`ratingService`). `requestNativeReview()` is for automatic flows only: Play enforces an undocumented per-user quota, silently skips the dialog once it is spent, and reports neither whether the dialog appeared nor its outcome — which is why Google forbids wiring it to a button. `openStoreListing({ reason })` serves every explicit tap (the settings row) and every fallback.
+
+**No event can mean "the user rated."** `rating_ask_shown` means a moment qualified; `review_flow_launched` only means the API was called, and its `likely_displayed` is a duration heuristic for dashboards, never a branch. Store-side truth lives in the Play Console rating count.
+
+**Attempts are spaced, never spent once.** `markReviewFlowLaunched` records an attempt rather than a conclusion — it does not set `hasRated`, so a call swallowed by the quota is retried later. `ratingStorage.hasRated` survives as a read-only legacy gate for installs that predate the split. `SOFT_RESET_INACTIVITY_MS` **must** stay above `MIN_DAYS_BETWEEN_PROMPTS`, or every re-ask would land past the reset, rewind the counter, and the cap would never be reached.
 
 ### Styling
 

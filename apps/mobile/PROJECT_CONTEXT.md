@@ -69,7 +69,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
 | `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases` |
-| `ratingService.ts` | `expo-store-review` with platform store URL fallback |
+| `ratingService.ts` | `requestNativeReview()` (auto flows only) / `openStoreListing({ reason })` (taps, fallbacks) |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
 
 ### `services/notifications/`
@@ -95,7 +95,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 | `domains/adFree.ts` | Ad-free window expiry |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction` / `resetActionCount`) |
-| `domains/rating.ts` | Rating prompt eligibility |
+| `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 

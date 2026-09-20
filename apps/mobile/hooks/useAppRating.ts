@@ -13,11 +13,18 @@ const MIN_SUCCESSFUL_ACTIONS = 4
 /** After this many dismissals (Later / Decline), we never show the prompt again. */
 const NO_MORE_PROMPT_COUNT = 4
 
+/** Minimum days between two attempts, whatever the action counters say. */
+const MIN_DAYS_BETWEEN_PROMPTS = 45
+
 /**
  * If the user has been inactive for this many ms since the last prompt,
  * soft-reset the execution counter so they get a prompt sooner.
+ *
+ * MUST stay above `MIN_DAYS_BETWEEN_PROMPTS`: below it, every re-ask would land
+ * past the reset and rewind the counter, so `NO_MORE_PROMPT_COUNT` would never
+ * be reached and the prompt would return forever.
  */
-const SOFT_RESET_INACTIVITY_MS = 30 * DAY_IN_MS
+const SOFT_RESET_INACTIVITY_MS = 180 * DAY_IN_MS
 
 /**
  * How many successful actions must happen SINCE the last prompt.
@@ -50,7 +57,7 @@ export type CheckRatingContext = {
 
 export type UseAppRatingReturn = {
   checkAndMaybeShowRating: (context: CheckRatingContext) => Promise<boolean>
-  markAsRated: () => Promise<void>
+  markReviewFlowLaunched: (currentActionCount: number) => Promise<void>
   markAsDeclinedForever: () => Promise<void>
   markAsLater: (currentActionCount: number) => Promise<void>
 }
@@ -62,6 +69,8 @@ export function useAppRating(): UseAppRatingReturn {
 
       if (context.totalActions < MIN_SUCCESSFUL_ACTIONS) return false
 
+      // Legacy read-only gate: nothing sets it any more, but installs and
+      // restored backups predating the split still carry it and must stay quiet.
       const hasRated = ratingStorage.getHasRated()
       if (hasRated) return false
 
@@ -89,6 +98,10 @@ export function useAppRating(): UseAppRatingReturn {
       let lastPromptExecution = ratingStorage.getLastPromptExecution()
       const lastPromptDate = ratingStorage.getLastPromptDate()
 
+      if (lastPromptDate > 0 && now - lastPromptDate < MIN_DAYS_BETWEEN_PROMPTS * DAY_IN_MS) {
+        return false
+      }
+
       if (
         promptCount > 0 &&
         lastPromptDate > 0 &&
@@ -114,8 +127,16 @@ export function useAppRating(): UseAppRatingReturn {
     []
   )
 
-  const markAsRated = useCallback(async () => {
-    ratingStorage.setHasRated(true)
+  /**
+   * Records an ATTEMPT, never a conclusion. Play's API reports neither whether
+   * the card appeared nor its outcome, so a call swallowed by the quota must
+   * stay retryable later — which is why this does not set `hasRated`.
+   */
+  const markReviewFlowLaunched = useCallback(async (currentActionCount: number) => {
+    const promptCount = ratingStorage.getPromptCount()
+    ratingStorage.setPromptCount(promptCount + 1)
+    ratingStorage.setLastPromptExecution(currentActionCount)
+    ratingStorage.setLastPromptDate(Date.now())
   }, [])
 
   const markAsDeclinedForever = useCallback(async () => {
@@ -130,5 +151,5 @@ export function useAppRating(): UseAppRatingReturn {
     ratingStorage.setLastPromptDate(now)
   }, [])
 
-  return { checkAndMaybeShowRating, markAsRated, markAsDeclinedForever, markAsLater }
+  return { checkAndMaybeShowRating, markReviewFlowLaunched, markAsDeclinedForever, markAsLater }
 }

@@ -180,8 +180,6 @@
   "appRating": {
     "title": "Enjoying RN Starter?",
     "message": "A 5-star rating helps us keep the app free and always improving.",
-    "settingsTitle": "Do you enjoy the app?",
-    "settingsMessage": "Your rating helps us keep the app free and improving. If you enjoy it, we'd love a 5-star review!",
     "rateButton": "Rate now",
     "laterButton": "Later",
     "declineButton": "No thanks",

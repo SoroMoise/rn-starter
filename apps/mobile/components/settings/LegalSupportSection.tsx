@@ -4,17 +4,13 @@ import {
   SectionContent,
   SectionHeader,
 } from '@/components/settings/SettingsSection'
-import { RatingModal } from '@/components/ui/RatingModal'
-import { MIN_STARS_FOR_STORE_REDIRECT } from '@/constants/rating'
 import { LEGAL_URLS } from '@/constants/legal'
 import { analyticsService } from '@/services/api/analyticsService'
-import { engagementStorage } from '@/services/storage/domains/engagement'
-import { requestStoreReview } from '@/services/api/ratingService'
+import { openStoreListing } from '@/services/api/ratingService'
 import { SettingsLinkRow, type SettingsLinkRowProps } from '@components/ui/SettingsLinkRow'
 import { openExternalLink } from '@/utils/linking'
-import { Fragment, useCallback, useMemo, useState } from 'react'
+import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert } from 'react-native'
 
 type LegalSupportItem = {
   id: string
@@ -25,35 +21,6 @@ type LegalSupportItem = {
 
 export function LegalSupportSection() {
   const { t } = useTranslation()
-  const [ratingModalVisible, setRatingModalVisible] = useState(false)
-
-  const closeRatingModal = useCallback(() => setRatingModalVisible(false), [])
-
-  const handleRatingLater = useCallback(() => {
-    closeRatingModal()
-    analyticsService.track('rating_later', { source: 'manual' })
-  }, [closeRatingModal])
-
-  const handleRatingSubmit = useCallback(
-    async (stars: number) => {
-      closeRatingModal()
-      const actionCount = engagementStorage.getActionCount()
-      analyticsService.track('rating_submitted', {
-        stars,
-        source: 'manual',
-        action_count: actionCount,
-      })
-      if (stars >= MIN_STARS_FOR_STORE_REDIRECT) {
-        await requestStoreReview()
-      } else {
-        Alert.alert(t('common.appName'), t('appRating.thankYou'), [{ text: t('common.ok') }], {
-          cancelable: true,
-        })
-      }
-    },
-    [closeRatingModal, t]
-  )
-
   const legalSupportItems = useMemo<LegalSupportItem[]>(
     () => [
       {
@@ -87,10 +54,11 @@ export function LegalSupportSection() {
         id: 'rate',
         icon: 'star-outline',
         label: t('settings.rateApp'),
+        // An explicit tap opens the listing, never the native card: Play enforces
+        // an undocumented quota on it and forbids wiring it to a button.
         onPress: () => {
           analyticsService.track('rate_app_clicked')
-          analyticsService.track('rating_modal_shown', { source: 'manual', action_count: 0 })
-          setRatingModalVisible(true)
+          void openStoreListing({ reason: 'settings' })
         },
       },
     ],
@@ -98,26 +66,16 @@ export function LegalSupportSection() {
   )
 
   return (
-    <>
-      <Section>
-        <SectionHeader>{t('settings.legalAndSupport')}</SectionHeader>
-        <SectionContent>
-          {legalSupportItems.map((item, index) => (
-            <Fragment key={item.id}>
-              {index > 0 ? <Divider /> : null}
-              <SettingsLinkRow icon={item.icon} label={item.label} onPress={item.onPress} />
-            </Fragment>
-          ))}
-        </SectionContent>
-      </Section>
-
-      <RatingModal
-        visible={ratingModalVisible}
-        promptTitle={t('appRating.settingsTitle')}
-        promptMessage={t('appRating.settingsMessage')}
-        onLater={handleRatingLater}
-        onRate={handleRatingSubmit}
-      />
-    </>
+    <Section>
+      <SectionHeader>{t('settings.legalAndSupport')}</SectionHeader>
+      <SectionContent>
+        {legalSupportItems.map((item, index) => (
+          <Fragment key={item.id}>
+            {index > 0 ? <Divider /> : null}
+            <SettingsLinkRow icon={item.icon} label={item.label} onPress={item.onPress} />
+          </Fragment>
+        ))}
+      </SectionContent>
+    </Section>
   )
 }

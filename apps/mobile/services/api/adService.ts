@@ -1,4 +1,5 @@
 import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
+import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { consentService } from '@/services/api/consentService'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
@@ -23,6 +24,7 @@ class AdServiceClass {
     // An ad served ahead of the UMP form is the violation itself, not a missed
     // impression: it carries data the user has not agreed to hand over.
     if (!consentService.canRequestAds()) return
+    if (!adsAllowedInEnvironment()) return
     this.isInitialized = true
     this.initializeInterstitial()
   }

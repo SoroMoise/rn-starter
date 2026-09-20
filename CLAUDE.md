@@ -42,6 +42,8 @@ pnpm preb:ios         # expo prebuild --platform ios
 
 Native `ios/` and `android/` are NOT committed (Continuous Native Generation). Run `pnpm --filter mobile preb` to generate them locally before running on a device.
 
+Local native modules live in `apps/mobile/modules/` and are autolinked through `expo.autolinking.nativeModulesDir` in `apps/mobile/package.json`.
+
 ## Architecture (mobile)
 
 ### Navigation
@@ -103,6 +105,7 @@ Notable domains:
 - `purchaseService` — RevenueCat
 - `ratingService` — `requestNativeReview()` (automatic flows only) / `openStoreListing({ reason })` (every explicit tap, and every fallback)
 - `consentService` — Google's UMP consent gate, and the only caller of `mobileAds().initialize()`
+- `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 
 `apps/mobile/services/notifications/` — reusable notification system: FCM permission handling + foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`), background handler stub. Ready to wire up push or local scheduled notifications for your own features.
@@ -112,6 +115,7 @@ Notable domains:
 ### Monetization
 
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active.
+- **Nothing requests an ad on a Firebase Test Lab device.** Play's pre-launch report crawls every upload and taps whatever the hierarchy reports as interactive, ad views included. Those devices hold no test-device identity, so AdMob bills the traffic as invalid — it is worth an account suspension, not a warning. `modules/app-environment` (a local Expo module, Android only) reads the `firebase.test.lab` system setting and `adsAllowedInEnvironment()` gates the banner, both ad services and the consent flow itself.
 - **Nothing requests an ad before consent does.** `consentService` runs Google's UMP flow and is the **only** caller of `mobileAds().initialize()` — starting the SDK is what makes a request possible, so it cannot happen where the consent state is unknown. An ad served ahead of the form is the violation itself, not a missed impression: it carries data the user has not agreed to hand over, and the penalty lands on the AdMob account rather than on the release. So the default is `canRequestAds: false`, `AdBanner` and both ad services read it, and the form is gathered at the frame the onboarding ends on — where the first ad can appear, never earlier, and never for a subscriber who will not be shown one. Where Google requires the choice to be reopenable (`arePrivacyOptionsRequired`), Settings grows a row for it; where it does not, the row is absent rather than opening nothing.
 - **RevenueCat** — `REVENUECAT_ENTITLEMENT_ID` controls the premium gate. `openPaywall({ source })` from `SubscriptionProvider`. `FORCE_FREE` env var for dev.
 - **Contextual paywall** — `contextualPaywallService` evaluates session count and generic action count (`engagementStorage.getActionCount()`) to trigger the paywall at a value moment. `power_action` / `after_n_actions` / `rewarded_ad_dismissed` triggers. `session_return` only arms the session — it never cold-fires the paywall on launch.

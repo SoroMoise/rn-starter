@@ -11,6 +11,7 @@ import { SubscriptionProvider } from '@/providers/SubscriptionProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { ToastProvider } from '@/providers/ToastProvider'
 import { AdService } from '@/services/api/adService'
+import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { consentService } from '@/services/api/consentService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { contextualPaywallService } from '@/services/api/contextualPaywall'
@@ -85,6 +86,7 @@ function AppContent() {
   // earlier, and never for a subscriber who will not be shown one.
   useEffect(() => {
     if (!isOnboardingCompleted || isPremium) return
+    if (!adsAllowedInEnvironment()) return
     void consentService.gather().then(() => AdService.initialize())
   }, [isOnboardingCompleted, isPremium])
 

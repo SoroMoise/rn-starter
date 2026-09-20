@@ -9,7 +9,7 @@ Keep this in sync with CLAUDE.md and the code — update both as part of any cha
 
 - **Bundle ID placeholder:** `com.yourcompany.rnstarter`
 - **Monorepo:** `apps/mobile/` (this app), `apps/api/` (Cloudflare Worker), `packages/shared/`
-- **Version:** computed in `app.config.js` — `major*10000 + minor*100 + patch`
+- **Version:** `versionCode` computed in `app.config.js` — `major*1000000 + minor*1000 + patch`. Base 1000 per field, so the code stays strictly increasing up to `x.999.999`; Play only ever accepts a higher code than the last upload.
 
 ---
 

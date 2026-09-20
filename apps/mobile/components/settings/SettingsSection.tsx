@@ -1,3 +1,4 @@
+import { ThemedText } from '@/components/ui/ThemedText'
 import type { ReactNode } from 'react'
 import { View, type ViewProps } from 'react-native'
 
@@ -25,13 +26,11 @@ export function SectionContent({
 }
 
 export function SectionHeader({ children }: { children: string }) {
-  return null
-
-  // return (
-  //   <ThemedText variant="sectionHeader" color="subtle" className="mb-2 ml-1">
-  //     {children}
-  //   </ThemedText>
-  // )
+  return (
+    <ThemedText variant="sectionHeader" color="subtle" className="mb-2 ml-1">
+      {children}
+    </ThemedText>
+  )
 }
 
 export function Divider() {

@@ -1,5 +1,7 @@
 const withAndroidConfigChanges = require('./plugins/withAndroidConfigChanges')
 const withAndroidSigning = require('./plugins/withAndroidSigning')
+const withGradleBuildCache = require('./plugins/withGradleBuildCache')
+const withGradleMemory = require('./plugins/withGradleMemory')
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
 
 export default () => {
@@ -66,6 +68,8 @@ export default () => {
       plugins: [
         withAndroidConfigChanges,
         withAndroidSigning,
+        withGradleMemory,
+        withGradleBuildCache,
         withAndroidFontFilter,
         [
           'expo-build-properties',

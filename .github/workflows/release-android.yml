@@ -1,0 +1,361 @@
+name: Release Android
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: release-android
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    # Manual runs always proceed. PR runs only when the PR was actually merged
+    # into main AND carries the `release` label — merely closing a PR, or
+    # merging one without the label, never triggers a release.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'release'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      # A GitHub-hosted runner boots with roughly 20 GB free, and a release build
+      # spends a large part of it on node_modules, the Gradle caches and the native
+      # intermediates the new architecture produces for every ABI. `No space left on
+      # device` surfaces as an unrelated-looking IOException in whichever task happens
+      # to be writing when the disk fills — usually the last one, an hour in. None of
+      # the runtimes wiped here take part in an Expo/Android build; the Android SDK is
+      # deliberately left alone, since the NDK the build resolves is not knowable from
+      # this file. Everything is best-effort: a missing path on a future runner image
+      # must never fail a release.
+      - name: Free disk space on the runner
+        run: |
+          echo "::group::Disk before cleanup"
+          df -h /
+          echo "::endgroup::"
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /usr/share/swift \
+            /usr/share/miniconda \
+            /usr/local/.ghcup \
+            /opt/ghc \
+            /usr/local/share/powershell \
+            /usr/local/share/chromium \
+            /usr/local/lib/node_modules \
+            /usr/lib/google-cloud-sdk \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/go \
+            /opt/hostedtoolcache/Ruby \
+            /opt/hostedtoolcache/PyPy \
+            || true
+          sudo docker image prune --all --force > /dev/null 2>&1 || true
+          echo "::group::Disk after cleanup"
+          df -h /
+          echo "::endgroup::"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Compute next version
+        id: version
+        run: bash .github/scripts/compute-android-version.sh
+
+      # Read from app.config.js rather than written into this file: the boilerplate's
+      # setup script renames the app in the config, and a package id duplicated here
+      # would keep pointing at the template's Play listing with nothing to warn you.
+      - name: Resolve Play package name
+        id: package
+        working-directory: apps/mobile
+        run: |
+          # Run from apps/mobile: app.config.js is ESM, so the `require('./plugins/…')`
+          # calls at its top resolve against the process cwd, not against the file.
+          pkg="$(node -e "const c=require('./app.config.js').default();process.stdout.write(c.expo.android.package)")"
+          if [ -z "$pkg" ]; then
+            echo "error: could not read expo.android.package from apps/mobile/app.config.js" >&2
+            exit 1
+          fi
+          echo "name=$pkg" >> "$GITHUB_OUTPUT"
+          echo "Publishing as $pkg"
+
+      # The PR title becomes the Play release name, which is what labels the build in
+      # the Play Console history long after the review is over. Play rejects names
+      # past 50 characters, so it is truncated and the cut is marked.
+      - name: Compute release name
+        id: release_name
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          title="$(printf '%s' "${PR_TITLE:-}" | tr -d '\r\n' | sed 's/  */ /g; s/^ //; s/ $//')"
+          if [ -n "$title" ]; then
+            name="$NEW_VERSION - $title"
+          else
+            name="$NEW_VERSION"
+          fi
+          if [ "${#name}" -gt 50 ]; then
+            name="${name:0:47}..."
+          fi
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "Release name: $name"
+
+      # app.config.js is the single source of the version: `versionCode` is derived
+      # from it there, and prebuild carries both into the generated build.gradle.
+      - name: Apply version to app.config.js
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          sed -i "s/const version = '[0-9]\+\.[0-9]\+\.[0-9]\+'/const version = '$NEW_VERSION'/" apps/mobile/app.config.js
+          echo "Releasing $NEW_VERSION (versionCode ${{ steps.version.outputs.version_code }}, bump ${{ steps.version.outputs.bump }})"
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+
+      # Wraps every ./gradlew invocation below (they only happen after prebuild
+      # generates android/) with automatic caching of ~/.gradle: the dependency
+      # cache, the wrapper distribution, and — since org.gradle.caching=true
+      # (withGradleBuildCache) — the build cache too. That last one is the
+      # point: each CI run starts on a fresh, empty runner, so without this step
+      # restoring ~/.gradle, org.gradle.caching would have nothing to hit and
+      # the CMake native builds (reanimated, worklets, mmkv, screens — the bulk
+      # of build time) would recompile from scratch every release regardless.
+      # No manual cache key needed: the action fingerprints the actual Gradle
+      # invocation, not files that don't exist yet at this point in the job.
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@48b5f213c81028ace310571dc5ec0fbbca0b2947 # v4
+
+      - name: Ensure required SDK packages
+        run: sdkmanager "platform-tools" "platforms;android-36" "platforms;android-35" "build-tools;36.0.0"
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Write mobile .env from secret
+        working-directory: apps/mobile
+        env:
+          MOBILE_DOTENV: ${{ secrets.MOBILE_DOTENV }}
+        run: printf '%s' "$MOBILE_DOTENV" > .env
+
+      - name: Restore google-services.json from secret
+        working-directory: apps/mobile
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "error: GOOGLE_SERVICES_JSON secret is empty — the Firebase plugins need it at prebuild time" >&2
+            exit 1
+          fi
+          printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
+
+      # android/ is not committed (Continuous Native Generation), so this step is
+      # what produces the native project at all, not a refresh of a checked-in one.
+      # --clean is still passed so a cached or partially restored tree can never be
+      # the thing that gets built.
+      - name: Prebuild native Android project
+        working-directory: apps/mobile
+        run: pnpm exec expo prebuild --clean --platform android --no-install
+
+      # Redundant with app.config.js on a healthy prebuild, and deliberately kept:
+      # a versionCode that silently failed to reach build.gradle is only discovered
+      # by the Play Console, an hour later, as a rejected upload.
+      - name: Apply version to build.gradle
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          sed -i "s/versionName \"[0-9.]\+\"/versionName \"$NEW_VERSION\"/" apps/mobile/android/app/build.gradle
+          sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" apps/mobile/android/app/build.gradle
+
+      # keystore.properties keys must match plugins/withAndroidSigning.js, and
+      # STORE_FILE is resolved relative to apps/mobile/.
+      - name: Restore release keystore and signing config
+        working-directory: apps/mobile
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          # Checked the same way GOOGLE_SERVICES_JSON is: an empty or truncated secret
+          # otherwise produces a 0-byte keystore, and the run dies much later in
+          # :app:signReleaseBundle on an error that names the keystore, not the secret.
+          if [ -z "$KEYSTORE_B64" ]; then
+            echo "error: ANDROID_KEYSTORE_BASE64 secret is empty — the release cannot be signed" >&2
+            exit 1
+          fi
+          echo "$KEYSTORE_B64" | base64 -d > release.keystore
+          if [ ! -s release.keystore ]; then
+            echo "error: ANDROID_KEYSTORE_BASE64 did not decode to a keystore — check the base64 encoding" >&2
+            exit 1
+          fi
+          {
+            echo "STORE_FILE=release.keystore"
+            echo "STORE_PASSWORD=$STORE_PASSWORD"
+            echo "KEY_ALIAS=$KEY_ALIAS"
+            echo "KEY_PASSWORD=$KEY_PASSWORD"
+          } > keystore.properties
+
+      - name: Build release bundle (AAB)
+        working-directory: apps/mobile/android
+        run: ./gradlew :app:bundleRelease --no-daemon
+
+      # Running this on failure too is what turns a disk that filled mid-task into
+      # a diagnosis rather than an IOException in an unrelated-looking place.
+      - name: Report disk usage
+        if: always()
+        run: |
+          df -h /
+          du -sh ~/.gradle apps/mobile/android/app/build node_modules 2>/dev/null || true
+
+      # The Play Developer API occasionally answers a clean upload with a transient
+      # "The service is currently unavailable." on the edit commit, with the AAB itself
+      # already uploaded. Each attempt opens its own edit, so retrying is safe: the
+      # previous, never-committed edit is simply abandoned.
+      #
+      # The attempts stay unrolled here rather than looping inside the composite
+      # action: `continue-on-error` on a composite action's own steps is not a
+      # mechanism worth betting a release on, and three named top-level steps say
+      # which attempt carried the release straight from the step list, where nested
+      # composite steps would only show inside one collapsed entry. Each `if` chains
+      # on the attempt immediately before it — a skipped step's outcome is `skipped`,
+      # never `failure`, so the chain stops on its own as soon as one attempt lands.
+      - name: Publish to Play Store (internal track)
+        id: publish_attempt_1
+        continue-on-error: true
+        uses: ./.github/actions/publish-play
+        with:
+          service-account-json: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ steps.package.outputs.name }}
+          release-name: ${{ steps.release_name.outputs.name }}
+
+      - name: Wait before retrying Play Store publish
+        if: steps.publish_attempt_1.outcome == 'failure'
+        run: sleep 30
+
+      - name: Publish to Play Store (internal track, retry 1)
+        id: publish_attempt_2
+        if: steps.publish_attempt_1.outcome == 'failure'
+        continue-on-error: true
+        uses: ./.github/actions/publish-play
+        with:
+          service-account-json: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ steps.package.outputs.name }}
+          release-name: ${{ steps.release_name.outputs.name }}
+
+      - name: Wait before retrying Play Store publish again
+        if: steps.publish_attempt_2.outcome == 'failure'
+        run: sleep 90
+
+      # The last attempt carries no continue-on-error: it is the one that fails the
+      # job, which is what keeps `Commit version bump back to main` from running.
+      - name: Publish to Play Store (internal track, retry 2)
+        id: publish_attempt_3
+        if: steps.publish_attempt_2.outcome == 'failure'
+        uses: ./.github/actions/publish-play
+        with:
+          service-account-json: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          package-name: ${{ steps.package.outputs.name }}
+          release-name: ${{ steps.release_name.outputs.name }}
+
+      # A publish that failed every attempt has two very different causes, and the
+      # run's last error names the wrong one. If Google committed the edit and only
+      # lost the response, the retries re-upload the same versionCode and die on
+      # `apkUpgradeVersionConflict` — so the annotation reads "version code already
+      # used" while the real fault was attempt 1's outage, demoted to a warning by
+      # continue-on-error. The release is then live on internal with `main` never
+      # bumped, and every later run recomputes the same version into the same wall.
+      # The guard reads attempt 1 rather than `failure()` alone so a build that died
+      # earlier (leaving attempt 1 `skipped`) never draws this diagnosis.
+      - name: Diagnose a publish that failed every attempt
+        if: failure() && steps.publish_attempt_1.outcome == 'failure'
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+          VERSION_CODE: ${{ steps.version.outputs.version_code }}
+        run: |
+          echo "::warning::Every publish attempt failed — read the job summary before re-running."
+          {
+            echo "## Play Store publish failed on all three attempts"
+            echo
+            echo "Target: **v$NEW_VERSION** (versionCode \`$VERSION_CODE\`), internal track."
+            echo
+            echo "Read the error on **Publish to Play Store (internal track)** — the first"
+            echo "attempt. It is the only one that met the Play Console in its original"
+            echo "state; the retries may be reporting a consequence of it."
+            echo
+            echo "If the last attempt says the version code has already been used, an"
+            echo "earlier attempt committed its edit despite reporting failure:"
+            echo
+            echo "- v$NEW_VERSION is already live on the internal track;"
+            echo "- \`main\` was never bumped, so this workflow recomputes v$NEW_VERSION and"
+            echo "  hits the same conflict on every re-run."
+            echo
+            echo "Recover by bumping the version in \`apps/mobile/app.config.js\` and"
+            echo "\`.last_release_commit\` by hand to match what the Play Console actually"
+            echo "holds. Do not simply re-run."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The Play Console keeps every bundle it accepts, so a copy in Actions storage
+      # is pure duplication once the publish lands — and Actions storage on a private
+      # repo is billed against a 500 MB monthly allowance that a handful of AABs at
+      # the default 90-day retention will exhaust on their own. The copy only earns
+      # its keep when the publish never landed at all: the bundle is then built,
+      # signed and correct, and uploading it to the Play Console by hand is one way out.
+      #
+      # So this guards on the *last* attempt where the diagnosis above guards on
+      # the first — the two ask different questions. The diagnosis fires whenever
+      # the publish path was entered and the job failed, because its whole subject
+      # is which error to trust. This one fires only when no attempt landed:
+      # guarding it on attempt 1 would upload the whole bundle every time attempt 1
+      # flaked, a retry carried the release, and something later in the job failed —
+      # with the bundle already on Play. Reading a specific attempt rather than
+      # `failure()` alone also keeps a build that died before producing an AAB
+      # from tripping `if-no-files-found: error`.
+      - name: Upload AAB for manual publishing (publish never landed)
+        if: failure() && steps.publish_attempt_3.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-aab
+          path: apps/mobile/android/app/build/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+          retention-days: 7
+
+      # Only two files are staged, by name. android/ is gitignored here, so the
+      # prebuild output has nothing to be excluded from — but the secrets restored
+      # above sit in the same working tree, and a `git add -A` is one edit away from
+      # committing a keystore. Everything the next run needs is in these two: the
+      # released version, and the commit the next range starts from.
+      - name: Commit version bump back to main
+        if: success()
+        env:
+          NEW_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          git rev-parse HEAD > .last_release_commit
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/mobile/app.config.js .last_release_commit
+          git commit -m "chore(release): v$NEW_VERSION [skip ci]"
+          git push origin HEAD:main \
+            || { git fetch origin main && git rebase origin/main && git push origin HEAD:main; }

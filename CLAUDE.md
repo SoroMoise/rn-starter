@@ -56,6 +56,23 @@ Local native modules live in `apps/mobile/modules/` and are autolinked through `
 
 **`withCrashlyticsMapping` uploads the R8 mapping only when `CI=true`**: a minified release whose mapping never reached Crashlytics reports every frame as `a.b.c(SourceFile:1)`, while a local `bundleRelease` has no business overwriting the mapping of the release that is actually live. Force one locally with `CI=true ./gradlew bundleRelease`. It is wrapped in `plugins.withId` because the Firebase Crashlytics config plugin appends its `apply plugin:` at the end of `app/build.gradle` — the DSL does not exist yet when the initial `android { }` block is evaluated.
 
+### Continuous delivery (GitHub Actions)
+
+`.github/workflows/release-android.yml` builds and publishes the Android release with no local machine. It fires on `workflow_dispatch`, or on a PR **merged into `main` carrying the `release` label** — closing a PR, or merging one without the label, releases nothing.
+
+`.github/scripts/compute-android-version.sh` derives the next version from Conventional Commits since `.last_release_commit` (`feat` → minor, `!`/`BREAKING CHANGE` → major, anything else → patch), reading the base from `const version` in `app.config.js` and deriving `versionCode` with that file's own formula — **the two must stay in step**. The job then versions, prebuilds (`--clean`), signs, `bundleRelease`s, uploads to the Play Console **internal** track (3 attempts, `.github/actions/publish-play/`), and pushes a `chore(release): vX.Y.Z [skip ci]` commit carrying `app.config.js` and `.last_release_commit` — the only two files staged, by name, since the same working tree holds the keystore and the `.env` the run restored from secrets.
+
+**The PR title becomes the Play release name** (`<version> - <title>`), which is what labels the build in the Play Console history long after the review is over. Play rejects names past 50 characters, so the workflow truncates and marks the cut — lead with the subject and the action, leave qualifiers for the tail.
+
+The Play package id is **read from `app.config.js`** rather than written into the workflow: `scripts/setup.sh` renames the app in the config, and a second copy here would keep pointing at the template's listing with nothing to warn you.
+
+`android/` is not committed here, so the workflow generates it and nothing of it is ever staged back.
+
+If all 3 publish attempts fail, read the **first** one and the job summary before re-running: an attempt can commit its Play edit and still report failure, which makes the later attempts die on `apkUpgradeVersionConflict` and every re-run recompute the same rejected version. Recovery is a hand bump of `app.config.js` and `.last_release_commit` to match what the Play Console holds.
+
+Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`.
+
+
 ## Architecture (mobile)
 
 ### Navigation

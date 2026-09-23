@@ -1,0 +1,39 @@
+name: Publish to Play Store
+description: >-
+  Uploads the signed release AAB and its R8 mapping to a Play Console track as a
+  completed release.
+
+inputs:
+  service-account-json:
+    description: Contents of the Play Developer API service account key (JSON).
+    required: true
+  package-name:
+    description: Android applicationId, as published on Play.
+    required: true
+  release-name:
+    description: Name shown in the Play Console release history (max 50 characters).
+    required: false
+    default: ''
+  track:
+    description: Play track to publish to.
+    required: false
+    default: internal
+
+runs:
+  using: composite
+  steps:
+    # Every input the publish needs lives here and nowhere else. The workflow calls
+    # this action three times to ride out a transient Play API outage, and three
+    # inline copies of `track` / `packageName` / the AAB and mapping paths would let
+    # a later edit reach the first attempt alone — a divergence that surfaces only
+    # on a day the first attempt has already failed, which is the least-watched path
+    # in the whole release.
+    - uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
+      with:
+        serviceAccountJsonPlainText: ${{ inputs.service-account-json }}
+        packageName: ${{ inputs.package-name }}
+        releaseName: ${{ inputs.release-name }}
+        releaseFiles: apps/mobile/android/app/build/outputs/bundle/release/app-release.aab
+        mappingFile: apps/mobile/android/app/build/outputs/mapping/release/mapping.txt
+        track: ${{ inputs.track }}
+        status: completed

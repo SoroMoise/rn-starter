@@ -46,6 +46,12 @@ Native `ios/` and `android/` are NOT committed (Continuous Native Generation). R
 
 Local native modules live in `apps/mobile/modules/` and are autolinked through `expo.autolinking.nativeModulesDir` in `apps/mobile/package.json`.
 
+## Build & Release
+
+**Nothing may be hand-edited under `android/`** — prebuild rewrites it. Anything the native project needs is a config plugin in `apps/mobile/plugins/`, and that is what makes the rule enforceable rather than aspirational.
+
+**Release signing is a plugin for exactly that reason.** `withAndroidSigning` appends a Gradle block that reads `apps/mobile/keystore.properties` **at build time**, so the credentials can arrive after the native project was generated and the same checkout can prebuild on a machine that holds no keystore. Without the plugin, the Expo template's `release` build type signs with the *debug* keystore: Play refuses that upload, and a hand-fixed `android/app/build.gradle` is gone at the next prebuild — the failure surfaces at the last possible step. A release build with neither `keystore.properties` nor EAS's injected credentials now fails on purpose and says what to do. `keystore.properties`, `release.keystore`, `.env` and the Firebase config files are all gitignored; `keystore.properties` has a committed `.example` beside it.
+
 ## Architecture (mobile)
 
 ### Navigation

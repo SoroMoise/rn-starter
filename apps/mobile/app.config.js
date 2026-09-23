@@ -1,4 +1,5 @@
 const withAndroidConfigChanges = require('./plugins/withAndroidConfigChanges')
+const withAndroidSigning = require('./plugins/withAndroidSigning')
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
 
 export default () => {
@@ -64,6 +65,7 @@ export default () => {
 
       plugins: [
         withAndroidConfigChanges,
+        withAndroidSigning,
         withAndroidFontFilter,
         [
           'expo-build-properties',

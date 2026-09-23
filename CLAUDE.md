@@ -40,6 +40,8 @@ From `apps/mobile`:
 pnpm preb             # expo prebuild (generates ios/ and android/)
 pnpm preb:android     # expo prebuild --platform android
 pnpm preb:ios         # expo prebuild --platform ios
+pnpm build:aab        # signed .aab for the Play Console
+pnpm build:install    # signed .apk, installed on the connected device
 ```
 
 Native `ios/` and `android/` are NOT committed (Continuous Native Generation). Run `pnpm --filter mobile preb` to generate them locally before running on a device.
@@ -70,7 +72,9 @@ The Play package id is **read from `app.config.js`** rather than written into th
 
 If all 3 publish attempts fail, read the **first** one and the job summary before re-running: an attempt can commit its Play edit and still report failure, which makes the later attempts die on `apkUpgradeVersionConflict` and every re-run recompute the same rejected version. Recovery is a hand bump of `app.config.js` and `.last_release_commit` to match what the Play Console holds.
 
-Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`.
+Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`. The AAB is kept as a build artifact **only** when no publish attempt landed; `purge-artifacts.yml` clears the backlog on demand, since Actions storage is billed on a private repo and nothing expires it before its 90 days.
+
+`.github/workflows/ci-api.yml` lints, typechecks, dry-run builds and deploys the Worker, on the same label pattern (`release-api`) — it needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Delete it along with `apps/api` if the app has no backend.
 
 
 ## Architecture (mobile)

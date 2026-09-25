@@ -37,7 +37,7 @@ real unit.
 1. Replace Google's sample **app ids** in `app.config.js` (the `react-native-google-mobile-ads`
    plugin block) with the app's own — the SDK crashes at launch without one, which is why the
    template ships the sample ones rather than nothing. The release workflow refuses to publish
-   while the Android one is still Google's.
+   while the Android one is still Google's, and warns while every Android unit is still pending.
 2. Create one unit per placement in the AdMob console and paste each into `constants/admob.ts`.
    A placement with no unit stays `UNIT_PENDING`; never lend it another placement's unit.
 3. Update the inventory above.
@@ -188,7 +188,7 @@ reset at every launch.
 |------|----------------|
 | `constants/admob.ts` | unit ids, kill switches, reward constants — the only place any of them appear |
 | `app.config.js` | the AdMob app ids (plugin block) |
-| `.github/workflows/release-android.yml` | refuses a release that still carries Google's sample app id |
+| `.github/workflows/release-android.yml` | refuses a release that still carries Google's sample app id, warns when no unit is configured |
 | `services/api/consentService.ts` | the UMP gate; the only caller of `mobileAds().initialize()` |
 | `services/api/adEnvironment.ts` | no request from a Firebase Test Lab device |
 | `modules/app-environment/` | the native side of it — reads the `firebase.test.lab` system setting |

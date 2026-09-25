@@ -23,17 +23,23 @@ audit of that gap and the plan to close it.
 | 3 | The offer is data: offerings-driven paywall, price retry, restore outcomes | 3 | **merged into `main`** |
 | 4 | Converter vestiges: dead code, dead keys, dead config | 15 | **merged into `main`** |
 | 5 | Promo coordination and AdMob | 18 | **merged into `main`** |
-| 6–13 | See §3 | — | not started |
+| 6 | Rating by moments: one pure policy, the ask deferred to the user's return | 9 | **merged into `main`** |
+| 7–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**119 have shipped** (62 in lots 1–3, 29 in lot 4, 28 in lot 5) and **113 remain**, spread over
-lots 6 to 13. Three more were deliberately held back out of lot 4 — see §4. The per-lot counts in
-§3 are remaining work only; the console's lot cards also count those three, which is why two of
-its figures are one higher.
+**125 have shipped** (62 in lots 1–3, 29 in lot 4, 28 in lot 5, 6 in lot 6) and **107 remain**,
+spread over lots 7 to 13. Three more were deliberately held back out of lot 4 — see §4. The per-lot
+counts in §3 are remaining work only; the console's lot cards also count those three, which is why
+its lot 7 figure is one higher and its lot 9 figure two.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
 "later" item (`ad-banner-reserved-height`) shipped with them, as eight did in lots 1–3.
+
+Lot 6's six include two the audit had filed under other lots: `review-storage` (lot 9) and
+`claude-rating-play-policy` (lot 13), whose last point needed lot 6. One "later" item,
+`rating-storage-keys`, shipped with them, bar the `retryAfter` only the dormant sentiment path
+would read.
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -75,15 +81,6 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 6 — Rating by moments (4 items)
-
-`RatingMoment` (a finished action raises the ask, never mid-task), the deferred ask consumed on the
-next foreground, `evaluateReviewRequest` as a pure function with traced refusals, and
-`reviewStorage` replacing `ratingStorage`. Lot 5 already gates the rating on the coordinator and
-spends the session's budget before Play's card is requested; `rating-promo-coordinator` keeps only
-its `promo_collision` refusal, and its `setRatingAskVisible` half should not be taken — Play's card
-exposes no visibility to track.
-
 ### Lot 7 — Subscription: security and funnel (10 items)
 
 Encrypted MMKV instance for entitlement keys plus `withBackupRules` (excluding the entitlement
@@ -102,7 +99,7 @@ the paywall split into reusable blocks with `usePaywallPlans` and a `paywallAnal
 and `OnboardingStepLayout`. (The guard that makes the flow sell exactly once, at its last step,
 shipped in lot 5 with the `openPaywall` choke point.)
 
-### Lot 9 — UI library and layout (27 items)
+### Lot 9 — UI library and layout (26 items)
 
 `ModalDialog` with `useKeyboardHeight` (Android edge-to-edge stopped resizing modal windows),
 `SettingsRow`/`AppSwitch`/`ProBadge`, `useModalSheetPanGesture` and the drag lock, `WheelPicker`,
@@ -135,14 +132,14 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (29 items)
+### Lot 13 — Documentation and conventions (28 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: large screens, the safe-area contract, the
 NativeWind and RN footguns that break silently, Play store policy (urgency, reviews, aggregate
 ratings, declared permissions), the i18n voice charter and plural parity, bundle size (Metro does
 not tree-shake — import `date-fns` per function), and the frozen structure of
 `PROJECT_CONTEXT.md`. The promo-coordination invariants, `ADS.md` and the AdMob-literals rationale
-shipped in lot 5.
+shipped in lot 5, the rating doctrine in lot 6.
 
 ---
 
@@ -251,18 +248,96 @@ before `pnpm install`, when loading it needs `@expo/config-plugins` — no relea
 
 ---
 
-## 7. Resuming in a new session
+## 7. What verification caught on lot 6
+
+Four items in one family of files, so both stages ran in the session itself rather than as
+sub-agents — the second one read ACC's host and bg-remover's policy against the starter's own
+lifecycle, and that is where most of this came from.
+
+- **A foreground on Android is not a return (stage 2, fatal to the audit's host).** React Native
+  maps `onHostPause` to `background`, so every activity drawn over the app reports one: the
+  interstitial, the rewarded video, the billing sheet, a permission dialog, Play's own card. ACC's
+  host raises the armed ask on any change to `active`. The rewarded video spends no budget and
+  stamps no ad time, and the paywall closes itself once a purchase lands, so Play's card could
+  have followed either 1.2 s later. A return now needs `RATING_ASK_MIN_AWAY_MS` (5 min) away.
+- **Traced refusals and a flag kept until launch do not mix (stage 2).** ACC disarms only on a
+  launch, which costs nothing while its refusals are silent. Traced, the flag would log one
+  `rating_ask_suppressed` at every return for as long as a cooldown lasts — up to 126 days. Stage
+  2's answer, one evaluation per arming, went a step too far; the review corrected it (below).
+- **The host's first check raced the session reset (stage 2).** ACC mounts the host in
+  `SubscriptionProvider`, so it checks at launch, while `contextualPaywallService.resetSession()`
+  waits for RevenueCat: on a slow network the ask spent the session's interruption and the reset
+  handed it back, opening the session to a second one. The host mounts once the session has
+  started.
+- **bg-remover's base cooldown never applies (stage 1).** `cooldownDays × backoffMultiplier^n` is
+  only read once a request exists, so n ≥ 1: `cooldownDays: 14` means 42 days, then 126. The
+  invariant that keeps the cap binding is written on 126.
+- **The old soft reset delayed what it meant to hasten (stage 1).** It rewound the count in the
+  middle of an evaluation and stamped the prompt date, which restarted the 45-day spacing: "a
+  prompt sooner" meant 45 more days. The policy now computes where a streak ends instead of
+  writing it.
+- **`weak_moment` cannot fire in bg-remover (stage 1).** Every moment there is strong. Here it is
+  the list an app promotes a candidate into, once the refusal has measured it.
+- **The rating's "first usage" was the first action (stage 1).** `RATING_FIRST_USAGE_DATE` was
+  stamped at the first evaluation; the policy reads the install date.
+- **The sentiment path was never wired (stage 1).** `markAsLater` and `markAsDeclinedForever` had
+  no caller and nothing reads `SENTIMENT_GATE_ENABLED`, so CLAUDE.md no longer says flipping the
+  flag brings anything back.
+- **Deferring the ask removed a lot-5 rule's reason (stage 2).** A failed interstitial ended the
+  chain so that no card would land seconds after it; with the ask deferred, only an ad the user
+  saw takes the moment.
+- **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
+  under lot 9; `lot == 6` alone would have missed it (§8, step 3).
+
+The branch was then reviewed before it was pushed — once by the session reading the whole diff,
+once with the code-review skill — and each pass found what the stages had not:
+
+- **The automatic ask sent the user to the store when Play's card could not come** — no Play app,
+  or a flow that threw. Google's in-app review guide says an error in the flow must neither be
+  reported to the user nor change the app's flow, and with the ask now raised at a launch it would
+  have opened the Play Store, or a browser, seconds after the app did. A lots 1–3 decision, reversed
+  in its own commit: a failure is traced, and a device with no card is refused before anything is
+  spent.
+- **The flag's own comment still said the sentiment path was wired** and that flipping it would
+  bring the pre-prompt back, against the CLAUDE.md line this lot had just corrected.
+- **A collision cleared the ask it only delayed.** One evaluation per arming was right for a
+  cooldown and wrong for a collision: an interstitial that spent the session's interruption, then
+  a return, cleared an ask the next launch would have made. Only a refusal that outlives the
+  session clears the arm now (`refusalOutlivesSession`).
+- **A warm return was judged on the install's age at session start.** The session context is a
+  snapshot taken once, and an Android process can outlive its launch by days; three days in, a
+  return still read as day zero. The install date and the session count are read when the ask is.
+- **Google's consent form was invisible to the coordinator.** A launch is where a deferred ask
+  falls due and where UMP collects consent again; the form is drawn inside the activity, so
+  nothing kept Play's card off it. The form is now a `PromoSurface`, visibility only.
+- **The living docs had drifted.** CLAUDE.md's provider tree lacked the host, and the one case
+  where the rating goes before the paywall — an ask at a launch takes that session's interruption
+  — was nowhere written down as the trade it is.
+
+Declined, each with its reason on the record: migrating the old `@rating_*` counters (the starter
+has no installs — `rating-no-legacy-migration`); an expiry on the arm (it stands for an engaged
+user not yet asked, and the policy judges the moment it is raised at); stamping the rewarded video
+as the last ad for `ad_collision` (it would also move the interstitial's own 90 s interval, an
+ad-cadence change for a lot of its own).
+
+The README also still documented `STORE_URL_*` variables that lots 1–3 had removed; it now says
+where the store URLs come from.
+
+---
+
+## 8. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
-3. Pick the lot. Pull its items:
+3. Pick the lot. Pull its items, then search the other lots for items on the same files — the
+   audit filed some under a neighbouring lot:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==6 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==7 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.
 6. Update `status` in `audit-items.json` for what shipped (`done-lotN`, in every copy of an item the
    audit filed twice), then the `ITEMS` line of `audit-console.html`, which embeds its own copy of
-   the data, and this file's §1 table.
+   the data, and its `SHIPPED_LOT` map, which must learn the new status; then this file's §1 table.
 7. Push the branch, open the pull request, review it, fix what the review finds, and merge.

@@ -9,6 +9,9 @@ import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+// Its own entry point in the funnel: a save made here is not a paywall conversion.
+const ONBOARDING_EXIT_INTENT_SOURCE = 'onboarding_exit_intent'
+
 interface ExitIntentSheetProps {
   visible: boolean
   onRecovered: () => void
@@ -24,19 +27,19 @@ export function ExitIntentSheet({
 }: ExitIntentSheetProps) {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const { purchaseAnnual, isLoadingPurchase, annualPackage, isPremium } = usePremium()
+  const { defaultPlan, purchasePlan, isLoadingPurchase, isPremium } = usePremium()
   const isPremiumRef = useRef(isPremium)
   useEffect(() => {
     isPremiumRef.current = isPremium
   }, [isPremium])
 
   const handleStart = useCallback(() => {
-    if (!annualPackage || isLoadingPurchase) return
+    if (!defaultPlan || isLoadingPurchase) return
     triggerLight()
-    void purchaseAnnual().then(() => {
+    void purchasePlan({ plan: defaultPlan, source: ONBOARDING_EXIT_INTENT_SOURCE }).then(() => {
       if (isPremiumRef.current) onRecovered()
     })
-  }, [annualPackage, isLoadingPurchase, purchaseAnnual, onRecovered])
+  }, [defaultPlan, isLoadingPurchase, purchasePlan, onRecovered])
 
   const handleSkip = useCallback(() => {
     triggerLight()
@@ -64,7 +67,7 @@ export function ExitIntentSheet({
         <GradientButton
           onPress={handleStart}
           isLoading={isLoadingPurchase}
-          disabled={!annualPackage}
+          disabled={!defaultPlan}
           colors={['#3b82f6', '#6366f1', '#8b5cf6']}
           style={{ height: 56, borderRadius: 14, marginTop: 24 }}
           gradientStyle={{ height: '100%' }}

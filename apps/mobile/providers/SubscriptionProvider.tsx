@@ -1,10 +1,5 @@
 import { PaywallModal } from '@/components/paywall/PaywallModal'
-import {
-  ENTITLEMENT_PREMIUM,
-  PlanType,
-  PRODUCT_IDS,
-  SUBSCRIPTION_GRACE_PERIOD_MS,
-} from '@/constants/purchases'
+import { ENTITLEMENT_PREMIUM, SUBSCRIPTION_GRACE_PERIOD_MS } from '@/constants/purchases'
 import { SubscriptionContext, type SubscriptionContextValue } from '@/contexts/SubscriptionContext'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -14,20 +9,39 @@ import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { purchaseService } from '@/services/api/purchaseService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
-import { getFreeTrialDays } from '@/utils/trialOffer'
+import {
+  buildOfferingPlans,
+  pickDefaultPlan,
+  type OfferingPlan,
+  type PlanPeriod,
+} from '@/utils/offerings'
 import Constants from 'expo-constants'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppState, AppStateStatus } from 'react-native'
-import { CustomerInfo, PurchasesError, PurchasesPackage } from 'react-native-purchases'
+import { CustomerInfo, PurchasesError, PurchasesOffering } from 'react-native-purchases'
 
 export { SubscriptionContext }
 export type { SubscriptionContextValue }
 
-function deriveActiveSubscription(customerInfo: CustomerInfo): PlanType | null {
+// A purchase made outside an offering still needs an attribution value, or the
+// per-offering funnel silently drops those conversions.
+const NO_OFFERING = 'none'
+
+// Matched against the offer the store actually returned, never against a product id
+// written here: a renamed product, a third plan or a one-time purchase must not be
+// reported as something it is not.
+function deriveActiveSubscription({
+  customerInfo,
+  plans,
+}: {
+  customerInfo: CustomerInfo
+  plans: OfferingPlan[]
+}): PlanPeriod | null {
   const active = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
   if (!active) return null
-  return active.productIdentifier === PRODUCT_IDS.ANNUAL ? 'annual' : 'monthly'
+  const plan = plans.find((p) => p.pkg.product.identifier === active.productIdentifier)
+  return plan?.period ?? 'other'
 }
 
 // Reached only when the store could not be asked at all — a subscriber on a plane
@@ -52,18 +66,27 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [isInGracePeriod, setIsInGracePeriod] = useState(cached.isInGracePeriod)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoadingPurchase, setIsLoadingPurchase] = useState(false)
-  const [activeSubscription, setActiveSubscription] = useState<PlanType | null>(null)
-  const [annualPackage, setAnnualPackage] = useState<PurchasesPackage | null>(null)
-  const [monthlyPackage, setMonthlyPackage] = useState<PurchasesPackage | null>(null)
+  const [activeSubscription, setActiveSubscription] = useState<PlanPeriod | null>(null)
+  const [offering, setOffering] = useState<PurchasesOffering | null>(null)
   const [paywallVisible, setPaywallVisible] = useState(false)
 
   const appState = useRef(AppState.currentState)
   const paywallSourceRef = useRef<string>('')
+  // Read inside applyCustomerInfo, which must not re-create itself when the offer
+  // reloads — the init effect depends on it.
+  const plansRef = useRef<OfferingPlan[]>([])
+
+  const plans = useMemo(() => buildOfferingPlans(offering), [offering])
+  const defaultPlan = useMemo(() => pickDefaultPlan({ offering, plans }), [offering, plans])
+
+  useEffect(() => {
+    plansRef.current = plans
+  }, [plans])
 
   // The single place a CustomerInfo becomes the app's tier, so the boot read, the
   // foreground sync, a purchase and a restore cannot disagree.
   const applyCustomerInfo = useCallback(
-    (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanType | null } => {
+    (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanPeriod | null } => {
       if (forceFree) {
         setIsPremium(false)
         setIsInGracePeriod(false)
@@ -74,7 +97,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
       const isActive = purchaseService.isPremiumActive({ customerInfo })
       const entitlement = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
-      const plan = deriveActiveSubscription(customerInfo)
+      const plan = deriveActiveSubscription({ customerInfo, plans: plansRef.current })
 
       subscriptionStorage.persistFromEntitlement({
         isPremiumActive: isActive,
@@ -109,76 +132,104 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   }, [applyCustomerInfo, forceFree])
 
+  const loadOfferings = useCallback(async () => {
+    try {
+      const offerings = await purchaseService.getOfferings()
+      // Only `current` — falling back to another offering would misprice the screen
+      // and detach the purchase from the experiment measuring it.
+      setOffering(offerings.current)
+    } catch (err) {
+      void crashlyticsService.recordError(err, { source: 'offerings_load' })
+    }
+  }, [])
+
   useEffect(() => {
     const init = async () => {
       try {
         await purchaseService.initialize()
-        const [customerInfo, offerings] = await Promise.all([
-          purchaseService.getCustomerInfo(),
-          purchaseService.getOfferings(),
-        ])
-        applyCustomerInfo(customerInfo)
-
-        const offering = offerings.current ?? Object.values(offerings.all)[0] ?? null
-        const packages = offering?.availablePackages ?? []
-        setMonthlyPackage(packages.find((p) => p.product.subscriptionPeriod === 'P1M') ?? null)
-        setAnnualPackage(packages.find((p) => p.product.subscriptionPeriod === 'P1Y') ?? null)
       } catch (err) {
-        if (!forceFree) {
-          const flags = unverifiedFlags()
-          setIsPremium(flags.isPremium)
-          setIsInGracePeriod(flags.isInGracePeriod)
-        }
         void crashlyticsService.recordError(err, { source: 'subscription_init' })
-      } finally {
         setIsInitialized(true)
+        return
       }
+
+      // Entitlement and prices are two independent calls, each with its own error
+      // boundary: a store that will not quote a price must not cost the subscriber
+      // their tier, which is what a single try around Promise.all did.
+      await Promise.all([syncPremiumState(), loadOfferings()])
+      setIsInitialized(true)
     }
     void init()
-  }, [applyCustomerInfo, forceFree])
+  }, [loadOfferings, syncPremiumState])
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
       if (appState.current.match(/inactive|background/) && nextState === 'active') {
         void syncPremiumState()
+        void loadOfferings()
       }
       appState.current = nextState
     })
     return () => sub.remove()
-  }, [syncPremiumState])
+  }, [loadOfferings, syncPremiumState])
 
-  const handlePurchase = useCallback(
-    async ({ pkg, plan }: { pkg: PurchasesPackage | null; plan: PlanType }) => {
-      if (!pkg) return
+  const purchasePlan = useCallback(
+    async ({ plan, source }: { plan: OfferingPlan; source: string }) => {
+      const product = plan.pkg.product
+      const offeringId = plan.pkg.presentedOfferingContext?.offeringIdentifier ?? NO_OFFERING
 
       setIsLoadingPurchase(true)
-      analyticsService.track('purchase_started', { plan })
+      analyticsService.track('purchase_started', {
+        plan: plan.period,
+        source,
+        product_id: product.identifier,
+        offering_id: offeringId,
+      })
 
       try {
-        await purchaseService.purchasePackage({ pkg })
-        await syncPremiumState()
+        // The purchase's own answer is the answer: a call that did not throw is not a
+        // purchase that granted anything — a deferred transaction resolves with no
+        // entitlement, and "Welcome to Pro!" over a free tier is a lie the user cannot check.
+        const customerInfo = await purchaseService.purchasePackage({ pkg: plan.pkg })
+        const applied = applyCustomerInfo(customerInfo)
+
+        if (!applied.isPremium) {
+          analyticsService.track('purchase_pending', {
+            plan: plan.period,
+            source,
+            product_id: product.identifier,
+          })
+          return
+        }
 
         const sessionCtx = engagementService.getSessionContext()
         const { paywallCount } = await engagementService.getPaywallContext()
         const totalActions = engagementStorage.getActionCount()
         analyticsService.track('purchase_completed', {
-          plan,
-          revenue_usd: pkg.product.price,
+          plan: plan.period,
+          source,
+          product_id: product.identifier,
+          offering_id: offeringId,
+          // The store quotes its own currency: logged as USD, a ₹3,499 annual plan
+          // reads as $3,499.
+          revenue: product.price,
+          currency: product.currencyCode,
           session_count: sessionCtx?.sessionCount ?? 0,
           days_since_install: sessionCtx?.daysSinceInstall ?? 0,
           paywall_count: paywallCount,
           total_actions: totalActions,
-          trial_started: plan === 'annual' && getFreeTrialDays(annualPackage) !== null,
+          trial_started: plan.hasTrial,
         })
 
         showToast({ message: t('paywall.welcomePro'), type: 'success' })
       } catch (e) {
         if (purchaseService.isUserCancelledError(e)) {
-          analyticsService.track('purchase_cancelled', { plan })
+          analyticsService.track('purchase_cancelled', { plan: plan.period, source })
           return
         }
         analyticsService.track('purchase_failed', {
-          plan,
+          plan: plan.period,
+          source,
           error_code: String((e as PurchasesError)?.code ?? 'unknown'),
         })
         showToast({ message: t('paywall.errorGeneric'), type: 'error' })
@@ -186,17 +237,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         setIsLoadingPurchase(false)
       }
     },
-    [showToast, t, syncPremiumState, annualPackage]
-  )
-
-  const purchaseMonthly = useCallback(
-    () => handlePurchase({ pkg: monthlyPackage, plan: 'monthly' }),
-    [handlePurchase, monthlyPackage]
-  )
-
-  const purchaseAnnual = useCallback(
-    () => handlePurchase({ pkg: annualPackage, plan: 'annual' }),
-    [handlePurchase, annualPackage]
+    [applyCustomerInfo, showToast, t]
   )
 
   const restorePurchases = useCallback(async () => {
@@ -236,13 +277,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         source,
         session_count: sessionCtx?.sessionCount ?? 0,
         paywall_count: paywallCount,
-        has_trial_offer: getFreeTrialDays(annualPackage) !== null,
+        has_trial_offer: plans.some((plan) => plan.hasTrial),
+        offering_id: offering?.identifier ?? NO_OFFERING,
         total_actions: totalActions,
       })
       promoCoordinator.setPaywallVisible(true)
       setPaywallVisible(true)
     },
-    [annualPackage]
+    [offering, plans]
   )
 
   const closePaywall = useCallback(() => {
@@ -258,10 +300,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isInGracePeriod,
       isPaywallVisible: paywallVisible,
       activeSubscription,
-      monthlyPackage,
-      annualPackage,
-      purchaseMonthly,
-      purchaseAnnual,
+      plans,
+      defaultPlan,
+      purchasePlan,
       restorePurchases,
       openPaywall,
       refreshSubscription: syncPremiumState,
@@ -273,10 +314,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isInGracePeriod,
       paywallVisible,
       activeSubscription,
-      monthlyPackage,
-      annualPackage,
-      purchaseMonthly,
-      purchaseAnnual,
+      plans,
+      defaultPlan,
+      purchasePlan,
       restorePurchases,
       openPaywall,
       syncPremiumState,

@@ -1,41 +1,45 @@
 const MIN_DISPLAYABLE_SAVINGS_PCT = 20
 
-export function computeSavingsPercent({
-  monthlyPrice,
-  annualPrice,
+export function computePricePerMonth({
+  price,
+  monthsPerCycle,
 }: {
-  monthlyPrice: number | undefined
-  annualPrice: number | undefined
+  price: number | undefined
+  monthsPerCycle: number | null
 }): number | null {
-  if (!monthlyPrice || !annualPrice) return null
-  const annualizedMonthly = monthlyPrice * 12
-  if (annualizedMonthly <= 0) return null
-  const savings = ((annualizedMonthly - annualPrice) / annualizedMonthly) * 100
-  // Regional pricing can make the yearly plan barely cheaper (or pricier):
+  if (!price || !monthsPerCycle || monthsPerCycle <= 0) return null
+  return price / monthsPerCycle
+}
+
+export function computeSavingsPercent({
+  pricePerMonth,
+  referencePricePerMonth,
+}: {
+  pricePerMonth: number | null
+  referencePricePerMonth: number | null
+}): number | null {
+  if (!pricePerMonth || !referencePricePerMonth || referencePricePerMonth <= 0) return null
+  const savings = ((referencePricePerMonth - pricePerMonth) / referencePricePerMonth) * 100
+  // Regional pricing can make the longer plan barely cheaper (or pricier):
   // a "-3%" or negative badge hurts the offer more than no badge at all.
   if (savings < MIN_DISPLAYABLE_SAVINGS_PCT) return null
   return Math.round(savings)
 }
 
-export function computeMonthlyFromAnnual({ annualPrice }: { annualPrice: number }): number {
-  return annualPrice / 12
-}
-
-export function formatMonthlyPrice({
-  annualPrice,
+export function formatPrice({
+  amount,
   currencyCode,
   locale,
 }: {
-  annualPrice: number
+  amount: number
   currencyCode: string
   locale: string
 }): string {
-  const monthly = computeMonthlyFromAnnual({ annualPrice })
   try {
     return new Intl.NumberFormat(locale, { style: 'currency', currency: currencyCode }).format(
-      monthly
+      amount
     )
   } catch {
-    return monthly.toFixed(2)
+    return amount.toFixed(2)
   }
 }

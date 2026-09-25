@@ -1,6 +1,5 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
-import { PlanType } from '@/constants/purchases'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
@@ -12,7 +11,6 @@ const SPRING_DOWN = { damping: 20, stiffness: 300, mass: 0.5 }
 const SPRING_UP = { damping: 15, stiffness: 200, mass: 0.6 }
 
 type PaywallPlanCardProps = {
-  type: PlanType
   label: string
   priceString: string
   periodLabel: string
@@ -24,7 +22,6 @@ type PaywallPlanCardProps = {
 }
 
 export function PaywallPlanCard({
-  type,
   label,
   priceString,
   periodLabel,
@@ -61,7 +58,7 @@ export function PaywallPlanCard({
       accessibilityRole="radio"
       accessibilityState={{ checked: isSelected, disabled: isDisabled }}>
       {/* Badges */}
-      {(savingsBadge || (trialBadge && type === 'annual')) && (
+      {(savingsBadge || trialBadge) && (
         <View style={styles.badges}>
           {savingsBadge && (
             <View style={styles.savingsBadge}>
@@ -70,7 +67,7 @@ export function PaywallPlanCard({
               </ThemedText>
             </View>
           )}
-          {trialBadge && type === 'annual' && (
+          {trialBadge && (
             <View style={[styles.trialBadge, isDark && styles.trialBadgeDark]}>
               <ThemedText style={[styles.trialText, isDark && { color: '#fff' }]} color="inherit">
                 {trialBadge}

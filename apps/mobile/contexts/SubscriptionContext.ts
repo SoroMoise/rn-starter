@@ -1,6 +1,5 @@
-import type { PlanType } from '@/constants/purchases'
+import type { OfferingPlan, PlanPeriod } from '@/utils/offerings'
 import { createContext } from 'react'
-import type { PurchasesPackage } from 'react-native-purchases'
 
 export type SubscriptionContextValue = {
   isPremium: boolean
@@ -8,11 +7,10 @@ export type SubscriptionContextValue = {
   isLoadingPurchase: boolean
   isInGracePeriod: boolean
   isPaywallVisible: boolean
-  activeSubscription: PlanType | null
-  monthlyPackage: PurchasesPackage | null
-  annualPackage: PurchasesPackage | null
-  purchaseMonthly: () => Promise<void>
-  purchaseAnnual: () => Promise<void>
+  activeSubscription: PlanPeriod | null
+  plans: OfferingPlan[]
+  defaultPlan: OfferingPlan | null
+  purchasePlan: (params: { plan: OfferingPlan; source: string }) => Promise<void>
   restorePurchases: () => Promise<void>
   openPaywall: (params: { source: string }) => Promise<void>
   refreshSubscription: () => Promise<void>
@@ -25,10 +23,9 @@ const initial: SubscriptionContextValue = {
   isInGracePeriod: false,
   isPaywallVisible: false,
   activeSubscription: null,
-  monthlyPackage: null,
-  annualPackage: null,
-  purchaseMonthly: async () => {},
-  purchaseAnnual: async () => {},
+  plans: [],
+  defaultPlan: null,
+  purchasePlan: async () => {},
   restorePurchases: async () => {},
   openPaywall: async () => {},
   refreshSubscription: async () => {},

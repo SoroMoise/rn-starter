@@ -1,13 +1,11 @@
 import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
-import { requestNativeReview } from '@/services/api/ratingService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
-import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
-import { useAppRating } from '@hooks/useAppRating'
+import { reviewStorage } from '@/services/storage/domains/review'
 import { useContextualPaywall } from '@hooks/useContextualPaywall'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback } from 'react'
 
 type UseActionRatingProps = {
   isAdFreeActive: boolean
@@ -20,7 +18,8 @@ type UseActionRatingProps = {
  *   1. increments the persistent action counter (`engagementStorage`), whatever follows,
  *   2. offers the moment to the contextual paywall (`after_n_actions` trigger),
  *   3. then to an interstitial ad when due (unless an ad-free window is open),
- *   4. then to the app-store rating prompt.
+ *   4. and a moment neither took arms the rating ask, which `RatingAskHost` raises once the
+ *      user is back — the instant an action completes, they are reading its result.
  * The first surface to take the moment ends the chain, and all three draw on the session's
  * single automatic interruption (`promoCoordinator`).
  *
@@ -32,21 +31,11 @@ type UseActionRatingProps = {
  */
 export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { maybeTrigger } = useContextualPaywall()
-  const { checkAndMaybeShowRating, markReviewFlowLaunched } = useAppRating()
-
-  // Cache adLastShown to avoid hitting MMKV on every action; seeded on mount,
-  // refreshed in-memory whenever an interstitial is displayed.
-  const adLastShownCacheRef = useRef<number>(0)
-
-  useEffect(() => {
-    adLastShownCacheRef.current = adsStorage.getAdLastShown()
-  }, [])
 
   const recordAction = useCallback(
     async ({ allowPromos = true }: { allowPromos?: boolean } = {}) => {
-      let newTotal = 0
       try {
-        newTotal = engagementStorage.incrementAction()
+        const newTotal = engagementStorage.incrementAction()
         analyticsService.track('action_performed', { total_actions: newTotal })
       } catch (err) {
         crashlyticsService.recordError(
@@ -65,12 +54,9 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
       if (!isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
         try {
           await AdService.recordExecution()
-          if (await AdService.shouldShowInterstitialAd()) {
-            // The moment belongs to the ad even when it failed to open: a rating card
-            // arriving seconds later would land out of context.
-            if (await AdService.showInterstitialAd()) adLastShownCacheRef.current = Date.now()
-            return
-          }
+          const adShown =
+            (await AdService.shouldShowInterstitialAd()) && (await AdService.showInterstitialAd())
+          if (adShown) return
         } catch (err) {
           crashlyticsService.recordError(
             err instanceof Error ? err : new Error('Ad chain failed'),
@@ -79,31 +65,9 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
         }
       }
 
-      if (!promoCoordinator.canPresentAutoPromo()) return
-
-      try {
-        const shouldShowRating = await checkAndMaybeShowRating({
-          wasSuccessful: true,
-          totalActions: newTotal,
-          lastInterstitialShownAt: adLastShownCacheRef.current,
-        })
-        if (shouldShowRating) {
-          promoCoordinator.markAutoPromoShown()
-          // Play's card is the whole ask: no question, no star picker, nothing
-          // rendered before it. Record the attempt first — the API never reports
-          // whether the card appeared, so a swallowed call must not look spent.
-          analyticsService.track('rating_ask_shown', { source: 'auto', action_count: newTotal })
-          await markReviewFlowLaunched(newTotal)
-          await requestNativeReview()
-        }
-      } catch (err) {
-        crashlyticsService.recordError(
-          err instanceof Error ? err : new Error('Rating check failed'),
-          { source: 'useActionRating.ratingFlow' }
-        )
-      }
+      reviewStorage.setArmed(true)
     },
-    [isAdFreeActive, maybeTrigger, checkAndMaybeShowRating, markReviewFlowLaunched]
+    [isAdFreeActive, maybeTrigger]
   )
 
   return { recordAction }

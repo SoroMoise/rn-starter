@@ -13,13 +13,12 @@ export const KEYS = {
   AD_EXECUTION_COUNT: '@ad_execution_count',
   AD_LAST_SHOWN: '@ad_last_shown',
 
-  // Rating prompt state
-  RATING_PROMPT_COUNT: '@rating_prompt_count',
-  RATING_LAST_PROMPT_EXECUTION: '@rating_last_prompt_execution',
-  RATING_FIRST_USAGE_DATE: '@rating_first_usage_date',
+  // Review requests
+  REVIEW_REQUEST_COUNT: '@review_request_count',
+  REVIEW_LAST_REQUEST_AT: '@review_last_request_at',
+  REVIEW_REQUEST_ARMED: '@review_request_armed',
   HAS_RATED_APP: '@has_rated_app',
   RATING_DECLINED_FOREVER: '@rating_declined_forever',
-  RATING_LAST_PROMPT_DATE: '@rating_last_prompt_date',
 
   // Engagement
   SESSION_COUNT: '@session_count',

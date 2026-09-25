@@ -1,3 +1,5 @@
+import type { RatingMoment } from '@/constants/rating'
+import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
 import type { PlanPeriod } from '@/utils/offerings'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import {
@@ -82,11 +84,25 @@ export type AnalyticsEventMap = {
   ad_privacy_options_opened: undefined
   // A moment qualified — never that the user rated. Play reports neither whether
   // the card appeared nor its outcome; store-side truth lives in the Play Console.
-  rating_ask_shown: { source: 'auto' | 'manual'; action_count: number }
+  rating_ask_shown: {
+    moment: RatingMoment
+    request_index: number
+    action_count: number
+    session_count: number
+    days_since_install: number
+  }
+  // Play is just as silent about an ask that never comes: this is the only record of why.
+  rating_ask_suppressed: {
+    moment: RatingMoment
+    reason: ReviewSuppressionReason
+    action_count: number
+    session_count: number
+    days_since_install: number
+  }
   review_flow_launched: { duration_ms: number; likely_displayed: boolean }
-  review_flow_unavailable: { reason: string }
+  review_flow_failed: { error_code: string }
   store_listing_opened: { reason: string }
-  // The dormant in-app pre-prompt, behind SENTIMENT_GATE_ENABLED.
+  // Emitted by nothing: the in-app pre-prompt they belong to is dormant (SENTIMENT_GATE_ENABLED).
   rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }

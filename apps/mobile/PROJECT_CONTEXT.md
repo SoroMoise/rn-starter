@@ -27,7 +27,7 @@ SafeAreaProvider
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
               > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal
                 > AdFreeProvider       <- ad-free session window tracking
-                  > AppContent         <- onboarding gate, then TabLayout
+                  > AppContent         <- onboarding gate, then TabLayout (+ RatingAskHost once the session started)
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -71,7 +71,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
 | `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases` |
 | `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
-| `ratingService.ts` | `requestNativeReview()` (auto flows only) / `openStoreListing({ reason })` (taps, fallbacks) |
+| `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
+| `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
 
 ### `services/notifications/`
@@ -83,8 +84,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 ### `services/promo/`
 
-`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall and the AdMob interstitial (`PromoSurface`).
-Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget. Reset at boot via `contextualPaywallService.resetSession()`.
+`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall, the AdMob interstitial and Google's consent form (`PromoSurface`).
+Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget, and so does the consent form while it is up. Reset at boot via `contextualPaywallService.resetSession()`.
 
 ### `services/storage/`
 
@@ -96,7 +97,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
-| `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
+| `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
@@ -120,7 +121,11 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
-**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
+**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall and the interstitial, in that order; a moment neither took arms the rating ask, which waits for the user to come back (App Rating below). The first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
+
+### App Rating
+
+`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state when it is asked — `reviewStorage`, the install date, the session and action counters, the last ad, `promoCoordinator`; never the session's boot snapshot, which a warm return can outlive by days — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. The arming lasts until the ask launches or a refusal outlives the session; a collision keeps it for a later one. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent — and never on a device with no store card, where nothing is spent. When the card cannot come, the user stays where they are: the listing opens only on a tap.
 
 ---
 

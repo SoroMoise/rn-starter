@@ -24,9 +24,11 @@ class AdServiceClass {
   private retryCount = 0
 
   // SubscriptionProvider is the only writer: buying Pro mid-process must disarm an
-  // interstitial preloaded while the user was still free.
+  // interstitial preloaded while the user was still free — dropped, not just left unshown, so
+  // no retry keeps requesting ads for a subscriber.
   setPremium(isPremium: boolean): void {
     this.isPremium = isPremium
+    if (isPremium) this.discardInterstitial()
   }
 
   private ensureInitialized() {
@@ -76,9 +78,7 @@ class AdServiceClass {
     this.preloadInterstitialAd()
   }
 
-  // An instance whose presentation failed is not trusted again: after a failure Android never
-  // reported, the library still counts it as loaded and refuses to reload it.
-  private replaceInterstitial() {
+  private discardInterstitial() {
     this.detachInterstitial?.()
     this.interstitialAd = null
     this.detachInterstitial = null
@@ -86,6 +86,12 @@ class AdServiceClass {
     this.isAdLoading = false
     this.retryCount = 0
     this.isInitialized = false
+  }
+
+  // An instance whose presentation failed is not trusted again: after a failure Android never
+  // reported, the library still counts it as loaded and refuses to reload it.
+  private replaceInterstitial() {
+    this.discardInterstitial()
     this.ensureInitialized()
   }
 

@@ -120,7 +120,7 @@ the button names the reward before anything plays (`settings.watchAdButton`).
 | Kill switch | `AD_*_ENABLED` in `constants/admob.ts` | placement off entirely |
 | Unit exists | `UNIT_PENDING` → `null` | placement silent, no request |
 | Environment | `adsAllowedInEnvironment()` (`services/api/adEnvironment.ts`) | nothing is requested on a Firebase Test Lab device |
-| Tier | `isPremium` (RevenueCat), mirrored into `AdService.setPremium` by `SubscriptionProvider` | no ads at all; a purchase mid-process disarms a preloaded interstitial |
+| Tier | `isPremium` (RevenueCat), mirrored into `AdService.setPremium` by `SubscriptionProvider` | no ads at all; a purchase mid-process drops a preloaded interstitial and its pending retries |
 | Ad-free window | `isAdFreeActive` | no ads while it lasts |
 | UMP consent | `consentService.canRequestAds()` — at init **and** at show time | nothing reaches the EEA/UK/CH without the form; the state can change after init |
 | On screen | `useStageActive()` in `AdBanner` | a blurred or backgrounded screen unmounts its banner |

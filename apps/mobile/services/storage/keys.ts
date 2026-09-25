@@ -7,7 +7,6 @@ export const KEYS = {
   SUBSCRIPTION_IS_LIFETIME: '@subscription_is_lifetime',
 
   // First app usage tracking
-  FIRST_APP_USAGE: '@first_app_usage',
   INSTALL_DATE: '@install_date',
 
   // Ad execution tracking

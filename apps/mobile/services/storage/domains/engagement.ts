@@ -2,17 +2,6 @@ import { mmkv } from '../mmkv'
 import { KEYS } from '../keys'
 
 export const engagementStorage = {
-  getFirstAppUsage(): number | null {
-    const raw = mmkv.getString(KEYS.FIRST_APP_USAGE)
-    if (!raw) return null
-    const n = parseInt(raw, 10)
-    return Number.isFinite(n) ? n : null
-  },
-
-  setFirstAppUsage(ts: number): void {
-    mmkv.set(KEYS.FIRST_APP_USAGE, ts.toString())
-  },
-
   getInstallDate(): number | null {
     const raw = mmkv.getString(KEYS.INSTALL_DATE)
     if (!raw) return null

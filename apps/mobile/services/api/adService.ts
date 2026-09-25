@@ -1,13 +1,14 @@
 import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { consentService } from '@/services/api/consentService'
+import { engagementService } from '@/services/api/engagementService'
 import { adsStorage } from '@/services/storage/domains/ads'
-import { engagementStorage } from '@/services/storage/domains/engagement'
 import { AdEventType, InterstitialAd } from 'react-native-google-mobile-ads'
 
 const MIN_INTERVAL_MS = 90 * 1000
 const INITIAL_EXECUTIONS_THRESHOLD = 4
 const PROGRESSIVE_EXECUTIONS_THRESHOLD = 2
+const INTERSTITIAL_RAMP_UP_DAYS = 7
 const MAX_LOAD_RETRIES = 3
 const BASE_RETRY_DELAY_MS = 30_000
 
@@ -78,16 +79,9 @@ class AdServiceClass {
   }
 
   private getExecutionsThreshold(): number {
-    const firstUsage = engagementStorage.getFirstAppUsage()
+    const daysSinceInstall = engagementService.getSessionContext()?.daysSinceInstall ?? 0
 
-    if (!firstUsage) {
-      engagementStorage.setFirstAppUsage(Date.now())
-      return INITIAL_EXECUTIONS_THRESHOLD
-    }
-
-    const daysSinceFirstUsage = (Date.now() - firstUsage) / (24 * 60 * 60 * 1000)
-
-    return daysSinceFirstUsage >= 7
+    return daysSinceInstall >= INTERSTITIAL_RAMP_UP_DAYS
       ? PROGRESSIVE_EXECUTIONS_THRESHOLD
       : INITIAL_EXECUTIONS_THRESHOLD
   }
@@ -137,7 +131,6 @@ class AdServiceClass {
   async resetAllAdData(): Promise<void> {
     adsStorage.setAdExecutionCount(0)
     adsStorage.setAdLastShown(0)
-    engagementStorage.setFirstAppUsage(Date.now())
   }
 }
 

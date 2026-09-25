@@ -84,8 +84,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 ### `services/promo/`
 
-`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall and the AdMob interstitial (`PromoSurface`).
-Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget. Reset at boot via `contextualPaywallService.resetSession()`.
+`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall, the AdMob interstitial and Google's consent form (`PromoSurface`).
+Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget, and so does the consent form while it is up. Reset at boot via `contextualPaywallService.resetSession()`.
 
 ### `services/storage/`
 

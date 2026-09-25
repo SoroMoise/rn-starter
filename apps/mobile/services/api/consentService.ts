@@ -1,4 +1,5 @@
 import { crashlyticsService } from '@/services/api/crashlyticsService'
+import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import mobileAds, {
   AdsConsent,
   AdsConsentPrivacyOptionsRequirementStatus,
@@ -43,7 +44,7 @@ class ConsentServiceClass {
 
   showPrivacyOptions = async (): Promise<void> => {
     try {
-      this.apply(await AdsConsent.showPrivacyOptionsForm())
+      this.apply(await this.presentForm(() => AdsConsent.showPrivacyOptionsForm()))
       await this.startSdk()
     } catch (err) {
       void crashlyticsService.recordError(err, { source: 'ads_consent_privacy_options' })
@@ -54,7 +55,7 @@ class ConsentServiceClass {
     let info: AdsConsentInfo | null = null
 
     try {
-      info = await AdsConsent.gatherConsent()
+      info = await this.presentForm(() => AdsConsent.gatherConsent())
     } catch (err) {
       void crashlyticsService.recordError(err, { source: 'ads_consent_gather' })
       // A network failure shouldn't cost a decision already made — fall back to the cached one.
@@ -70,6 +71,17 @@ class ConsentServiceClass {
     if (info === null) this.gathering = null
 
     await this.startSdk()
+  }
+
+  // The form comes up over the app, at a launch too, where a deferred rating ask can fall due:
+  // nothing automatic may land on it.
+  private async presentForm<T>(show: () => Promise<T>): Promise<T> {
+    promoCoordinator.setConsentFormVisible(true)
+    try {
+      return await show()
+    } finally {
+      promoCoordinator.setConsentFormVisible(false)
+    }
   }
 
   private apply(info: AdsConsentInfo | null): void {

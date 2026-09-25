@@ -47,8 +47,8 @@ class RewardedAdServiceClass {
     this.preloadRewardedAd()
   }
 
-  // The library still counts an ad that never opened as loaded and refuses to reload that
-  // instance, so the only way back to a fresh ad is a new one.
+  // An instance whose presentation failed is not trusted again: after a failure Android never
+  // reported, the library still counts it as loaded and refuses to reload it.
   private replaceRewarded() {
     this.detachRewarded?.()
     this.rewardedAd = null
@@ -89,14 +89,12 @@ class RewardedAdServiceClass {
       onRewarded()
     })
 
-    try {
-      const outcome = await presentFullScreenAd(ad)
-      if (outcome === 'never_opened') this.replaceRewarded()
-      if (hasRewarded) return 'earned'
-      return outcome === 'closed' ? 'dismissed' : 'failed'
-    } finally {
-      removeEarnedListener()
-    }
+    // The reward listener outlives a deadline the video missed: one that opens late and is
+    // watched in full still earns its window.
+    const outcome = await presentFullScreenAd({ ad, onEnd: removeEarnedListener })
+    if (outcome !== 'closed') this.replaceRewarded()
+    if (hasRewarded) return 'earned'
+    return outcome === 'closed' ? 'dismissed' : 'failed'
   }
 }
 

@@ -65,7 +65,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 |---|---|
 | `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) disarms a preloaded ad the moment Pro is bought. `showInterstitialAd()` resolves `true` only once the ad has closed, and only then spends the cadence and the session's interruption |
 | `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion; `showRewardedAd` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
-| `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`) |
+| `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`); `onEnd` runs whenever the presentation really ends, so an ad that opens late still pays its slot or its reward |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |

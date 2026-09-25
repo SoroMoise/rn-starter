@@ -80,8 +80,13 @@ Rules that follow, and that the code enforces:
   errored or never opened leaves them untouched.
 - **An ad that never opens does not hold anything.** On Android the library never reports a failed
   presentation (`onAdFailedToShowFullScreenContent` is not handled), so `presentFullScreenAd`
-  settles as `never_opened` when no `OPENED` arrives within `PRESENTATION_TIMEOUT_MS`, the
-  coordinator's flag comes down, and that instance is no longer offered.
+  settles as `never_opened` when no `OPENED` arrives within `PRESENTATION_TIMEOUT_MS` and the
+  coordinator's flag comes down. That instance is replaced, as is any whose presentation failed:
+  the library still counts it as loaded and would refuse to reload it.
+- **An ad that opens late still pays what it owes.** `onEnd` runs whenever a presentation really
+  ends, past the deadline included, so a late interstitial still spends its slot and the session's
+  interruption — or the next action could show a second one — and a late rewarded video still
+  earns its window.
 - **Moments that must not be interrupted still count.** `recordAction({ allowPromos: false })`
   moves the lifetime counter and nothing else — for the user's first success and for an abandoned
   or failed action. It does not advance the interstitial's own counter either.
@@ -103,7 +108,8 @@ the button names the reward before anything plays (`settings.watchAdButton`).
   before its reward — is followed by the contextual paywall (`rewarded_ad_dismissed`, 800 ms
   later). A video watched in full is never followed by a sale, and a failure is not a refusal.
 - Readiness is checked before the video starts: nothing loaded ⇒ "Ad not available", not an offer
-  that cannot be honoured.
+  that cannot be honoured. A video that failed to open shows the error alert; if it opens after
+  all and is watched in full, the window is still granted.
 
 ---
 

@@ -76,8 +76,8 @@ class AdServiceClass {
     this.preloadInterstitialAd()
   }
 
-  // The library still counts an ad that never opened as loaded and refuses to reload that
-  // instance, so the only way back to a fresh ad is a new one.
+  // An instance whose presentation failed is not trusted again: after a failure Android never
+  // reported, the library still counts it as loaded and refuses to reload it.
   private replaceInterstitial() {
     this.detachInterstitial?.()
     this.interstitialAd = null
@@ -139,8 +139,8 @@ class AdServiceClass {
 
   // Resolves once the ad is gone, true only if it was on screen: whatever follows an ad must
   // not open over it. Only an ad actually shown spends the cadence and the session's
-  // interruption, and the coordinator's flag comes down on every path — left up, it would
-  // freeze every automatic promo for the rest of the session.
+  // interruption — even one that opened past the deadline — and the coordinator's flag comes
+  // down on every path: left up, it would freeze every automatic promo for the session.
   async showInterstitialAd(): Promise<boolean> {
     if (this.isPremium) return false
     // Consent can change after the SDK started and preloaded: the privacy form stays reachable.
@@ -152,18 +152,24 @@ class AdServiceClass {
     let outcome: PresentationOutcome
     promoCoordinator.setInterstitialVisible(true)
     try {
-      outcome = await presentFullScreenAd(ad)
+      outcome = await presentFullScreenAd({
+        ad,
+        onEnd: (ending) => {
+          if (ending === 'closed') this.spendSlot()
+        },
+      })
     } finally {
       promoCoordinator.setInterstitialVisible(false)
     }
 
-    if (outcome === 'never_opened') this.replaceInterstitial()
-    if (outcome !== 'closed') return false
+    if (outcome !== 'closed') this.replaceInterstitial()
+    return outcome === 'closed'
+  }
 
+  private spendSlot() {
     adsStorage.setAdExecutionCount(0)
     adsStorage.setAdLastShown(Date.now())
     promoCoordinator.markAutoPromoShown()
-    return true
   }
 
   async resetExecutionCount(): Promise<void> {

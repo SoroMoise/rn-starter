@@ -48,13 +48,18 @@ const mmkvPersister = createAsyncStoragePersister({
   throttleTime: 1000,
 })
 
+// The query keys whose successful results survive a cold start. Empty by design:
+// which data is worth restoring is a per-app call, and a cache rehydrated under a
+// key the app no longer serves costs more than the refetch it saves.
+const PERSISTED_QUERY_KEYS: readonly string[] = []
+
 const persistOptions = {
   persister: mmkvPersister,
   maxAge: 24 * 60 * 60 * 1000,
   buster: APP_VERSION,
   dehydrateOptions: {
     shouldDehydrateQuery: (q: { queryKey: readonly unknown[]; state: { status: string } }) =>
-      q.queryKey[0] === 'historicalRates' && q.state.status === 'success',
+      q.state.status === 'success' && PERSISTED_QUERY_KEYS.includes(String(q.queryKey[0])),
   },
 }
 

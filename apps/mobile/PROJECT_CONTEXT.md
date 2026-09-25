@@ -22,7 +22,7 @@ SafeAreaProvider
   > RootLayoutContent
       TelemetryEffects         <- side-effect only, no children
       GestureHandlerRootView
-        > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV)
+        > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
           > ThemeProvider      <- light/dark via NativeWind 'class' strategy
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
               > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal

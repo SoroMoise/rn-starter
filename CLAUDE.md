@@ -158,6 +158,19 @@ is only named after it — it is handed the MMKV adapter here.)
 
 `apps/mobile/services/promo/promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces (contextual paywall). Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`), reset at boot via `contextualPaywallService.resetSession()`.
 
+### Data Fetching
+
+TanStack Query v5, wired in `QueryProvider` over `PersistQueryClientProvider` with the MMKV
+persister and the app version as cache buster. **Nothing is persisted until you say so**:
+`PERSISTED_QUERY_KEYS` is empty, so `shouldDehydrateQuery` restores no query across a cold
+start — add the key prefixes your app wants back. It shipped whitelisting one key belonging to
+another app, which reads as configured and persists nothing.
+
+`QueryProvider` is here because `apps/api` is. **An app with no backend should remove both in
+the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages, `axios`,
+`utils/retry.ts` and `utils/apiErrors.ts`. deep-focus is the sibling that did exactly this when
+its Worker went — the data-fetching layer has no reason to outlive the API it serves.
+
 ### Monetization
 
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active.

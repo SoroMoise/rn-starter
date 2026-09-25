@@ -80,7 +80,7 @@ apps/mobile/
 │   ├── api/             # adService, analyticsService, contextualPaywall/,
 │   │                    #   crashlyticsService, engagementService, purchaseService,
 │   │                    #   ratingService, rewardedAdService
-│   ├── notifications/   # setup, channels, backgroundHandler
+│   ├── notifications/   # setup, channels
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
 │   └── storage/         # mmkv, adapter, keys, domains/
 ├── stores/              # onboardingStore, settingsStore

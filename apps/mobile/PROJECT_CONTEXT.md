@@ -79,7 +79,6 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 |---|---|
 | `setup.ts` | `notificationService` — permission request/primer, foreground presentation handler |
 | `channels.ts` | Android notification channel setup (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) |
-| `backgroundHandler.ts` | Registered at entry point (`index.js`) for background FCM handling |
 
 ### `services/promo/`
 

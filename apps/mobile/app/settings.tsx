@@ -18,7 +18,6 @@ import { useAdFree } from '@/providers/AdFreeProvider'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useSettingsStore } from '@/stores/settingsStore'
-import { useShallow } from 'zustand/react/shallow'
 import type { Language, ThemeMode, ThemeOption } from '@/types'
 import { openExternalLink } from '@/utils/linking'
 import { isRTLLanguage } from '@/utils/rtl'
@@ -35,13 +34,10 @@ import { ScrollView, TouchableOpacity } from 'react-native'
 
 export default function SettingsScreen() {
   const { t, i18n } = useTranslation()
-  const { settings, updateSetting, setLanguage } = useSettingsStore(
-    useShallow((s) => ({
-      settings: s.settings,
-      updateSetting: s.updateSetting,
-      setLanguage: s.setLanguage,
-    }))
-  )
+  const theme = useSettingsStore((s) => s.settings.theme)
+  const language = useSettingsStore((s) => s.settings.language)
+  const updateSetting = useSettingsStore((s) => s.updateSetting)
+  const setLanguage = useSettingsStore((s) => s.setLanguage)
   const { showToast } = useToast()
   const { isAdFreeActive } = useAdFree()
   const { isPremium, isInitialized } = usePremium()
@@ -52,30 +48,30 @@ export default function SettingsScreen() {
   const [showLanguagePicker, setShowLanguagePicker] = useState(false)
 
   useEffect(() => {
-    if (settings.language !== i18n.language) {
-      loadLanguage(settings.language)
-      i18n.changeLanguage(settings.language)
+    if (language !== i18n.language) {
+      loadLanguage(language)
+      i18n.changeLanguage(language)
     }
-  }, [settings.language, i18n])
+  }, [language, i18n])
 
-  const handleThemeChange = (theme: ThemeMode) => {
-    analyticsService.track('settings_theme_changed', { theme, previous_theme: settings.theme })
-    updateSetting('theme', theme)
+  const handleThemeChange = (next: ThemeMode) => {
+    analyticsService.track('settings_theme_changed', { theme: next, previous_theme: theme })
+    updateSetting('theme', next)
   }
 
-  const handleLanguageChange = (language: Language) => {
+  const handleLanguageChange = (next: Language) => {
     analyticsService.track('settings_language_changed', {
-      language_code: language,
-      previous_language: settings.language,
+      language_code: next,
+      previous_language: language,
     })
-    void analyticsService.setUserProperty('preferred_language', language)
-    setLanguage(language)
+    void analyticsService.setUserProperty('preferred_language', next)
+    setLanguage(next)
 
     if (RTL_RESTART_BANNER_ENABLED) return
 
-    const directionChanged = isRTLLanguage(settings.language) !== isRTLLanguage(language)
+    const directionChanged = isRTLLanguage(language) !== isRTLLanguage(next)
     if (directionChanged) {
-      const targetT = i18n.getFixedT(language)
+      const targetT = i18n.getFixedT(next)
       showToast({ message: targetT('settings.languageChanged'), type: 'success' })
     }
   }
@@ -111,7 +107,7 @@ export default function SettingsScreen() {
           <SectionHeader>{t('settings.appearance')}</SectionHeader>
           <SlidingSelector
             options={themeOptions}
-            value={settings.theme}
+            value={theme}
             onChange={handleThemeChange}
             variant="blue"
           />
@@ -162,7 +158,7 @@ export default function SettingsScreen() {
         visible={showLanguagePicker}
         onClose={() => setShowLanguagePicker(false)}
         onSelect={handleLanguageChange}
-        selectedLanguage={settings.language}
+        selectedLanguage={language}
       />
 
       <AdBanner

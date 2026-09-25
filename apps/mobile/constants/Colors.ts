@@ -43,23 +43,49 @@ export default {
   },
 }
 
-export const shadows = (isDark: boolean) => ({
-  small: {
-    shadowColor: isDark ? '#ffffff0d' : '#00000026',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 1,
-    shadowRadius: 3,
+// Two fixed sets rather than a fresh object per call: consumers spread these into
+// style arrays, where a new identity on every render defeats every memo downstream.
+const SHADOWS = {
+  light: {
+    small: {
+      shadowColor: '#00000026',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 1,
+      shadowRadius: 3,
+    },
+    medium: {
+      shadowColor: '#00000040',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+    large: {
+      shadowColor: '#00000059',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 1,
+      shadowRadius: 16,
+    },
   },
-  medium: {
-    shadowColor: isDark ? '#ffffff1a' : '#00000040',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 8,
+  dark: {
+    small: {
+      shadowColor: '#ffffff0d',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 1,
+      shadowRadius: 3,
+    },
+    medium: {
+      shadowColor: '#ffffff1a',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 1,
+      shadowRadius: 8,
+    },
+    large: {
+      shadowColor: '#ffffff4d',
+      shadowOffset: { width: 0, height: -2 },
+      shadowOpacity: 1,
+      shadowRadius: 20,
+    },
   },
-  large: {
-    shadowColor: isDark ? '#ffffff4d' : '#00000059',
-    shadowOffset: { width: 0, height: isDark ? -2 : 8 },
-    shadowOpacity: 1,
-    shadowRadius: isDark ? 20 : 16,
-  },
-})
+} as const
+
+export const shadows = (isDark: boolean) => (isDark ? SHADOWS.dark : SHADOWS.light)

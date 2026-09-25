@@ -131,6 +131,15 @@ Notable domains:
 - `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating and grace period banner
 - `adFree` — tracks the ad-free window granted after a rewarded ad
 
+**MMKV is the only key-value store, and `@react-native-async-storage/async-storage` does not come
+back.** The persisted stores hydrate synchronously because of it, which is what removes the async gate
+at boot; reintroducing an async store would put the gate back for every screen. One rule follows from
+reading a persisted store from outside Zustand: `persist` wraps what it writes in its own
+`{ state, version }` envelope, so a hand-written value stored under that key has no `state` field,
+rehydration silently falls back to the store's defaults on the next launch, and nothing reports it.
+`domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
+is only named after it — it is handed the MMKV adapter here.)
+
 ### API Layer
 
 `apps/mobile/services/api/`:

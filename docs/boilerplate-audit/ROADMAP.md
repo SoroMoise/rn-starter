@@ -21,14 +21,19 @@ audit of that gap and the plan to close it.
 | 1 | Correctness: grace period, rating, UMP consent, Test Lab, versionCode | 14 | **merged into `main`** |
 | 2 | Build & release: signing, Gradle plugins, GitHub Actions | 6 | **merged into `main`** |
 | 3 | The offer is data: offerings-driven paywall, price retry, restore outcomes | 3 | **merged into `main`** |
-| 4 | Converter vestiges: dead code, dead keys, dead config | 15 | **on the branch** |
-| 5–13 | See §3 | — | not started |
+| 4 | Converter vestiges: dead code, dead keys, dead config | 15 | **merged into `main`** |
+| 5 | Promo coordination and AdMob | 11 | **merged into `main`** |
+| 6–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**91 have shipped** (62 in lots 1–3, 29 in lot 4) and **141 remain**, spread over lots 5 to 13.
-Three more were deliberately held back out of lot 4 — see §4. The per-lot counts in §3 are
-remaining work only; the console's lot cards also count those three, which is why two of its
-figures are one higher.
+**119 have shipped** (62 in lots 1–3, 29 in lot 4, 28 in lot 5) and **113 remain**, spread over
+lots 6 to 13. Three more were deliberately held back out of lot 4 — see §4. The per-lot counts in
+§3 are remaining work only; the console's lot cards also count those three, which is why two of
+its figures are one higher.
+
+Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
+are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
+"later" item (`ad-banner-reserved-height`) shipped with them, as eight did in lots 1–3.
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -57,23 +62,11 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
 
 ### Pushing
 
-`git push` to `SoroMoise/rn-starter` returns **403** from this environment: the session identity has
-no write access (`gate: push_denied`, `gate_scope: identity`). Every lot has therefore been
-delivered as a git bundle and merged locally by the user.
-
-To unblock: install the Claude GitHub App on `SoroMoise/rn-starter` with write access via
-<https://claude.ai/connect-github>. Until then:
-
-```bash
-git bundle create lotN-rn-starter.bundle origin/main..HEAD
-# on the user's machine:
-git fetch ~/Downloads/lotN-rn-starter.bundle 'refs/heads/*:refs/remotes/lotN/*'
-git merge lotN/claude/rn-starter-boilerplate-improvements-nst9w1
-```
-
-The remote branch `claude/rn-starter-boilerplate-improvements-nst9w1` is stale at `0b311c8` and
-will never advance while pushes are refused, so any "N unpushed commits" warning counts from that
-stale ref. The real gap is always `git rev-list --count origin/main..HEAD`.
+Pushes to `SoroMoise/rn-starter` work from this environment since lot 5: a lot is pushed to its
+`claude/*` branch, opened as a pull request, reviewed, fixed and merged. Lots 1–4 predate that — the
+session identity had no write access then, so they were handed over as git bundles and merged by
+hand, which is why the remote still carries a stale `claude/rn-starter-boilerplate-improvements-nst9w1`
+at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 
 ---
 
@@ -82,38 +75,16 @@ stale ref. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 5 — Promo coordination and AdMob (19 items)
-
-The two remaining **critical** items of the whole audit are here.
-
-- `interstitial-claims-budget` — the interstitial must claim the session's single automatic
-  interruption through `promoCoordinator` and declare its visibility. Today it can stack with the
-  paywall over the same moment.
-- `action-rating-priority-order` — `useActionRating` must increment the counter first, then offer
-  the moment to paywall > interstitial > rating, all arbitrated by the coordinator.
-- `show-interstitial-awaitable` — `showInterstitialAd()` returns a boolean and resolves on
-  `CLOSED`/`ERROR`, not on `show()`. Without it the chain after an ad is guesswork.
-- `record-action-allow-promos` — `recordAction({ allowPromos: false })` for moments that must move
-  the counter without interrupting.
-- `contextual-paywall-requires-offer` — refuse before recording an impression when no offer loaded.
-  A user behind a captive portal currently spends a lifetime impression on an empty paywall.
-- `ads-unit-ids-literals` + `ads-unit-pending-and-placeholder-guard` — unit ids become literals
-  (they ship in the bundle either way, and a truncated `.env` released a build with empty ids in
-  a sibling app); a missing or `ca-app-pub-XXXX` id renders nothing.
-- `ads-single-visibility-predicate` — one predicate behind every placement, so reserved scroll
-  height cannot disagree with the banner.
-- `ads-service-set-premium` — `AdService.setPremium`, written only by `SubscriptionProvider`, so
-  buying Pro mid-session disarms the preloaded interstitial.
-- `ads-docs-ads-md-template` — an `ADS.md` listing every placement, unit and cadence, declared
-  living documentation.
-
 ### Lot 6 — Rating by moments (4 items)
 
 `RatingMoment` (a finished action raises the ask, never mid-task), the deferred ask consumed on the
 next foreground, `evaluateReviewRequest` as a pure function with traced refusals, and
-`reviewStorage` replacing `ratingStorage`.
+`reviewStorage` replacing `ratingStorage`. Lot 5 already gates the rating on the coordinator and
+spends the session's budget before Play's card is requested; `rating-promo-coordinator` keeps only
+its `promo_collision` refusal, and its `setRatingAskVisible` half should not be taken — Play's card
+exposes no visibility to track.
 
-### Lot 7 — Subscription: security and funnel (13 items)
+### Lot 7 — Subscription: security and funnel (10 items)
 
 Encrypted MMKV instance for entitlement keys plus `withBackupRules` (excluding the entitlement
 store from cloud backup and device transfer closes the "pull the store, flip the flag, restore"
@@ -122,13 +93,14 @@ Crashlytics errors classified **by code** with only `unknown` recorded as non-fa
 purchase funnel — `source`, `offering_id`, `product_id`, `currency` (never `revenue_usd`: a ₹3,499
 plan logged as USD reads as $3,499), plus the `PurchaseSurface` axis.
 
-### Lot 8 — Selling surfaces and onboarding (18 items)
+### Lot 8 — Selling surfaces and onboarding (15 items)
 
 `PRO_BENEFITS` as the single list behind every Pro pitch, removal of the fabricated social proof,
 the paywall split into reusable blocks with `usePaywallPlans` and a `paywallAnalytics`,
 `PremiumGate` blurring instead of erasing, and on the onboarding side: navigation **by step name**
 (`OnboardingStepKind`) rather than index, hardware back stepping back instead of leaving the app,
-`OnboardingStepLayout`, and the guard that makes the flow sell exactly once, at its last step.
+and `OnboardingStepLayout`. (The guard that makes the flow sell exactly once, at its last step,
+shipped in lot 5 with the `openPaywall` choke point.)
 
 ### Lot 9 — UI library and layout (27 items)
 
@@ -163,13 +135,14 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (32 items)
+### Lot 13 — Documentation and conventions (29 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: large screens, the safe-area contract, the
 NativeWind and RN footguns that break silently, Play store policy (urgency, reviews, aggregate
 ratings, declared permissions), the i18n voice charter and plural parity, bundle size (Metro does
-not tree-shake — import `date-fns` per function), the promo-coordination invariants, and the
-frozen structure of `PROJECT_CONTEXT.md`.
+not tree-shake — import `date-fns` per function), and the frozen structure of
+`PROJECT_CONTEXT.md`. The promo-coordination invariants, `ADS.md` and the AdMob-literals rationale
+shipped in lot 5.
 
 ---
 
@@ -228,16 +201,53 @@ Recorded because it is the argument for keeping that second stage, not a log.
 
 ---
 
-## 6. Resuming in a new session
+## 6. What verification caught on lot 5
+
+Both stages found something the audit's proposals would have shipped. Stage 1 caught what the
+proposals assumed about the library; stage 2 caught what stage 1's plan still left open.
+
+- **A presentation Android never reports (stage 1, fatal to the audit's proposal).** The reference
+  — bg-remover's `showInterstitialAd`, settling on `CLOSED`/`ERROR` — assumes one of the two always
+  fires. In react-native-google-mobile-ads 15.8.3 the Android `FullScreenContentCallback` leaves
+  `onAdFailedToShowFullScreenContent` unhandled: a failed presentation emits nothing, the promise
+  hangs, and the coordinator's new visibility flag would have frozen every automatic promo for the
+  session. Hence the `OPENED` timeout in `presentFullScreenAd`, cleared the moment the ad opens.
+- **A timed-out instance is dead, not unloaded (stage 2, fatal to the plan).** The plan only marked
+  it unloaded. The library keeps its own `_loaded` flag up until `CLOSED`/`ERROR` and ignores
+  `load()` meanwhile, so one silent failure would have ended interstitials — and the ad-free reward
+  — for the life of the process. The instance is replaced instead.
+- **Google's sample app id silences the only warning (stage 2).** The config plugin warns only when
+  the app id is `undefined`; a literal sample id keeps the template launchable but would let a
+  release pair real units with Google's test app unnoticed. The release workflow now refuses it.
+- **Lot 1's consent gate was half shipped (stage 1).** Marked done, it gated initialisation only;
+  the show-time re-read the item asked for had never landed. It has now, for both formats.
+- **A failed rewarded video is not a refusal (stage 1, confirmed by stage 2).** A boolean
+  `showRewardedAd` filed failures under `dismissed` and sold the paywall to someone who had declined
+  nothing — deep-focus, the proposal's reference, has the same conflation.
+- **A choke point that refuses leaves dead buttons behind (stage 1).** The Home CTA was the one
+  surface that did not hide its offer from a subscriber.
+- **"ACC claims the budget before showing" was false (stage 2).** ACC's interstitial never touches
+  the shared budget: it keeps its own one-per-session flag and only avoids overlapping other
+  surfaces in time. One budget across ad, paywall and rating is deep-focus's model, chosen here on
+  purpose.
+- **bg-remover's ADS.md, emptied, would have stated falsehoods (stage 2).** Its encrypted storage,
+  `/success` screen, inline banners and per-feature unlocks do not exist here; the starter's file
+  was written from this code, keeping only the platform invariants word for word.
+
+---
+
+## 7. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
 3. Pick the lot. Pull its items:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==5 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==6 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.
-6. Update `status` in `audit-items.json` for what shipped, and this file's §1 table.
-7. Bundle and hand it over until pushes work.
+6. Update `status` in `audit-items.json` for what shipped (`done-lotN`, in every copy of an item the
+   audit filed twice), then the `ITEMS` line of `audit-console.html`, which embeds its own copy of
+   the data, and this file's §1 table.
+7. Push the branch, open the pull request, review it, fix what the review finds, and merge.

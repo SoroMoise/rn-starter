@@ -195,12 +195,15 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 - **REVENUECAT_*** — API keys, entitlement ID, product IDs
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
-- **STORE_URL_*** — App Store and Play Store URLs for rating fallback
 
 AdMob identifiers are not environment variables: the app IDs are literals in
 `apps/mobile/app.config.js` (Google's sample IDs until you replace them) and the ad unit IDs
 in `apps/mobile/constants/admob.ts`. `apps/mobile/ADS.md` is the advertising reference —
 placements, cadence, gates, and what to set before the first release.
+
+Store URLs are not environment variables either: `apps/mobile/constants/rating.ts` derives the
+Play Store ones from the package id, and the App Store one waits for App Store Connect's numeric
+id (`APP_STORE_APP_ID`) — the bundle id opens nothing there.
 
 ### Environment variables — API (`apps/api/.dev.vars`)
 

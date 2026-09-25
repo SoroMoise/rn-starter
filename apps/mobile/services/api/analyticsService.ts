@@ -131,7 +131,12 @@ export type AnalyticsEventMap = {
   }
   purchase_failed: { plan: PlanPeriod; source: string; error_code: string }
   purchase_cancelled: { plan: PlanPeriod; source: string }
-  purchase_restored: { had_active_sub: boolean }
+  // A restore has three outcomes; `restore_purchases_completed` carries which one,
+  // and `subscription_restored` fires only when something actually came back.
+  restore_purchases_completed: {
+    outcome: 'restored' | 'already_premium' | 'nothing_found'
+  }
+  subscription_restored: { plan: PlanPeriod }
   restore_purchases_initiated: undefined
   restore_purchases_failed: { error_code: string }
   subscription_synced: { is_premium: boolean; plan: string }

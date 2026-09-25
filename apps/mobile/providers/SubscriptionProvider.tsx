@@ -28,6 +28,8 @@ export type { SubscriptionContextValue }
 // per-offering funnel silently drops those conversions.
 const NO_OFFERING = 'none'
 
+export type RestoreOutcome = 'restored' | 'already_premium' | 'nothing_found'
+
 // Matched against the offer the store actually returned, never against a product id
 // written here: a renamed product, a third plan or a one-time purchase must not be
 // reported as something it is not.
@@ -252,9 +254,20 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
     try {
       const customerInfo = await purchaseService.restorePurchases()
-      const { isPremium: nowPremium } = applyCustomerInfo(customerInfo)
+      const { isPremium: nowPremium, plan } = applyCustomerInfo(customerInfo)
 
-      analyticsService.track('purchase_restored', { had_active_sub: wasAlreadyPremium })
+      // Three outcomes, not a boolean: a restore that found nothing and one that
+      // genuinely brought a subscription back are the same event otherwise, and the
+      // difference is the only thing the funnel is asked about here.
+      const outcome: RestoreOutcome = !nowPremium
+        ? 'nothing_found'
+        : wasAlreadyPremium
+          ? 'already_premium'
+          : 'restored'
+      analyticsService.track('restore_purchases_completed', { outcome })
+      if (outcome === 'restored') {
+        analyticsService.track('subscription_restored', { plan: plan ?? 'other' })
+      }
 
       if (nowPremium) {
         showToast({ message: t('paywall.restoreSuccess'), type: 'success' })

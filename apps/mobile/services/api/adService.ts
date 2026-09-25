@@ -22,12 +22,13 @@ class AdServiceClass {
   private ensureInitialized() {
     if (this.isInitialized) return
     if (!AD_INTERSTITIAL_ENABLED) return
+    if (ADMOB_INTERSTITIAL_ID === null) return
     // An ad served ahead of the UMP form is the violation itself, not a missed
     // impression: it carries data the user has not agreed to hand over.
     if (!consentService.canRequestAds()) return
     if (!adsAllowedInEnvironment()) return
     this.isInitialized = true
-    this.initializeInterstitial()
+    this.initializeInterstitial(ADMOB_INTERSTITIAL_ID)
   }
 
   // Call at app boot to start preloading before the first ad is shown.
@@ -35,8 +36,8 @@ class AdServiceClass {
     this.ensureInitialized()
   }
 
-  private initializeInterstitial() {
-    this.interstitialAd = InterstitialAd.createForAdRequest(ADMOB_INTERSTITIAL_ID, {})
+  private initializeInterstitial(unitId: string) {
+    this.interstitialAd = InterstitialAd.createForAdRequest(unitId, {})
 
     this.interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
       this.isAdLoaded = true

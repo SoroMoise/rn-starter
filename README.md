@@ -192,11 +192,14 @@ All commands run from the repo root unless noted.
 
 See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
-- **ADMOB_*** — AdMob app IDs and ad unit IDs (banner / interstitial / rewarded per platform)
 - **REVENUECAT_*** — API keys, entitlement ID, product IDs
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 - **STORE_URL_*** — App Store and Play Store URLs for rating fallback
+
+AdMob identifiers are not environment variables: the app IDs are literals in
+`apps/mobile/app.config.js` (Google's sample IDs until you replace them) and the ad unit IDs
+in `apps/mobile/constants/admob.ts`.
 
 ### Environment variables — API (`apps/api/.dev.vars`)
 

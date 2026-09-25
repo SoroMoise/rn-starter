@@ -8,6 +8,7 @@ import { Section, SectionContent, SectionHeader } from '@/components/settings/Se
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
 import {
+  ADMOB_REWARDED_ID,
   ADMOB_SETTINGS_BANNER_ID,
   AD_BANNER_SETTINGS_ENABLED,
   AD_REWARDED_ENABLED,
@@ -42,7 +43,12 @@ export default function SettingsScreen() {
   const { isAdFreeActive } = useAdFree()
   const { isPremium, isInitialized } = usePremium()
 
-  const showAds = isInitialized && !isAdFreeActive && AD_BANNER_SETTINGS_ENABLED && !isPremium
+  const showAds =
+    isInitialized &&
+    !isAdFreeActive &&
+    AD_BANNER_SETTINGS_ENABLED &&
+    ADMOB_SETTINGS_BANNER_ID !== null &&
+    !isPremium
   const tabBarPadding = useTabBarPadding(showAds ? 60 : 0) + 20
 
   const [showLanguagePicker, setShowLanguagePicker] = useState(false)
@@ -115,7 +121,7 @@ export default function SettingsScreen() {
 
         <DisplaySection onOpenLanguagePicker={() => setShowLanguagePicker(true)} />
 
-        {AD_REWARDED_ENABLED && !isPremium && (
+        {AD_REWARDED_ENABLED && ADMOB_REWARDED_ID !== null && !isPremium && (
           <Section>
             <SectionHeader>{t('settings.ads')}</SectionHeader>
             <SectionContent className="p-4">

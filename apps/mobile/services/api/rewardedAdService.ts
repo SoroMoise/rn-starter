@@ -11,14 +11,15 @@ class RewardedAdServiceClass {
 
   private ensureInitialized() {
     if (this.isInitialized) return
+    if (ADMOB_REWARDED_ID === null) return
     if (!consentService.canRequestAds()) return
     if (!adsAllowedInEnvironment()) return
     this.isInitialized = true
-    this.initializeRewarded()
+    this.initializeRewarded(ADMOB_REWARDED_ID)
   }
 
-  private initializeRewarded() {
-    this.rewardedAd = RewardedAd.createForAdRequest(ADMOB_REWARDED_ID, {})
+  private initializeRewarded(unitId: string) {
+    this.rewardedAd = RewardedAd.createForAdRequest(unitId, {})
 
     this.rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
       this.isAdLoaded = true

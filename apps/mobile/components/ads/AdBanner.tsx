@@ -9,7 +9,7 @@ import { StyleSheet, View } from 'react-native'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
 
 interface AdBannerProps {
-  adBannerId: string
+  adBannerId: string | null
   screenName: string
   enabled?: boolean
 }
@@ -25,7 +25,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
   const isStageActive = useStageActive()
   const tabBarPadding = useTabBarPadding() + 8
 
-  if (!enabled || !isInitialized || isAdFreeActive || isPremium) return null
+  if (!enabled || adBannerId === null || !isInitialized || isAdFreeActive || isPremium) return null
   if (!canRequestAds || !adsAllowedInEnvironment()) return null
   if (!isStageActive) return null
 

@@ -86,6 +86,20 @@ jobs:
           echo "name=$pkg" >> "$GITHUB_OUTPUT"
           echo "Publishing as $pkg"
 
+      # The template ships Google's sample AdMob app id because the SDK crashes at launch
+      # without one. A release carrying it pairs the app's own units with Google's test app,
+      # and nothing on the device would say so — so the release refuses it here.
+      - name: Refuse Google's sample AdMob app id
+        working-directory: apps/mobile
+        run: |
+          app_id="$(node -e "const c=require('./app.config.js').default();const p=c.expo.plugins.find((e)=>Array.isArray(e)&&e[0]==='react-native-google-mobile-ads');process.stdout.write(p?String(p[1].androidAppId??''):'')")"
+          case "$app_id" in
+            ca-app-pub-3940256099942544~*)
+              echo "::error::apps/mobile/app.config.js still carries Google's sample AdMob app id ($app_id). Put the app's own in the react-native-google-mobile-ads plugin block before releasing."
+              exit 1
+              ;;
+          esac
+
       # The PR title becomes the Play release name, which is what labels the build in
       # the Play Console history long after the review is over. Play rejects names
       # past 50 characters, so it is truncated and the cut is marked.

@@ -2,6 +2,7 @@ import { PaywallModal } from '@/components/paywall/PaywallModal'
 import { ENTITLEMENT_PREMIUM, SUBSCRIPTION_GRACE_PERIOD_MS } from '@/constants/purchases'
 import { SubscriptionContext, type SubscriptionContextValue } from '@/contexts/SubscriptionContext'
 import { useToast } from '@/providers/ToastProvider'
+import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
@@ -85,6 +86,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     plansRef.current = plans
   }, [plans])
+
+  useEffect(() => {
+    AdService.setPremium(isPremium)
+  }, [isPremium])
 
   // The single place a CustomerInfo becomes the app's tier, so the boot read, the
   // foreground sync, a purchase and a restore cannot disagree.

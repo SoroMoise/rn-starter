@@ -17,10 +17,18 @@ class AdServiceClass {
   private isAdLoaded = false
   private isAdLoading = false
   private isInitialized = false
+  private isPremium = false
   private retryCount = 0
+
+  // SubscriptionProvider is the only writer: buying Pro mid-process must disarm an
+  // interstitial preloaded while the user was still free.
+  setPremium(isPremium: boolean): void {
+    this.isPremium = isPremium
+  }
 
   private ensureInitialized() {
     if (this.isInitialized) return
+    if (this.isPremium) return
     if (!AD_INTERSTITIAL_ENABLED) return
     if (ADMOB_INTERSTITIAL_ID === null) return
     // An ad served ahead of the UMP form is the violation itself, not a missed
@@ -88,6 +96,7 @@ class AdServiceClass {
   }
 
   async shouldShowInterstitialAd(): Promise<boolean> {
+    if (this.isPremium) return false
     if (!AD_INTERSTITIAL_ENABLED) return false
     this.ensureInitialized()
 
@@ -111,6 +120,7 @@ class AdServiceClass {
   }
 
   async showInterstitialAd(): Promise<void> {
+    if (this.isPremium) return
     this.ensureInitialized()
     if (!this.isAdLoaded || !this.interstitialAd) {
       return

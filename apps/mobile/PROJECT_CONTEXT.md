@@ -63,7 +63,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 | Service | Description |
 |---|---|
-| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free |
+| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) disarms a preloaded ad the moment Pro is bought |
 | `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |

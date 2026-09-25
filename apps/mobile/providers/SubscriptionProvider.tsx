@@ -68,6 +68,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [isLoadingPurchase, setIsLoadingPurchase] = useState(false)
   const [activeSubscription, setActiveSubscription] = useState<PlanPeriod | null>(null)
   const [offering, setOffering] = useState<PurchasesOffering | null>(null)
+  const [isLoadingPrices, setIsLoadingPrices] = useState(true)
   const [paywallVisible, setPaywallVisible] = useState(false)
 
   const appState = useRef(AppState.currentState)
@@ -133,6 +134,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   }, [applyCustomerInfo, forceFree])
 
   const loadOfferings = useCallback(async () => {
+    setIsLoadingPrices(true)
     try {
       const offerings = await purchaseService.getOfferings()
       // Only `current` — falling back to another offering would misprice the screen
@@ -140,6 +142,8 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       setOffering(offerings.current)
     } catch (err) {
       void crashlyticsService.recordError(err, { source: 'offerings_load' })
+    } finally {
+      setIsLoadingPrices(false)
     }
   }, [])
 
@@ -302,6 +306,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       activeSubscription,
       plans,
       defaultPlan,
+      hasPrices: plans.length > 0,
+      isLoadingPrices,
+      retryPrices: loadOfferings,
       purchasePlan,
       restorePurchases,
       openPaywall,
@@ -316,6 +323,8 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       activeSubscription,
       plans,
       defaultPlan,
+      isLoadingPrices,
+      loadOfferings,
       purchasePlan,
       restorePurchases,
       openPaywall,

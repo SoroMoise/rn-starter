@@ -239,7 +239,9 @@
     "legalNoteOneTime": "{{price}}, one-time payment. Yours forever.",
     "offerUnavailable": "Plans are unavailable right now. Check your connection and try again.",
     "ctaSubscribeMonthly": "Subscribe — {{price}}/month",
-    "ctaSubscribeAnnual": "Subscribe — {{price}}/year"
+    "ctaSubscribeAnnual": "Subscribe — {{price}}/year",
+    "pricesUnavailable": "Prices unavailable.",
+    "pricesRetry": "Try again"
   },
   "premiumGate": {
     "unlock": "Unlock",

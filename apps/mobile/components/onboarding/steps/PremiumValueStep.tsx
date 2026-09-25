@@ -1,3 +1,4 @@
+import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { usePremium } from '@/hooks/usePremium'
@@ -134,6 +135,8 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           </ThemedText>
           <Ionicons name="arrow-forward" size={20} color="#ffffff" />
         </GradientButton>
+
+        <PriceRetryNotice />
 
         <View className="mt-3 flex-row flex-wrap items-center justify-center">
           <Pressable

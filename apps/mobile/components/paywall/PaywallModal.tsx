@@ -1,4 +1,5 @@
 import { PaywallPlanCard } from '@/components/paywall/PaywallPlanCard'
+import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
@@ -282,9 +283,12 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           {plans.length === 0 ? (
             // No offer loaded: showing a price that does not exist, behind an active
             // button that silently does nothing, is worse than saying so.
-            <ThemedText variant="body" color="muted" align="center" style={styles.offerUnavailable}>
-              {t('paywall.offerUnavailable')}
-            </ThemedText>
+            <View style={styles.offerUnavailable}>
+              <ThemedText variant="body" color="muted" align="center">
+                {t('paywall.offerUnavailable')}
+              </ThemedText>
+              <PriceRetryNotice />
+            </View>
           ) : (
             <>
               <View style={styles.plans}>

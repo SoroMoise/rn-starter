@@ -242,7 +242,9 @@
     "legalNoteOneTime": "{{price}}, paiement unique. Acquis définitivement.",
     "offerUnavailable": "Les formules sont indisponibles. Vérifiez votre connexion et réessayez.",
     "ctaSubscribeMonthly": "S'abonner — {{price}}/mois",
-    "ctaSubscribeAnnual": "S'abonner — {{price}}/an"
+    "ctaSubscribeAnnual": "S'abonner — {{price}}/an",
+    "pricesUnavailable": "Prix indisponibles.",
+    "pricesRetry": "Réessayer"
   },
   "premiumGate": {
     "unlock": "Débloquer",

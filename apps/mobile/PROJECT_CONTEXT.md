@@ -118,7 +118,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 - `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
 - `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
 
-`useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`): the impressions are capped for life and each one arms a cooldown.
+`useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
 **To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
 

@@ -23,8 +23,10 @@ export function useContextualPaywall() {
         now,
       })
       if (!decision.show) return false
-      contextualPaywallService.recordShown(now)
-      void openPaywall({ source: contextualSource(trigger) })
+      // Recorded once the paywall is really up: the choke point can still refuse it.
+      void openPaywall({ source: contextualSource(trigger) }).then((opened) => {
+        if (opened) contextualPaywallService.recordShown(now)
+      })
       return true
     },
     [isInitialized, isPremium, isOnboardingCompleted, defaultPlan, openPaywall]

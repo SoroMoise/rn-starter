@@ -41,8 +41,10 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
     if (!isAdFreeActive) {
       try {
         await AdService.recordExecution()
-        if (await AdService.shouldShowInterstitialAd()) {
-          await AdService.showInterstitialAd()
+        if (
+          (await AdService.shouldShowInterstitialAd()) &&
+          (await AdService.showInterstitialAd())
+        ) {
           adLastShownCacheRef.current = Date.now()
         }
       } catch (err) {

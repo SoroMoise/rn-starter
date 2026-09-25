@@ -2,6 +2,8 @@ import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admo
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { consentService } from '@/services/api/consentService'
 import { engagementService } from '@/services/api/engagementService'
+import { presentFullScreenAd, type PresentationOutcome } from '@/services/api/fullScreenAd'
+import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { AdEventType, InterstitialAd } from 'react-native-google-mobile-ads'
 
@@ -14,6 +16,7 @@ const BASE_RETRY_DELAY_MS = 30_000
 
 class AdServiceClass {
   private interstitialAd: InterstitialAd | null = null
+  private detachInterstitial: (() => void) | null = null
   private isAdLoaded = false
   private isAdLoading = false
   private isInitialized = false
@@ -45,34 +48,45 @@ class AdServiceClass {
   }
 
   private initializeInterstitial(unitId: string) {
-    this.interstitialAd = InterstitialAd.createForAdRequest(unitId, {})
+    const ad = InterstitialAd.createForAdRequest(unitId, {})
 
-    this.interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-      this.isAdLoaded = true
-      this.isAdLoading = false
-      this.retryCount = 0
-    })
+    const detachers = [
+      ad.addAdEventListener(AdEventType.LOADED, () => {
+        this.isAdLoaded = true
+        this.isAdLoading = false
+        this.retryCount = 0
+      }),
+      ad.addAdEventListener(AdEventType.CLOSED, () => {
+        this.isAdLoaded = false
+        this.preloadInterstitialAd()
+      }),
+      ad.addAdEventListener(AdEventType.ERROR, () => {
+        this.isAdLoaded = false
+        this.isAdLoading = false
+        if (this.retryCount < MAX_LOAD_RETRIES) {
+          const delay = Math.pow(2, this.retryCount) * BASE_RETRY_DELAY_MS
+          this.retryCount++
+          setTimeout(() => this.preloadInterstitialAd(), delay)
+        }
+      }),
+    ]
 
-    this.interstitialAd.addAdEventListener(AdEventType.OPENED, () => {})
-
-    this.interstitialAd.addAdEventListener(AdEventType.CLOSED, () => {
-      this.isAdLoaded = false
-      this.preloadInterstitialAd()
-    })
-
-    this.interstitialAd.addAdEventListener(AdEventType.ERROR, () => {
-      this.isAdLoaded = false
-      this.isAdLoading = false
-      if (this.retryCount < MAX_LOAD_RETRIES) {
-        const delay = Math.pow(2, this.retryCount) * BASE_RETRY_DELAY_MS
-        this.retryCount++
-        setTimeout(() => this.preloadInterstitialAd(), delay)
-      }
-    })
-
-    this.interstitialAd.addAdEventListener(AdEventType.PAID, () => {})
-
+    this.interstitialAd = ad
+    this.detachInterstitial = () => detachers.forEach((detach) => detach())
     this.preloadInterstitialAd()
+  }
+
+  // The library still counts an ad that never opened as loaded and refuses to reload that
+  // instance, so the only way back to a fresh ad is a new one.
+  private replaceInterstitial() {
+    this.detachInterstitial?.()
+    this.interstitialAd = null
+    this.detachInterstitial = null
+    this.isAdLoaded = false
+    this.isAdLoading = false
+    this.retryCount = 0
+    this.isInitialized = false
+    this.ensureInitialized()
   }
 
   async preloadInterstitialAd() {
@@ -98,6 +112,10 @@ class AdServiceClass {
   async shouldShowInterstitialAd(): Promise<boolean> {
     if (this.isPremium) return false
     if (!AD_INTERSTITIAL_ENABLED) return false
+    // One automatic interruption per session, all types included: an ad never lands on top
+    // of a paywall, nor in a session that already had its promo.
+    if (!promoCoordinator.canPresentAutoPromo()) return false
+    if (!consentService.canRequestAds()) return false
     this.ensureInitialized()
 
     const executionCount = adsStorage.getAdExecutionCount()
@@ -119,20 +137,33 @@ class AdServiceClass {
     adsStorage.setAdExecutionCount(currentCount + 1)
   }
 
-  async showInterstitialAd(): Promise<void> {
-    if (this.isPremium) return
+  // Resolves once the ad is gone, true only if it was on screen: whatever follows an ad must
+  // not open over it. Only an ad actually shown spends the cadence and the session's
+  // interruption, and the coordinator's flag comes down on every path — left up, it would
+  // freeze every automatic promo for the rest of the session.
+  async showInterstitialAd(): Promise<boolean> {
+    if (this.isPremium) return false
+    // Consent can change after the SDK started and preloaded: the privacy form stays reachable.
+    if (!consentService.canRequestAds()) return false
     this.ensureInitialized()
-    if (!this.isAdLoaded || !this.interstitialAd) {
-      return
+    const ad = this.interstitialAd
+    if (!this.isAdLoaded || !ad) return false
+
+    let outcome: PresentationOutcome
+    promoCoordinator.setInterstitialVisible(true)
+    try {
+      outcome = await presentFullScreenAd(ad)
+    } finally {
+      promoCoordinator.setInterstitialVisible(false)
     }
 
-    try {
-      await this.interstitialAd.show()
-      adsStorage.setAdExecutionCount(0)
-      adsStorage.setAdLastShown(Date.now())
-    } catch (error) {
-      console.warn('[AdService] Failed to show interstitial:', error)
-    }
+    if (outcome === 'never_opened') this.replaceInterstitial()
+    if (outcome !== 'closed') return false
+
+    adsStorage.setAdExecutionCount(0)
+    adsStorage.setAdLastShown(Date.now())
+    promoCoordinator.markAutoPromoShown()
+    return true
   }
 
   async resetExecutionCount(): Promise<void> {

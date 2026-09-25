@@ -145,6 +145,7 @@ is only named after it — it is handed the MMKV adapter here.)
 `apps/mobile/services/api/`:
 - `adService` — AdMob interstitial (lazy-init)
 - `rewardedAdService` — AdMob rewarded (lazy-init)
+- `fullScreenAd` — `presentFullScreenAd`: settles an interstitial or rewarded ad once it is gone, including the presentation Android never reports
 - `analyticsService` — Firebase Analytics typed wrapper
 - `crashlyticsService` — Firebase Crashlytics
 - `engagementService` — session init, paywall counter
@@ -179,7 +180,7 @@ and defaults to `'development'`. It is declared here so the config states what t
 produces. The consequence is Apple's, not ours: the App ID needs the Push Notifications capability
 enabled or the release build fails code signing, on an app whose notifications are all local.
 
-`apps/mobile/services/promo/promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces (contextual paywall). Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`), reset at boot via `contextualPaywallService.resetSession()`.
+`apps/mobile/services/promo/promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall and the AdMob interstitial (`PromoSurface`). Enforces no stacking (`isSurfaceVisible`) and **one automatic interruption per session, all types included** (`canPresentAutoPromo` / `markAutoPromoShown`): an ad and a promo never land in the same session. A paywall the user opens registers its visibility, so nothing automatic lands on it, but spends no budget. Reset at boot via `contextualPaywallService.resetSession()`. `canPresentAutoPromo` reads `isSurfaceVisible` instead of re-listing the surfaces, so adding one is a `PromoSurface` member and its setter.
 
 ### Data Fetching
 
@@ -198,6 +199,7 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 - **AdMob** — banners (per-screen), interstitial, rewarded. Lazy-init. Disabled when premium or ad-free session active. `AdService.setPremium` has one writer, `SubscriptionProvider`, so buying Pro mid-process disarms an interstitial preloaded while the user was still free.
 - **AdMob identifiers are literals, and a pending unit requests nothing.** App ids sit in `app.config.js` (Google's sample ids until the app has its own — the SDK crashes at launch with none, and the release workflow refuses to publish with the sample one), unit ids and kill switches in `constants/admob.ts`, never in `.env`: they ship in the manifest and the bundle whichever route they take, and an incomplete env shipped a sibling app's release with empty ids — no ad, no error, no revenue. `pickUnitId` resolves an unconfigured unit (`UNIT_PENDING`, an empty id or a `XXXX` placeholder) to `null`, and every surface reads `null` as "request nothing". Never lend a pending placement another one's unit: AdMob reports revenue by unit, and two surfaces on one are a revenue line nobody can split afterwards. `__DEV__` always resolves to Google's `TestIds`.
+- **The interstitial settles when it closes, not when it is handed over.** The native `show()` resolves the moment the ad reaches the activity, so `showInterstitialAd()` resolves on `CLOSED` (`true`), on `ERROR`, a rejected `show()`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS` (`false`) — the Android side of the library never reports a failed presentation, and a visibility flag left raised would freeze every automatic promo for the session. Only `true` resets the cadence and spends the session's interruption, and consent is re-read at show time: it can change after the SDK started and preloaded an ad — the privacy form stays reachable from Settings.
 - **One predicate decides whether a placement runs.** `useAdPlacementActive({ unitId, enabled })` — kill switch, configured unit, tier, ad-free window, consent, environment — is what `AdBanner` renders from and what its screen reserves `AD_BANNER_RESERVED_HEIGHT` from. A screen that recomputes its own condition drifts from the banner's: it pads for a banner consent has hidden, or lets one cover its last row.
 - **A banner is mounted once per visit and unmounted when its screen blurs** (`useStageActive` in `AdBanner`). A `BannerAd` left refreshing under the top of the stack, or rebuilt by an in-screen toggle, is impression inflation — the same offence as serving the crawler, and it costs the same account.
 - **Nothing requests an ad on a Firebase Test Lab device.** Play's pre-launch report crawls every upload and taps whatever the hierarchy reports as interactive, ad views included. Those devices hold no test-device identity, so AdMob bills the traffic as invalid — it is worth an account suspension, not a warning. `modules/app-environment` (a local Expo module, Android only) reads the `firebase.test.lab` system setting and `adsAllowedInEnvironment()` gates the banner, both ad services and the consent flow itself.

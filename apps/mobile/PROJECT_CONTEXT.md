@@ -63,8 +63,9 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 | Service | Description |
 |---|---|
-| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) disarms a preloaded ad the moment Pro is bought |
+| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) disarms a preloaded ad the moment Pro is bought. `showInterstitialAd()` resolves `true` only once the ad has closed, and only then spends the cadence and the session's interruption |
 | `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion |
+| `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`) |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
@@ -82,8 +83,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 ### `services/promo/`
 
-`promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces.
-Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`). Reset at boot via `contextualPaywallService.resetSession()`.
+`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall and the AdMob interstitial (`PromoSurface`).
+Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget. Reset at boot via `contextualPaywallService.resetSession()`.
 
 ### `services/storage/`
 

@@ -14,10 +14,6 @@ export const BACKEND_CONFIG = {
 export const DEFAULT_SETTINGS = {
   theme: 'auto' as const,
   language: getDeviceLanguage(),
-  notifications: true,
-  notificationQuietHoursEnabled: false,
-  notificationQuietHoursStart: '22:00',
-  notificationQuietHoursEnd: '08:00',
   notificationSound: true,
   notificationVibration: true,
 }

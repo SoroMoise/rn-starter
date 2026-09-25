@@ -27,10 +27,6 @@ export type Language =
 export interface UserSettings {
   theme: ThemeMode
   language: Language
-  notifications: boolean
-  notificationQuietHoursEnabled: boolean
-  notificationQuietHoursStart: string
-  notificationQuietHoursEnd: string
   notificationSound: boolean
   notificationVibration: boolean
 }

@@ -1,4 +1,4 @@
-import type { PlanType } from '@/constants/purchases'
+import type { PlanPeriod } from '@/utils/offerings'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import {
   logEvent as analyticsLogEvent,
@@ -88,9 +88,13 @@ export type AnalyticsEventMap = {
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }
 
-  // Purchases
+  // Purchases.
+  // `source` (which surface opened the sale) and `offering_id` (which RevenueCat
+  // experiment served it) ride on every step: eight surfaces can sell Pro, and one
+  // unattributed conversion count cannot say which of them earns its place.
   paywall_shown: {
     source: string
+    offering_id: string
     session_count: number
     paywall_count: number
     has_trial_offer: boolean
@@ -99,22 +103,40 @@ export type AnalyticsEventMap = {
   paywall_dismissed: {
     source: string
     time_on_paywall_s: number
-    selected_plan: PlanType
+    selected_plan: PlanPeriod | 'none'
   }
-  paywall_plan_selected: { plan: PlanType }
-  purchase_started: { plan: PlanType }
+  paywall_plan_selected: { plan: PlanPeriod; product_id: string }
+  purchase_started: {
+    plan: PlanPeriod
+    source: string
+    product_id: string
+    offering_id: string
+  }
+  // A call that did not throw is not a purchase that granted anything: a deferred
+  // transaction resolves with no entitlement.
+  purchase_pending: { plan: PlanPeriod; source: string; product_id: string }
   purchase_completed: {
-    plan: PlanType
-    revenue_usd: number
+    plan: PlanPeriod
+    source: string
+    product_id: string
+    offering_id: string
+    // Money carries its own currency: logged as USD, a ₹3,499 plan reads as $3,499.
+    revenue: number
+    currency: string
     session_count: number
     days_since_install: number
     paywall_count: number
     total_actions: number
     trial_started: boolean
   }
-  purchase_failed: { plan: PlanType; error_code: string }
-  purchase_cancelled: { plan: PlanType }
-  purchase_restored: { had_active_sub: boolean }
+  purchase_failed: { plan: PlanPeriod; source: string; error_code: string }
+  purchase_cancelled: { plan: PlanPeriod; source: string }
+  // A restore has three outcomes; `restore_purchases_completed` carries which one,
+  // and `subscription_restored` fires only when something actually came back.
+  restore_purchases_completed: {
+    outcome: 'restored' | 'already_premium' | 'nothing_found'
+  }
+  subscription_restored: { plan: PlanPeriod }
   restore_purchases_initiated: undefined
   restore_purchases_failed: { error_code: string }
   subscription_synced: { is_premium: boolean; plan: string }

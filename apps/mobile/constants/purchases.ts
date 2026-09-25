@@ -10,13 +10,6 @@ export const REVENUECAT_API_KEY: string =
 // RevenueCat entitlement identifier — set this to match your RevenueCat dashboard.
 export const ENTITLEMENT_PREMIUM = 'premium'
 
-export const PRODUCT_IDS = {
-  MONTHLY: 'premium:premium-monthly',
-  ANNUAL: 'premium:premium-yearly',
-} as const
-
-export type PlanType = 'monthly' | 'annual'
-
 export const FREE_FEATURES = [
   { key: 'core', i18nKey: 'paywall.featureCore' },
   { key: 'limitedSupport', i18nKey: 'paywall.featureLimitedSupport' },

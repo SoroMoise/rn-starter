@@ -1,8 +1,8 @@
+import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
-import { getFreeTrialDays } from '@/utils/trialOffer'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -10,6 +10,10 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+
+// The onboarding sells Pro without going through openPaywall, so it names its own
+// entry point — otherwise its conversions land unattributed in the funnel.
+const ONBOARDING_PREMIUM_SOURCE = 'onboarding_premium'
 
 interface PremiumValueStepProps {
   onTriggerSkip: () => void
@@ -23,13 +27,13 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
-  const { purchaseAnnual, restorePurchases, isLoadingPurchase, annualPackage } = usePremium()
+  const { defaultPlan, purchasePlan, restorePurchases, isLoadingPurchase } = usePremium()
 
   const benefits = Platform.OS === 'android' ? ANDROID_BENEFITS : BASE_BENEFITS
 
   // The frieze describes the trial the store actually reported; with no trial
   // behind it there is nothing truthful to draw, so the block is not rendered.
-  const trialDays = getFreeTrialDays(annualPackage)
+  const trialDays = defaultPlan?.hasTrial ? (defaultPlan.trialDays ?? null) : null
   const timeline =
     trialDays === null
       ? []
@@ -45,10 +49,10 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         ]
 
   const handleStart = useCallback(() => {
-    if (!annualPackage) return
+    if (!defaultPlan) return
     triggerLight()
-    void purchaseAnnual()
-  }, [annualPackage, purchaseAnnual])
+    void purchasePlan({ plan: defaultPlan, source: ONBOARDING_PREMIUM_SOURCE })
+  }, [defaultPlan, purchasePlan])
 
   const handleRestore = useCallback(() => {
     triggerLight()
@@ -115,7 +119,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         <GradientButton
           onPress={handleStart}
           isLoading={isLoadingPurchase}
-          disabled={!annualPackage}
+          disabled={!defaultPlan}
           colors={['#3b82f6', '#6366f1', '#8b5cf6']}
           style={{ height: 58, borderRadius: 16, marginTop: 20 }}
           gradientStyle={{ height: '100%' }}
@@ -131,6 +135,8 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           </ThemedText>
           <Ionicons name="arrow-forward" size={20} color="#ffffff" />
         </GradientButton>
+
+        <PriceRetryNotice />
 
         <View className="mt-3 flex-row flex-wrap items-center justify-center">
           <Pressable

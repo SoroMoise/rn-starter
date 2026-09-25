@@ -165,6 +165,14 @@ like working push and is not. Adding push means the package, a handler registere
 point (not from a route module, which is lazy and never evaluated in a headless launch), and a token
 registered with your backend.
 
+**`expo-notifications` carries a patch, and it must survive every version bump.**
+`patches/expo-notifications@0.32.17.patch` wraps `NotificationForwarderActivity.onCreate` in a
+try/catch: some OEM ROMs hand the activity back its intent without the custom Parcelable extras
+restored, which makes `createNotificationResponseBroadcastIntent` throw and crashes the app on a
+notification tap — the one moment the user is deliberately opening it. The patched version opens
+the app instead. `pnpm.patchedDependencies` pins it to the exact version, so bumping the package
+fails loudly rather than dropping the fix; re-cut the patch against the new source.
+
 **`expo-notifications` always writes the `aps-environment` entitlement**, whatever `mode` says and
 even with `ios.entitlements` removed from `app.config.js` — its iOS plugin sets it unconditionally
 and defaults to `'development'`. It is declared here so the config states what the build actually

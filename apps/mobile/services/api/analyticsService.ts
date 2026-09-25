@@ -102,7 +102,7 @@ export type AnalyticsEventMap = {
   review_flow_launched: { duration_ms: number; likely_displayed: boolean }
   review_flow_failed: { error_code: string }
   store_listing_opened: { reason: string }
-  // The dormant in-app pre-prompt, behind SENTIMENT_GATE_ENABLED.
+  // Emitted by nothing: the in-app pre-prompt they belong to is dormant (SENTIMENT_GATE_ENABLED).
   rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }

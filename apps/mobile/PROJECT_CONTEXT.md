@@ -9,7 +9,7 @@ Keep this in sync with CLAUDE.md and the code — update both as part of any cha
 
 - **Bundle ID placeholder:** `com.yourcompany.rnstarter`
 - **Monorepo:** `apps/mobile/` (this app), `apps/api/` (Cloudflare Worker), `packages/shared/`
-- **Version:** computed in `app.config.js` — `major*10000 + minor*100 + patch`
+- **Version:** `versionCode` computed in `app.config.js` — `major*1000000 + minor*1000 + patch`. Base 1000 per field, so the code stays strictly increasing up to `x.999.999`; Play only ever accepts a higher code than the last upload.
 
 ---
 
@@ -25,7 +25,7 @@ SafeAreaProvider
         > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV)
           > ThemeProvider      <- light/dark via NativeWind 'class' strategy
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
-              > SubscriptionProvider   <- RevenueCat, grace period, PostPurchaseModal
+              > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal
                 > AdFreeProvider       <- ad-free session window tracking
                   > AppContent         <- onboarding gate, then TabLayout
       RTLRestartBanner         <- outside provider tree
@@ -69,7 +69,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
 | `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases` |
-| `ratingService.ts` | `expo-store-review` with platform store URL fallback |
+| `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
+| `ratingService.ts` | `requestNativeReview()` (auto flows only) / `openStoreListing({ reason })` (taps, fallbacks) |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
 
 ### `services/notifications/`
@@ -95,8 +96,8 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 | `domains/adFree.ts` | Ad-free window expiry |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction` / `resetActionCount`) |
-| `domains/rating.ts` | Rating prompt eligibility |
-| `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` |
+| `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
+| `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
 ---
@@ -109,7 +110,7 @@ Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })`. Grace period: `subscriptionStorage.derive(now, gracePeriodMs)` grants continued access after expiry; `SubscriptionGraceBanner` warns user.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })`. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
 
 ### Contextual Paywall
 

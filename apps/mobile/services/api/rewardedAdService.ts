@@ -1,4 +1,6 @@
 import { ADMOB_REWARDED_ID } from '@/constants/admob'
+import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
+import { consentService } from '@/services/api/consentService'
 import { AdEventType, RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads'
 
 class RewardedAdServiceClass {
@@ -9,6 +11,8 @@ class RewardedAdServiceClass {
 
   private ensureInitialized() {
     if (this.isInitialized) return
+    if (!consentService.canRequestAds()) return
+    if (!adsAllowedInEnvironment()) return
     this.isInitialized = true
     this.initializeRewarded()
   }

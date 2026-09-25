@@ -76,12 +76,17 @@ export type AnalyticsEventMap = {
 
   // Rating
   rate_app_clicked: undefined
-  rating_modal_shown: { source: 'auto' | 'manual'; action_count: number }
-  rating_submitted: { stars: number; source: 'auto' | 'manual'; action_count: number }
+  ad_privacy_options_opened: undefined
+  // A moment qualified — never that the user rated. Play reports neither whether
+  // the card appeared nor its outcome; store-side truth lives in the Play Console.
+  rating_ask_shown: { source: 'auto' | 'manual'; action_count: number }
+  review_flow_launched: { duration_ms: number; likely_displayed: boolean }
+  review_flow_unavailable: { reason: string }
+  store_listing_opened: { reason: string }
+  // The dormant in-app pre-prompt, behind SENTIMENT_GATE_ENABLED.
+  rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }
-  store_review_native_requested: undefined
-  store_review_store_opened: { reason: string }
 
   // Purchases
   paywall_shown: {

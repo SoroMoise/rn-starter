@@ -125,6 +125,55 @@ info "  slug     = $APP_SLUG"
 info "  bundleId = $BUNDLE_ID"
 info "  scheme   = $SCHEME"
 
+# ─── Sweep the template identity out of the rest of the tree ──────────────────
+# app.config.js is only where the identity is DECLARED. It is also written into
+# code and into all twenty translation files, and a new app that skips them ships
+# "RN Starter" strings in twenty languages and an MMKV store named after the
+# template. Everything below is driven by the same four answers.
+header "Sweeping the template identity"
+
+node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" <<'NODE_SCRIPT'
+const fs = require('fs')
+const path = require('path')
+const [, , repoRoot, appName, appSlug, bundleId] = process.argv
+
+const OLD_NAME = 'RN Starter'
+const OLD_SLUG = 'rn-starter'
+const OLD_BUNDLE = 'com.yourcompany.rnstarter'
+
+const edits = []
+
+function patch(relPath, replacer) {
+  const file = path.join(repoRoot, relPath)
+  if (!fs.existsSync(file)) return
+  const before = fs.readFileSync(file, 'utf8')
+  const after = replacer(before)
+  if (after === before) return
+  fs.writeFileSync(file, after, 'utf8')
+  edits.push(relPath)
+}
+
+const all = (src, from, to) => src.split(from).join(to)
+
+patch('apps/mobile/constants/config.ts', (src) =>
+  all(all(src, OLD_NAME, appName), OLD_SLUG, appSlug)
+)
+patch('apps/mobile/constants/rating.ts', (src) => all(src, OLD_BUNDLE, bundleId))
+patch('apps/mobile/services/storage/mmkv.ts', (src) => all(src, OLD_SLUG, appSlug))
+patch('apps/mobile/package.json', (src) => all(src, OLD_BUNDLE, bundleId))
+
+const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
+if (fs.existsSync(localesDir)) {
+  for (const entry of fs.readdirSync(localesDir).filter((f) => f.endsWith('.json'))) {
+    patch(path.join('apps/mobile/i18n/languages', entry), (src) => all(src, OLD_NAME, appName))
+  }
+}
+
+console.log(edits.length ? edits.map((e) => `  ${e}`).join('\n') : '  nothing left to rename')
+NODE_SCRIPT
+
+success "Identity swept."
+
 # ─── Copy example files if absent ─────────────────────────────────────────────
 header "Copying example secret files (if absent)"
 

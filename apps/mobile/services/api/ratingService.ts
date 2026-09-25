@@ -1,46 +1,62 @@
-import { STORE_URLS } from '@/constants/legal'
-import { PLAY_STORE_RATE_URL } from '@/constants/rating'
+import { APP_STORE_URL, PLAY_STORE_MARKET_URL, PLAY_STORE_WEB_URL } from '@/constants/rating'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import * as StoreReview from 'expo-store-review'
 import { Linking, Platform } from 'react-native'
 
-const STORE_URL = Platform.OS === 'ios' ? STORE_URLS.IOS : PLAY_STORE_RATE_URL
+// A flow that returns faster than this never rendered anything: Play's per-user
+// quota swallowed it. The API deliberately reports neither whether the dialog
+// appeared nor whether a review was left, so duration is the only observable
+// proxy. It feeds dashboards only — never branch on it.
+const REVIEW_FLOW_DISPLAY_FLOOR_MS = 300
+
+function storeCandidates(): (string | undefined)[] {
+  if (Platform.OS === 'ios') return [APP_STORE_URL]
+  return [PLAY_STORE_MARKET_URL, PLAY_STORE_WEB_URL]
+}
 
 /**
- * Attempts native in-app review first.
- * Falls back to the platform-appropriate store URL if native review is unavailable.
- * Silently fails if both attempts fail.
+ * Native in-app review. Reserved for automatic flows: Play enforces an
+ * undocumented per-user quota and silently skips the dialog once it is spent,
+ * which is why Google forbids wiring this to a button. Use `openStoreListing`
+ * for anything the user taps on purpose.
  */
-export async function requestStoreReview(): Promise<void> {
+export async function requestNativeReview(): Promise<void> {
   try {
-    // this will be uncomment. i left it out for now because the native review dialog is currently causing crashes on Android, and we want to be able to deploy a fix without needing to update the app. once we have more confidence in the stability of the native review flow, we can uncomment this and remove the fallback to the store URL.
-    // const isAvailable = (await StoreReview.isAvailableAsync()) && (await StoreReview.hasAction())
-
-    const isAvailable = false
-
-    if (isAvailable) {
-      await StoreReview.requestReview()
-      analyticsService.track('store_review_native_requested')
+    if (!(await StoreReview.isAvailableAsync())) {
+      analyticsService.track('review_flow_unavailable', { reason: 'platform' })
+      await openStoreListing({ reason: 'native_unavailable' })
       return
     }
 
-    if (STORE_URL) {
-      await Linking.openURL(STORE_URL)
-      analyticsService.track('store_review_store_opened', { reason: 'unavailable' })
-    }
-  } catch (error) {
-    crashlyticsService.recordError(error as Error, { reason: 'requestStoreReview' })
+    const startedAt = Date.now()
+    await StoreReview.requestReview()
+    const durationMs = Date.now() - startedAt
 
+    analyticsService.track('review_flow_launched', {
+      duration_ms: durationMs,
+      likely_displayed: durationMs >= REVIEW_FLOW_DISPLAY_FLOOR_MS,
+    })
+  } catch (error) {
+    crashlyticsService.recordError(error as Error, { source: 'requestNativeReview' })
+    await openStoreListing({ reason: 'native_error' })
+  }
+}
+
+/** Opens the store listing. Safe behind a button — no quota, always lands somewhere. */
+export async function openStoreListing({ reason }: { reason: string }): Promise<void> {
+  for (const url of storeCandidates()) {
+    if (!url) continue
     try {
-      if (STORE_URL) {
-        await Linking.openURL(STORE_URL)
-        analyticsService.track('store_review_store_opened', { reason: 'error_fallback' })
-      }
-    } catch (fallbackError) {
-      crashlyticsService.recordError(fallbackError as Error, {
-        reason: 'requestStoreReview.fallback',
-      })
+      await Linking.openURL(url)
+      analyticsService.track('store_listing_opened', { reason })
+      return
+    } catch {
+      continue
     }
   }
+
+  crashlyticsService.recordError(new Error('No store URL could be opened'), {
+    source: `openStoreListing.${reason}`,
+  })
 }

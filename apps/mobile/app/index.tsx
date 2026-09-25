@@ -1,5 +1,4 @@
 import { GradientButton } from '@/components/ui/GradientButton'
-import { RatingModal } from '@/components/ui/RatingModal'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -33,7 +32,7 @@ export default function HomeScreen() {
   const { isAdFreeActive } = useAdFree()
   const tabBarPadding = useTabBarPadding(24)
 
-  const { recordAction, isRatingModalVisible, handleRateApp, handleRateLater } = useActionRating({
+  const { recordAction } = useActionRating({
     isAdFreeActive,
   })
 
@@ -123,12 +122,6 @@ export default function HomeScreen() {
           </View>
         </MotiView>
       </ScrollView>
-
-      <RatingModal
-        visible={isRatingModalVisible}
-        onRate={handleRateApp}
-        onLater={handleRateLater}
-      />
     </ScreenContainer>
   )
 }

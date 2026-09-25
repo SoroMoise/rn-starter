@@ -1,0 +1,68 @@
+name: Purge Actions artifacts
+
+# Actions storage on a private repo is billed, and a release AAB is tens of MB a
+# copy. `release-android.yml` only keeps one when the publish never landed, but
+# nothing expires the backlog before its 90 days are up — hence a button.
+#
+# Deleting them is safe: the Play Console holds every bundle it accepted, and a
+# bundle it rejected can be rebuilt by re-dispatching the release. Nothing here
+# touches the Gradle cache, which is a separate, unbilled 10 GB per repo and
+# worth a large share of the build time of every release.
+on:
+  workflow_dispatch:
+    inputs:
+      keep_latest:
+        description: 'How many of the most recent artifacts to keep'
+        default: '0'
+        required: false
+
+permissions:
+  actions: write
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Delete artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          KEEP: ${{ inputs.keep_latest }}
+        run: |
+          set -euo pipefail
+
+          case "$KEEP" in
+            ''|*[!0-9]*)
+              echo "error: keep_latest must be a whole number, got '$KEEP'" >&2
+              exit 1
+              ;;
+          esac
+
+          # --paginate applies -q per page and concatenates, so the sort has to
+          # come after the whole listing is in hand. created_at is RFC 3339, so
+          # a reverse lexicographic sort is a reverse chronological one.
+          artifacts=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts" \
+            -q '.artifacts[] | select(.expired == false) | [.created_at, .id, .size_in_bytes, .name] | @tsv' \
+            | sort -r)
+
+          live=$(printf '%s' "$artifacts" | grep -c . || true)
+          echo "$live live artifact(s); keeping the newest $KEEP"
+
+          if [ "$live" -le "$KEEP" ]; then
+            echo "nothing to delete" | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          deleted=0
+          freed=0
+          while IFS=$'\t' read -r created id size name; do
+            [ -n "${id:-}" ] || continue
+            echo "deleting $name  $((size / 1024 / 1024)) MB  $created  (id $id)"
+            gh api -X DELETE "repos/$GITHUB_REPOSITORY/actions/artifacts/$id"
+            deleted=$((deleted + 1))
+            freed=$((freed + size))
+          done <<< "$(printf '%s\n' "$artifacts" | tail -n "+$((KEEP + 1))")"
+
+          printf '%s\n' \
+            "Deleted **$deleted** artifact(s), freeing **$((freed / 1024 / 1024)) MB**." \
+            >> "$GITHUB_STEP_SUMMARY"

@@ -11,6 +11,8 @@ import { SubscriptionProvider } from '@/providers/SubscriptionProvider'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { ToastProvider } from '@/providers/ToastProvider'
 import { AdService } from '@/services/api/adService'
+import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
+import { consentService } from '@/services/api/consentService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { contextualPaywallService } from '@/services/api/contextualPaywall'
 import { engagementService } from '@/services/api/engagementService'
@@ -78,11 +80,15 @@ function AppContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSubscriptionInitialized]) // intentional: snapshot at session start
 
+  // Consent first, always: starting the SDK is what makes a request possible, so
+  // it must not happen where the consent state is unknown. The form is gathered
+  // at the frame the onboarding ends on — where the first ad can appear, never
+  // earlier, and never for a subscriber who will not be shown one.
   useEffect(() => {
-    if (isOnboardingCompleted) {
-      AdService.initialize()
-    }
-  }, [isOnboardingCompleted])
+    if (!isOnboardingCompleted || isPremium) return
+    if (!adsAllowedInEnvironment()) return
+    void consentService.gather().then(() => AdService.initialize())
+  }, [isOnboardingCompleted, isPremium])
 
   useEffect(() => {
     if (!isOnboardingCompleted) return

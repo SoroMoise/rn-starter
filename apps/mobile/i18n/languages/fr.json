@@ -114,7 +114,8 @@
     "termsOfService": "Conditions d'utilisation",
     "support": "Support",
     "rateApp": "Noter cette application",
-    "languageChanged": "Langue mise à jour avec succès"
+    "languageChanged": "Langue mise à jour avec succès",
+    "adPrivacy": "Confidentialité publicitaire"
   },
   "onboarding": {
     "next": "Continuer",
@@ -132,12 +133,13 @@
         "premium": "Toutes les fonctionnalités premium"
       },
       "timelineHeader": "Comment fonctionne l'essai",
-      "day0": "Jour 0 — Pro débloqué instantanément",
-      "day5": "Jour 5 — Rappel avant la fin de l'essai",
-      "day7": "Jour 7 — Facturation, annulable à tout moment",
-      "ctaStart": "Démarrer mon essai gratuit de 7 jours",
       "ctaSkip": "Continuer gratuitement",
-      "restore": "Restaurer mes achats"
+      "restore": "Restaurer mes achats",
+      "dayUnlock": "Jour 0 — Pro débloqué immédiatement",
+      "dayReminder": "Jour {{day}} — Rappel avant la fin de l’essai",
+      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment",
+      "ctaStartTrial": "Démarrer mon essai gratuit de {{days}} jours",
+      "ctaStartNoTrial": "Débloquer Pro"
     },
     "exitIntent": {
       "title": "Un instant — essaie Pro gratuitement",
@@ -183,8 +185,6 @@
   "appRating": {
     "title": "Vous aimez RN Starter ?",
     "message": "Une note 5 étoiles nous aide à garder l'app gratuite 😊 et à continuer de l'améliorer.",
-    "settingsTitle": "Vous appréciez l'application ?",
-    "settingsMessage": "Votre note nous aide à garder l'app gratuite et à l'améliorer. Si vous l'aimez, une note 5 étoiles nous ferait vraiment plaisir 😊 !",
     "rateButton": "Noter maintenant",
     "laterButton": "Plus tard",
     "declineButton": "Non merci",

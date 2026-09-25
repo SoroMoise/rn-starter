@@ -17,8 +17,6 @@ export const PRODUCT_IDS = {
 
 export type PlanType = 'monthly' | 'annual'
 
-export const TRIAL_DURATION_DAYS = 7
-
 export const FREE_FEATURES = [
   { key: 'core', i18nKey: 'paywall.featureCore' },
   { key: 'limitedSupport', i18nKey: 'paywall.featureLimitedSupport' },

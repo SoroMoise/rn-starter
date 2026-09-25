@@ -1,0 +1,54 @@
+name: CI API
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-api
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    # Manual runs always proceed. PR runs only when the PR was actually merged
+    # into main AND carries the `release-api` label — merely closing a PR, or
+    # merging one without the label, never triggers this check.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.pull_request.merged == true &&
+       contains(github.event.pull_request.labels.*.name, 'release-api'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm exec turbo run lint --filter=api...
+
+      - name: Typecheck
+        run: pnpm exec turbo run typecheck --filter=api...
+
+      - name: Build (dry-run)
+        run: pnpm exec turbo run build --filter=api...
+
+      - name: Deploy
+        working-directory: apps/api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: pnpm run deploy

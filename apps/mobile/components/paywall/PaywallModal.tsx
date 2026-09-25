@@ -3,18 +3,14 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { LEGAL_URLS } from '@/constants/legal'
-import {
-  FREE_FEATURES,
-  PREMIUM_FEATURES,
-  PlanType,
-  TRIAL_DURATION_DAYS,
-} from '@/constants/purchases'
+import { FREE_FEATURES, PREMIUM_FEATURES, PlanType } from '@/constants/purchases'
 import { SOCIAL_PROOF } from '@/constants/socialProof'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import i18n from '@/i18n/service'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
+import { getFreeTrialDays } from '@/utils/trialOffer'
 import { openExternalLink } from '@/utils/linking'
 import { computeSavingsPercent, formatMonthlyPrice } from '@/utils/pricing'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -99,17 +95,18 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     }
   }, [selectedPlan, purchaseAnnual, purchaseMonthly])
 
+  const annualTrialDays = getFreeTrialDays(annualPackage)
+
   const ctaLabel = useMemo(() => {
     if (selectedPlan === 'annual') {
-      const hasIntroOffer = !!annualPackage?.product.introPrice
-      return hasIntroOffer
-        ? t('paywall.ctaTrial', { days: TRIAL_DURATION_DAYS })
+      return annualTrialDays !== null
+        ? t('paywall.ctaTrial', { days: annualTrialDays })
         : t('paywall.ctaSubscribeAnnual', { price: annualPackage?.product.priceString ?? '' })
     }
     return t('paywall.ctaSubscribeMonthly', {
       price: monthlyPackage?.product.priceString ?? '',
     })
-  }, [selectedPlan, annualPackage, monthlyPackage, t])
+  }, [selectedPlan, annualTrialDays, annualPackage, monthlyPackage, t])
 
   const monthlyPeriodLabel = t('paywall.billedMonthly')
 
@@ -231,7 +228,11 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
               savingsBadge={
                 savingsPercent ? t('paywall.savingsBadge', { percent: savingsPercent }) : undefined
               }
-              trialBadge={t('paywall.trialBadge', { days: TRIAL_DURATION_DAYS })}
+              trialBadge={
+                annualTrialDays !== null
+                  ? t('paywall.trialBadge', { days: annualTrialDays })
+                  : undefined
+              }
               isSelected={selectedPlan === 'annual'}
               isDisabled={isLoadingPurchase}
               onSelect={() => handlePlanSelect('annual')}

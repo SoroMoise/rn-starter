@@ -1,10 +1,16 @@
 import { ADMOB_REWARDED_ID } from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { consentService } from '@/services/api/consentService'
+import { presentFullScreenAd } from '@/services/api/fullScreenAd'
 import { AdEventType, RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads'
+
+// A presentation that failed is not a refusal: only a user who closed the video early is
+// someone who declined the reward.
+export type RewardedOutcome = 'earned' | 'dismissed' | 'failed'
 
 class RewardedAdServiceClass {
   private rewardedAd: RewardedAd | null = null
+  private detachRewarded: (() => void) | null = null
   private isAdLoaded = false
   private isAdLoading = false
   private isInitialized = false
@@ -19,30 +25,38 @@ class RewardedAdServiceClass {
   }
 
   private initializeRewarded(unitId: string) {
-    this.rewardedAd = RewardedAd.createForAdRequest(unitId, {})
+    const ad = RewardedAd.createForAdRequest(unitId, {})
 
-    this.rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-      this.isAdLoaded = true
-      this.isAdLoading = false
-    })
+    const detachers = [
+      ad.addAdEventListener(RewardedAdEventType.LOADED, () => {
+        this.isAdLoaded = true
+        this.isAdLoading = false
+      }),
+      ad.addAdEventListener(AdEventType.CLOSED, () => {
+        this.isAdLoaded = false
+        this.preloadRewardedAd()
+      }),
+      ad.addAdEventListener(AdEventType.ERROR, () => {
+        this.isAdLoaded = false
+        this.isAdLoading = false
+      }),
+    ]
 
-    this.rewardedAd.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {})
-
-    this.rewardedAd.addAdEventListener(AdEventType.OPENED, () => {})
-
-    this.rewardedAd.addAdEventListener(AdEventType.CLOSED, () => {
-      this.isAdLoaded = false
-      this.preloadRewardedAd()
-    })
-
-    this.rewardedAd.addAdEventListener(AdEventType.ERROR, () => {
-      this.isAdLoaded = false
-      this.isAdLoading = false
-    })
-
-    this.rewardedAd.addAdEventListener(AdEventType.PAID, () => {})
-
+    this.rewardedAd = ad
+    this.detachRewarded = () => detachers.forEach((detach) => detach())
     this.preloadRewardedAd()
+  }
+
+  // The library still counts an ad that never opened as loaded and refuses to reload that
+  // instance, so the only way back to a fresh ad is a new one.
+  private replaceRewarded() {
+    this.detachRewarded?.()
+    this.rewardedAd = null
+    this.detachRewarded = null
+    this.isAdLoaded = false
+    this.isAdLoading = false
+    this.isInitialized = false
+    this.ensureInitialized()
   }
 
   async preloadRewardedAd() {
@@ -62,50 +76,27 @@ class RewardedAdServiceClass {
     return this.isAdLoaded
   }
 
-  async showRewardedAd(onRewarded: () => void): Promise<boolean> {
+  async showRewardedAd(onRewarded: () => void): Promise<RewardedOutcome> {
+    // Consent can change after the SDK started and preloaded: the privacy form stays reachable.
+    if (!consentService.canRequestAds()) return 'failed'
     this.ensureInitialized()
-    if (!this.isAdLoaded || !this.rewardedAd) {
-      return false
-    }
+    const ad = this.rewardedAd
+    if (!this.isAdLoaded || !ad) return 'failed'
 
-    return new Promise((resolve) => {
-      let hasRewarded = false
-      let settled = false
-
-      const settle = (value: boolean) => {
-        if (settled) return
-        settled = true
-        removeEarnedListener()
-        removeClosedListener()
-        removeErrorListener()
-        resolve(value)
-      }
-
-      const removeEarnedListener = this.rewardedAd!.addAdEventListener(
-        RewardedAdEventType.EARNED_REWARD,
-        () => {
-          hasRewarded = true
-          onRewarded()
-        }
-      )
-
-      const removeClosedListener = this.rewardedAd!.addAdEventListener(AdEventType.CLOSED, () => {
-        settle(hasRewarded)
-      })
-
-      // Render failure or ad expiry during display: CLOSED never fires, so
-      // without this the promise hangs forever and the per-show listeners leak.
-      const removeErrorListener = this.rewardedAd!.addAdEventListener(AdEventType.ERROR, () => {
-        settle(false)
-      })
-
-      try {
-        this.rewardedAd!.show()
-      } catch (error) {
-        console.warn('[RewardedAdService] Failed to show ad:', error)
-        settle(false)
-      }
+    let hasRewarded = false
+    const removeEarnedListener = ad.addAdEventListener(RewardedAdEventType.EARNED_REWARD, () => {
+      hasRewarded = true
+      onRewarded()
     })
+
+    try {
+      const outcome = await presentFullScreenAd(ad)
+      if (outcome === 'never_opened') this.replaceRewarded()
+      if (hasRewarded) return 'earned'
+      return outcome === 'closed' ? 'dismissed' : 'failed'
+    } finally {
+      removeEarnedListener()
+    }
   }
 }
 

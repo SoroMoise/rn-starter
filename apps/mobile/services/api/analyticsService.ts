@@ -72,7 +72,10 @@ export type AnalyticsEventMap = {
   external_link_opened: { link_type: 'privacy_policy' | 'terms_of_service' | 'support' }
 
   // Ads
-  rewarded_ad_result: { result: 'completed' | 'dismissed'; ad_free_duration_minutes: number }
+  rewarded_ad_result: {
+    result: 'completed' | 'dismissed' | 'failed'
+    ad_free_duration_minutes: number
+  }
 
   // Rating
   rate_app_clicked: undefined

@@ -10,7 +10,7 @@ import { Language } from '@/types'
 import { formatMinutesAsDuration } from '@/utils/time'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, StyleSheet, View } from 'react-native'
 
@@ -20,7 +20,15 @@ export function RewardedAdButton() {
   const { maybeTrigger } = useContextualPaywall()
   const { t, i18n } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
+  const promoTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const language = i18n.language as Language
+
+  useEffect(
+    () => () => {
+      if (promoTimeoutRef.current !== null) clearTimeout(promoTimeoutRef.current)
+    },
+    []
+  )
 
   const durationLabel = formatMinutesAsDuration(AD_REWARDED_FREE_DURATION_MINUTES, language)
   const remainingLabel = formatMinutesAsDuration(adFreeRemainingMinutes, language)
@@ -44,28 +52,34 @@ export function RewardedAdButton() {
     setIsLoading(true)
 
     try {
-      const success = await RewardedAdService.showRewardedAd(async () => {
+      const outcome = await RewardedAdService.showRewardedAd(async () => {
         await activateAdFreeReward()
       })
 
-      if (success) {
-        analyticsService.track('rewarded_ad_result', {
-          result: 'completed',
-          ad_free_duration_minutes: AD_REWARDED_FREE_DURATION_MINUTES,
-        })
+      analyticsService.track('rewarded_ad_result', {
+        result: outcome === 'earned' ? 'completed' : outcome,
+        ad_free_duration_minutes: AD_REWARDED_FREE_DURATION_MINUTES,
+      })
+
+      if (outcome === 'earned') {
         Alert.alert(
           t('settings.adRewardTitle'),
           t('settings.adRewardMessage', { duration: durationLabel }),
           undefined,
           { cancelable: true }
         )
-      } else {
-        analyticsService.track('rewarded_ad_result', {
-          result: 'dismissed',
-          ad_free_duration_minutes: AD_REWARDED_FREE_DURATION_MINUTES,
-        })
+        return
       }
-      setTimeout(() => maybeTrigger('rewarded_ad_dismissed'), 800)
+
+      if (outcome === 'failed') {
+        Alert.alert(t('settings.adErrorTitle'), t('settings.adErrorMessage'), undefined, {
+          cancelable: true,
+        })
+        return
+      }
+
+      // Only a declined video is the moment to sell its removal, never one just watched in full.
+      promoTimeoutRef.current = setTimeout(() => maybeTrigger('rewarded_ad_dismissed'), 800)
     } catch {
       Alert.alert(t('settings.adErrorTitle'), t('settings.adErrorMessage'), undefined, {
         cancelable: true,

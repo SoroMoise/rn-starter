@@ -15,20 +15,27 @@ function storeCandidates(): (string | undefined)[] {
   return [PLAY_STORE_MARKET_URL, PLAY_STORE_WEB_URL]
 }
 
+/** False where the store's own card cannot exist — on Android, no Play app. */
+export async function isNativeReviewAvailable(): Promise<boolean> {
+  try {
+    return await StoreReview.isAvailableAsync()
+  } catch {
+    return false
+  }
+}
+
 /**
  * Native in-app review. Reserved for automatic flows: Play enforces an
  * undocumented per-user quota and silently skips the dialog once it is spent,
  * which is why Google forbids wiring this to a button. Use `openStoreListing`
  * for anything the user taps on purpose.
+ *
+ * A failure is traced, never answered with the store listing: Google asks that
+ * an error in the flow be neither reported to the user nor allowed to change
+ * the app's own flow, and nobody asked to leave the app.
  */
 export async function requestNativeReview(): Promise<void> {
   try {
-    if (!(await StoreReview.isAvailableAsync())) {
-      analyticsService.track('review_flow_unavailable', { reason: 'platform' })
-      await openStoreListing({ reason: 'native_unavailable' })
-      return
-    }
-
     const startedAt = Date.now()
     await StoreReview.requestReview()
     const durationMs = Date.now() - startedAt
@@ -38,8 +45,10 @@ export async function requestNativeReview(): Promise<void> {
       likely_displayed: durationMs >= REVIEW_FLOW_DISPLAY_FLOOR_MS,
     })
   } catch (error) {
-    crashlyticsService.recordError(error as Error, { source: 'requestNativeReview' })
-    await openStoreListing({ reason: 'native_error' })
+    crashlyticsService.recordError(error, { source: 'requestNativeReview' })
+    analyticsService.track('review_flow_failed', {
+      error_code: String((error as { code?: unknown } | null)?.code ?? 'unknown'),
+    })
   }
 }
 

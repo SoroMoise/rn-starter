@@ -4,6 +4,7 @@ const DAY_MS = 24 * 60 * 60 * 1000
 
 export type ReviewRequestState = {
   moment: RatingMoment
+  nativeReviewAvailable: boolean
   optedOut: boolean
   requestCount: number
   lastRequestAt: number
@@ -16,6 +17,7 @@ export type ReviewRequestState = {
 }
 
 export type ReviewSuppressionReason =
+  | 'review_unavailable'
   | 'opted_out'
   | 'request_cap'
   | 'cooldown'
@@ -33,6 +35,7 @@ export type ReviewRequestDecision =
 export function evaluateReviewRequest(state: ReviewRequestState): ReviewRequestDecision {
   const c = REVIEW_REQUEST_CONFIG
 
+  if (!state.nativeReviewAvailable) return { show: false, reason: 'review_unavailable' }
   if (state.optedOut) return { show: false, reason: 'opted_out' }
 
   const sinceLastRequest = state.now - state.lastRequestAt

@@ -2,7 +2,7 @@ import type { RatingMoment } from '@/constants/rating'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
-import { requestNativeReview } from '@/services/api/ratingService'
+import { isNativeReviewAvailable, requestNativeReview } from '@/services/api/ratingService'
 import { evaluateReviewRequest } from '@/services/api/reviewPolicy'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { adsStorage } from '@/services/storage/domains/ads'
@@ -14,6 +14,7 @@ export function useRatingPrompt() {
   const maybeAskForRating = useCallback(
     async ({ moment }: { moment: RatingMoment }): Promise<boolean> => {
       try {
+        const nativeReviewAvailable = await isNativeReviewAvailable()
         const now = Date.now()
         const session = engagementService.getSessionContext()
         const totalActions = engagementStorage.getActionCount()
@@ -22,6 +23,7 @@ export function useRatingPrompt() {
 
         const decision = evaluateReviewRequest({
           moment,
+          nativeReviewAvailable,
           optedOut: reviewStorage.isOptedOut(),
           requestCount: reviewStorage.getRequestCount(),
           lastRequestAt: reviewStorage.getLastRequestAt(),

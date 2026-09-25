@@ -100,7 +100,7 @@ export type AnalyticsEventMap = {
     days_since_install: number
   }
   review_flow_launched: { duration_ms: number; likely_displayed: boolean }
-  review_flow_unavailable: { reason: string }
+  review_flow_failed: { error_code: string }
   store_listing_opened: { reason: string }
   // The dormant in-app pre-prompt, behind SENTIMENT_GATE_ENABLED.
   rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }

@@ -12,8 +12,3 @@ export const LEGAL_URLS = {
 export function getAppWebsiteUrl(): string | undefined {
   return venv?.websiteUrl
 }
-
-export const STORE_URLS = {
-  IOS: venv?.store?.ios,
-  ANDROID: venv?.store?.android,
-}

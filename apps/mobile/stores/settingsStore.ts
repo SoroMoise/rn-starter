@@ -18,7 +18,6 @@ interface SettingsStore {
   updateSetting: <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => void
   setLanguage: (language: Language) => void
   clearRTLRestartNeeded: () => void
-  resetSettings: () => void
 }
 
 export const useSettingsStore = create<SettingsStore>()(
@@ -57,10 +56,6 @@ export const useSettingsStore = create<SettingsStore>()(
 
       clearRTLRestartNeeded: () => {
         set({ rtlRestartNeeded: false })
-      },
-
-      resetSettings: () => {
-        set({ settings: DEFAULT_SETTINGS })
       },
     }),
     {

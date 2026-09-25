@@ -115,10 +115,6 @@ export default () => {
           licensesUrl: process.env.LEGAL_LICENSES_URL,
           supportEmail: process.env.LEGAL_SUPPORT_EMAIL,
         },
-        store: {
-          ios: process.env.STORE_URL_IOS,
-          android: process.env.STORE_URL_ANDROID,
-        },
         admob: {
           bannerIndexEnabled: process.env.AD_BANNER_INDEX_ENABLED !== 'false',
           bannerSettingsEnabled: process.env.AD_BANNER_SETTINGS_ENABLED !== 'false',

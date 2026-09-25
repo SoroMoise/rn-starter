@@ -92,7 +92,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 | `mmkv.ts` | Single MMKV instance |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
-| `domains/adFree.ts` | Ad-free window expiry |
+| `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |

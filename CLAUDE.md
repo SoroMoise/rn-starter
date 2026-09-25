@@ -129,7 +129,7 @@ Notable domains:
   policy's own cooldown and lifetime cap are what pace the paywall, and a counter that could be rewound
   would make both meaningless.
 - `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating and grace period banner
-- `adFree` — tracks the ad-free window granted after a rewarded ad
+- `adFree` — tracks the ad-free window granted after a rewarded ad. A video watched while a window is open adds to what is left, up to `AD_REWARDED_FREE_MAX_MINUTES` — overwriting took back minutes already earned
 
 **MMKV is the only key-value store, and `@react-native-async-storage/async-storage` does not come
 back.** The persisted stores hydrate synchronously because of it, which is what removes the async gate

@@ -105,7 +105,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 
 ### AdMob
 
-Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`.
+Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer.
 
 ### RevenueCat
 

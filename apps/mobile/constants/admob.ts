@@ -50,3 +50,5 @@ export const AD_BANNER_SETTINGS_ENABLED: boolean = true
 export const AD_INTERSTITIAL_ENABLED: boolean = true
 export const AD_REWARDED_ENABLED: boolean = true
 export const AD_REWARDED_FREE_DURATION_MINUTES: number = 60
+
+export const AD_BANNER_RESERVED_HEIGHT: number = 60

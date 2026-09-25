@@ -10,12 +10,13 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import {
   ADMOB_REWARDED_ID,
   ADMOB_SETTINGS_BANNER_ID,
+  AD_BANNER_RESERVED_HEIGHT,
   AD_BANNER_SETTINGS_ENABLED,
   AD_REWARDED_ENABLED,
 } from '@/constants/admob'
+import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { usePremium } from '@/hooks/usePremium'
 import { loadLanguage } from '@/i18n/service'
-import { useAdFree } from '@/providers/AdFreeProvider'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useSettingsStore } from '@/stores/settingsStore'
@@ -40,16 +41,13 @@ export default function SettingsScreen() {
   const updateSetting = useSettingsStore((s) => s.updateSetting)
   const setLanguage = useSettingsStore((s) => s.setLanguage)
   const { showToast } = useToast()
-  const { isAdFreeActive } = useAdFree()
-  const { isPremium, isInitialized } = usePremium()
+  const { isPremium } = usePremium()
 
-  const showAds =
-    isInitialized &&
-    !isAdFreeActive &&
-    AD_BANNER_SETTINGS_ENABLED &&
-    ADMOB_SETTINGS_BANNER_ID !== null &&
-    !isPremium
-  const tabBarPadding = useTabBarPadding(showAds ? 60 : 0) + 20
+  const isBannerVisible = useAdPlacementActive({
+    unitId: ADMOB_SETTINGS_BANNER_ID,
+    enabled: AD_BANNER_SETTINGS_ENABLED,
+  })
+  const tabBarPadding = useTabBarPadding(isBannerVisible ? AD_BANNER_RESERVED_HEIGHT : 0) + 20
 
   const [showLanguagePicker, setShowLanguagePicker] = useState(false)
 

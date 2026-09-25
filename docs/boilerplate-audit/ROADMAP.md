@@ -22,7 +22,7 @@ audit of that gap and the plan to close it.
 | 2 | Build & release: signing, Gradle plugins, GitHub Actions | 6 | **merged into `main`** |
 | 3 | The offer is data: offerings-driven paywall, price retry, restore outcomes | 3 | **merged into `main`** |
 | 4 | Converter vestiges: dead code, dead keys, dead config | 15 | **merged into `main`** |
-| 5 | Promo coordination and AdMob | 11 | **merged into `main`** |
+| 5 | Promo coordination and AdMob | 18 | **merged into `main`** |
 | 6–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
@@ -233,6 +233,21 @@ proposals assumed about the library; stage 2 caught what stage 1's plan still le
 - **bg-remover's ADS.md, emptied, would have stated falsehoods (stage 2).** Its encrypted storage,
   `/success` screen, inline banners and per-feature unlocks do not exist here; the starter's file
   was written from this code, keeping only the platform invariants word for word.
+
+The code review on the pull request then found five more, all fixed before the merge — a third
+stage worth keeping:
+
+- an ad that opened after the deadline still owed something, a reward or a spent slot, and every
+  listener was gone by then;
+- a `show()` rejected without an `ERROR` left a dead instance in place, so every later action
+  stopped at the ad;
+- the interstitial's counter kept climbing through a session whose interruption was spent, so the
+  next session opened on an ad;
+- `setPremium(true)` left the preloaded instance retrying for a subscriber;
+- the contextual impression was recorded before the choke point could still refuse.
+
+Checking the new release gate also exposed a lot-2 bug: the workflow required `app.config.js`
+before `pnpm install`, when loading it needs `@expo/config-plugins` — no release could have left.
 
 ---
 

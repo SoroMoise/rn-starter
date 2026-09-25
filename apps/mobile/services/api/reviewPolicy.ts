@@ -32,6 +32,12 @@ export type ReviewRequestDecision =
   | { show: true; requestIndex: number }
   | { show: false; reason: ReviewSuppressionReason }
 
+// A collision ends with its session; every other refusal holds past it, and the next action arms a
+// fresh ask anyway.
+export function refusalOutlivesSession(reason: ReviewSuppressionReason): boolean {
+  return reason !== 'ad_collision' && reason !== 'promo_collision'
+}
+
 export function evaluateReviewRequest(state: ReviewRequestState): ReviewRequestDecision {
   const c = REVIEW_REQUEST_CONFIG
 

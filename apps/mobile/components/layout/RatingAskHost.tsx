@@ -1,5 +1,6 @@
 import { RATING_ASK_MIN_AWAY_MS, RATING_ASK_SETTLE_MS } from '@/constants/rating'
 import { useRatingPrompt } from '@/hooks/useRatingPrompt'
+import { refusalOutlivesSession } from '@/services/api/reviewPolicy'
 import { reviewStorage } from '@/services/storage/domains/review'
 import { useEffect } from 'react'
 import { AppState } from 'react-native'
@@ -24,10 +25,13 @@ export function RatingAskHost() {
       settleTimer = setTimeout(() => {
         settleTimer = null
         if (!reviewStorage.getArmed()) return
-        // One arming, one evaluation: a refusal left armed would be traced again at every
-        // return for as long as a cooldown lasts.
-        reviewStorage.setArmed(false)
-        void maybeAskForRating({ moment: 'action_completed' })
+        void maybeAskForRating({ moment: 'action_completed' }).then((decision) => {
+          // A refusal left armed would be traced again at every return for as long as it lasts —
+          // a cooldown runs for months — so only a collision keeps the ask for a later session.
+          if (decision === null || (!decision.show && refusalOutlivesSession(decision.reason))) {
+            reviewStorage.setArmed(false)
+          }
+        })
       }, RATING_ASK_SETTLE_MS)
     }
 

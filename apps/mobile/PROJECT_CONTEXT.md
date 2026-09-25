@@ -114,8 +114,8 @@ Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `
 ### Contextual Paywall
 
 `contextualPaywallService.evaluate(...)` uses:
-- `engagementStorage.getSessionCount()` — for `session_return` arming
-- `engagementStorage.getActionCount()` — for `power_action` / `after_n_actions` triggers
+- `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
+- `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
 
 **To hook your app's actions into the contextual paywall:** call `engagementStorage.incrementAction()` on any meaningful user interaction (e.g. completing a feature action). The paywall policy in `contextualPaywall/policy.ts` will trigger at the configured thresholds.
 

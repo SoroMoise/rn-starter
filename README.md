@@ -9,7 +9,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Theme system** — light / dark mode with RTL support (Arabic and any RTL language)
 - **i18n** — 20 languages (EN, FR, ES, DE, PT-BR, ZH-CN, ZH-TW, JA, KO, AR, HI, BN, RU, ID, TR, IT, NL, SV, PL, VI), lazy-loaded
 - **RevenueCat paywall** — monthly + annual subscriptions, 7-day free trial, grace period banner
-- **Contextual paywall** — triggers on generic action count (`engagementStorage.getActionCount / incrementAction`) and session signals — no business logic baked in
+- **Contextual paywall** — triggers on generic action count (`engagementStorage.getActionCount / incrementAction`), never during the first session — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
 - **Notification system** — `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications

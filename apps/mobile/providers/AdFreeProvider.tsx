@@ -1,4 +1,4 @@
-import { AD_REWARDED_FREE_DURATION_MINUTES } from '@/constants/admob'
+import { AD_REWARDED_FREE_DURATION_MINUTES, AD_REWARDED_FREE_MAX_MINUTES } from '@/constants/admob'
 import { adFreeStorage } from '@/services/storage/domains/adFree'
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
@@ -49,8 +49,15 @@ export const AdFreeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const isAdFreeActive = adFreeUntil !== null
 
+  // A video watched while a window is still open adds to what is left: overwriting took
+  // back minutes already earned. The ceiling keeps stacked videos from becoming Pro.
   const activateAdFreeReward = useCallback(async () => {
-    const until = Date.now() + AD_REWARDED_FREE_DURATION_MINUTES * 60 * 1000
+    const now = Date.now()
+    const base = Math.max(adFreeStorage.getUntil() ?? 0, now)
+    const until = Math.min(
+      base + AD_REWARDED_FREE_DURATION_MINUTES * 60 * 1000,
+      now + AD_REWARDED_FREE_MAX_MINUTES * 60 * 1000
+    )
     adFreeStorage.setUntil(until)
     setAdFreeUntilState(until)
   }, [])

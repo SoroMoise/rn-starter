@@ -1,12 +1,6 @@
-export type ContextualTrigger =
-  | 'after_n_actions'
-  | 'power_action'
-  | 'rewarded_ad_dismissed'
-  | 'session_return'
+export type ContextualTrigger = 'after_n_actions' | 'power_action' | 'rewarded_ad_dismissed'
 
-// Cadence « Équilibrée » validée.
 export const CONTEXTUAL_PAYWALL_CONFIG = {
-  minSessions: 3,
   minActions: 10,
   cooldownDays: 3,
   lifetimeCap: 4,

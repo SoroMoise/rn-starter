@@ -88,8 +88,10 @@ export default () => {
         [
           'react-native-google-mobile-ads',
           {
-            androidAppId: process.env.ADMOB_ANDROID_APP_ID,
-            iosAppId: process.env.ADMOB_IOS_APP_ID,
+            // Google's sample app ids: the SDK crashes at launch without one. Replace both with
+            // the app's own before the first release — unit ids live in constants/admob.ts.
+            androidAppId: 'ca-app-pub-3940256099942544~3347511713',
+            iosAppId: 'ca-app-pub-3940256099942544~1458002511',
           },
         ],
         [
@@ -113,24 +115,6 @@ export default () => {
           termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,
           licensesUrl: process.env.LEGAL_LICENSES_URL,
           supportEmail: process.env.LEGAL_SUPPORT_EMAIL,
-        },
-        admob: {
-          bannerIndexEnabled: process.env.AD_BANNER_INDEX_ENABLED !== 'false',
-          bannerSettingsEnabled: process.env.AD_BANNER_SETTINGS_ENABLED !== 'false',
-          interstitialEnabled: process.env.AD_INTERSTITIAL_ENABLED !== 'false',
-          rewardedEnabled: process.env.AD_REWARDED_ENABLED !== 'false',
-          rewardedFreeDurationMinutes: parseInt(
-            process.env.AD_REWARDED_FREE_DURATION_MINUTES || '60',
-            10
-          ),
-          androidBannerIndexId: process.env.ADMOB_ANDROID_BANNER_INDEX_ID,
-          androidBannerSettingsId: process.env.ADMOB_ANDROID_BANNER_SETTINGS_ID,
-          androidInterstitialId: process.env.ADMOB_ANDROID_INTERSTITIAL_ID,
-          androidRewardedId: process.env.ADMOB_ANDROID_REWARDED_ID,
-          iosBannerIndexId: process.env.ADMOB_IOS_BANNER_INDEX_ID,
-          iosBannerSettingsId: process.env.ADMOB_IOS_BANNER_SETTINGS_ID,
-          iosInterstitialId: process.env.ADMOB_IOS_INTERSTITIAL_ID,
-          iosRewardedId: process.env.ADMOB_IOS_REWARDED_ID,
         },
         purchases: {
           iosApiKey: process.env.REVENUECAT_IOS_API_KEY ?? '',

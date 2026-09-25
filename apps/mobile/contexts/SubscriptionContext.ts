@@ -15,7 +15,7 @@ export type SubscriptionContextValue = {
   retryPrices: () => Promise<void>
   purchasePlan: (params: { plan: OfferingPlan; source: string }) => Promise<void>
   restorePurchases: () => Promise<void>
-  openPaywall: (params: { source: string }) => Promise<void>
+  openPaywall: (params: { source: string }) => Promise<boolean>
   refreshSubscription: () => Promise<void>
 }
 
@@ -33,7 +33,7 @@ const initial: SubscriptionContextValue = {
   retryPrices: async () => {},
   purchasePlan: async () => {},
   restorePurchases: async () => {},
-  openPaywall: async () => {},
+  openPaywall: async () => false,
   refreshSubscription: async () => {},
 }
 

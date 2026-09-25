@@ -35,8 +35,10 @@ export function evaluateContextualPaywall(
     return { show: false, reason: 'cooldown' }
   }
 
-  const meetsThreshold = state.sessionCount >= c.minSessions || state.totalActions >= c.minActions
-  if (!meetsThreshold) return { show: false, reason: 'below_threshold' }
+  // Usage only: coming back a third time says nothing about value drawn from the app, and
+  // at three sessions against ten actions the session criterion always fired first — the
+  // action count never actually gated anything.
+  if (state.totalActions < c.minActions) return { show: false, reason: 'below_threshold' }
 
   return { show: true }
 }

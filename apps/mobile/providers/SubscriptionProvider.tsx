@@ -2,6 +2,7 @@ import { PaywallModal } from '@/components/paywall/PaywallModal'
 import { ENTITLEMENT_PREMIUM, SUBSCRIPTION_GRACE_PERIOD_MS } from '@/constants/purchases'
 import { SubscriptionContext, type SubscriptionContextValue } from '@/contexts/SubscriptionContext'
 import { useToast } from '@/providers/ToastProvider'
+import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
@@ -9,6 +10,7 @@ import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { purchaseService } from '@/services/api/purchaseService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import {
   buildOfferingPlans,
   pickDefaultPlan,
@@ -85,6 +87,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     plansRef.current = plans
   }, [plans])
+
+  useEffect(() => {
+    AdService.setPremium(isPremium)
+  }, [isPremium])
 
   // The single place a CustomerInfo becomes the app's tier, so the boot read, the
   // foreground sync, a purchase and a restore cannot disagree.
@@ -284,8 +290,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   }, [applyCustomerInfo, isPremium, showToast, t])
 
+  // The one gate every source passes, so a source that does not exist yet cannot sell to a
+  // subscriber or ahead of the onboarding's own pitch — and `paywall_shown` only counts
+  // impressions that could convert.
   const openPaywall = useCallback(
-    async ({ source }: { source: string }) => {
+    async ({ source }: { source: string }): Promise<boolean> => {
+      if (isPremium) return false
+      if (!useOnboardingStore.getState().isCompleted) return false
+
       paywallSourceRef.current = source
       const paywallCount = await engagementService.incrementPaywallCount()
       const sessionCtx = engagementService.getSessionContext()
@@ -300,8 +312,9 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       })
       promoCoordinator.setPaywallVisible(true)
       setPaywallVisible(true)
+      return true
     },
-    [offering, plans]
+    [isPremium, offering, plans]
   )
 
   const closePaywall = useCallback(() => {

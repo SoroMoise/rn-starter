@@ -1,25 +1,29 @@
-export type PromoSurface = 'paywall' | 'widget_tooltip'
+export type PromoSurface = 'paywall' | 'interstitial_ad'
 
-let paywallVisible = false
-let tooltipVisible = false
+const visibleSurfaces = new Set<PromoSurface>()
 let autoPromoShownThisSession = false
 
-// Single in-memory authority that keeps interruptive promotional surfaces (the
-// paywall and the widget tooltip) from stacking on top of each other or firing
-// more than once per session. User-initiated paywall opens still register their
-// visibility here so an automatic promo never appears over them, but they do not
-// consume the per-session auto-promo budget.
+function setSurfaceVisible({ surface, visible }: { surface: PromoSurface; visible: boolean }) {
+  if (visible) visibleSurfaces.add(surface)
+  else visibleSurfaces.delete(surface)
+}
+
+// Single in-memory authority over interruptive surfaces — the paywall and the AdMob
+// interstitial. It keeps them from stacking, and grants one automatic interruption per
+// session, all types included: an ad and a promo never land in the same session. A paywall
+// the user opens registers its visibility, so nothing automatic lands on top of it, but does
+// not spend the budget.
 export const promoCoordinator = {
   setPaywallVisible(visible: boolean): void {
-    paywallVisible = visible
+    setSurfaceVisible({ surface: 'paywall', visible })
   },
 
-  setTooltipVisible(visible: boolean): void {
-    tooltipVisible = visible
+  setInterstitialVisible(visible: boolean): void {
+    setSurfaceVisible({ surface: 'interstitial_ad', visible })
   },
 
   isSurfaceVisible(): boolean {
-    return paywallVisible || tooltipVisible
+    return visibleSurfaces.size > 0
   },
 
   autoPromoShown(): boolean {
@@ -27,7 +31,7 @@ export const promoCoordinator = {
   },
 
   canPresentAutoPromo(): boolean {
-    return !paywallVisible && !tooltipVisible && !autoPromoShownThisSession
+    return !promoCoordinator.isSurfaceVisible() && !autoPromoShownThisSession
   },
 
   markAutoPromoShown(): void {

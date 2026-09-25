@@ -69,23 +69,6 @@ jobs:
         id: version
         run: bash .github/scripts/compute-android-version.sh
 
-      # Read from app.config.js rather than written into this file: the boilerplate's
-      # setup script renames the app in the config, and a package id duplicated here
-      # would keep pointing at the template's Play listing with nothing to warn you.
-      - name: Resolve Play package name
-        id: package
-        working-directory: apps/mobile
-        run: |
-          # Run from apps/mobile: app.config.js is ESM, so the `require('./plugins/…')`
-          # calls at its top resolve against the process cwd, not against the file.
-          pkg="$(node -e "const c=require('./app.config.js').default();process.stdout.write(c.expo.android.package)")"
-          if [ -z "$pkg" ]; then
-            echo "error: could not read expo.android.package from apps/mobile/app.config.js" >&2
-            exit 1
-          fi
-          echo "name=$pkg" >> "$GITHUB_OUTPUT"
-          echo "Publishing as $pkg"
-
       # The PR title becomes the Play release name, which is what labels the build in
       # the Play Console history long after the review is over. Play rejects names
       # past 50 characters, so it is truncated and the cut is marked.
@@ -152,6 +135,44 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      # Read from app.config.js rather than written into this file: the boilerplate's
+      # setup script renames the app in the config, and a package id duplicated here
+      # would keep pointing at the template's Play listing with nothing to warn you.
+      # Loading the config loads its plugins, and with them @expo/config-plugins — so this
+      # only works once dependencies are installed.
+      - name: Resolve Play package name
+        id: package
+        working-directory: apps/mobile
+        run: |
+          # Run from apps/mobile: app.config.js is ESM, so the `require('./plugins/…')`
+          # calls at its top resolve against the process cwd, not against the file.
+          pkg="$(node -e "const c=require('./app.config.js').default();process.stdout.write(c.expo.android.package)")"
+          if [ -z "$pkg" ]; then
+            echo "error: could not read expo.android.package from apps/mobile/app.config.js" >&2
+            exit 1
+          fi
+          echo "name=$pkg" >> "$GITHUB_OUTPUT"
+          echo "Publishing as $pkg"
+
+      # The template ships Google's sample AdMob app id because the SDK crashes at launch
+      # without one. A release carrying it pairs the app's own units with Google's test app,
+      # and nothing on the device would say so — so the release refuses it here. A release
+      # whose units are all still pending is legitimate (an app can launch ad-free) but
+      # requests no ad at all, so it is flagged rather than refused.
+      - name: Check the AdMob configuration
+        working-directory: apps/mobile
+        run: |
+          app_id="$(node -e "const c=require('./app.config.js').default();const p=c.expo.plugins.find((e)=>Array.isArray(e)&&e[0]==='react-native-google-mobile-ads');process.stdout.write(p?String(p[1].androidAppId??''):'')")"
+          case "$app_id" in
+            ca-app-pub-3940256099942544~*)
+              echo "::error::apps/mobile/app.config.js still carries Google's sample AdMob app id ($app_id). Put the app's own in the react-native-google-mobile-ads plugin block before releasing."
+              exit 1
+              ;;
+          esac
+          if [ -n "$app_id" ] && ! grep -Eq "android: 'ca-app-pub-[0-9]{16}/[0-9]{10}'" constants/admob.ts; then
+            echo "::warning::Every Android unit in apps/mobile/constants/admob.ts is still UNIT_PENDING: this release requests no ad."
+          fi
 
       - name: Write mobile .env from secret
         working-directory: apps/mobile

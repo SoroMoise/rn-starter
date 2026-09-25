@@ -63,8 +63,9 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 | Service | Description |
 |---|---|
-| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free |
-| `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion |
+| `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) drops a preloaded ad, and its pending retries, the moment Pro is bought. `showInterstitialAd()` resolves `true` only once the ad has closed, and only then spends the cadence and the session's interruption |
+| `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion; `showRewardedAd` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
+| `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`); `onEnd` runs whenever the presentation really ends, so an ad that opens late still pays its slot or its reward |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
@@ -82,8 +83,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 
 ### `services/promo/`
 
-`promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces.
-Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`). Reset at boot via `contextualPaywallService.resetSession()`.
+`promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall and the AdMob interstitial (`PromoSurface`).
+Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget. Reset at boot via `contextualPaywallService.resetSession()`.
 
 ### `services/storage/`
 
@@ -92,7 +93,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 | `mmkv.ts` | Single MMKV instance |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
-| `domains/adFree.ts` | Ad-free window expiry |
+| `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
@@ -105,19 +106,21 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 
 ### AdMob
 
-Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Configured via `constants/admob.ts` which reads from `.env`.
+`ADS.md` is the reference — placements, units, cadence, gates and invariants. Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer.
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })`. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
 
 ### Contextual Paywall
 
 `contextualPaywallService.evaluate(...)` uses:
-- `engagementStorage.getSessionCount()` — for `session_return` arming
-- `engagementStorage.getActionCount()` — for `power_action` / `after_n_actions` triggers
+- `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
+- `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
 
-**To hook your app's actions into the contextual paywall:** call `engagementStorage.incrementAction()` on any meaningful user interaction (e.g. completing a feature action). The paywall policy in `contextualPaywall/policy.ts` will trigger at the configured thresholds.
+`useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
+
+**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
 
 ---
 

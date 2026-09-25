@@ -109,7 +109,7 @@ Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })`. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
 
 ### Contextual Paywall
 

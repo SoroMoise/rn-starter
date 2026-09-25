@@ -28,7 +28,7 @@ const FEATURE_ITEMS: FeatureItem[] = [
 
 export default function HomeScreen() {
   const { t } = useTranslation()
-  const { openPaywall } = usePremium()
+  const { isPremium, openPaywall } = usePremium()
   const { isAdFreeActive } = useAdFree()
   const tabBarPadding = useTabBarPadding(24)
 
@@ -91,20 +91,24 @@ export default function HomeScreen() {
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 400, delay: 240 }}>
           <View className="mx-5 mt-2">
-            <GradientButton
-              onPress={() => void openPaywall({ source: 'home_cta' })}
-              colors={['#3b82f6', '#6366f1', '#8b5cf6']}
-              style={{ height: 58, borderRadius: 16 }}
-              gradientStyle={{ height: '100%', gap: 10 }}
-              accessibilityLabel={t('home.cta.label')}>
-              <ThemedText variant="buttonLarge" color="inverse">
-                {t('home.cta.label')}
-              </ThemedText>
-              <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-            </GradientButton>
-            <ThemedText variant="caption" color="muted" align="center" className="mt-2">
-              {t('home.cta.sub')}
-            </ThemedText>
+            {!isPremium && (
+              <>
+                <GradientButton
+                  onPress={() => void openPaywall({ source: 'home_cta' })}
+                  colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+                  style={{ height: 58, borderRadius: 16 }}
+                  gradientStyle={{ height: '100%', gap: 10 }}
+                  accessibilityLabel={t('home.cta.label')}>
+                  <ThemedText variant="buttonLarge" color="inverse">
+                    {t('home.cta.label')}
+                  </ThemedText>
+                  <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+                </GradientButton>
+                <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+                  {t('home.cta.sub')}
+                </ThemedText>
+              </>
+            )}
 
             <Pressable
               onPress={() => void recordAction()}

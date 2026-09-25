@@ -199,7 +199,8 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
 AdMob identifiers are not environment variables: the app IDs are literals in
 `apps/mobile/app.config.js` (Google's sample IDs until you replace them) and the ad unit IDs
-in `apps/mobile/constants/admob.ts`.
+in `apps/mobile/constants/admob.ts`. `apps/mobile/ADS.md` is the advertising reference —
+placements, cadence, gates, and what to set before the first release.
 
 ### Environment variables — API (`apps/api/.dev.vars`)
 

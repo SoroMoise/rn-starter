@@ -117,6 +117,8 @@ Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `
 - `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
 - `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
 
+`useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`): the impressions are capped for life and each one arms a cooldown.
+
 **To hook your app's actions into the contextual paywall:** call `engagementStorage.incrementAction()` on any meaningful user interaction (e.g. completing a feature action). The paywall policy in `contextualPaywall/policy.ts` will trigger at the configured thresholds.
 
 ---

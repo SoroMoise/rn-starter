@@ -1,7 +1,6 @@
 import type { RatingMoment } from '@/constants/rating'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
-import { engagementService } from '@/services/api/engagementService'
 import { isNativeReviewAvailable, requestNativeReview } from '@/services/api/ratingService'
 import { evaluateReviewRequest, type ReviewRequestDecision } from '@/services/api/reviewPolicy'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
@@ -10,16 +9,20 @@ import { engagementStorage } from '@/services/storage/domains/engagement'
 import { reviewStorage } from '@/services/storage/domains/review'
 import { useCallback } from 'react'
 
+const DAY_MS = 24 * 60 * 60 * 1000
+
 export function useRatingPrompt() {
   const maybeAskForRating = useCallback(
     async ({ moment }: { moment: RatingMoment }): Promise<ReviewRequestDecision | null> => {
       try {
         const nativeReviewAvailable = await isNativeReviewAvailable()
         const now = Date.now()
-        const session = engagementService.getSessionContext()
+        // Read now rather than from the session's snapshot: a warm return can come days after the
+        // session started, and would be judged on the age the install had then.
+        const installDate = engagementStorage.getInstallDate()
+        const daysSinceInstall = installDate === null ? 0 : Math.floor((now - installDate) / DAY_MS)
+        const sessionCount = engagementStorage.getSessionCount()
         const totalActions = engagementStorage.getActionCount()
-        const sessionCount = session?.sessionCount ?? 0
-        const daysSinceInstall = session?.daysSinceInstall ?? 0
 
         const decision = evaluateReviewRequest({
           moment,

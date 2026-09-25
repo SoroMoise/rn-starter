@@ -16,6 +16,7 @@ export const KEYS = {
   // Review requests
   REVIEW_REQUEST_COUNT: '@review_request_count',
   REVIEW_LAST_REQUEST_AT: '@review_last_request_at',
+  REVIEW_REQUEST_ARMED: '@review_request_armed',
   HAS_RATED_APP: '@has_rated_app',
   RATING_DECLINED_FOREVER: '@rating_declined_forever',
 

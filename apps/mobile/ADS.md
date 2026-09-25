@@ -54,11 +54,11 @@ recordAction({ allowPromos })
   ├─ engagementStorage.incrementAction()     (lifetime counter, +1, always)
   ├─ allowPromos: false ─────────────────────► stop
   ├─ contextual paywall takes the moment ───► stop
-  ├─ session's interruption already spent ──► skip the ad (and the rating after it)
+  ├─ session's interruption already spent ──► skip the ad
   ├─ ad-free window open ───────────────────► skip the ad
   ├─ AdService.recordExecution()             (actions since the last ad, +1)
-  ├─ shouldShowInterstitialAd() ────────────► show it, then stop — shown or not
-  └─ rating prompt, if eligible
+  ├─ shouldShowInterstitialAd() ────────────► show it; stop if it was seen
+  └─ arm the rating ask                      (raised once the user is back — CLAUDE.md, App Rating)
 ```
 
 `shouldShowInterstitialAd()` says yes only when all of these hold:
@@ -76,12 +76,16 @@ can come, and the interval only matters across a quick relaunch.
 Rules that follow, and that the code enforces:
 
 - **One automatic interruption per session, all types included.** The contextual paywall, the
-  interstitial and the rating prompt share one budget; a session that had its contextual paywall
-  gets no interstitial, and the other way round. A paywall the user opens spends nothing. The order is paywall, then interstitial, then rating.
+  interstitial and the rating ask share one budget; a session that had its contextual paywall
+  gets no interstitial, and the other way round. A paywall the user opens spends nothing. The
+  order is paywall, then interstitial, then rating — which an action only arms: the ask is raised
+  when the user comes back, and never within two minutes of an interstitial
+  (`REVIEW_REQUEST_CONFIG.adQuietSeconds`).
 - **A slot is spent on what the user actually saw.** `showInterstitialAd()` resolves on `CLOSED`,
   not on the native `show()` — which resolves the moment the ad is handed to the activity. Only a
-  closed ad resets the counter, stamps the interval and spends the session's interruption; one that
-  errored or never opened leaves them untouched.
+  closed ad resets the counter, stamps the interval, spends the session's interruption and takes
+  the action's moment; one that errored or never opened leaves them untouched, and the moment
+  still arms the rating ask.
 - **An ad that never opens does not hold anything.** On Android the library never reports a failed
   presentation (`onAdFailedToShowFullScreenContent` is not handled), so `presentFullScreenAd`
   settles as `never_opened` when no `OPENED` arrives within `PRESENTATION_TIMEOUT_MS` and the
@@ -196,7 +200,7 @@ reset at every launch.
 | `services/api/rewardedAdService.ts` | rewarded: preload, show, `earned` / `dismissed` / `failed` |
 | `services/api/fullScreenAd.ts` | `presentFullScreenAd` — settles a full-screen ad once it is gone |
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
-| `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, rating |
+| `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |
 | `hooks/useAdPlacementActive.ts` | may this placement run right now |
 | `components/ads/AdBanner.tsx` | the banner, pinned above the tab bar |
 | `components/ads/RewardedAdButton.tsx` | the Settings rewarded entry point |

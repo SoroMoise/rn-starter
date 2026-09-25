@@ -13,7 +13,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
 - **Notification system** — `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
-- **App-store rating prompt** — `expo-store-review` with store URL fallback
+- **App-store rating prompt** — Play's in-app review card, armed by an action and raised once the user is back; one pure policy decides and names every refusal; the store listing for explicit taps
 - **Onboarding flow** — welcome → premium value pitch → language picker
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
 - **Custom tab bar** — blur effect, haptics, premium-aware

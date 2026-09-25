@@ -37,11 +37,23 @@ export const APP_STORE_URL: string | undefined = APP_STORE_APP_ID
  * Where an ask may come from: a point where the app has just delivered what the user came for,
  * never a step inside a task. Add your own, and list in `STRONG_RATING_MOMENTS` the ones allowed
  * to open Play's card — any other is refused as `weak_moment`, which measures a candidate before
- * it is promoted. `action_completed` is `recordAction()`'s.
+ * it is promoted. `action_completed` is `recordAction()`'s, and it waits for the user to come
+ * back: the instant an action completes, they are reading its result.
  */
 export type RatingMoment = 'action_completed'
 
 export const STRONG_RATING_MOMENTS: readonly RatingMoment[] = ['action_completed']
+
+/**
+ * A deferred ask is raised at a launch, or on a return after at least `RATING_ASK_MIN_AWAY_MS`
+ * away. Android reports every activity drawn over the app as a background — the interstitial,
+ * the rewarded video, the billing sheet, a permission dialog, Play's own card — so a shorter
+ * absence is the app's own flow, not the user coming back. The ask then waits
+ * `RATING_ASK_SETTLE_MS`, so it lands on a screen that is back rather than on the frame that
+ * restores it.
+ */
+export const RATING_ASK_MIN_AWAY_MS = 5 * 60 * 1000
+export const RATING_ASK_SETTLE_MS = 1200
 
 /**
  * When a qualifying moment may become a request to Play (`services/api/reviewPolicy.ts`).

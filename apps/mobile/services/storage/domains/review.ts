@@ -25,4 +25,8 @@ export const reviewStorage = {
     mmkv.set(KEYS.REVIEW_REQUEST_COUNT, index.toString())
     mmkv.set(KEYS.REVIEW_LAST_REQUEST_AT, at.toString())
   },
+
+  // Persisted, so an action taken just before a kill still gets its ask at the next launch.
+  getArmed: (): boolean => getBoolean(KEYS.REVIEW_REQUEST_ARMED),
+  setArmed: (armed: boolean) => mmkv.set(KEYS.REVIEW_REQUEST_ARMED, armed.toString()),
 }

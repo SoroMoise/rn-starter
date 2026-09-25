@@ -1,4 +1,5 @@
 import { useThemeColor } from '@/components/Themed'
+import { RatingAskHost } from '@/components/layout/RatingAskHost'
 import { TelemetryEffects } from '@/components/layout/TelemetryEffects'
 import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
 import { PremiumTabBar } from '@/components/ui/PremiumTabBar'
@@ -21,7 +22,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Constants from 'expo-constants'
 import { Tabs } from 'expo-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -50,6 +51,7 @@ function AppContent() {
   const theme = useSettingsStore((s) => s.settings.theme)
 
   const isOnboardingCompleted = useOnboardingStore((s) => s.isCompleted)
+  const [isSessionStarted, setIsSessionStarted] = useState(false)
 
   useEffect(() => {
     if (!isSubscriptionInitialized) return
@@ -60,6 +62,7 @@ function AppContent() {
         analyticsService.init({ isPremium, platform: Platform.OS, appVersion }),
       ])
       contextualPaywallService.resetSession()
+      setIsSessionStarted(true)
       await Promise.all([
         analyticsService.setUserProperty('preferred_language', language),
         analyticsService.setUserProperty('session_count', String(sessionCtx.sessionCount)),
@@ -97,7 +100,12 @@ function AppContent() {
 
   if (!isOnboardingCompleted) return <OnboardingScreen />
 
-  return <TabLayout />
+  return (
+    <>
+      <TabLayout />
+      {isSessionStarted && <RatingAskHost />}
+    </>
+  )
 }
 
 function RootLayoutContent() {

@@ -27,7 +27,7 @@ SafeAreaProvider
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
               > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal
                 > AdFreeProvider       <- ad-free session window tracking
-                  > AppContent         <- onboarding gate, then TabLayout
+                  > AppContent         <- onboarding gate, then TabLayout (+ RatingAskHost once the session started)
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -121,11 +121,11 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
-**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
+**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall and the interstitial, in that order; a moment neither took arms the rating ask, which waits for the user to come back (App Rating below). The first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
 
 ### App Rating
 
-`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state — `reviewStorage`, the session context, the action counter, the last ad, `promoCoordinator` — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from; `recordAction()` raises `action_completed`, and an app adds its own moments to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent.
+`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state — `reviewStorage`, the session context, the action counter, the last ad, `promoCoordinator` — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. One arming buys one evaluation, launched or refused. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent.
 
 ---
 

@@ -3,8 +3,8 @@ import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
 import { engagementStorage } from '@/services/storage/domains/engagement'
+import { reviewStorage } from '@/services/storage/domains/review'
 import { useContextualPaywall } from '@hooks/useContextualPaywall'
-import { useRatingPrompt } from '@hooks/useRatingPrompt'
 import { useCallback } from 'react'
 
 type UseActionRatingProps = {
@@ -18,7 +18,8 @@ type UseActionRatingProps = {
  *   1. increments the persistent action counter (`engagementStorage`), whatever follows,
  *   2. offers the moment to the contextual paywall (`after_n_actions` trigger),
  *   3. then to an interstitial ad when due (unless an ad-free window is open),
- *   4. then to the app-store rating prompt.
+ *   4. and a moment neither took arms the rating ask, which `RatingAskHost` raises once the
+ *      user is back — the instant an action completes, they are reading its result.
  * The first surface to take the moment ends the chain, and all three draw on the session's
  * single automatic interruption (`promoCoordinator`).
  *
@@ -30,7 +31,6 @@ type UseActionRatingProps = {
  */
 export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { maybeTrigger } = useContextualPaywall()
-  const { maybeAskForRating } = useRatingPrompt()
 
   const recordAction = useCallback(
     async ({ allowPromos = true }: { allowPromos?: boolean } = {}) => {
@@ -54,12 +54,9 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
       if (!isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
         try {
           await AdService.recordExecution()
-          if (await AdService.shouldShowInterstitialAd()) {
-            // The moment belongs to the ad even when it failed to open: a rating card
-            // arriving seconds later would land out of context.
-            await AdService.showInterstitialAd()
-            return
-          }
+          const adShown =
+            (await AdService.shouldShowInterstitialAd()) && (await AdService.showInterstitialAd())
+          if (adShown) return
         } catch (err) {
           crashlyticsService.recordError(
             err instanceof Error ? err : new Error('Ad chain failed'),
@@ -68,9 +65,9 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
         }
       }
 
-      await maybeAskForRating({ moment: 'action_completed' })
+      reviewStorage.setArmed(true)
     },
-    [isAdFreeActive, maybeTrigger, maybeAskForRating]
+    [isAdFreeActive, maybeTrigger]
   )
 
   return { recordAction }

@@ -49,6 +49,7 @@ export function useRatingPrompt() {
         // gone: the session's interruption and the attempt are spent before it is asked for.
         promoCoordinator.markAutoPromoShown()
         reviewStorage.recordRequest({ index: decision.requestIndex, at: now })
+        reviewStorage.setArmed(false)
         analyticsService.track('rating_ask_shown', {
           ...context,
           request_index: decision.requestIndex,

@@ -60,7 +60,9 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
 
       if (maybeTrigger('after_n_actions')) return
 
-      if (!isAdFreeActive) {
+      // The ad's counter only moves on actions that could have gone to an ad: counted through a
+      // session whose interruption is spent, it would open the next session on an ad at once.
+      if (!isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
         try {
           await AdService.recordExecution()
           if (await AdService.shouldShowInterstitialAd()) {

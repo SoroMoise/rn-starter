@@ -54,6 +54,7 @@ recordAction({ allowPromos })
   ├─ engagementStorage.incrementAction()     (lifetime counter, +1, always)
   ├─ allowPromos: false ─────────────────────► stop
   ├─ contextual paywall takes the moment ───► stop
+  ├─ session's interruption already spent ──► skip the ad (and the rating after it)
   ├─ ad-free window open ───────────────────► skip the ad
   ├─ AdService.recordExecution()             (actions since the last ad, +1)
   ├─ shouldShowInterstitialAd() ────────────► show it, then stop — shown or not
@@ -68,6 +69,9 @@ recordAction({ allowPromos })
 - at least `INITIAL_EXECUTIONS_THRESHOLD` (4) actions since the last ad during the first
   `INTERSTITIAL_RAMP_UP_DAYS` (7) days after install, `PROGRESSIVE_EXECUTIONS_THRESHOLD` (2) after;
 - at least `MIN_INTERVAL_MS` (90 s) since the last ad.
+
+With one interruption per session, the thresholds decide how far into a session its interruption
+can come, and the interval only matters across a quick relaunch.
 
 Rules that follow, and that the code enforces:
 
@@ -89,7 +93,9 @@ Rules that follow, and that the code enforces:
   earns its window.
 - **Moments that must not be interrupted still count.** `recordAction({ allowPromos: false })`
   moves the lifetime counter and nothing else — for the user's first success and for an abandoned
-  or failed action. It does not advance the interstitial's own counter either.
+  or failed action. It does not advance the interstitial's own counter either, and neither does an
+  action taken once the session's interruption is spent: that counter measures actions that could
+  have gone to an ad, so a new session never opens on an ad the last one ran up.
 - **The counters are persisted** (MMKV), so killing the app between two actions buys nothing.
 
 ---

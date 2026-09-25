@@ -72,8 +72,4 @@ export const engagementStorage = {
     mmkv.set(KEYS.ENGAGEMENT_ACTION_COUNT, next.toString())
     return next
   },
-
-  resetActionCount(): void {
-    mmkv.set(KEYS.ENGAGEMENT_ACTION_COUNT, '0')
-  },
 }

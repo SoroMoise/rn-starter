@@ -95,7 +95,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`
 | `keys.ts` | All MMKV key constants (`KEYS`) |
 | `domains/adFree.ts` | Ad-free window expiry |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
-| `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction` / `resetActionCount`) |
+| `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |

@@ -123,7 +123,11 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `rating`, `subscription`, `userSettings`
 
 Notable domains:
-- `engagementStorage` — session count, install date, paywall counter, **generic action counter** (`getActionCount()` / `incrementAction()` / `resetActionCount()`). Call `incrementAction()` on any meaningful user interaction in your app to feed the contextual paywall.
+- `engagementStorage` — session count, install date, paywall counter, and the **generic action counter**
+  (`getActionCount()` / `incrementAction()`) the contextual paywall paces itself on. Call
+  `incrementAction()` on any meaningful user interaction in your app to feed it. It is never reset: the
+  policy's own cooldown and lifetime cap are what pace the paywall, and a counter that could be rewound
+  would make both meaningless.
 - `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating and grace period banner
 - `adFree` — tracks the ad-free window granted after a rewarded ad
 

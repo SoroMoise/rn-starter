@@ -6,16 +6,12 @@ type AdFreeContextValue = {
   adFreeUntil: number | null
   isAdFreeActive: boolean
   activateAdFreeReward: () => Promise<void>
-  reloadAdFreeState: () => Promise<void>
-  resetAdFreeState: () => Promise<void>
 }
 
 const initial: AdFreeContextValue = {
   adFreeUntil: null,
   isAdFreeActive: false,
   activateAdFreeReward: async () => {},
-  reloadAdFreeState: async () => {},
-  resetAdFreeState: async () => {},
 }
 
 const AdFreeContext = createContext<AdFreeContextValue>(initial)
@@ -59,24 +55,13 @@ export const AdFreeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setAdFreeUntilState(until)
   }, [])
 
-  const reloadAdFreeState = useCallback(async () => {
-    setAdFreeUntilState(adFreeStorage.getUntil())
-  }, [])
-
-  const resetAdFreeState = useCallback(async () => {
-    adFreeStorage.setUntil(null)
-    setAdFreeUntilState(null)
-  }, [])
-
   const value = useMemo(
     () => ({
       adFreeUntil,
       isAdFreeActive,
       activateAdFreeReward,
-      reloadAdFreeState,
-      resetAdFreeState,
     }),
-    [adFreeUntil, isAdFreeActive, activateAdFreeReward, reloadAdFreeState, resetAdFreeState]
+    [adFreeUntil, isAdFreeActive, activateAdFreeReward]
   )
 
   return <AdFreeContext.Provider value={value}>{children}</AdFreeContext.Provider>

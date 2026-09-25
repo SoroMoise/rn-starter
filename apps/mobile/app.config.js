@@ -99,7 +99,6 @@ export default () => {
             color: '#f59e0b',
             defaultChannel: 'reminders',
             mode: 'production',
-            enableBackgroundRemoteNotifications: true,
           },
         ],
       ],

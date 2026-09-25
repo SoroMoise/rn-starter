@@ -56,9 +56,6 @@ importers:
       '@react-native-firebase/crashlytics':
         specifier: ^24.0.0
         version: 24.0.0(@react-native-firebase/app@24.0.0(@react-native-async-storage/async-storage@2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0)))(expo@54.0.23)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(expo@54.0.23)
-      '@react-native-firebase/messaging':
-        specifier: ^24.0.0
-        version: 24.0.0(@react-native-firebase/app@24.0.0(@react-native-async-storage/async-storage@2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0)))(expo@54.0.23)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(expo@54.0.23)
       '@react-navigation/native':
         specifier: ^7.1.8
         version: 7.1.20(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
@@ -2171,15 +2168,6 @@ packages:
 
   '@react-native-firebase/crashlytics@24.0.0':
     resolution: {integrity: sha512-slNW6ood4SO9J15OLv2HjWLIsKlVT4VVGew7OacRql0VNDFDxjPwqPDrPus4lCz2oJWS6DQZ+tzZ2BEdT0irSA==}
-    peerDependencies:
-      '@react-native-firebase/app': 24.0.0
-      expo: '>=47.0.0'
-    peerDependenciesMeta:
-      expo:
-        optional: true
-
-  '@react-native-firebase/messaging@24.0.0':
-    resolution: {integrity: sha512-rODaV83e8mR+Y9EPDblfSpy4rM+alriiq5306RyzPryhsyu+guj4fhGwZpESWwhmk9fKjsnshv++aFA50xFjhg==}
     peerDependencies:
       '@react-native-firebase/app': 24.0.0
       expo: '>=47.0.0'
@@ -9002,12 +8990,6 @@ snapshots:
     dependencies:
       '@react-native-firebase/app': 24.0.0(@react-native-async-storage/async-storage@2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0)))(expo@54.0.23)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
       stacktrace-js: 2.0.2
-    optionalDependencies:
-      expo: 54.0.23(@babel/core@7.28.5)(@expo/metro-runtime@6.1.2)(expo-router@6.0.14)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
-
-  '@react-native-firebase/messaging@24.0.0(@react-native-firebase/app@24.0.0(@react-native-async-storage/async-storage@2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0)))(expo@54.0.23)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0))(expo@54.0.23)':
-    dependencies:
-      '@react-native-firebase/app': 24.0.0(@react-native-async-storage/async-storage@2.2.0(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0)))(expo@54.0.23)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
     optionalDependencies:
       expo: 54.0.23(@babel/core@7.28.5)(@expo/metro-runtime@6.1.2)(expo-router@6.0.14)(react-native@0.81.5(@babel/core@7.28.5)(@react-native-community/cli@20.2.0(typescript@5.9.3))(@types/react@19.1.17)(react@19.1.0))(react@19.1.0)
 

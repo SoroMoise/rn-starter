@@ -12,7 +12,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Contextual paywall** — triggers on generic action count (`engagementStorage.getActionCount / incrementAction`) and session signals — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
-- **Notification system** — FCM + `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
+- **Notification system** — `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
 - **App-store rating prompt** — `expo-store-review` with store URL fallback
 - **Onboarding flow** — welcome → premium value pitch → language picker
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
@@ -37,7 +37,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 | i18next / react-i18next | ^25 / ^16 | Internationalization |
 | react-native-reanimated | ~4.1.1 | Animations |
 | Moti | ^0.30.0 | Declarative animations |
-| @react-native-firebase | ^24.0.0 | Analytics, Crashlytics, FCM |
+| @react-native-firebase | ^24.0.0 | Analytics, Crashlytics |
 | react-native-google-mobile-ads | ^15.5.0 | AdMob |
 | react-native-purchases | ^10.0.1 | RevenueCat IAP |
 | expo-notifications | latest | Push + local notifications |

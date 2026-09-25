@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 Monorepo boilerplate for a premium React Native / Expo app:
 
-- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable notification system (FCM permissions + Android channels, ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
+- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable notification system (permissions + Android channels, ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -154,7 +154,22 @@ is only named after it — it is handed the MMKV adapter here.)
 - `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 
-`apps/mobile/services/notifications/` — reusable notification system: FCM permission handling + foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`), background handler stub. Ready to wire up push or local scheduled notifications for your own features.
+`apps/mobile/services/notifications/` — reusable notification system: permission handling +
+foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`,
+`NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled notifications for your own features.
+
+**Remote push is not wired on the device, and `@react-native-firebase/messaging` is not installed.**
+`apps/api` still ships an FCM sender, so the server half is there; the client half is a deliberate
+gap — a background message handler that no `messaging()` call ever registers is a file that looks
+like working push and is not. Adding push means the package, a handler registered at the JS entry
+point (not from a route module, which is lazy and never evaluated in a headless launch), and a token
+registered with your backend.
+
+**`expo-notifications` always writes the `aps-environment` entitlement**, whatever `mode` says and
+even with `ios.entitlements` removed from `app.config.js` — its iOS plugin sets it unconditionally
+and defaults to `'development'`. It is declared here so the config states what the build actually
+produces. The consequence is Apple's, not ours: the App ID needs the Push Notifications capability
+enabled or the release build fails code signing, on an app whose notifications are all local.
 
 `apps/mobile/services/promo/promoCoordinator.ts` — single in-memory authority over interruptive promotional surfaces (contextual paywall). Enforces no stacking (`isSurfaceVisible`) and one automatic promo per session (`canPresentAutoPromo` / `markAutoPromoShown`), reset at boot via `contextualPaywallService.resetSession()`.
 

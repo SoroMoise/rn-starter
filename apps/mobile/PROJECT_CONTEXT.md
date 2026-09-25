@@ -120,7 +120,7 @@ Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `
 
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`): the impressions are capped for life and each one arms a cooldown.
 
-**To hook your app's actions into the contextual paywall:** call `engagementStorage.incrementAction()` on any meaningful user interaction (e.g. completing a feature action). The paywall policy in `contextualPaywall/policy.ts` will trigger at the configured thresholds.
+**To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
 
 ---
 

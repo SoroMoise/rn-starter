@@ -72,6 +72,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases` |
 | `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
 | `ratingService.ts` | `requestNativeReview()` (auto flows only) / `openStoreListing({ reason })` (taps, fallbacks) |
+| `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
 
 ### `services/notifications/`
@@ -96,7 +97,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
-| `domains/rating.ts` | Rating prompt eligibility; `hasRated` is a read-only legacy gate |
+| `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
@@ -121,6 +122,10 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
 **To hook your app's actions in:** call `recordAction()` from `useActionRating` on any meaningful user interaction (e.g. completing a feature action). It increments the lifetime counter first, then offers the moment to the contextual paywall, the interstitial and the rating prompt, in that order — the first to take it ends the chain, and all three share the session's single automatic interruption. `recordAction({ allowPromos: false })` counts without interrupting: the user's first success, an abandoned or failed action. Calling `engagementStorage.incrementAction()` directly moves the counter and offers the moment to nothing.
+
+### App Rating
+
+`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state — `reviewStorage`, the session context, the action counter, the last ad, `promoCoordinator` — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from; `recordAction()` raises `action_completed`, and an app adds its own moments to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent.
 
 ---
 

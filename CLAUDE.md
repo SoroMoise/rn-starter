@@ -122,7 +122,7 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `mmkv.ts` — single MMKV instance
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
-- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `rating`, `subscription`, `userSettings`
+- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`, `userSettings`
 
 Notable domains:
 - `engagementStorage` — session count, install date, paywall counter, and the **generic action counter**
@@ -154,6 +154,7 @@ is only named after it — it is handed the MMKV adapter here.)
 - `engagementService` — session init, paywall counter
 - `purchaseService` — RevenueCat
 - `ratingService` — `requestNativeReview()` (automatic flows only) / `openStoreListing({ reason })` (every explicit tap, and every fallback)
+- `reviewPolicy` — `evaluateReviewRequest`: the pure decision behind every rating ask, naming each refusal
 - `consentService` — Google's UMP consent gate, and the only caller of `mobileAds().initialize()`
 - `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
@@ -225,13 +226,15 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 ### App Rating
 
-**Play forbids pre-filtering the review.** Asking anything before the review card — an opinion question ("Do you like the app?") or a predictive one (a star picker) — is against Play's in-app review guidelines, and the old star gate did both. A qualifying moment now calls `requestNativeReview()` directly and Play's card is the whole ask. The sentiment path stays wired and compiling behind `SENTIMENT_GATE_ENABLED` (off); `AppRatingModal` is kept mounted-nowhere for it.
+**Play forbids pre-filtering the review.** Asking anything before the review card — an opinion question ("Do you like the app?") or a predictive one (a star picker) — is against Play's in-app review guidelines, and the old star gate did both. A qualifying moment calls `requestNativeReview()` directly and Play's card is the whole ask. `AppRatingModal` still compiles behind `SENTIMENT_GATE_ENABLED` (off), mounted nowhere: bringing the pre-prompt back means wiring it, not flipping the flag.
+
+**One pure policy decides, from a moment, and names every refusal.** `useRatingPrompt().maybeAskForRating({ moment })` is the single entry point: it reads the state, hands it to `evaluateReviewRequest` (`services/api/reviewPolicy.ts` — no React, no storage), and either asks or tracks `rating_ask_suppressed` with the refusal's `reason`. Play is silent on its side, so that reason is the only answer to "why does the app never ask?". A `RatingMoment` is a point where the app has just delivered something, never a step inside a task; `STRONG_RATING_MOMENTS` lists the ones allowed to open the card, and any other is refused as `weak_moment`. The ask draws on the session's single interruption — `promo_collision` once it is spent or while a surface is up — but registers no visibility: Play's card exposes none, and its flow resolves only once the card is gone, so the budget and the attempt are spent before the card is asked for.
 
 **The two store paths are split and not interchangeable** (`ratingService`). `requestNativeReview()` is for automatic flows only: Play enforces an undocumented per-user quota, silently skips the dialog once it is spent, and reports neither whether the dialog appeared nor its outcome — which is why Google forbids wiring it to a button. `openStoreListing({ reason })` serves every explicit tap (the settings row) and every fallback.
 
-**No event can mean "the user rated."** `rating_ask_shown` means a moment qualified; `review_flow_launched` only means the API was called, and its `likely_displayed` is a duration heuristic for dashboards, never a branch. Store-side truth lives in the Play Console rating count.
+**No event can mean "the user rated."** `rating_ask_shown` means a moment qualified and `rating_ask_suppressed` why one did not; `review_flow_launched` only means the API was called, and its `likely_displayed` is a duration heuristic for dashboards, never a branch. Store-side truth lives in the Play Console rating count.
 
-**Attempts are spaced, never spent once.** `markReviewFlowLaunched` records an attempt rather than a conclusion — it does not set `hasRated`, so a call swallowed by the quota is retried later. `ratingStorage.hasRated` survives as a read-only legacy gate for installs that predate the split. `SOFT_RESET_INACTIVITY_MS` **must** stay above `MIN_DAYS_BETWEEN_PROMPTS`, or every re-ask would land past the reset, rewind the counter, and the cap would never be reached.
+**Attempts are spaced, never spent once.** `reviewStorage.recordRequest` records an attempt rather than a conclusion, so a call swallowed by the quota is retried later. Requests come in streaks of at most three (`REVIEW_REQUEST_CONFIG`), each cooldown triple the last — 42 days, then 126 — and a streak ends after `softResetDays` (180) without one. That reset **must** stay above the longest cooldown a streak can reach, `cooldownDays × backoffMultiplier^(requestCap − 1)`: below it, every re-ask would land past the reset, restart the count, and the cap would never bind. `reviewStorage.isOptedOut()` still reads the two flags the old star gate wrote, for installs that predate the split; nothing writes them now.
 
 ### Brand assets
 

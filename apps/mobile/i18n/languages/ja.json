@@ -13,12 +13,7 @@
     "close": "閉じる",
     "search": "検索",
     "noResults": "結果が見つかりませんでした",
-    "refresh": "更新",
-    "updated": "更新済み",
     "offline": "オフライン",
-    "online": "オンライン",
-    "copy": "コピー",
-    "copiedToClipboard": "クリップボードにコピーしました！",
     "back": "戻る"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "設定",
     "subtitle": "外観と設定をカスタマイズ",
     "appearance": "外観",
-    "theme": "テーマ",
     "themeLight": "ライト",
     "themeDark": "ダーク",
     "themeAuto": "システム",
     "display": "表示",
     "language": "言語",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "言語を選択",
     "searchLanguage": "言語を検索...",
-    "data": "データ",
-    "clearCache": "キャッシュをクリア",
-    "clearCacheConfirm": "すべてのキャッシュデータを削除してもよろしいですか？",
-    "resetFavorites": "お気に入りをリセット",
-    "resetFavoritesConfirm": "すべてのお気に入りをリセットしてもよろしいですか？",
-    "lastUpdate": "最終更新",
-    "validate": "確定",
     "ads": "広告",
-    "premium": "プレミアム",
     "removeAds": "広告を削除",
     "removeAdsDescription": "広告なしの体験をお楽しみください",
-    "restorePurchases": "購入を復元",
-    "purchaseSuccess": "購入が完了しました！",
-    "purchaseFailed": "購入に失敗しました",
     "watchAdButton": "広告を見て{{duration}}広告なし",
     "adFreeActive": "広告なし有効（残り{{duration}}）",
     "adNotAvailableTitle": "広告を利用できません",
@@ -60,8 +41,6 @@
     "adRewardMessage": "{{duration}}の広告なし体験を獲得しました。お楽しみください！",
     "adErrorTitle": "エラー",
     "adErrorMessage": "広告の読み込みに失敗しました。後でもう一度お試しください。",
-    "debugResetAds": "🔧 広告なしをリセット（Dev）",
-    "debugResetAdsSuccess": "広告なし状態をリセットしました",
     "about": "について",
     "version": "バージョン",
     "legalAndSupport": "法的情報とサポート",
@@ -76,8 +55,6 @@
     "premiumLifetime": "永久アクセス"
   },
   "onboarding": {
-    "skip": "スキップ",
-    "next": "次へ",
     "previous": "戻る",
     "welcome": {
       "cta": "はじめる",
@@ -96,36 +73,16 @@
       "title": "おかえりなさい！"
     }
   },
-  "initialization": {
-    "errorTitle": "接続が必要です",
-    "retryButton": "再試行"
-  },
   "error": {
     "networkError": "ネットワークエラー。接続を確認してください。",
-    "rateLimitExceeded": "レート制限を超えました。後でもう一度お試しください。",
     "serverError": "サーバーエラー。後でもう一度お試しください。",
-    "timeout": "リクエストがタイムアウトしました。もう一度お試しください。",
-    "unknownError": "不明なエラーが発生しました",
-    "copyFailed": "クリップボードへのコピーに失敗しました"
-  },
-  "time": {
-    "justNow": "たった今",
-    "minutesAgo_other": "{{count}}分前",
-    "hoursAgo_other": "{{count}}時間前",
-    "daysAgo_other": "{{count}}日前",
-    "daysAgo_one": "{{count}}日前",
-    "hoursAgo_one": "{{count}}時間前",
-    "minutesAgo_one": "{{count}}分前"
+    "unknownError": "不明なエラーが発生しました"
   },
   "appRating": {
     "message": "5つ星の評価は、アプリを無料で改善し続けるための大きな力になります。",
-    "settingsTitle": "アプリはお気に召しましたか？",
-    "settingsMessage": "ご評価はアプリを無料でより良くするために役立ちます。気に入っていただけたら、5つ星レビューをいただけると嬉しいです！",
     "rateButton": "今すぐ評価",
     "laterButton": "後で",
-    "declineButton": "結構です",
-    "thankYou": "フィードバックありがとうございます！",
-    "rateAppButton": "このアプリを評価する"
+    "declineButton": "結構です"
   },
   "rtlRestart": {
     "title": "レイアウト更新が必要です",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "登録する — {{price}}/月",
     "ctaSubscribeAnnual": "登録する — {{price}}/年",
     "billedMonthly": "毎月請求",
-    "legalNoteAnnual": "トライアル終了後{{price}}/年。いつでもキャンセル可能。",
-    "legalNoteMonthly": "{{price}}/月。いつでもキャンセル可能。",
     "restore": "購入を復元",
     "restoreSuccess": "サブスクリプションが復元されました！",
     "restoreNotFound": "有効なサブスクリプションが見つかりません",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/月",
     "reassurance": "契約なし · いつでもキャンセル可能",
-    "socialProof": "★ {{rating}} · {{users}}人が利用中",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}}人が利用中"
   },
   "premiumGate": {
     "unlock": "ロック解除",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "サブスクリプションが期限切れの可能性があります",
     "graceBannerMessage": "{{date}} 前にインターネットに接続して、サブスクリプションを確認してください。",
     "graceBannerCta": "サブスクリプションを確認"
-  },
-  "a11y": {}
+  }
 }

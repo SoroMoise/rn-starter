@@ -13,12 +13,7 @@
     "close": "Zamknij",
     "search": "Szukaj",
     "noResults": "Nie znaleziono wyników",
-    "refresh": "Odśwież",
-    "updated": "Zaktualizowano",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Kopiuj",
-    "copiedToClipboard": "Skopiowano do schowka!",
     "back": "Wstecz"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Ustawienia",
     "subtitle": "Dostosuj wygląd i preferencje",
     "appearance": "Wygląd",
-    "theme": "Motyw",
     "themeLight": "Jasny",
     "themeDark": "Ciemny",
     "themeAuto": "System",
     "display": "Wyświetlanie",
     "language": "Język",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Wybierz Język",
     "searchLanguage": "Szukaj języków...",
-    "data": "Dane",
-    "clearCache": "Wyczyść pamięć podręczną",
-    "clearCacheConfirm": "Czy na pewno chcesz usunąć wszystkie dane z pamięci podręcznej?",
-    "resetFavorites": "Resetuj",
-    "resetFavoritesConfirm": "Czy na pewno chcesz zresetować wszystkie ulubione?",
-    "lastUpdate": "Ostatnia aktualizacja",
-    "validate": "Potwierdź",
     "ads": "Reklamy",
-    "premium": "Premium",
     "removeAds": "Usuń Reklamy",
     "removeAdsDescription": "Ciesz się aplikacją bez reklam",
-    "restorePurchases": "Przywróć zakupy",
-    "purchaseSuccess": "Zakup pomyślny!",
-    "purchaseFailed": "Zakup nieudany",
     "watchAdButton": "Obejrzyj reklamę na {{duration}} bez reklam",
     "adFreeActive": "Bez reklam aktywne (pozostało {{duration}})",
     "adNotAvailableTitle": "Reklama niedostępna",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Masz {{duration}} bez reklam. Ciesz się!",
     "adErrorTitle": "Błąd",
     "adErrorMessage": "Nie udało się załadować reklamy. Spróbuj ponownie później.",
-    "debugResetAds": "🔧 Resetuj Bez-Reklam (Dev)",
-    "debugResetAdsSuccess": "Stan bez reklam został zresetowany",
     "about": "O aplikacji",
     "version": "Wersja",
     "legalAndSupport": "Prawne i Wsparcie",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Dożywotni dostęp"
   },
   "onboarding": {
-    "skip": "Pomiń",
-    "next": "Dalej",
     "previous": "Wstecz",
     "welcome": {
       "cta": "Zaczynamy",
@@ -96,42 +73,16 @@
       "title": "Witaj z powrotem!"
     }
   },
-  "initialization": {
-    "errorTitle": "Wymagane połączenie",
-    "retryButton": "Spróbuj ponownie"
-  },
   "error": {
     "networkError": "Błąd sieci. Sprawdź połączenie.",
-    "rateLimitExceeded": "Przekroczono limit. Spróbuj ponownie później.",
     "serverError": "Błąd serwera. Spróbuj ponownie później.",
-    "timeout": "Upłynął limit czasu żądania. Spróbuj ponownie.",
-    "unknownError": "Wystąpił nieznany błąd",
-    "copyFailed": "Nie udało się skopiować do schowka"
-  },
-  "time": {
-    "justNow": "przed chwilą",
-    "minutesAgo_one": "{{count}} minutę temu",
-    "minutesAgo_few": "{{count}} minuty temu",
-    "minutesAgo_many": "{{count}} minut temu",
-    "minutesAgo_other": "{{count}} minut temu",
-    "hoursAgo_one": "{{count}} godzinę temu",
-    "hoursAgo_few": "{{count}} godziny temu",
-    "hoursAgo_many": "{{count}} godzin temu",
-    "hoursAgo_other": "{{count}} godzin temu",
-    "daysAgo_one": "{{count}} dzień temu",
-    "daysAgo_few": "{{count}} dni temu",
-    "daysAgo_many": "{{count}} dni temu",
-    "daysAgo_other": "{{count}} dni temu"
+    "unknownError": "Wystąpił nieznany błąd"
   },
   "appRating": {
     "message": "Ocena 5 gwiazdek pomaga nam utrzymać aplikację bezpłatną i stale ją ulepszać.",
-    "settingsTitle": "Lubisz tę aplikację?",
-    "settingsMessage": "Twoja ocena pomaga nam utrzymać aplikację bezpłatną i lepszą. Jeśli Ci się podoba, recenzja z 5 gwiazdkami będzie dla nas ogromnym wsparciem!",
     "rateButton": "Oceń teraz",
     "laterButton": "Później",
-    "declineButton": "Nie, dziękuję",
-    "thankYou": "Dziękujemy za opinię!",
-    "rateAppButton": "Oceń tę aplikację"
+    "declineButton": "Nie, dziękuję"
   },
   "rtlRestart": {
     "title": "Wymagana aktualizacja układu",
@@ -149,8 +100,6 @@
     "ctaSubscribeMonthly": "Subskrybuj — {{price}}/miesiąc",
     "ctaSubscribeAnnual": "Subskrybuj — {{price}}/rok",
     "billedMonthly": "rozliczane miesięcznie",
-    "legalNoteAnnual": "{{price}}/rok po okresie próbnym. Anuluj w dowolnym momencie.",
-    "legalNoteMonthly": "{{price}}/miesiąc. Anuluj w dowolnym momencie.",
     "restore": "Przywróć zakupy",
     "restoreSuccess": "Subskrypcja przywrócona!",
     "restoreNotFound": "Nie znaleziono aktywnej subskrypcji",
@@ -162,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mies.",
     "reassurance": "Bez zobowiązań · Anuluj w każdej chwili",
-    "socialProof": "★ {{rating}} · {{users}} użytkowników",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} użytkowników"
   },
   "premiumGate": {
     "unlock": "Odblokuj",
@@ -173,6 +121,5 @@
     "graceBannerTitle": "Subskrypcja mogła wygasnąć",
     "graceBannerMessage": "Połącz się z internetem przed {{date}}, aby zweryfikować subskrypcję.",
     "graceBannerCta": "Zweryfikuj subskrypcję"
-  },
-  "a11y": {}
+  }
 }

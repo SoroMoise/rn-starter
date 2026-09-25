@@ -13,12 +13,7 @@
     "close": "إغلاق",
     "search": "بحث",
     "noResults": "لم يتم العثور على نتائج",
-    "refresh": "تحديث",
-    "updated": "تم التحديث",
     "offline": "غير متصل",
-    "online": "متصل",
-    "copy": "نسخ",
-    "copiedToClipboard": "تم النسخ إلى الحافظة!",
     "back": "رجوع"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "الإعدادات",
     "subtitle": "خصص المظهر والتفضيلات",
     "appearance": "المظهر",
-    "theme": "السمة",
     "themeLight": "فاتح",
     "themeDark": "داكن",
     "themeAuto": "النظام",
     "display": "العرض",
     "language": "اللغة",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "اختيار اللغة",
     "searchLanguage": "البحث عن اللغات...",
-    "data": "البيانات",
-    "clearCache": "مسح الذاكرة المؤقتة",
-    "clearCacheConfirm": "هل أنت متأكد من حذف جميع البيانات المخزنة مؤقتًا؟",
-    "resetFavorites": "إعادة تعيين",
-    "resetFavoritesConfirm": "هل أنت متأكد من أنك تريد إعادة تعيين جميع المفضلة؟",
-    "lastUpdate": "آخر تحديث",
-    "validate": "تأكيد",
     "ads": "الإعلانات",
-    "premium": "بريميوم",
     "removeAds": "إزالة الإعلانات",
     "removeAdsDescription": "استمتع بتجربة خالية من الإعلانات",
-    "restorePurchases": "استعادة المشتريات",
-    "purchaseSuccess": "تمت عملية الشراء بنجاح!",
-    "purchaseFailed": "فشلت عملية الشراء",
     "watchAdButton": "شاهد إعلانًا لـ{{duration}} بدون إعلانات",
     "adFreeActive": "بدون إعلانات نشط ({{duration}} متبقية)",
     "adNotAvailableTitle": "الإعلان غير متاح",
@@ -60,8 +41,6 @@
     "adRewardMessage": "لديك {{duration}} من التجربة بدون إعلانات. استمتع!",
     "adErrorTitle": "خطأ",
     "adErrorMessage": "فشل تحميل الإعلان. يرجى المحاولة لاحقًا.",
-    "debugResetAds": "🔧 إعادة تعيين بدون إعلانات (Dev)",
-    "debugResetAdsSuccess": "تمت إعادة تعيين حالة بدون إعلانات بنجاح",
     "about": "حول",
     "version": "الإصدار",
     "legalAndSupport": "القانونية والدعم",
@@ -76,8 +55,6 @@
     "premiumLifetime": "وصول مدى الحياة"
   },
   "onboarding": {
-    "skip": "تخطي",
-    "next": "متابعة",
     "previous": "رجوع",
     "welcome": {
       "cta": "ابدأ الآن",
@@ -96,48 +73,16 @@
       "title": "مرحباً بعودتك!"
     }
   },
-  "initialization": {
-    "errorTitle": "مطلوب اتصال",
-    "retryButton": "إعادة المحاولة"
-  },
   "error": {
     "networkError": "خطأ في الشبكة. يرجى التحقق من الاتصال.",
-    "rateLimitExceeded": "تم تجاوز حد المعدل. يرجى المحاولة لاحقًا.",
     "serverError": "خطأ في الخادم. يرجى المحاولة لاحقًا.",
-    "timeout": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
-    "unknownError": "حدث خطأ غير معروف",
-    "copyFailed": "فشل النسخ إلى الحافظة"
-  },
-  "time": {
-    "justNow": "الآن",
-    "minutesAgo_zero": "منذ لحظات",
-    "minutesAgo_one": "منذ {{count}} دقيقة",
-    "minutesAgo_two": "منذ دقيقتين",
-    "minutesAgo_few": "منذ {{count}} دقائق",
-    "minutesAgo_many": "منذ {{count}} دقيقة",
-    "minutesAgo_other": "منذ {{count}} دقيقة",
-    "hoursAgo_zero": "منذ لحظات",
-    "hoursAgo_one": "منذ {{count}} ساعة",
-    "hoursAgo_two": "منذ ساعتين",
-    "hoursAgo_few": "منذ {{count}} ساعات",
-    "hoursAgo_many": "منذ {{count}} ساعة",
-    "hoursAgo_other": "منذ {{count}} ساعة",
-    "daysAgo_zero": "اليوم",
-    "daysAgo_one": "منذ {{count}} يوم",
-    "daysAgo_two": "منذ يومين",
-    "daysAgo_few": "منذ {{count}} أيام",
-    "daysAgo_many": "منذ {{count}} يوماً",
-    "daysAgo_other": "منذ {{count}} يوم"
+    "unknownError": "حدث خطأ غير معروف"
   },
   "appRating": {
     "message": "تقييم 5 نجوم يساعدنا في الإبقاء على التطبيق مجانياً وتحسينه باستمرار.",
-    "settingsTitle": "هل تحب التطبيق؟",
-    "settingsMessage": "تقييمك يساعدنا على تطوير التطبيق والإبقاء عليه مجانياً. إذا أعجبك، يسعدنا حصوله على 5 نجوم!",
     "rateButton": "قيّم الآن",
     "laterButton": "لاحقاً",
-    "declineButton": "لا شكراً",
-    "thankYou": "شكراً على ملاحظاتك!",
-    "rateAppButton": "قيّم التطبيق"
+    "declineButton": "لا شكراً"
   },
   "rtlRestart": {
     "title": "تحديث التخطيط مطلوب",
@@ -155,8 +100,6 @@
     "ctaSubscribeMonthly": "اشترك — {{price}}/شهر",
     "ctaSubscribeAnnual": "اشترك — {{price}}/سنة",
     "billedMonthly": "يُحسب شهرياً",
-    "legalNoteAnnual": "{{price}}/سنة بعد التجربة. إلغاء في أي وقت.",
-    "legalNoteMonthly": "{{price}}/شهر. إلغاء في أي وقت.",
     "restore": "استعادة المشتريات",
     "restoreSuccess": "تمت استعادة الاشتراك!",
     "restoreNotFound": "لم يُعثر على اشتراك نشط",
@@ -168,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/شهر",
     "reassurance": "بدون التزام · إلغاء في أي وقت",
-    "socialProof": "★ {{rating}} · {{users}} مستخدم",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} مستخدم"
   },
   "premiumGate": {
     "unlock": "فتح",
@@ -179,6 +121,5 @@
     "graceBannerTitle": "قد يكون الاشتراك منتهي الصلاحية",
     "graceBannerMessage": "اتصل بالإنترنت قبل {{date}} للتحقق من اشتراكك.",
     "graceBannerCta": "التحقق من الاشتراك"
-  },
-  "a11y": {}
+  }
 }

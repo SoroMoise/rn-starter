@@ -13,12 +13,7 @@
     "close": "Kapat",
     "search": "Ara",
     "noResults": "Sonuç bulunamadı",
-    "refresh": "Yenile",
-    "updated": "Güncellendi",
     "offline": "Çevrimdışı",
-    "online": "Çevrimiçi",
-    "copy": "Kopyala",
-    "copiedToClipboard": "Panoya kopyalandı!",
     "back": "Geri"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Ayarlar",
     "subtitle": "Görünüm ve tercihleri özelleştirin",
     "appearance": "Görünüm",
-    "theme": "Tema",
     "themeLight": "Açık",
     "themeDark": "Koyu",
     "themeAuto": "Sistem",
     "display": "Görüntüleme",
     "language": "Dil",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Dil Seçin",
     "searchLanguage": "Dil ara...",
-    "data": "Veri",
-    "clearCache": "Önbelleği temizle",
-    "clearCacheConfirm": "Tüm önbellek verilerini silmek istediğinizden emin misiniz?",
-    "resetFavorites": "Sıfırla",
-    "resetFavoritesConfirm": "Tüm favorileri sıfırlamak istediğinizden emin misiniz?",
-    "lastUpdate": "Son güncelleme",
-    "validate": "Onayla",
     "ads": "Reklamlar",
-    "premium": "Premium",
     "removeAds": "Reklamları Kaldır",
     "removeAdsDescription": "Reklamsız deneyimin keyfini çıkarın",
-    "restorePurchases": "Satın alımları geri yükle",
-    "purchaseSuccess": "Satın alma başarılı!",
-    "purchaseFailed": "Satın alma başarısız",
     "watchAdButton": "{{duration}} reklamsız için reklam izle",
     "adFreeActive": "Reklamsız aktif ({{duration}} kaldı)",
     "adNotAvailableTitle": "Reklam mevcut değil",
@@ -60,8 +41,6 @@
     "adRewardMessage": "{{duration}} reklamsız deneyim kazandınız. Keyfini çıkarın!",
     "adErrorTitle": "Hata",
     "adErrorMessage": "Reklam yüklenemedi. Lütfen daha sonra tekrar deneyin.",
-    "debugResetAds": "🔧 Reklamsızı Sıfırla (Dev)",
-    "debugResetAdsSuccess": "Reklamsız durumu başarıyla sıfırlandı",
     "about": "Hakkında",
     "version": "Versiyon",
     "legalAndSupport": "Yasal ve Destek",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Ömür boyu erişim"
   },
   "onboarding": {
-    "skip": "Atla",
-    "next": "Devam",
     "previous": "Geri",
     "welcome": {
       "cta": "Başla",
@@ -96,36 +73,16 @@
       "title": "Tekrar hoş geldiniz!"
     }
   },
-  "initialization": {
-    "errorTitle": "Bağlantı Gerekli",
-    "retryButton": "Tekrar Dene"
-  },
   "error": {
     "networkError": "Ağ hatası. Lütfen bağlantınızı kontrol edin.",
-    "rateLimitExceeded": "Hız sınırı aşıldı. Lütfen daha sonra tekrar deneyin.",
     "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-    "timeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
-    "unknownError": "Bilinmeyen bir hata oluştu",
-    "copyFailed": "Panoya kopyalama başarısız"
-  },
-  "time": {
-    "justNow": "şimdi",
-    "minutesAgo_one": "{{count}} dakika önce",
-    "minutesAgo_other": "{{count}} dakika önce",
-    "hoursAgo_one": "{{count}} saat önce",
-    "hoursAgo_other": "{{count}} saat önce",
-    "daysAgo_one": "{{count}} gün önce",
-    "daysAgo_other": "{{count}} gün önce"
+    "unknownError": "Bilinmeyen bir hata oluştu"
   },
   "appRating": {
     "message": "5 yıldızlı bir değerlendirme, uygulamayı ücretsiz ve sürekli gelişen tutmamıza yardımcı olur.",
-    "settingsTitle": "Uygulamayı seviyor musunuz?",
-    "settingsMessage": "Değerlendirmeniz uygulamayı ücretsiz ve daha iyi tutmamıza yardımcı olur. Beğendiyseniz, 5 yıldızlı bir yorum bizi çok mutlu eder!",
     "rateButton": "Şimdi değerlendir",
     "laterButton": "Sonra",
-    "declineButton": "Hayır, teşekkürler",
-    "thankYou": "Geri bildiriminiz için teşekkürler!",
-    "rateAppButton": "Bu uygulamayı değerlendir"
+    "declineButton": "Hayır, teşekkürler"
   },
   "rtlRestart": {
     "title": "Düzen güncellemesi gerekli",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Abone ol — {{price}}/ay",
     "ctaSubscribeAnnual": "Abone ol — {{price}}/yıl",
     "billedMonthly": "aylık faturalandırılır",
-    "legalNoteAnnual": "Denemeden sonra {{price}}/yıl. İstediğiniz zaman iptal edin.",
-    "legalNoteMonthly": "{{price}}/ay. İstediğiniz zaman iptal edin.",
     "restore": "Satın alımları geri yükle",
     "restoreSuccess": "Abonelik geri yüklendi!",
     "restoreNotFound": "Aktif abonelik bulunamadı",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/ay",
     "reassurance": "Taahhüt yok · İstediğiniz zaman iptal edin",
-    "socialProof": "★ {{rating}} · {{users}} kullanıcı",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} kullanıcı"
   },
   "premiumGate": {
     "unlock": "Kilidi aç",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Aboneliğinizin süresi dolmuş olabilir",
     "graceBannerMessage": "Aboneliğinizi doğrulamak için {{date}} tarihinden önce internete bağlanın.",
     "graceBannerCta": "Aboneliği doğrula"
-  },
-  "a11y": {}
+  }
 }

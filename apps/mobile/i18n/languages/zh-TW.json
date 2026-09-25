@@ -13,12 +13,7 @@
     "close": "關閉",
     "search": "搜尋",
     "noResults": "未找到結果",
-    "refresh": "重新整理",
-    "updated": "已更新",
     "offline": "離線",
-    "online": "線上",
-    "copy": "複製",
-    "copiedToClipboard": "已複製到剪貼簿！",
     "back": "返回"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "設定",
     "subtitle": "自訂外觀與偏好設定",
     "appearance": "外觀",
-    "theme": "主題",
     "themeLight": "淺色",
     "themeDark": "深色",
     "themeAuto": "跟隨系統",
     "display": "顯示",
     "language": "語言",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "選擇語言",
     "searchLanguage": "搜尋語言...",
-    "data": "資料",
-    "clearCache": "清除快取",
-    "clearCacheConfirm": "確定要清除所有快取資料嗎？",
-    "resetFavorites": "重設收藏",
-    "resetFavoritesConfirm": "確定要重設所有收藏嗎？",
-    "lastUpdate": "上次更新",
-    "validate": "確認",
     "ads": "廣告",
-    "premium": "進階版",
     "removeAds": "移除廣告",
     "removeAdsDescription": "享受無廣告體驗",
-    "restorePurchases": "還原購買",
-    "purchaseSuccess": "購買成功！",
-    "purchaseFailed": "購買失敗",
     "watchAdButton": "觀看廣告享受{{duration}}無廣告",
     "adFreeActive": "無廣告已啟用（剩餘{{duration}}）",
     "adNotAvailableTitle": "廣告無法使用",
@@ -60,8 +41,6 @@
     "adRewardMessage": "您已獲得{{duration}}無廣告體驗。盡情享受！",
     "adErrorTitle": "錯誤",
     "adErrorMessage": "載入廣告失敗。請稍後再試。",
-    "debugResetAds": "🔧 重設無廣告（開發）",
-    "debugResetAdsSuccess": "無廣告狀態重設成功",
     "about": "關於",
     "version": "版本",
     "legalAndSupport": "法律和支援",
@@ -76,8 +55,6 @@
     "premiumLifetime": "終身存取"
   },
   "onboarding": {
-    "skip": "略過",
-    "next": "繼續",
     "previous": "返回",
     "welcome": {
       "cta": "開始使用",
@@ -96,36 +73,16 @@
       "title": "歡迎回來！"
     }
   },
-  "initialization": {
-    "errorTitle": "需要連線",
-    "retryButton": "重試"
-  },
   "error": {
     "networkError": "網路錯誤。請檢查您的連線。",
-    "rateLimitExceeded": "超出速率限制。請稍後再試。",
     "serverError": "伺服器錯誤。請稍後再試。",
-    "timeout": "請求逾時。請重試。",
-    "unknownError": "發生未知錯誤",
-    "copyFailed": "複製到剪貼簿失敗"
-  },
-  "time": {
-    "justNow": "剛剛",
-    "minutesAgo_other": "{{count}} 分鐘前",
-    "hoursAgo_other": "{{count}} 小時前",
-    "daysAgo_other": "{{count}} 天前",
-    "daysAgo_one": "{{count}} 天前",
-    "hoursAgo_one": "{{count}} 小時前",
-    "minutesAgo_one": "{{count}} 分鐘前"
+    "unknownError": "發生未知錯誤"
   },
   "appRating": {
     "message": "5星好評幫助我們保持應用免費並持續改進。",
-    "settingsTitle": "您喜歡這款應用嗎？",
-    "settingsMessage": "您的評價幫助我們保持應用免費並不斷改進。如果您喜歡此應用，非常感謝5星好評！",
     "rateButton": "立即評價",
     "laterButton": "稍後",
-    "declineButton": "不了，謝謝",
-    "thankYou": "感謝您的反饋！",
-    "rateAppButton": "評價此應用"
+    "declineButton": "不了，謝謝"
   },
   "rtlRestart": {
     "title": "需要更新版面",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "訂閱 — {{price}}/月",
     "ctaSubscribeAnnual": "訂閱 — {{price}}/年",
     "billedMonthly": "每月計費",
-    "legalNoteAnnual": "試用結束後{{price}}/年。隨時取消。",
-    "legalNoteMonthly": "{{price}}/月。隨時取消。",
     "restore": "恢復購買",
     "restoreSuccess": "訂閱已恢復！",
     "restoreNotFound": "未找到有效訂閱",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/月",
     "reassurance": "無需承諾 · 隨時可取消",
-    "socialProof": "★ {{rating}} · {{users}} 位使用者",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} 位使用者"
   },
   "premiumGate": {
     "unlock": "解鎖",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "訂閱可能已過期",
     "graceBannerMessage": "請在 {{date}} 之前連線以驗證您的訂閱。",
     "graceBannerCta": "驗證訂閱"
-  },
-  "a11y": {}
+  }
 }

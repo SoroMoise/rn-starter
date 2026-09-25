@@ -13,12 +13,7 @@
     "close": "Chiudi",
     "search": "Cerca",
     "noResults": "Nessun risultato trovato",
-    "refresh": "Aggiorna",
-    "updated": "Aggiornato",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Copia",
-    "copiedToClipboard": "Copiato negli appunti!",
     "back": "Indietro"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Impostazioni",
     "subtitle": "Personalizza aspetto e preferenze",
     "appearance": "Aspetto",
-    "theme": "Tema",
     "themeLight": "Chiaro",
     "themeDark": "Scuro",
     "themeAuto": "Sistema",
     "display": "Visualizzazione",
     "language": "Lingua",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Seleziona Lingua",
     "searchLanguage": "Cerca lingue...",
-    "data": "Dati",
-    "clearCache": "Cancella cache",
-    "clearCacheConfirm": "Sei sicuro di voler cancellare tutti i dati in cache?",
-    "resetFavorites": "Ripristina",
-    "resetFavoritesConfirm": "Sei sicuro di voler reimpostare tutti i preferiti?",
-    "lastUpdate": "Ultimo aggiornamento",
-    "validate": "Conferma",
     "ads": "Annunci",
-    "premium": "Premium",
     "removeAds": "Rimuovi Annunci",
     "removeAdsDescription": "Goditi un'esperienza senza annunci",
-    "restorePurchases": "Ripristina acquisti",
-    "purchaseSuccess": "Acquisto riuscito!",
-    "purchaseFailed": "Acquisto fallito",
     "watchAdButton": "Guarda annuncio per {{duration}} senza annunci",
     "adFreeActive": "Senza annunci attivo ({{duration}} rimanenti)",
     "adNotAvailableTitle": "Annuncio non disponibile",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Hai {{duration}} di esperienza senza annunci. Goditi!",
     "adErrorTitle": "Errore",
     "adErrorMessage": "Impossibile caricare l'annuncio. Riprova più tardi.",
-    "debugResetAds": "🔧 Ripristina Senza-Annunci (Dev)",
-    "debugResetAdsSuccess": "Stato senza annunci ripristinato con successo",
     "about": "Informazioni",
     "version": "Versione",
     "legalAndSupport": "Legale e Supporto",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Accesso a vita"
   },
   "onboarding": {
-    "skip": "Salta",
-    "next": "Continua",
     "previous": "Indietro",
     "welcome": {
       "cta": "Inizia",
@@ -96,39 +73,16 @@
       "title": "Bentornato!"
     }
   },
-  "initialization": {
-    "errorTitle": "Connessione richiesta",
-    "retryButton": "Riprova"
-  },
   "error": {
     "networkError": "Errore di rete. Controlla la tua connessione.",
-    "rateLimitExceeded": "Limite di richieste superato. Riprova più tardi.",
     "serverError": "Errore del server. Riprova più tardi.",
-    "timeout": "Timeout della richiesta. Riprova.",
-    "unknownError": "Si è verificato un errore sconosciuto",
-    "copyFailed": "Impossibile copiare negli appunti"
-  },
-  "time": {
-    "justNow": "proprio ora",
-    "minutesAgo_one": "{{count}} minuto fa",
-    "minutesAgo_many": "{{count}} minuti fa",
-    "minutesAgo_other": "{{count}} minuti fa",
-    "hoursAgo_one": "{{count}} ora fa",
-    "hoursAgo_many": "{{count}} ore fa",
-    "hoursAgo_other": "{{count}} ore fa",
-    "daysAgo_one": "{{count}} giorno fa",
-    "daysAgo_many": "{{count}} giorni fa",
-    "daysAgo_other": "{{count}} giorni fa"
+    "unknownError": "Si è verificato un errore sconosciuto"
   },
   "appRating": {
     "message": "Una valutazione a 5 stelle ci aiuta a mantenere l'app gratuita e in continuo miglioramento.",
-    "settingsTitle": "Ti piace l'app?",
-    "settingsMessage": "La tua valutazione ci aiuta a tenere l'app gratuita e migliorarla. Se ti piace, una recensione a 5 stelle ci farebbe molto piacere!",
     "rateButton": "Valuta ora",
     "laterButton": "Più tardi",
-    "declineButton": "No grazie",
-    "thankYou": "Grazie per il tuo feedback!",
-    "rateAppButton": "Valuta questa app"
+    "declineButton": "No grazie"
   },
   "rtlRestart": {
     "title": "Aggiornamento layout necessario",
@@ -146,8 +100,6 @@
     "ctaSubscribeMonthly": "Abbonati — {{price}}/mese",
     "ctaSubscribeAnnual": "Abbonati — {{price}}/anno",
     "billedMonthly": "fatturato mensilmente",
-    "legalNoteAnnual": "{{price}}/anno dopo la prova. Annulla quando vuoi.",
-    "legalNoteMonthly": "{{price}}/mese. Annulla quando vuoi.",
     "restore": "Ripristina acquisti",
     "restoreSuccess": "Abbonamento ripristinato!",
     "restoreNotFound": "Nessun abbonamento attivo trovato",
@@ -159,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mese",
     "reassurance": "Nessun impegno · Annulla quando vuoi",
-    "socialProof": "★ {{rating}} · {{users}} utenti",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} utenti"
   },
   "premiumGate": {
     "unlock": "Sblocca",
@@ -170,6 +121,5 @@
     "graceBannerTitle": "L'abbonamento potrebbe essere scaduto",
     "graceBannerMessage": "Connettiti a internet prima del {{date}} per verificare il tuo abbonamento.",
     "graceBannerCta": "Verifica abbonamento"
-  },
-  "a11y": {}
+  }
 }

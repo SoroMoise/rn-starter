@@ -13,12 +13,7 @@
     "close": "Закрыть",
     "search": "Поиск",
     "noResults": "Результаты не найдены",
-    "refresh": "Обновить",
-    "updated": "Обновлено",
     "offline": "Офлайн",
-    "online": "Онлайн",
-    "copy": "Копировать",
-    "copiedToClipboard": "Скопировано в буфер обмена!",
     "back": "Назад"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Настройки",
     "subtitle": "Настройте оформление и параметры",
     "appearance": "Внешний Вид",
-    "theme": "Тема",
     "themeLight": "Светлая",
     "themeDark": "Тёмная",
     "themeAuto": "Система",
     "display": "Отображение",
     "language": "Язык",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Выбрать Язык",
     "searchLanguage": "Поиск языков...",
-    "data": "Данные",
-    "clearCache": "Очистить кэш",
-    "clearCacheConfirm": "Вы уверены, что хотите удалить все кэшированные данные?",
-    "resetFavorites": "Сбросить",
-    "resetFavoritesConfirm": "Вы уверены, что хотите сбросить все избранное?",
-    "lastUpdate": "Последнее обновление",
-    "validate": "Подтвердить",
     "ads": "Реклама",
-    "premium": "Премиум",
     "removeAds": "Убрать Рекламу",
     "removeAdsDescription": "Наслаждайтесь приложением без рекламы",
-    "restorePurchases": "Восстановить покупки",
-    "purchaseSuccess": "Покупка успешна!",
-    "purchaseFailed": "Покупка не удалась",
     "watchAdButton": "Посмотреть рекламу для {{duration}} без рекламы",
     "adFreeActive": "Без рекламы активно (осталось {{duration}})",
     "adNotAvailableTitle": "Реклама недоступна",
@@ -60,8 +41,6 @@
     "adRewardMessage": "У вас {{duration}} без рекламы. Наслаждайтесь!",
     "adErrorTitle": "Ошибка",
     "adErrorMessage": "Не удалось загрузить рекламу. Пожалуйста, попробуйте позже.",
-    "debugResetAds": "🔧 Сбросить Без-Рекламы (Dev)",
-    "debugResetAdsSuccess": "Состояние без рекламы успешно сброшено",
     "about": "О приложении",
     "version": "Версия",
     "legalAndSupport": "Юридическая информация и Поддержка",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Пожизненный доступ"
   },
   "onboarding": {
-    "skip": "Пропустить",
-    "next": "Продолжить",
     "previous": "Назад",
     "welcome": {
       "cta": "Начать",
@@ -96,42 +73,16 @@
       "title": "С возвращением!"
     }
   },
-  "initialization": {
-    "errorTitle": "Требуется подключение",
-    "retryButton": "Повторить"
-  },
   "error": {
     "networkError": "Ошибка сети. Пожалуйста, проверьте подключение.",
-    "rateLimitExceeded": "Превышен лимит запросов. Пожалуйста, попробуйте позже.",
     "serverError": "Ошибка сервера. Пожалуйста, попробуйте позже.",
-    "timeout": "Время ожидания запроса истекло. Пожалуйста, попробуйте снова.",
-    "unknownError": "Произошла неизвестная ошибка",
-    "copyFailed": "Не удалось скопировать в буфер обмена"
-  },
-  "time": {
-    "justNow": "только что",
-    "minutesAgo_one": "{{count}} минуту назад",
-    "minutesAgo_few": "{{count}} минуты назад",
-    "minutesAgo_many": "{{count}} минут назад",
-    "minutesAgo_other": "{{count}} минут назад",
-    "hoursAgo_one": "{{count}} час назад",
-    "hoursAgo_few": "{{count}} часа назад",
-    "hoursAgo_many": "{{count}} часов назад",
-    "hoursAgo_other": "{{count}} часов назад",
-    "daysAgo_one": "{{count}} день назад",
-    "daysAgo_few": "{{count}} дня назад",
-    "daysAgo_many": "{{count}} дней назад",
-    "daysAgo_other": "{{count}} дней назад"
+    "unknownError": "Произошла неизвестная ошибка"
   },
   "appRating": {
     "message": "Оценка в 5 звёзд помогает нам сохранять приложение бесплатным и постоянно улучшать его.",
-    "settingsTitle": "Вам нравится приложение?",
-    "settingsMessage": "Ваша оценка помогает нам держать приложение бесплатным и лучше. Если оно вам нравится, мы будем рады отзыву на 5 звёзд!",
     "rateButton": "Оценить сейчас",
     "laterButton": "Позже",
-    "declineButton": "Нет, спасибо",
-    "thankYou": "Спасибо за ваш отзыв!",
-    "rateAppButton": "Оценить приложение"
+    "declineButton": "Нет, спасибо"
   },
   "rtlRestart": {
     "title": "Требуется обновление макета",
@@ -149,8 +100,6 @@
     "ctaSubscribeMonthly": "Подписаться — {{price}}/мес",
     "ctaSubscribeAnnual": "Подписаться — {{price}}/год",
     "billedMonthly": "ежемесячное списание",
-    "legalNoteAnnual": "{{price}}/год после пробного периода. Отмена в любое время.",
-    "legalNoteMonthly": "{{price}}/мес. Отмена в любое время.",
     "restore": "Восстановить покупки",
     "restoreSuccess": "Подписка восстановлена!",
     "restoreNotFound": "Активная подписка не найдена",
@@ -162,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/мес",
     "reassurance": "Без обязательств · Отмена в любое время",
-    "socialProof": "★ {{rating}} · {{users}} пользователей",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} пользователей"
   },
   "premiumGate": {
     "unlock": "Разблокировать",
@@ -173,6 +121,5 @@
     "graceBannerTitle": "Срок подписки, возможно, истёк",
     "graceBannerMessage": "Подключитесь к интернету до {{date}}, чтобы проверить подписку.",
     "graceBannerCta": "Проверить подписку"
-  },
-  "a11y": {}
+  }
 }

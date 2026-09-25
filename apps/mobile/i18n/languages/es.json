@@ -13,12 +13,7 @@
     "close": "Cerrar",
     "search": "Buscar",
     "noResults": "No se encontraron resultados",
-    "refresh": "Actualizar",
-    "updated": "Actualizado",
     "offline": "Sin conexión",
-    "online": "En línea",
-    "copy": "Copiar",
-    "copiedToClipboard": "¡Copiado al portapapeles!",
     "back": "Volver"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Ajustes",
     "subtitle": "Personaliza la apariencia y las preferencias",
     "appearance": "Apariencia",
-    "theme": "Tema",
     "themeLight": "Claro",
     "themeDark": "Oscuro",
     "themeAuto": "Sistema",
     "display": "Visualización",
     "language": "Idioma",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Seleccionar Idioma",
     "searchLanguage": "Buscar idiomas...",
-    "data": "Datos",
-    "clearCache": "Borrar caché",
-    "clearCacheConfirm": "¿Estás seguro de que quieres borrar todos los datos en caché?",
-    "resetFavorites": "Restablecer",
-    "resetFavoritesConfirm": "¿Estás seguro de que quieres restablecer todos los favoritos?",
-    "lastUpdate": "Última actualización",
-    "validate": "Validar",
     "ads": "Anuncios",
-    "premium": "Premium",
     "removeAds": "Eliminar Anuncios",
     "removeAdsDescription": "Disfruta de una experiencia sin anuncios",
-    "restorePurchases": "Restaurar compras",
-    "purchaseSuccess": "¡Compra exitosa!",
-    "purchaseFailed": "Compra fallida",
     "watchAdButton": "Ver anuncio para {{duration}} sin anuncios",
     "adFreeActive": "Sin anuncios activo ({{duration}} restantes)",
     "adNotAvailableTitle": "Anuncio no disponible",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Tienes {{duration}} de experiencia sin anuncios. ¡Disfrútala!",
     "adErrorTitle": "Error",
     "adErrorMessage": "Error al cargar el anuncio. Por favor, inténtalo más tarde.",
-    "debugResetAds": "🔧 Restablecer Sin-Anuncios (Dev)",
-    "debugResetAdsSuccess": "Estado sin anuncios restablecido con éxito",
     "about": "Acerca de",
     "version": "Versión",
     "legalAndSupport": "Legal y Soporte",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Acceso de por vida"
   },
   "onboarding": {
-    "skip": "Saltar",
-    "next": "Continuar",
     "previous": "Atrás",
     "welcome": {
       "cta": "Empezar",
@@ -96,39 +73,16 @@
       "title": "¡Bienvenido de nuevo!"
     }
   },
-  "initialization": {
-    "errorTitle": "Conexión requerida",
-    "retryButton": "Reintentar"
-  },
   "error": {
     "networkError": "Error de red. Por favor verifica tu conexión.",
-    "rateLimitExceeded": "Límite de tasa excedido. Por favor, inténtalo más tarde.",
     "serverError": "Error del servidor. Por favor, inténtalo más tarde.",
-    "timeout": "Tiempo de espera agotado. Por favor, inténtalo de nuevo.",
-    "unknownError": "Ocurrió un error desconocido",
-    "copyFailed": "Error al copiar al portapapeles"
-  },
-  "time": {
-    "justNow": "ahora mismo",
-    "minutesAgo_one": "hace {{count}} minuto",
-    "minutesAgo_many": "hace {{count}} minutos",
-    "minutesAgo_other": "hace {{count}} minutos",
-    "hoursAgo_one": "hace {{count}} hora",
-    "hoursAgo_many": "hace {{count}} horas",
-    "hoursAgo_other": "hace {{count}} horas",
-    "daysAgo_one": "hace {{count}} día",
-    "daysAgo_many": "hace {{count}} días",
-    "daysAgo_other": "hace {{count}} días"
+    "unknownError": "Ocurrió un error desconocido"
   },
   "appRating": {
     "message": "Una valoración de 5 estrellas nos ayuda a mantener la app gratuita y en constante mejora.",
-    "settingsTitle": "¿Te gusta la aplicación?",
-    "settingsMessage": "Tu valoración nos ayuda a mantener la app gratuita y mejorarla. Si te gusta, ¡una reseña de 5 estrellas nos encantaría!",
     "rateButton": "Valorar ahora",
     "laterButton": "Más tarde",
-    "declineButton": "No gracias",
-    "thankYou": "¡Gracias por tu opinión!",
-    "rateAppButton": "Valorar la app"
+    "declineButton": "No gracias"
   },
   "rtlRestart": {
     "title": "Actualización de diseño requerida",
@@ -146,8 +100,6 @@
     "ctaSubscribeMonthly": "Suscribirse — {{price}}/mes",
     "ctaSubscribeAnnual": "Suscribirse — {{price}}/año",
     "billedMonthly": "facturado mensualmente",
-    "legalNoteAnnual": "{{price}}/año después del período de prueba. Cancela cuando quieras.",
-    "legalNoteMonthly": "{{price}}/mes. Cancela cuando quieras.",
     "restore": "Restaurar compras",
     "restoreSuccess": "¡Suscripción restaurada!",
     "restoreNotFound": "No se encontró ninguna suscripción activa",
@@ -159,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mes",
     "reassurance": "Sin compromiso · Cancela cuando quieras",
-    "socialProof": "★ {{rating}} · {{users}} usuarios",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} usuarios"
   },
   "premiumGate": {
     "unlock": "Desbloquear",
@@ -170,6 +121,5 @@
     "graceBannerTitle": "Es posible que tu suscripción haya vencido",
     "graceBannerMessage": "Conéctate a internet antes del {{date}} para verificar tu suscripción.",
     "graceBannerCta": "Verificar suscripción"
-  },
-  "a11y": {}
+  }
 }

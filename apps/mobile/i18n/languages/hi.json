@@ -13,12 +13,7 @@
     "close": "बंद करें",
     "search": "खोजें",
     "noResults": "कोई परिणाम नहीं मिला",
-    "refresh": "रीफ्रेश करें",
-    "updated": "अपडेट किया गया",
     "offline": "ऑफ़लाइन",
-    "online": "ऑनलाइन",
-    "copy": "कॉपी करें",
-    "copiedToClipboard": "क्लिपबोर्ड पर कॉपी किया गया!",
     "back": "वापस"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "सेटिंग्स",
     "subtitle": "रूप-रंग और वरीयताएँ अनुकूलित करें",
     "appearance": "रूप-रंग",
-    "theme": "थीम",
     "themeLight": "लाइट",
     "themeDark": "डार्क",
     "themeAuto": "सिस्टम",
     "display": "प्रदर्शन",
     "language": "भाषा",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "भाषा चुनें",
     "searchLanguage": "भाषाएं खोजें...",
-    "data": "डेटा",
-    "clearCache": "कैश साफ़ करें",
-    "clearCacheConfirm": "क्या आप सभी कैश डेटा हटाना चाहते हैं?",
-    "resetFavorites": "रीसेट करें",
-    "resetFavoritesConfirm": "क्या आप सभी पसंदीदा रीसेट करना चाहते हैं?",
-    "lastUpdate": "अंतिम अपडेट",
-    "validate": "सत्यापित करें",
     "ads": "विज्ञापन",
-    "premium": "प्रीमियम",
     "removeAds": "विज्ञापन हटाएं",
     "removeAdsDescription": "विज्ञापन-मुक्त अनुभव का आनंद लें",
-    "restorePurchases": "खरीदारी पुनर्स्थापित करें",
-    "purchaseSuccess": "खरीदारी सफल!",
-    "purchaseFailed": "खरीदारी विफल",
     "watchAdButton": "{{duration}} विज्ञापन-मुक्त के लिए विज्ञापन देखें",
     "adFreeActive": "विज्ञापन-मुक्त सक्रिय ({{duration}} शेष)",
     "adNotAvailableTitle": "विज्ञापन उपलब्ध नहीं",
@@ -60,8 +41,6 @@
     "adRewardMessage": "आपको {{duration}} का विज्ञापन-मुक्त अनुभव मिला है। आनंद लें!",
     "adErrorTitle": "त्रुटि",
     "adErrorMessage": "विज्ञापन लोड नहीं हो सका। कृपया बाद में पुनः प्रयास करें।",
-    "debugResetAds": "🔧 विज्ञापन-मुक्त रीसेट करें (Dev)",
-    "debugResetAdsSuccess": "विज्ञापन-मुक्त स्थिति सफलतापूर्वक रीसेट की गई",
     "about": "के बारे में",
     "version": "संस्करण",
     "legalAndSupport": "कानूनी और सहायता",
@@ -76,8 +55,6 @@
     "premiumLifetime": "आजीवन पहुँच"
   },
   "onboarding": {
-    "skip": "छोड़ें",
-    "next": "जारी रखें",
     "previous": "वापस",
     "welcome": {
       "cta": "शुरू करें",
@@ -96,36 +73,16 @@
       "title": "वापसी पर स्वागत है!"
     }
   },
-  "initialization": {
-    "errorTitle": "कनेक्शन आवश्यक",
-    "retryButton": "पुनः प्रयास करें"
-  },
   "error": {
     "networkError": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
-    "rateLimitExceeded": "दर सीमा पार हो गई। कृपया बाद में पुनः प्रयास करें।",
     "serverError": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
-    "timeout": "अनुरोध समय समाप्त। कृपया पुनः प्रयास करें।",
-    "unknownError": "एक अज्ञात त्रुटि हुई",
-    "copyFailed": "क्लिपबोर्ड पर कॉपी करना विफल"
-  },
-  "time": {
-    "justNow": "अभी",
-    "minutesAgo_one": "{{count}} मिनट पहले",
-    "minutesAgo_other": "{{count}} मिनट पहले",
-    "hoursAgo_one": "{{count}} घंटा पहले",
-    "hoursAgo_other": "{{count}} घंटे पहले",
-    "daysAgo_one": "{{count}} दिन पहले",
-    "daysAgo_other": "{{count}} दिन पहले"
+    "unknownError": "एक अज्ञात त्रुटि हुई"
   },
   "appRating": {
     "message": "5 स्टार रेटिंग हमें ऐप को मुफ्त और हमेशा बेहतर बनाए रखने में मदद करती है।",
-    "settingsTitle": "क्या आपको ऐप पसंद है?",
-    "settingsMessage": "आपकी रेटिंग हमें ऐप को मुफ्त और बेहतर बनाने में मदद करती है। अगर आपको पसंद है, तो 5 स्टार रिव्यू हमें बहुत खुशी देगा!",
     "rateButton": "अभी रेट करें",
     "laterButton": "बाद में",
-    "declineButton": "नहीं धन्यवाद",
-    "thankYou": "आपकी प्रतिक्रिया के लिए धन्यवाद!",
-    "rateAppButton": "ऐप को रेट करें"
+    "declineButton": "नहीं धन्यवाद"
   },
   "rtlRestart": {
     "title": "लेआउट अपडेट आवश्यक है",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "सब्सक्राइब करें — {{price}}/माह",
     "ctaSubscribeAnnual": "सब्सक्राइब करें — {{price}}/साल",
     "billedMonthly": "मासिक बिल",
-    "legalNoteAnnual": "ट्रायल के बाद {{price}}/साल। कभी भी रद्द करें।",
-    "legalNoteMonthly": "{{price}}/माह। कभी भी रद्द करें।",
     "restore": "खरीदारी पुनर्स्थापित करें",
     "restoreSuccess": "सब्सक्रिप्शन बहाल हो गई!",
     "restoreNotFound": "कोई सक्रिय सब्सक्रिप्शन नहीं मिली",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/माह",
     "reassurance": "कोई प्रतिबद्धता नहीं · कभी भी रद्द करें",
-    "socialProof": "★ {{rating}} · {{users}} यूज़र",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} यूज़र"
   },
   "premiumGate": {
     "unlock": "अनलॉक करें",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "सदस्यता समाप्त हो सकती है",
     "graceBannerMessage": "अपनी सदस्यता सत्यापित करने के लिए {{date}} से पहले इंटरनेट से कनेक्ट करें।",
     "graceBannerCta": "सदस्यता सत्यापित करें"
-  },
-  "a11y": {}
+  }
 }

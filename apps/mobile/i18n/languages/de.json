@@ -13,12 +13,7 @@
     "close": "Schließen",
     "search": "Suchen",
     "noResults": "Keine Ergebnisse gefunden",
-    "refresh": "Aktualisieren",
-    "updated": "Aktualisiert",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Kopieren",
-    "copiedToClipboard": "In die Zwischenablage kopiert!",
     "back": "Zurück"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Einstellungen",
     "subtitle": "Erscheinungsbild und Einstellungen anpassen",
     "appearance": "Erscheinungsbild",
-    "theme": "Design",
     "themeLight": "Hell",
     "themeDark": "Dunkel",
     "themeAuto": "System",
     "display": "Anzeige",
     "language": "Sprache",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Sprache Auswählen",
     "searchLanguage": "Sprachen suchen...",
-    "data": "Daten",
-    "clearCache": "Cache leeren",
-    "clearCacheConfirm": "Sind Sie sicher, dass Sie alle zwischengespeicherten Daten löschen möchten?",
-    "resetFavorites": "Zurücksetzen",
-    "resetFavoritesConfirm": "Sind Sie sicher, dass Sie alle Favoriten zurücksetzen möchten?",
-    "lastUpdate": "Letzte Aktualisierung",
-    "validate": "Bestätigen",
     "ads": "Werbung",
-    "premium": "Premium",
     "removeAds": "Werbung Entfernen",
     "removeAdsDescription": "Genießen Sie eine werbefreie Erfahrung",
-    "restorePurchases": "Käufe wiederherstellen",
-    "purchaseSuccess": "Kauf erfolgreich!",
-    "purchaseFailed": "Kauf fehlgeschlagen",
     "watchAdButton": "Werbung ansehen für {{duration}} werbefrei",
     "adFreeActive": "Werbefrei aktiv (noch {{duration}})",
     "adNotAvailableTitle": "Werbung nicht verfügbar",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Sie haben {{duration}} werbefreie Erfahrung. Viel Spaß!",
     "adErrorTitle": "Fehler",
     "adErrorMessage": "Werbung konnte nicht geladen werden. Bitte versuchen Sie es später erneut.",
-    "debugResetAds": "🔧 Werbefrei Zurücksetzen (Dev)",
-    "debugResetAdsSuccess": "Werbefreier Status erfolgreich zurückgesetzt",
     "about": "Über",
     "version": "Version",
     "legalAndSupport": "Rechtliches & Support",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Lebenslanger Zugang"
   },
   "onboarding": {
-    "skip": "Überspringen",
-    "next": "Weiter",
     "previous": "Zurück",
     "welcome": {
       "cta": "Loslegen",
@@ -96,36 +73,16 @@
       "title": "Willkommen zurück!"
     }
   },
-  "initialization": {
-    "errorTitle": "Verbindung erforderlich",
-    "retryButton": "Erneut versuchen"
-  },
   "error": {
     "networkError": "Netzwerkfehler. Bitte überprüfen Sie Ihre Verbindung.",
-    "rateLimitExceeded": "Ratenlimit überschritten. Bitte versuchen Sie es später erneut.",
     "serverError": "Serverfehler. Bitte versuchen Sie es später erneut.",
-    "timeout": "Zeitüberschreitung der Anfrage. Bitte versuchen Sie es erneut.",
-    "unknownError": "Ein unbekannter Fehler ist aufgetreten",
-    "copyFailed": "Kopieren in die Zwischenablage fehlgeschlagen"
-  },
-  "time": {
-    "justNow": "gerade eben",
-    "minutesAgo_one": "vor {{count}} Minute",
-    "minutesAgo_other": "vor {{count}} Minuten",
-    "hoursAgo_one": "vor {{count}} Stunde",
-    "hoursAgo_other": "vor {{count}} Stunden",
-    "daysAgo_one": "vor {{count}} Tag",
-    "daysAgo_other": "vor {{count}} Tagen"
+    "unknownError": "Ein unbekannter Fehler ist aufgetreten"
   },
   "appRating": {
     "message": "Eine 5-Sterne-Bewertung hilft uns, die App kostenlos und immer besser zu halten.",
-    "settingsTitle": "Mögen Sie die App?",
-    "settingsMessage": "Ihre Bewertung hilft uns, die App kostenlos und besser zu machen. Wenn sie Ihnen gefällt, freuen wir uns über 5 Sterne!",
     "rateButton": "Jetzt bewerten",
     "laterButton": "Später",
-    "declineButton": "Nein danke",
-    "thankYou": "Vielen Dank für Ihr Feedback!",
-    "rateAppButton": "App bewerten"
+    "declineButton": "Nein danke"
   },
   "rtlRestart": {
     "title": "Layout-Update erforderlich",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Abonnieren — {{price}}/Monat",
     "ctaSubscribeAnnual": "Abonnieren — {{price}}/Jahr",
     "billedMonthly": "monatlich abgerechnet",
-    "legalNoteAnnual": "{{price}}/Jahr nach der Testversion. Jederzeit kündbar.",
-    "legalNoteMonthly": "{{price}}/Monat. Jederzeit kündbar.",
     "restore": "Käufe wiederherstellen",
     "restoreSuccess": "Abonnement wiederhergestellt!",
     "restoreNotFound": "Kein aktives Abonnement gefunden",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/Monat",
     "reassurance": "Keine Verpflichtung · Jederzeit kündbar",
-    "socialProof": "★ {{rating}} · {{users}} Nutzer",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} Nutzer"
   },
   "premiumGate": {
     "unlock": "Freischalten",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Abonnement möglicherweise abgelaufen",
     "graceBannerMessage": "Stelle vor dem {{date}} eine Internetverbindung her, um dein Abonnement zu überprüfen.",
     "graceBannerCta": "Abonnement überprüfen"
-  },
-  "a11y": {}
+  }
 }

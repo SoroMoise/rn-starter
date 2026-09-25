@@ -13,12 +13,7 @@
     "close": "বন্ধ করুন",
     "search": "খুঁজুন",
     "noResults": "কোনো ফলাফল পাওয়া যায়নি",
-    "refresh": "রিফ্রেশ করুন",
-    "updated": "আপডেট হয়েছে",
     "offline": "অফলাইন",
-    "online": "অনলাইন",
-    "copy": "কপি করুন",
-    "copiedToClipboard": "ক্লিপবোর্ডে কপি হয়েছে!",
     "back": "পিছনে"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "সেটিংস",
     "subtitle": "চেহারা ও পছন্দসমূহ কাস্টমাইজ করুন",
     "appearance": "চেহারা",
-    "theme": "থিম",
     "themeLight": "হালকা",
     "themeDark": "গাঢ়",
     "themeAuto": "সিস্টেম",
     "display": "প্রদর্শন",
     "language": "ভাষা",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "ভাষা নির্বাচন করুন",
     "searchLanguage": "ভাষা খুঁজুন...",
-    "data": "ডেটা",
-    "clearCache": "ক্যাশ পরিষ্কার করুন",
-    "clearCacheConfirm": "আপনি কি সমস্ত ক্যাশ করা ডেটা মুছে ফেলতে চান?",
-    "resetFavorites": "রিসেট করুন",
-    "resetFavoritesConfirm": "আপনি কি নিশ্চিত যে আপনি সমস্ত প্রিয় রিসেট করতে চান?",
-    "lastUpdate": "শেষ আপডেট",
-    "validate": "যাচাই করুন",
     "ads": "বিজ্ঞাপন",
-    "premium": "প্রিমিয়াম",
     "removeAds": "বিজ্ঞাপন সরান",
     "removeAdsDescription": "বিজ্ঞাপন-মুক্ত অভিজ্ঞতা উপভোগ করুন",
-    "restorePurchases": "ক্রয় পুনরুদ্ধার করুন",
-    "purchaseSuccess": "ক্রয় সফল!",
-    "purchaseFailed": "ক্রয় ব্যর্থ",
     "watchAdButton": "{{duration}} বিজ্ঞাপন-মুক্ত জন্য বিজ্ঞাপন দেখুন",
     "adFreeActive": "বিজ্ঞাপন-মুক্ত সক্রিয় ({{duration}} বাকি)",
     "adNotAvailableTitle": "বিজ্ঞাপন উপলব্ধ নয়",
@@ -60,8 +41,6 @@
     "adRewardMessage": "আপনি {{duration}} বিজ্ঞাপন-মুক্ত অভিজ্ঞতা পেয়েছেন। উপভোগ করুন!",
     "adErrorTitle": "ত্রুটি",
     "adErrorMessage": "বিজ্ঞাপন লোড করতে ব্যর্থ। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
-    "debugResetAds": "🔧 বিজ্ঞাপন-মুক্ত রিসেট করুন (Dev)",
-    "debugResetAdsSuccess": "বিজ্ঞাপন-মুক্ত অবস্থা সফলভাবে রিসেট হয়েছে",
     "about": "সম্পর্কে",
     "version": "সংস্করণ",
     "legalAndSupport": "আইনি এবং সহায়তা",
@@ -76,8 +55,6 @@
     "premiumLifetime": "আজীবন অ্যাক্সেস"
   },
   "onboarding": {
-    "skip": "এড়িয়ে যান",
-    "next": "চালিয়ে যান",
     "previous": "ফিরে যান",
     "welcome": {
       "cta": "শুরু করুন",
@@ -96,36 +73,16 @@
       "title": "আবার স্বাগতম!"
     }
   },
-  "initialization": {
-    "errorTitle": "সংযোগ প্রয়োজন",
-    "retryButton": "আবার চেষ্টা করুন"
-  },
   "error": {
     "networkError": "নেটওয়ার্ক ত্রুটি। অনুগ্রহ করে আপনার সংযোগ পরীক্ষা করুন।",
-    "rateLimitExceeded": "হার সীমা অতিক্রম হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
     "serverError": "সার্ভার ত্রুটি। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
-    "timeout": "অনুরোধের সময় শেষ। অনুগ্রহ করে আবার চেষ্টা করুন।",
-    "unknownError": "একটি অজানা ত্রুটি ঘটেছে",
-    "copyFailed": "ক্লিপবোর্ডে কপি করতে ব্যর্থ"
-  },
-  "time": {
-    "justNow": "এইমাত্র",
-    "minutesAgo_one": "{{count}} মিনিট আগে",
-    "minutesAgo_other": "{{count}} মিনিট আগে",
-    "hoursAgo_one": "{{count}} ঘন্টা আগে",
-    "hoursAgo_other": "{{count}} ঘন্টা আগে",
-    "daysAgo_one": "{{count}} দিন আগে",
-    "daysAgo_other": "{{count}} দিন আগে"
+    "unknownError": "একটি অজানা ত্রুটি ঘটেছে"
   },
   "appRating": {
     "message": "৫ তারা রেটিং আমাদের অ্যাপটি বিনামূল্যে রাখতে এবং সবসময় উন্নত করতে সাহায্য করে।",
-    "settingsTitle": "অ্যাপটি কি পছন্দ হচ্ছে?",
-    "settingsMessage": "আপনার রেটিং আমাদের অ্যাপ উন্নত ও বিনামূল্যে রাখতে সাহায্য করে। যদি পছন্দ করেন, ৫ তারা রিভিউ আমাদের অনুপ্রাণিত করবে!",
     "rateButton": "এখনই রেট করুন",
     "laterButton": "পরে",
-    "declineButton": "না ধন্যবাদ",
-    "thankYou": "আপনার মতামতের জন্য ধন্যবাদ!",
-    "rateAppButton": "অ্যাপ রেট করুন"
+    "declineButton": "না ধন্যবাদ"
   },
   "rtlRestart": {
     "title": "লেআউট আপডেট প্রয়োজন",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "সাবস্ক্রাইব করুন — {{price}}/মাস",
     "ctaSubscribeAnnual": "সাবস্ক্রাইব করুন — {{price}}/বছর",
     "billedMonthly": "মাসিক বিল করা হয়",
-    "legalNoteAnnual": "ট্রায়ালের পর {{price}}/বছর। যেকোনো সময় বাতিল করুন।",
-    "legalNoteMonthly": "{{price}}/মাস। যেকোনো সময় বাতিল করুন।",
     "restore": "কেনাকাটা পুনরুদ্ধার করুন",
     "restoreSuccess": "সাবস্ক্রিপশন পুনরুদ্ধার হয়েছে!",
     "restoreNotFound": "কোনো সক্রিয় সাবস্ক্রিপশন পাওয়া যায়নি",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/মাস",
     "reassurance": "কোনো প্রতিশ্রুতি নেই · যেকোনো সময় বাতিল করুন",
-    "socialProof": "★ {{rating}} · {{users}} ব্যবহারকারী",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} ব্যবহারকারী"
   },
   "premiumGate": {
     "unlock": "আনলক করুন",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "সদস্যতা মেয়াদ শেষ হয়ে থাকতে পারে",
     "graceBannerMessage": "আপনার সদস্যতা যাচাই করতে {{date}} এর আগে ইন্টারনেটে সংযুক্ত হন।",
     "graceBannerCta": "সদস্যতা যাচাই করুন"
-  },
-  "a11y": {}
+  }
 }

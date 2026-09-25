@@ -13,12 +13,7 @@
     "close": "Close",
     "search": "Search",
     "noResults": "No results found",
-    "refresh": "Refresh",
-    "updated": "Updated",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Copy",
-    "copiedToClipboard": "Copied to clipboard!",
     "back": "Back"
   },
   "tabs": {
@@ -66,25 +61,14 @@
     "title": "Settings",
     "subtitle": "Customize appearance and preferences",
     "appearance": "Appearance",
-    "theme": "Theme",
     "themeLight": "Light",
     "themeDark": "Dark",
     "themeAuto": "System",
     "display": "Display",
     "language": "Language",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Select Language",
     "searchLanguage": "Search languages...",
-    "data": "Data",
-    "clearCache": "Clear cache",
-    "clearCacheConfirm": "Are you sure you want to clear all cached data?",
-    "resetFavorites": "Reset",
-    "resetFavoritesConfirm": "Are you sure you want to reset all favorites?",
-    "lastUpdate": "Last update",
-    "validate": "Validate",
     "ads": "Ads",
-    "premium": "Premium",
     "goPremium": "Upgrade to Pro",
     "premiumDescription": "Remove ads · Premium features · Priority support",
     "premiumActive": "You're a Pro member",
@@ -92,9 +76,6 @@
     "premiumLifetime": "Lifetime access",
     "removeAds": "Remove Ads",
     "removeAdsDescription": "Enjoy ad-free experience",
-    "restorePurchases": "Restore purchases",
-    "purchaseSuccess": "Purchase successful!",
-    "purchaseFailed": "Purchase failed",
     "watchAdButton": "Watch ad for {{duration}} ad-free",
     "adFreeActive": "Ad-free active ({{duration}} left)",
     "adNotAvailableTitle": "Ad not available",
@@ -103,8 +84,6 @@
     "adRewardMessage": "You have {{duration}} of ad-free experience. Enjoy!",
     "adErrorTitle": "Error",
     "adErrorMessage": "Failed to load ad. Please try again later.",
-    "debugResetAds": "🔧 Reset Ad-Free (Dev)",
-    "debugResetAdsSuccess": "Ad-free state reset successfully",
     "about": "About",
     "version": "Version",
     "legalAndSupport": "Legal & Support",
@@ -116,7 +95,6 @@
     "adPrivacy": "Ad privacy settings"
   },
   "onboarding": {
-    "next": "Continue",
     "previous": "Back",
     "welcome": {
       "subtitle": "Everything you need, beautifully built and ready to ship.",
@@ -152,39 +130,18 @@
       "ctaContinue": "Keep exploring"
     }
   },
-  "initialization": {
-    "loading": "Loading…",
-    "loadingSubtitle": "Setting things up, just a moment…",
-    "errorTitle": "Connection Required",
-    "errorMessage": "We need an internet connection to finish setting up. Please check your connection and try again.",
-    "retryButton": "Retry"
-  },
   "error": {
     "networkError": "Network error. Please check your connection.",
     "apiError": "Could not load data. Please try again.",
-    "rateLimitExceeded": "Rate limit exceeded. Please try again later.",
     "serverError": "Server error. Please try again later.",
-    "timeout": "Request timeout. Please try again.",
-    "unknownError": "An unknown error occurred",
-    "copyFailed": "Failed to copy to clipboard"
-  },
-  "time": {
-    "justNow": "just now",
-    "minutesAgo_one": "{{count}} minute ago",
-    "minutesAgo_other": "{{count}} minutes ago",
-    "hoursAgo_one": "{{count}} hour ago",
-    "hoursAgo_other": "{{count}} hours ago",
-    "daysAgo_one": "{{count}} day ago",
-    "daysAgo_other": "{{count}} days ago"
+    "unknownError": "An unknown error occurred"
   },
   "appRating": {
     "title": "Enjoying RN Starter?",
     "message": "A 5-star rating helps us keep the app free and always improving.",
     "rateButton": "Rate now",
     "laterButton": "Later",
-    "declineButton": "No thanks",
-    "thankYou": "Thank you for your feedback!",
-    "rateAppButton": "Rate this app"
+    "declineButton": "No thanks"
   },
   "rtlRestart": {
     "title": "Layout update required",
@@ -214,7 +171,6 @@
     "perMonth": "≈ {{price}}/mo",
     "reassurance": "No commitment · Cancel anytime",
     "socialProof": "★ {{rating}} · {{users}} users",
-    "socialProofShort": "★ {{rating}} ({{users}})",
     "featureCore": "All core features",
     "featureLimitedSupport": "Community support",
     "featureReminders": "Unlimited scheduled reminders",
@@ -249,9 +205,6 @@
     "graceBannerTitle": "Subscription may have expired",
     "graceBannerMessage": "Connect to internet before {{date}} to verify your subscription.",
     "graceBannerCta": "Verify subscription"
-  },
-  "a11y": {
-    "refreshRates": "Refresh"
   },
   "notifications": {
     "channelName": "Reminders",

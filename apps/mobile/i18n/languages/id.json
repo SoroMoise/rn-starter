@@ -13,12 +13,7 @@
     "close": "Tutup",
     "search": "Cari",
     "noResults": "Tidak ada hasil ditemukan",
-    "refresh": "Segarkan",
-    "updated": "Diperbarui",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Salin",
-    "copiedToClipboard": "Disalin ke papan klip!",
     "back": "Kembali"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Pengaturan",
     "subtitle": "Sesuaikan tampilan dan preferensi",
     "appearance": "Tampilan",
-    "theme": "Tema",
     "themeLight": "Terang",
     "themeDark": "Gelap",
     "themeAuto": "Sistem",
     "display": "Tampilan",
     "language": "Bahasa",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Pilih Bahasa",
     "searchLanguage": "Cari bahasa...",
-    "data": "Data",
-    "clearCache": "Hapus cache",
-    "clearCacheConfirm": "Apakah Anda yakin ingin menghapus semua data cache?",
-    "resetFavorites": "Reset",
-    "resetFavoritesConfirm": "Apakah Anda yakin ingin mengatur ulang semua favorit?",
-    "lastUpdate": "Pembaruan terakhir",
-    "validate": "Validasi",
     "ads": "Iklan",
-    "premium": "Premium",
     "removeAds": "Hapus Iklan",
     "removeAdsDescription": "Nikmati pengalaman bebas iklan",
-    "restorePurchases": "Pulihkan pembelian",
-    "purchaseSuccess": "Pembelian berhasil!",
-    "purchaseFailed": "Pembelian gagal",
     "watchAdButton": "Tonton iklan untuk {{duration}} bebas iklan",
     "adFreeActive": "Bebas iklan aktif ({{duration}} tersisa)",
     "adNotAvailableTitle": "Iklan tidak tersedia",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Anda mendapat {{duration}} pengalaman bebas iklan. Nikmati!",
     "adErrorTitle": "Kesalahan",
     "adErrorMessage": "Gagal memuat iklan. Silakan coba lagi nanti.",
-    "debugResetAds": "🔧 Reset Bebas-Iklan (Dev)",
-    "debugResetAdsSuccess": "Status bebas iklan berhasil direset",
     "about": "Tentang",
     "version": "Versi",
     "legalAndSupport": "Hukum & Dukungan",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Akses seumur hidup"
   },
   "onboarding": {
-    "skip": "Lewati",
-    "next": "Lanjut",
     "previous": "Kembali",
     "welcome": {
       "cta": "Mulai",
@@ -96,36 +73,16 @@
       "title": "Selamat datang kembali!"
     }
   },
-  "initialization": {
-    "errorTitle": "Koneksi Diperlukan",
-    "retryButton": "Coba Lagi"
-  },
   "error": {
     "networkError": "Kesalahan jaringan. Silakan periksa koneksi Anda.",
-    "rateLimitExceeded": "Batas kecepatan terlampaui. Silakan coba lagi nanti.",
     "serverError": "Kesalahan server. Silakan coba lagi nanti.",
-    "timeout": "Waktu permintaan habis. Silakan coba lagi.",
-    "unknownError": "Terjadi kesalahan yang tidak diketahui",
-    "copyFailed": "Gagal menyalin ke papan klip"
-  },
-  "time": {
-    "justNow": "baru saja",
-    "minutesAgo_other": "{{count}} menit yang lalu",
-    "hoursAgo_other": "{{count}} jam yang lalu",
-    "daysAgo_other": "{{count}} hari yang lalu",
-    "daysAgo_one": "{{count}} hari yang lalu",
-    "hoursAgo_one": "{{count}} jam yang lalu",
-    "minutesAgo_one": "{{count}} menit yang lalu"
+    "unknownError": "Terjadi kesalahan yang tidak diketahui"
   },
   "appRating": {
     "message": "Rating 5 bintang membantu kami menjaga aplikasi tetap gratis dan terus berkembang.",
-    "settingsTitle": "Apakah Anda suka aplikasinya?",
-    "settingsMessage": "Penilaian Anda membantu kami menjaga aplikasi tetap gratis dan terus diperbaiki. Jika Anda menyukainya, ulasan 5 bintang akan sangat berarti bagi kami!",
     "rateButton": "Nilai sekarang",
     "laterButton": "Nanti",
-    "declineButton": "Tidak, terima kasih",
-    "thankYou": "Terima kasih atas masukan Anda!",
-    "rateAppButton": "Nilai aplikasi ini"
+    "declineButton": "Tidak, terima kasih"
   },
   "rtlRestart": {
     "title": "Pembaruan tata letak diperlukan",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Berlangganan — {{price}}/bulan",
     "ctaSubscribeAnnual": "Berlangganan — {{price}}/tahun",
     "billedMonthly": "ditagih setiap bulan",
-    "legalNoteAnnual": "{{price}}/tahun setelah uji coba. Batalkan kapan saja.",
-    "legalNoteMonthly": "{{price}}/bulan. Batalkan kapan saja.",
     "restore": "Pulihkan pembelian",
     "restoreSuccess": "Langganan dipulihkan!",
     "restoreNotFound": "Tidak ada langganan aktif ditemukan",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/bln",
     "reassurance": "Tanpa komitmen · Batalkan kapan saja",
-    "socialProof": "★ {{rating}} · {{users}} pengguna",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} pengguna"
   },
   "premiumGate": {
     "unlock": "Buka kunci",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Langganan mungkin telah kedaluwarsa",
     "graceBannerMessage": "Sambungkan ke internet sebelum {{date}} untuk memverifikasi langganan Anda.",
     "graceBannerCta": "Verifikasi langganan"
-  },
-  "a11y": {}
+  }
 }

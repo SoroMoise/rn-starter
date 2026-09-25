@@ -13,12 +13,7 @@
     "close": "Fermer",
     "search": "Rechercher",
     "noResults": "Aucun résultat trouvé",
-    "refresh": "Actualiser",
-    "updated": "Mis à jour",
     "offline": "Hors ligne",
-    "online": "En ligne",
-    "copy": "Copier",
-    "copiedToClipboard": "Copié dans le presse-papiers !",
     "back": "Retour"
   },
   "tabs": {
@@ -66,25 +61,14 @@
     "title": "Paramètres",
     "subtitle": "Personnalisez l'apparence et vos préférences",
     "appearance": "Apparence",
-    "theme": "Thème",
     "themeLight": "Clair",
     "themeDark": "Sombre",
     "themeAuto": "Système",
     "display": "Affichage",
     "language": "Langue",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Sélectionner la langue",
     "searchLanguage": "Rechercher des langues...",
-    "data": "Données",
-    "clearCache": "Vider le cache",
-    "clearCacheConfirm": "Êtes-vous sûr de vouloir effacer toutes les données en cache ?",
-    "resetFavorites": "Réinitialiser",
-    "resetFavoritesConfirm": "Êtes-vous sûr de vouloir réinitialiser tous les favoris ?",
-    "lastUpdate": "Dernière mise à jour",
-    "validate": "Valider",
     "ads": "Publicités",
-    "premium": "Premium",
     "goPremium": "Passer à Pro",
     "premiumDescription": "Sans pub · Fonctionnalités premium · Support prioritaire",
     "premiumActive": "Vous êtes membre Pro",
@@ -92,9 +76,6 @@
     "premiumLifetime": "Accès à vie",
     "removeAds": "Retirer les publicités",
     "removeAdsDescription": "Profitez d'une expérience sans publicités",
-    "restorePurchases": "Restaurer les achats",
-    "purchaseSuccess": "Achat réussi !",
-    "purchaseFailed": "Échec de l'achat",
     "watchAdButton": "Regarder une pub pour {{duration}} sans pub",
     "adFreeActive": "Sans pub actif ({{duration}} restantes)",
     "adNotAvailableTitle": "Publicité non disponible",
@@ -103,8 +84,6 @@
     "adRewardMessage": "Vous avez {{duration}} d'expérience sans publicité. Profitez-en !",
     "adErrorTitle": "Erreur",
     "adErrorMessage": "Échec du chargement de la publicité. Veuillez réessayer plus tard.",
-    "debugResetAds": "🔧 Réinitialiser Sans-Pub (Dev)",
-    "debugResetAdsSuccess": "État sans-pub réinitialisé avec succès",
     "about": "À propos",
     "version": "Version",
     "legalAndSupport": "Légal et Support",
@@ -116,7 +95,6 @@
     "adPrivacy": "Confidentialité publicitaire"
   },
   "onboarding": {
-    "next": "Continuer",
     "previous": "Retour",
     "welcome": {
       "subtitle": "Tout ce qu'il faut, soigneusement construit et prêt à publier.",
@@ -152,42 +130,18 @@
       "ctaContinue": "Continuer la visite"
     }
   },
-  "initialization": {
-    "loading": "Chargement…",
-    "loadingSubtitle": "Préparation en cours, un instant…",
-    "errorTitle": "Connexion requise",
-    "errorMessage": "Une connexion internet est nécessaire pour terminer la configuration. Vérifiez votre connexion et réessayez.",
-    "retryButton": "Réessayer"
-  },
   "error": {
     "networkError": "Erreur réseau. Veuillez vérifier votre connexion.",
     "apiError": "Impossible de charger les données. Veuillez réessayer.",
-    "rateLimitExceeded": "Limite de taux dépassée. Veuillez réessayer plus tard.",
     "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
-    "timeout": "Délai d'attente dépassé. Veuillez réessayer.",
-    "unknownError": "Une erreur inconnue s'est produite",
-    "copyFailed": "Échec de la copie dans le presse-papiers"
-  },
-  "time": {
-    "justNow": "à l'instant",
-    "minutesAgo_one": "il y a {{count}} minute",
-    "minutesAgo_many": "il y a {{count}} minutes",
-    "minutesAgo_other": "il y a {{count}} minutes",
-    "hoursAgo_one": "il y a {{count}} heure",
-    "hoursAgo_many": "il y a {{count}} heures",
-    "hoursAgo_other": "il y a {{count}} heures",
-    "daysAgo_one": "il y a {{count}} jour",
-    "daysAgo_many": "il y a {{count}} jours",
-    "daysAgo_other": "il y a {{count}} jours"
+    "unknownError": "Une erreur inconnue s'est produite"
   },
   "appRating": {
     "title": "Vous aimez RN Starter ?",
     "message": "Une note 5 étoiles nous aide à garder l'app gratuite 😊 et à continuer de l'améliorer.",
     "rateButton": "Noter maintenant",
     "laterButton": "Plus tard",
-    "declineButton": "Non merci",
-    "thankYou": "Merci pour votre retour !",
-    "rateAppButton": "Noter l'application"
+    "declineButton": "Non merci"
   },
   "rtlRestart": {
     "title": "Mise à jour du layout requise",
@@ -217,7 +171,6 @@
     "perMonth": "≈ {{price}}/mois",
     "reassurance": "Sans engagement · Annulable à tout moment",
     "socialProof": "★ {{rating}} · {{users}} utilisateurs",
-    "socialProofShort": "★ {{rating}} ({{users}})",
     "featureCore": "Toutes les fonctions de base",
     "featureLimitedSupport": "Support communautaire",
     "featureReminders": "Rappels programmés illimités",
@@ -252,9 +205,6 @@
     "graceBannerTitle": "Votre abonnement a peut-être expiré",
     "graceBannerMessage": "Connectez-vous à internet avant le {{date}} pour vérifier votre abonnement.",
     "graceBannerCta": "Vérifier l'abonnement"
-  },
-  "a11y": {
-    "refreshRates": "Actualiser"
   },
   "notifications": {
     "channelName": "Rappels",

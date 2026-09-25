@@ -13,12 +13,7 @@
     "close": "Đóng",
     "search": "Tìm kiếm",
     "noResults": "Không tìm thấy kết quả",
-    "refresh": "Làm mới",
-    "updated": "Đã cập nhật",
     "offline": "Ngoại tuyến",
-    "online": "Trực tuyến",
-    "copy": "Sao chép",
-    "copiedToClipboard": "Đã sao chép vào clipboard!",
     "back": "Quay lại"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Cài Đặt",
     "subtitle": "Tùy chỉnh giao diện và tùy chọn",
     "appearance": "Giao diện",
-    "theme": "Chủ đề",
     "themeLight": "Sáng",
     "themeDark": "Tối",
     "themeAuto": "Hệ thống",
     "display": "Hiển thị",
     "language": "Ngôn ngữ",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Chọn Ngôn Ngữ",
     "searchLanguage": "Tìm ngôn ngữ...",
-    "data": "Dữ liệu",
-    "clearCache": "Xóa bộ nhớ cache",
-    "clearCacheConfirm": "Bạn có chắc chắn muốn xóa tất cả dữ liệu đã lưu trong cache?",
-    "resetFavorites": "Đặt lại",
-    "resetFavoritesConfirm": "Bạn có chắc chắn muốn đặt lại tất cả mục yêu thích?",
-    "lastUpdate": "Cập nhật lần cuối",
-    "validate": "Xác nhận",
     "ads": "Quảng cáo",
-    "premium": "Cao cấp",
     "removeAds": "Xóa Quảng Cáo",
     "removeAdsDescription": "Tận hưởng trải nghiệm không quảng cáo",
-    "restorePurchases": "Khôi phục giao dịch mua",
-    "purchaseSuccess": "Mua hàng thành công!",
-    "purchaseFailed": "Mua hàng thất bại",
     "watchAdButton": "Xem quảng cáo để được {{duration}} không quảng cáo",
     "adFreeActive": "Không quảng cáo đang hoạt động (còn {{duration}})",
     "adNotAvailableTitle": "Quảng cáo không khả dụng",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Bạn có {{duration}} trải nghiệm không quảng cáo. Tận hưởng nhé!",
     "adErrorTitle": "Lỗi",
     "adErrorMessage": "Không thể tải quảng cáo. Vui lòng thử lại sau.",
-    "debugResetAds": "🔧 Đặt Lại Không-Quảng-Cáo (Dev)",
-    "debugResetAdsSuccess": "Đã đặt lại trạng thái không quảng cáo thành công",
     "about": "Giới thiệu",
     "version": "Phiên bản",
     "legalAndSupport": "Pháp lý & Hỗ trợ",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Truy cập trọn đời"
   },
   "onboarding": {
-    "skip": "Bỏ qua",
-    "next": "Tiếp tục",
     "previous": "Quay lại",
     "welcome": {
       "cta": "Bắt đầu",
@@ -96,36 +73,16 @@
       "title": "Chào mừng trở lại!"
     }
   },
-  "initialization": {
-    "errorTitle": "Cần kết nối",
-    "retryButton": "Thử lại"
-  },
   "error": {
     "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
-    "rateLimitExceeded": "Vượt quá giới hạn. Vui lòng thử lại sau.",
     "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
-    "timeout": "Hết thời gian yêu cầu. Vui lòng thử lại.",
-    "unknownError": "Đã xảy ra lỗi không xác định",
-    "copyFailed": "Sao chép vào clipboard thất bại"
-  },
-  "time": {
-    "justNow": "vừa xong",
-    "minutesAgo_other": "{{count}} phút trước",
-    "hoursAgo_other": "{{count}} giờ trước",
-    "daysAgo_other": "{{count}} ngày trước",
-    "daysAgo_one": "{{count}} ngày trước",
-    "hoursAgo_one": "{{count}} giờ trước",
-    "minutesAgo_one": "{{count}} phút trước"
+    "unknownError": "Đã xảy ra lỗi không xác định"
   },
   "appRating": {
     "message": "Đánh giá 5 sao giúp chúng tôi giữ ứng dụng miễn phí và không ngừng cải thiện.",
-    "settingsTitle": "Bạn có thích ứng dụng không?",
-    "settingsMessage": "Đánh giá của bạn giúp chúng tôi duy trì ứng dụng miễn phí và tốt hơn. Nếu bạn thích, một đánh giá 5 sao sẽ có ý nghĩa rất lớn với chúng tôi!",
     "rateButton": "Đánh giá ngay",
     "laterButton": "Để sau",
-    "declineButton": "Không, cảm ơn",
-    "thankYou": "Cảm ơn phản hồi của bạn!",
-    "rateAppButton": "Đánh giá ứng dụng này"
+    "declineButton": "Không, cảm ơn"
   },
   "rtlRestart": {
     "title": "Cần cập nhật bố cục",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Đăng ký — {{price}}/tháng",
     "ctaSubscribeAnnual": "Đăng ký — {{price}}/năm",
     "billedMonthly": "thanh toán hàng tháng",
-    "legalNoteAnnual": "{{price}}/năm sau thử nghiệm. Hủy bất cứ lúc nào.",
-    "legalNoteMonthly": "{{price}}/tháng. Hủy bất cứ lúc nào.",
     "restore": "Khôi phục giao dịch",
     "restoreSuccess": "Đã khôi phục gói đăng ký!",
     "restoreNotFound": "Không tìm thấy gói đăng ký nào đang hoạt động",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/tháng",
     "reassurance": "Không ràng buộc · Hủy bất cứ lúc nào",
-    "socialProof": "★ {{rating}} · {{users}} người dùng",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} người dùng"
   },
   "premiumGate": {
     "unlock": "Mở khóa",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Gói đăng ký có thể đã hết hạn",
     "graceBannerMessage": "Kết nối internet trước {{date}} để xác minh gói đăng ký của bạn.",
     "graceBannerCta": "Xác minh gói đăng ký"
-  },
-  "a11y": {}
+  }
 }

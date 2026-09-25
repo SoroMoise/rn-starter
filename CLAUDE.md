@@ -223,6 +223,11 @@ Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Config `i18n/service.ts`, translations in `i18n/languages/`. Lazy-loaded per language. RTL (`ar`) triggers `I18nManager.forceRTL` + restart.
 
+**`common.*` is the shared UI vocabulary**, and the one namespace allowed to hold a key with no
+current reader: *Cancel*, *Save*, *Retry* and their neighbours are already translated into all twenty
+languages, so keeping them costs nothing and deleting them would bill the next app a translation
+session for words it certainly needs. Everywhere else, a key with no reader is dead and goes.
+
 **Translation policy:**
 - All code changes that touch i18n keys must provide values in **EN and FR only**. These two are the source of truth.
 - Translations into the 18 other languages are done in **dedicated sessions**, not alongside feature work. Never mix feature dev and mass translation in the same session.

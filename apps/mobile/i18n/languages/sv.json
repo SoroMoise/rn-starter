@@ -13,12 +13,7 @@
     "close": "Stäng",
     "search": "Sök",
     "noResults": "Inga resultat hittades",
-    "refresh": "Uppdatera",
-    "updated": "Uppdaterad",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Kopiera",
-    "copiedToClipboard": "Kopierat till urklipp!",
     "back": "Tillbaka"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Inställningar",
     "subtitle": "Anpassa utseende och inställningar",
     "appearance": "Utseende",
-    "theme": "Tema",
     "themeLight": "Ljust",
     "themeDark": "Mörkt",
     "themeAuto": "System",
     "display": "Visning",
     "language": "Språk",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Välj Språk",
     "searchLanguage": "Sök språk...",
-    "data": "Data",
-    "clearCache": "Rensa cache",
-    "clearCacheConfirm": "Är du säker på att du vill radera all cachad data?",
-    "resetFavorites": "Återställ",
-    "resetFavoritesConfirm": "Är du säker på att du vill återställa alla favoriter?",
-    "lastUpdate": "Senaste uppdatering",
-    "validate": "Bekräfta",
     "ads": "Annonser",
-    "premium": "Premium",
     "removeAds": "Ta Bort Annonser",
     "removeAdsDescription": "Njut av en annonsfri upplevelse",
-    "restorePurchases": "Återställ köp",
-    "purchaseSuccess": "Köp lyckades!",
-    "purchaseFailed": "Köp misslyckades",
     "watchAdButton": "Titta på annons för {{duration}} annonsfritt",
     "adFreeActive": "Annonsfritt aktivt ({{duration}} kvar)",
     "adNotAvailableTitle": "Annons ej tillgänglig",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Du har {{duration}} annonsfri upplevelse. Njut!",
     "adErrorTitle": "Fel",
     "adErrorMessage": "Kunde inte ladda annons. Försök igen senare.",
-    "debugResetAds": "🔧 Återställ Annonsfritt (Dev)",
-    "debugResetAdsSuccess": "Annonsfri status återställd",
     "about": "Om",
     "version": "Version",
     "legalAndSupport": "Juridiskt & Support",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Livstidsåtkomst"
   },
   "onboarding": {
-    "skip": "Hoppa över",
-    "next": "Fortsätt",
     "previous": "Tillbaka",
     "welcome": {
       "cta": "Kom igång",
@@ -96,36 +73,16 @@
       "title": "Välkommen tillbaka!"
     }
   },
-  "initialization": {
-    "errorTitle": "Anslutning krävs",
-    "retryButton": "Försök igen"
-  },
   "error": {
     "networkError": "Nätverksfel. Kontrollera din anslutning.",
-    "rateLimitExceeded": "Hastighetsgräns överskriden. Försök igen senare.",
     "serverError": "Serverfel. Försök igen senare.",
-    "timeout": "Timeout för begäran. Försök igen.",
-    "unknownError": "Ett okänt fel uppstod",
-    "copyFailed": "Kunde inte kopiera till urklipp"
-  },
-  "time": {
-    "justNow": "just nu",
-    "minutesAgo_one": "{{count}} minut sedan",
-    "minutesAgo_other": "{{count}} minuter sedan",
-    "hoursAgo_one": "{{count}} timme sedan",
-    "hoursAgo_other": "{{count}} timmar sedan",
-    "daysAgo_one": "{{count}} dag sedan",
-    "daysAgo_other": "{{count}} dagar sedan"
+    "unknownError": "Ett okänt fel uppstod"
   },
   "appRating": {
     "message": "Ett 5-stjärnigt betyg hjälper oss att hålla appen gratis och alltid förbättra den.",
-    "settingsTitle": "Tycker du om appen?",
-    "settingsMessage": "Ditt betyg hjälper oss att hålla appen gratis och bättre. Om du gillar den skulle ett 5-stjärnigt omdöme betyda mycket för oss!",
     "rateButton": "Betygsätt nu",
     "laterButton": "Senare",
-    "declineButton": "Nej tack",
-    "thankYou": "Tack för din feedback!",
-    "rateAppButton": "Betygsätt denna app"
+    "declineButton": "Nej tack"
   },
   "rtlRestart": {
     "title": "Layoutuppdatering krävs",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Prenumerera — {{price}}/månad",
     "ctaSubscribeAnnual": "Prenumerera — {{price}}/år",
     "billedMonthly": "debiteras månadsvis",
-    "legalNoteAnnual": "{{price}}/år efter provperioden. Avsluta när som helst.",
-    "legalNoteMonthly": "{{price}}/månad. Avsluta när som helst.",
     "restore": "Återställ köp",
     "restoreSuccess": "Prenumeration återställd!",
     "restoreNotFound": "Ingen aktiv prenumeration hittades",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mån",
     "reassurance": "Inget åtagande · Avsluta när som helst",
-    "socialProof": "★ {{rating}} · {{users}} användare",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} användare"
   },
   "premiumGate": {
     "unlock": "Lås upp",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Prenumerationen kan ha gått ut",
     "graceBannerMessage": "Anslut till internet före {{date}} för att verifiera din prenumeration.",
     "graceBannerCta": "Verifiera prenumeration"
-  },
-  "a11y": {}
+  }
 }

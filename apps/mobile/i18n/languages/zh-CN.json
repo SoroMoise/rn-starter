@@ -13,12 +13,7 @@
     "close": "关闭",
     "search": "搜索",
     "noResults": "未找到结果",
-    "refresh": "刷新",
-    "updated": "已更新",
     "offline": "离线",
-    "online": "在线",
-    "copy": "复制",
-    "copiedToClipboard": "已复制到剪贴板！",
     "back": "返回"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "设置",
     "subtitle": "自定义外观与偏好设置",
     "appearance": "外观",
-    "theme": "主题",
     "themeLight": "浅色",
     "themeDark": "深色",
     "themeAuto": "跟随系统",
     "display": "显示",
     "language": "语言",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "选择语言",
     "searchLanguage": "搜索语言...",
-    "data": "数据",
-    "clearCache": "清除缓存",
-    "clearCacheConfirm": "确定要清除所有缓存数据吗？",
-    "resetFavorites": "重置收藏",
-    "resetFavoritesConfirm": "确定要重置所有收藏吗？",
-    "lastUpdate": "上次更新",
-    "validate": "确认",
     "ads": "广告",
-    "premium": "高级版",
     "removeAds": "移除广告",
     "removeAdsDescription": "享受无广告体验",
-    "restorePurchases": "恢复购买",
-    "purchaseSuccess": "购买成功！",
-    "purchaseFailed": "购买失败",
     "watchAdButton": "观看广告享受{{duration}}无广告",
     "adFreeActive": "无广告已激活（剩余{{duration}}）",
     "adNotAvailableTitle": "广告不可用",
@@ -60,8 +41,6 @@
     "adRewardMessage": "您已获得{{duration}}无广告体验。尽情享受！",
     "adErrorTitle": "错误",
     "adErrorMessage": "加载广告失败。请稍后再试。",
-    "debugResetAds": "🔧 重置无广告（开发）",
-    "debugResetAdsSuccess": "无广告状态重置成功",
     "about": "关于",
     "version": "版本",
     "legalAndSupport": "法律和支持",
@@ -76,8 +55,6 @@
     "premiumLifetime": "永久访问"
   },
   "onboarding": {
-    "skip": "跳过",
-    "next": "继续",
     "previous": "返回",
     "welcome": {
       "cta": "开始使用",
@@ -96,36 +73,16 @@
       "title": "欢迎回来！"
     }
   },
-  "initialization": {
-    "errorTitle": "需要连接",
-    "retryButton": "重试"
-  },
   "error": {
     "networkError": "网络错误。请检查您的连接。",
-    "rateLimitExceeded": "超出速率限制。请稍后再试。",
     "serverError": "服务器错误。请稍后再试。",
-    "timeout": "请求超时。请重试。",
-    "unknownError": "发生未知错误",
-    "copyFailed": "复制到剪贴板失败"
-  },
-  "time": {
-    "justNow": "刚刚",
-    "minutesAgo_other": "{{count}} 分钟前",
-    "hoursAgo_other": "{{count}} 小时前",
-    "daysAgo_other": "{{count}} 天前",
-    "daysAgo_one": "{{count}} 天前",
-    "hoursAgo_one": "{{count}} 小时前",
-    "minutesAgo_one": "{{count}} 分钟前"
+    "unknownError": "发生未知错误"
   },
   "appRating": {
     "message": "5星好评帮助我们保持应用免费并持续改进。",
-    "settingsTitle": "您喜欢这款应用吗？",
-    "settingsMessage": "您的评价帮助我们保持应用免费并不断改进。如果您喜欢此应用，非常感谢5星好评！",
     "rateButton": "立即评价",
     "laterButton": "稍后",
-    "declineButton": "不了，谢谢",
-    "thankYou": "感谢您的反馈！",
-    "rateAppButton": "评价此应用"
+    "declineButton": "不了，谢谢"
   },
   "rtlRestart": {
     "title": "需要更新布局",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "订阅 — {{price}}/月",
     "ctaSubscribeAnnual": "订阅 — {{price}}/年",
     "billedMonthly": "每月计费",
-    "legalNoteAnnual": "试用结束后{{price}}/年。随时取消。",
-    "legalNoteMonthly": "{{price}}/月。随时取消。",
     "restore": "恢复购买",
     "restoreSuccess": "订阅已恢复！",
     "restoreNotFound": "未找到有效订阅",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/月",
     "reassurance": "无需承诺 · 随时可取消",
-    "socialProof": "★ {{rating}} · {{users}} 位用户",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} 位用户"
   },
   "premiumGate": {
     "unlock": "解锁",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "订阅可能已过期",
     "graceBannerMessage": "请在 {{date}} 之前连接网络以验证您的订阅。",
     "graceBannerCta": "验证订阅"
-  },
-  "a11y": {}
+  }
 }

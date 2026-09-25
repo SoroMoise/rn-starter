@@ -13,12 +13,7 @@
     "close": "Sluiten",
     "search": "Zoeken",
     "noResults": "Geen resultaten gevonden",
-    "refresh": "Vernieuwen",
-    "updated": "Bijgewerkt",
     "offline": "Offline",
-    "online": "Online",
-    "copy": "Kopiëren",
-    "copiedToClipboard": "Gekopieerd naar klembord!",
     "back": "Terug"
   },
   "tabs": {
@@ -28,30 +23,16 @@
     "title": "Instellingen",
     "subtitle": "Pas uiterlijk en voorkeuren aan",
     "appearance": "Uiterlijk",
-    "theme": "Thema",
     "themeLight": "Licht",
     "themeDark": "Donker",
     "themeAuto": "Systeem",
     "display": "Weergave",
     "language": "Taal",
-    "languageEnglish": "English",
-    "languageFrench": "Français",
     "selectLanguage": "Selecteer Taal",
     "searchLanguage": "Zoek talen...",
-    "data": "Gegevens",
-    "clearCache": "Cache wissen",
-    "clearCacheConfirm": "Weet je zeker dat je alle gecachte gegevens wilt verwijderen?",
-    "resetFavorites": "Resetten",
-    "resetFavoritesConfirm": "Weet je zeker dat je alle favorieten opnieuw wilt instellen?",
-    "lastUpdate": "Laatste update",
-    "validate": "Bevestigen",
     "ads": "Advertenties",
-    "premium": "Premium",
     "removeAds": "Verwijder Advertenties",
     "removeAdsDescription": "Geniet van een advertentievrije ervaring",
-    "restorePurchases": "Aankopen herstellen",
-    "purchaseSuccess": "Aankoop succesvol!",
-    "purchaseFailed": "Aankoop mislukt",
     "watchAdButton": "Bekijk advertentie voor {{duration}} advertentievrij",
     "adFreeActive": "Advertentievrij actief ({{duration}} resterend)",
     "adNotAvailableTitle": "Advertentie niet beschikbaar",
@@ -60,8 +41,6 @@
     "adRewardMessage": "Je hebt {{duration}} advertentievrije ervaring. Geniet ervan!",
     "adErrorTitle": "Fout",
     "adErrorMessage": "Kan advertentie niet laden. Probeer het later opnieuw.",
-    "debugResetAds": "🔧 Reset Advertentievrij (Dev)",
-    "debugResetAdsSuccess": "Advertentievrije status succesvol gereset",
     "about": "Over",
     "version": "Versie",
     "legalAndSupport": "Juridisch & Ondersteuning",
@@ -76,8 +55,6 @@
     "premiumLifetime": "Levenslange toegang"
   },
   "onboarding": {
-    "skip": "Overslaan",
-    "next": "Doorgaan",
     "previous": "Terug",
     "welcome": {
       "cta": "Beginnen",
@@ -96,36 +73,16 @@
       "title": "Welkom terug!"
     }
   },
-  "initialization": {
-    "errorTitle": "Verbinding vereist",
-    "retryButton": "Opnieuw proberen"
-  },
   "error": {
     "networkError": "Netwerkfout. Controleer je verbinding.",
-    "rateLimitExceeded": "Limiet overschreden. Probeer het later opnieuw.",
     "serverError": "Serverfout. Probeer het later opnieuw.",
-    "timeout": "Time-out van verzoek. Probeer het opnieuw.",
-    "unknownError": "Er is een onbekende fout opgetreden",
-    "copyFailed": "Kopiëren naar klembord mislukt"
-  },
-  "time": {
-    "justNow": "zojuist",
-    "minutesAgo_one": "{{count}} minuut geleden",
-    "minutesAgo_other": "{{count}} minuten geleden",
-    "hoursAgo_one": "{{count}} uur geleden",
-    "hoursAgo_other": "{{count}} uur geleden",
-    "daysAgo_one": "{{count}} dag geleden",
-    "daysAgo_other": "{{count}} dagen geleden"
+    "unknownError": "Er is een onbekende fout opgetreden"
   },
   "appRating": {
     "message": "Een 5-sterrenbeoordeling helpt ons de app gratis en steeds beter te houden.",
-    "settingsTitle": "Vindt u de app goed?",
-    "settingsMessage": "Uw beoordeling helpt ons de app gratis en beter te houden. Als u de app fijn vindt, zou een 5-sterrenrecensie ons enorm helpen!",
     "rateButton": "Nu beoordelen",
     "laterButton": "Later",
-    "declineButton": "Nee bedankt",
-    "thankYou": "Bedankt voor uw feedback!",
-    "rateAppButton": "Deze app beoordelen"
+    "declineButton": "Nee bedankt"
   },
   "rtlRestart": {
     "title": "Layout-update vereist",
@@ -143,8 +100,6 @@
     "ctaSubscribeMonthly": "Abonneren — {{price}}/maand",
     "ctaSubscribeAnnual": "Abonneren — {{price}}/jaar",
     "billedMonthly": "maandelijks gefactureerd",
-    "legalNoteAnnual": "{{price}}/jaar na proefperiode. Altijd opzegbaar.",
-    "legalNoteMonthly": "{{price}}/maand. Altijd opzegbaar.",
     "restore": "Aankopen herstellen",
     "restoreSuccess": "Abonnement hersteld!",
     "restoreNotFound": "Geen actief abonnement gevonden",
@@ -156,8 +111,7 @@
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/maand",
     "reassurance": "Geen verplichtingen · Altijd opzegbaar",
-    "socialProof": "★ {{rating}} · {{users}} gebruikers",
-    "socialProofShort": "★ {{rating}} ({{users}})"
+    "socialProof": "★ {{rating}} · {{users}} gebruikers"
   },
   "premiumGate": {
     "unlock": "Ontgrendelen",
@@ -167,6 +121,5 @@
     "graceBannerTitle": "Abonnement is mogelijk verlopen",
     "graceBannerMessage": "Maak verbinding met internet vóór {{date}} om je abonnement te verifiëren.",
     "graceBannerCta": "Abonnement verifiëren"
-  },
-  "a11y": {}
+  }
 }

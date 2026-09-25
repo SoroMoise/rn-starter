@@ -155,9 +155,6 @@ function patch(relPath, replacer) {
 
 const all = (src, from, to) => src.split(from).join(to)
 
-patch('apps/mobile/constants/config.ts', (src) =>
-  all(all(src, OLD_NAME, appName), OLD_SLUG, appSlug)
-)
 patch('apps/mobile/constants/rating.ts', (src) => all(src, OLD_BUNDLE, bundleId))
 patch('apps/mobile/services/storage/mmkv.ts', (src) => all(src, OLD_SLUG, appSlug))
 patch('apps/mobile/package.json', (src) => all(src, OLD_BUNDLE, bundleId))

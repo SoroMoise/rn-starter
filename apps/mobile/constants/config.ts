@@ -23,31 +23,8 @@ export const DEFAULT_SETTINGS = {
 }
 
 export const UI_CONFIG = {
-  ANIMATION_DURATION: 300, // ms
-  DEBOUNCE_DELAY: 300, // ms
-
-  MAX_AMOUNT: 999999999999,
-  MIN_AMOUNT: 0.000001,
-
-  MAX_FAVORITES: 50,
-
-  AUTO_REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes
-  PULL_TO_REFRESH_THRESHOLD: 100, // pixels
-}
-
-export const APP_URLS = {
-  PRIVACY_POLICY: 'https://yourwebsite.com/privacy',
-  TERMS_OF_SERVICE: 'https://yourwebsite.com/terms',
-  SUPPORT_EMAIL: 'support@yourapp.com',
-  WEBSITE: 'https://yourwebsite.com',
-  GITHUB: 'https://github.com/yourusername/rn-starter',
-}
-
-export const APP_INFO = {
-  NAME: 'RN Starter',
-  VERSION: '1.0.0',
-  BUILD_NUMBER: '1',
-  DESCRIPTION: 'A production-ready React Native starter',
+  ANIMATION_DURATION: 300,
+  DEBOUNCE_DELAY: 300,
 }
 
 export const RTL_RESTART_BANNER_ENABLED: boolean = appConfig?.rtlRestartBannerEnabled !== false

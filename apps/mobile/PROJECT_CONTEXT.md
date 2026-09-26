@@ -99,7 +99,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | File/Dir | Description |
 |---|---|
 | `mmkv.ts` | Main MMKV instance |
-| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one. `plugins/withBackupRules.js` keeps its files out of cloud backup and device transfer |
+| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one. `plugins/withBackupRules.js` keeps its files out of cloud backup and device transfer, with expo-modules-core's record of the permissions asked on the device |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
 | `domains/adFree.ts` | Ad-free window expiry (encrypted instance) — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |

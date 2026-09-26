@@ -193,8 +193,9 @@ at import, before any reader — the starter has no installs, so it ships no mig
 Android 11 and below, which `minSdkVersion` 26 still reaches — excluding the instance's two files,
 `mmkv/entitlements` and its `.crc`: a copy that can be restored can be edited into Pro first, and
 the store's next answer re-establishes the tier anyway. The file names follow the instance id, so
-the two move together. Everything else still restores: preferences, the onboarding, the review and
-paywall spacing follow the user to a new phone. An app whose `files/` holds a library that a
+the two move together. The rules also keep expo-modules-core's record of the permissions it asked
+for on the device (Notifications, below). Everything else still restores: preferences, the
+onboarding, the review and paywall spacing follow the user to a new phone. An app whose `files/` holds a library that a
 day-stale snapshot would resurrect takes more out of cloud backup, as its own decision. RevenueCat
 keeps its own CustomerInfo cache in the SDK's preferences and `getCustomerInfo` serves it offline —
 this closes the cheap attack on the app's copy, not on the SDK's.
@@ -238,7 +239,13 @@ nothing and resolves at once with `canAskAgain: false`; the honest route is then
 
 **Whether to ask is the OS's answer, never a flag the app kept.** The main MMKV instance rides cloud
 backup and device transfer, so a stored "already asked" reaches a phone where nothing was asked, and
-an ask guarded by it never happens there. `readPermission()` reads the grant itself.
+an ask guarded by it never happens there. `readPermission()` reads the grant itself. Android's
+answer leans on one such record all the same: expo-modules-core writes each runtime permission it
+asks for into `shared_prefs/expo.modules.permissions.asked.xml`, and a permission it holds there
+but not granted reads as `denied`, with `canAskAgain` taken from the system's rationale flag —
+false where nothing was ever asked. Restored onto a new phone, it would send the user to the system
+settings instead of the dialog, for every runtime permission, so `withBackupRules` keeps it on the
+device.
 
 **A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
 applies only a new name and description to a channel that exists — importance can only be lowered,

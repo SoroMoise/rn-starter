@@ -520,6 +520,13 @@ Next.js 16 App Router, **a static export** (`output: 'export'`): `pnpm build:web
 
 The Android release workflow installs the whole workspace, the site's dependencies included; it builds nothing of it.
 
+## Store policy
+
+What costs a rejected release or a suspended account rather than a bug report. Most of it sits beside the code it constrains: the review card is never pre-filtered (App Rating); no social proof the store cannot back, and the charge stated beside every buy button (Monetization); no ad request before consent or on a Test Lab device (Monetization, `ADS.md`); a permission declared only where something uses it (Build & Release); no `aggregateRating` in the site's structured data (Architecture (web)). Two rules have no code to sit beside:
+
+- **No urgency the store does not enforce.** A countdown, a "today only" or a "last chance" over a price that does not change is false scarcity: a misleading offer under Play's policies, and in the EU a practice the Unfair Commercial Practices Directive bans in all circumstances — falsely stating that an offer is available only for a very limited time. Urgency is allowed only when a real store offer ends — a Play promotional or introductory offer with an end date — and it states that date.
+- **A declaration is a form, not a design constraint.** Where Play restricts a permission to certain kinds of app, eligibility is a product decision, taken once. Past it, the declaration a sensitive permission or API needs — accessibility, notification access — is filed at submission: never narrow a feature or drop an API because "Play requires a declaration". What binds is what the declaration affirms: an in-app disclosure in plain words before the system dialog, never after it, and a configuration no wider than the need.
+
 ## Testing
 
 **No tests.** Do not write, suggest, or run tests. Do not add test files or testing libraries.

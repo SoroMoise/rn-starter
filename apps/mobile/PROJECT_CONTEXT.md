@@ -53,7 +53,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | Store | Persisted | Description |
 |---|---|---|
 | `settingsStore` | Yes | User preferences (theme, language), RTL restart state |
-| `onboardingStore` | Yes | Onboarding completion, current step, persona, pro welcome seen |
+| `onboardingStore` | Yes | Onboarding completion, the exit sheet already offered (`attemptedSkipTrial`), Pro welcome seen — the current step is not persisted |
 
 ---
 

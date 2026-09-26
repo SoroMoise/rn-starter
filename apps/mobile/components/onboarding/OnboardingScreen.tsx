@@ -51,7 +51,6 @@ export function OnboardingScreen() {
   const attemptedSkipTrial = useOnboardingStore((s) => s.attemptedSkipTrial)
   const markAttemptedSkipTrial = useOnboardingStore((s) => s.markAttemptedSkipTrial)
   const markCompleted = useOnboardingStore((s) => s.markCompleted)
-  const setCurrentSlide = useOnboardingStore((s) => s.setCurrentSlide)
   const hasSeenProWelcome = useOnboardingStore((s) => s.hasSeenProWelcome)
   const markProWelcomeSeen = useOnboardingStore((s) => s.markProWelcomeSeen)
 
@@ -65,23 +64,19 @@ export function OnboardingScreen() {
     analyticsService.logOnboardingStepViewed({ stepIndex: 0, timeOnPreviousStepS: null })
   }, [])
 
-  const goToStep = useCallback(
-    (step: number) => {
-      triggerLight()
-      const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
-      slideStartTimeRef.current = Date.now()
-      setCurrentStep(step)
-      setCurrentSlide(step)
-      analyticsService.logOnboardingStepViewed({
-        stepIndex: step,
-        timeOnPreviousStepS: elapsedS,
-      })
-      if (stepName(step) === 'premium') {
-        premiumEnteredAtRef.current = Date.now()
-      }
-    },
-    [setCurrentSlide]
-  )
+  const goToStep = useCallback((step: number) => {
+    triggerLight()
+    const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
+    slideStartTimeRef.current = Date.now()
+    setCurrentStep(step)
+    analyticsService.logOnboardingStepViewed({
+      stepIndex: step,
+      timeOnPreviousStepS: elapsedS,
+    })
+    if (stepName(step) === 'premium') {
+      premiumEnteredAtRef.current = Date.now()
+    }
+  }, [])
 
   const handleComplete = useCallback(() => {
     analyticsService.track('onboarding_completed', {

@@ -116,7 +116,7 @@ Persisted Zustand stores use MMKV via `mmkvStateStorage`, a synchronous `StateSt
 Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` + MMKV via `mmkvStateStorage`:
 
 - `settingsStore` — user preferences (theme, language) + RTL restart state
-- `onboardingStore` — first-launch tracking, persona, onboarding step
+- `onboardingStore` — onboarding completion and the two once-only sale flags (`attemptedSkipTrial`, `hasSeenProWelcome`). The current step is not persisted: each step writes its answer into the store it owns
 
 ### Storage
 

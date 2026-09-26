@@ -1,3 +1,4 @@
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
@@ -108,7 +109,7 @@ export default function HomeScreen() {
                   <ThemedText variant="buttonLarge" color="inverse">
                     {t('home.cta.label')}
                   </ThemedText>
-                  <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+                  <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
                 </GradientButton>
                 {trialLabel ? (
                   <ThemedText variant="caption" color="muted" align="center" className="mt-2">

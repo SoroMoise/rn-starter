@@ -5,6 +5,7 @@ import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
 import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
 import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { LanguagePicker } from '@/components/ui/LanguagePicker'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -260,7 +261,7 @@ export function OnboardingScreen() {
             <ThemedText variant="buttonLarge" color="inverse">
               {t('onboarding.welcome.cta')}
             </ThemedText>
-            <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+            <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
           </GradientButton>
 
           <ThemedText variant="caption" color="muted" align="center" className="mt-2">

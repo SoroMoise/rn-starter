@@ -29,7 +29,12 @@ import Constants from 'expo-constants'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppState, AppStateStatus } from 'react-native'
-import { CustomerInfo, PurchasesError, PurchasesOffering } from 'react-native-purchases'
+import {
+  CustomerInfo,
+  PurchasesEntitlementInfo,
+  PurchasesError,
+  PurchasesOffering,
+} from 'react-native-purchases'
 
 export { SubscriptionContext }
 export type { SubscriptionContextValue }
@@ -49,6 +54,15 @@ function failureMessageKey(reason: PurchaseFailure): string {
 
 export type RestoreOutcome = 'restored' | 'already_premium' | 'nothing_found'
 
+// Play reports a subscription and its base plan apart, while the store product carries them
+// joined (`subId:basePlanId`): compared on the subscription id alone, no Play plan ever matches.
+function entitlementProductIds(entitlement: PurchasesEntitlementInfo): string[] {
+  const { productIdentifier, productPlanIdentifier } = entitlement
+  return productPlanIdentifier
+    ? [`${productIdentifier}:${productPlanIdentifier}`, productIdentifier]
+    : [productIdentifier]
+}
+
 // Matched against the offer the store actually returned, never against a product id
 // written here: a renamed product, a third plan or a one-time purchase must not be
 // reported as something it is not.
@@ -61,7 +75,8 @@ function deriveActiveSubscription({
 }): PlanPeriod | null {
   const active = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
   if (!active) return null
-  const plan = plans.find((p) => p.pkg.product.identifier === active.productIdentifier)
+  const productIds = entitlementProductIds(active)
+  const plan = plans.find((p) => productIds.includes(p.pkg.product.identifier))
   return plan?.period ?? 'other'
 }
 

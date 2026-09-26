@@ -31,13 +31,13 @@ audit of that gap and the plan to close it.
 | 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
-| 13 | See §3 | — | not started |
+| 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **in review** |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**222 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12) and **13 remain**, all in lot 13. The three held back
-out of lot 4 (§4) closed with lot 9, so nothing is deferred any more and the console's lot cards
-match §3.
+**all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
+in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
+The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
+says what comes after the audit.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -120,6 +120,15 @@ branch also carries one commit outside the audit: the iOS prebuild had never bee
 identity rather than Claude's (§2) and a subject longer than the convention; it was already on the
 pushed branch when the second session began, and was left as it is rather than rewritten.
 
+Lot 13's thirteen are its own. No "later" item shipped with them. Two it touched stay open, each
+with a note saying what is left: `readme-troubleshooting` (its `analyze` line shipped; the
+Troubleshooting section remains) and `onboarding-transition-view-drop-moti` (Moti's cost is measured
+and written down; the starter keeps Moti, §4). Two items shipped otherwise than proposed: the comment
+rule carries no one-line cap (§4), and `project-context-structure`'s Known gaps are the starter's
+current ones, its proposed examples having gone stale (§14). The branch also carries one commit
+outside the audit: Settings' Pro banner sold "Premium features · Priority support", neither of which
+exists (§14).
+
 The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
 onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
 blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
@@ -165,26 +174,17 @@ always `git rev-list --count origin/main..HEAD`.
 
 ---
 
-## 3. The remaining lot
+## 3. After the audit
 
-Documentation comes last — documenting code that is still moving is work done twice.
+Every kept item has shipped. What is left is not in the audit's lots:
 
-### Lot 13 — Documentation and conventions (13 items)
-
-Last, deliberately. The CLAUDE.md sections still missing: the NativeWind and RN footguns that break
-silently (the line-height one is written), the measured-height echo beside the modal-keyboard rule,
-Play store policy (urgency, reviews, aggregate ratings, sensitive-permission declarations — the
-declared-permissions rule shipped in lot 11), the i18n voice charter and plural parity, a
-bundle-size section (the `date-fns` rule and the Metro stub are in the code style; `pnpm analyze`
-is not), code-style layers and comments, and the frozen structure of
-`PROJECT_CONTEXT.md` — which by now needs its "Hooks" section: lot 9 put a dozen hooks and
-components in its Styling section for want of one. The promo-coordination invariants, `ADS.md` and
-the AdMob-literals rationale shipped in lot 5, the rating doctrine in lot 6, the grace-period
-doctrine, the entitlement-storage rules and the social-proof rule in lot 7, the back-key and
-step-name rules in lot 8, large screens, the safe-area contract, limits on read, the persist flush
-and the stack reset in lot 9, the notification permission and channel rules in lot 10, the font
-filter, blocked permissions and CNG rationale in lot 11, the legal-URL contract, the brand assets,
-the server-side entitlement, the backend's removal and the `./gradlew clean` rule in lot 12.
+- **A translation session**, the one the parity rule describes (CLAUDE.md, Internationalization).
+  Each of the 18 other languages lacks 72 of `en.json`'s 163 keys — most of the paywall and its legal
+  notes, the onboarding's pitch, the home screen, the billing banner — which its speakers read in
+  English; of the 91 they hold, the ones this lot rewrote in EN and FR keep the old wording.
+  `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`) against the table the voice charter
+  sets. The session brings every file to parity and to the charter, and nothing else.
+- **The 84 "later" items**, judged useful but never blocking (§1). None is scheduled.
 
 ---
 
@@ -305,6 +305,19 @@ leave five packages and a provider serving nothing.
 impression. Here `paywall_count` rides on every `purchase_completed`, and the step and the exit
 sheet already have their impressions (`onboarding_step_viewed`, `onboarding_exit_intent_shown`).
 
+**Moti stays, measured.** It costs ~250 KB of the starter's 4.0 MB bundle for six entrance
+animations — the case where all-currency-converter's Reanimated-only replacement pays. The starter
+keeps it anyway: it is where convenience wins, and deep-focus and bg-remover use it beyond entrances.
+CLAUDE.md (Bundle size) states the figure and the criterion, and `analyze` decides for an app.
+
+**The comment rule has no one-line cap.** bg-remover caps even a justified comment at one line; here
+the comments that qualify say what breaks — why the entitlement and the prices are two calls, why a
+resolved purchase is not a granted one — and a cap would keep the claim and drop the reason.
+
+**`PROJECT_CONTEXT.md` says what exists, CLAUDE.md why.** A convention lives in CLAUDE.md only, and
+both files stay in English; all-currency-converter's context file, in French with conventions of its
+own, is what the rule prevents.
+
 ---
 
 ## 5. What adversarial verification caught on lot 4
@@ -418,7 +431,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§14, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§15, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -844,7 +857,42 @@ contract, to be decided rather than slipped in.
 
 ---
 
-## 14. Resuming in a new session
+## 14. What verification caught on lot 13
+
+Both stages ran in the session, without agents: each item's facts against the code, the library
+sources it describes (react-native-css-interop, expo-blur 15, React Native's `ScrollView`, i18next's
+resolver, `Intl.PluralRules`) and a real bundle; then one adversarial read of the whole branch
+before it was pushed.
+
+- **`pnpm analyze` had never run on the starter (not in the audit).** It looked for
+  `entry-*.js`, and `expo export` names the bundle after the entry file, `index.js` here: the export
+  finished and the copy failed. Fixed, and run — which is where the figures below come from.
+- **The 18 other languages lag `en.json` by 72 keys each (not in the audit).** The parity rule's
+  case, in the starter itself: a German user reads the paywall's legal note in English. Left to the
+  translation session (§3), as the policy requires. `settings.premiumDescription`, removed here,
+  had only ever existed in English and French.
+- **Settings' Pro banner sold what Pro does not have (not in the audit).** "Premium features ·
+  Priority support", a third list beside the two lot 8 had merged into `PRO_BENEFITS`. The banner
+  now joins `PRO_BENEFITS`.
+- **date-fns's weight is its locales.** 212 KB in the bundle, 186 of them the twenty locales twenty
+  languages need; the per-function rule keeps its functions to 26 KB. The RevenueCat stub holds.
+- **The tab bar's blur takes the whole app.** expo-blur 15 re-blurs the nearest react-native-screens
+  `Screen`, else the activity's content view; the tab bar sits under no `Screen`. Written as a cost
+  kept on purpose, with what to drop first.
+- **Several audit states had gone stale.** The plural keys the parity item described left with lot
+  4; the task-trace comment in `ratingService.ts` left with lot 1's rating fix; the Known gaps the
+  context item proposed named release signing, shipped in lot 2. Each rule was written against the
+  code as it is.
+- **The branch read caught five of its own errors before the push.** The home hero was still title
+  case under the rule the same commit wrote; the plural list skipped the two-form languages; the
+  bundle section overstated what the locales weigh; one commit message dated the rating comment's
+  removal to lot 6, another miscounted the violations it fixed.
+
+Not run: the code-review skill, before the push. The review of the pull request is where it runs.
+
+---
+
+## 15. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.

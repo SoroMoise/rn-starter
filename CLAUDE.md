@@ -454,6 +454,13 @@ session for words it certainly needs. Everywhere else, a key with no reader is d
 - Translations into the 18 other languages are done in **dedicated sessions**, not alongside feature work. Never mix feature dev and mass translation in the same session.
 - Translations must be contextually adapted — not literal. A translation that is grammatically correct but sounds mechanical is wrong.
 
+**Voice:**
+- **One register per language, the whole app, onboarding included.** The apps this starter came from each had the same split in every T–V language — an informal onboarding in front of a formal app — so the app changed register on the user between day 0 and day 1. The starter's default: formal in **fr** (`vous`), **ru** (`вы`), **tr** (`siz`), **id** (`Anda`), **hi** (`आप`), **bn** (`আপনি`), **ar**, **zh-CN/zh-TW** (`您`), **ja** (です・ます), **ko**; informal in **es** (`tú`), **de** (`du`), **it** (`tu`), **nl** (`je`), **pl** (`Twój`), **pt-BR** (`você`), **sv**, **vi** (`bạn`). An app may flip a language, but its whole file at once — never half of it.
+- No process boilerplate: no "successfully" / "avec succès" on a confirmation, no "Please" / "Veuillez" in front of a recovery action, no "Are you sure you want to…" / "Êtes-vous sûr de vouloir…" on a confirm dialog. Say what happened, or what the next tap does.
+- Errors name the problem in the user's terms, never the transport's: `server error`, `rate limit`, `timeout`, `layout` and the like do not reach the UI.
+- EN labels are **sentence case** — `Select language`, not `Select Language`. Proper nouns keep their capitals (Pro, Google Play, Privacy Policy, Terms of Service).
+- The separator between two clauses on one line is `·`, and the ellipsis is `…`.
+
 ### Path Aliases
 
 Defined in `apps/mobile/tsconfig.json`: `@/*`, `@components/*`, `@services/*`, `@stores/*`, `@hooks/*`, `@utils/*`, `@constants/*`, `@types/*`, `@i18n/*`, `@assets/*`.

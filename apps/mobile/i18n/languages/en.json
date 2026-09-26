@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Loading...",
+    "loading": "Loading…",
     "error": "Error",
     "retry": "Retry",
     "cancel": "Cancel",
@@ -22,7 +22,7 @@
   },
   "home": {
     "hero": {
-      "title": "Premium Starter",
+      "title": "Premium starter",
       "subtitle": "Ship a polished, monetized React Native app — theme, i18n, paywall and ads already wired."
     },
     "features": {
@@ -49,7 +49,7 @@
       }
     },
     "cta": {
-      "label": "Try Premium"
+      "label": "Try Pro"
     },
     "demoAction": {
       "label": "Perform a sample action",
@@ -65,8 +65,8 @@
     "themeAuto": "System",
     "display": "Display",
     "language": "Language",
-    "selectLanguage": "Select Language",
-    "searchLanguage": "Search languages...",
+    "selectLanguage": "Select language",
+    "searchLanguage": "Search languages…",
     "ads": "Ads",
     "goPremium": "Upgrade to Pro",
     "premiumDescription": "Remove ads · Premium features · Priority support",
@@ -74,31 +74,31 @@
     "premiumActiveUntil": "Active until {{date}}",
     "premiumLifetime": "Lifetime access",
     "manageSubscription": "Manage subscription",
-    "removeAds": "Remove Ads",
-    "removeAdsDescription": "Enjoy ad-free experience",
-    "watchAdButton": "Watch ad for {{duration}} ad-free",
+    "removeAds": "Remove ads",
+    "removeAdsDescription": "Watch one ad, get a break from the rest",
+    "watchAdButton": "Watch an ad, get {{duration}} ad-free",
     "adFreeActive": "Ad-free active ({{duration}} left)",
     "adNotAvailableTitle": "Ad not available",
-    "adNotAvailableMessage": "No ad available right now. Please try again later.",
-    "adRewardTitle": "Reward Unlocked!",
-    "adRewardMessage": "You have {{duration}} of ad-free experience. Enjoy!",
+    "adNotAvailableMessage": "There's no ad ready at the moment. Try again in a few minutes.",
+    "adRewardTitle": "Reward unlocked!",
+    "adRewardMessage": "{{duration}} without a single ad, starting now. Enjoy!",
     "adErrorTitle": "Error",
-    "adErrorMessage": "Failed to load ad. Please try again later.",
+    "adErrorMessage": "The ad couldn't load. Try again in a few minutes.",
     "about": "About",
     "version": "Version",
-    "legalAndSupport": "Legal & Support",
+    "legalAndSupport": "Legal & support",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "support": "Support",
     "rateApp": "Rate this app",
-    "languageChanged": "Language updated successfully",
+    "languageChanged": "Language updated",
     "adPrivacy": "Ad privacy settings"
   },
   "onboarding": {
     "previous": "Back",
     "welcome": {
       "subtitle": "Everything you need, beautifully built and ready to ship.",
-      "cta": "Get Started",
+      "cta": "Get started",
       "reassurance": "Free · No account needed"
     },
     "premium": {
@@ -129,10 +129,10 @@
     }
   },
   "error": {
-    "networkError": "Network error. Please check your connection.",
-    "apiError": "Could not load data. Please try again.",
-    "serverError": "Server error. Please try again later.",
-    "unknownError": "An unknown error occurred"
+    "networkError": "Couldn't connect. Check your connection and try again.",
+    "apiError": "Couldn't load the data. Try again.",
+    "serverError": "Something went wrong on our side. Try again shortly.",
+    "unknownError": "Something went wrong"
   },
   "appRating": {
     "title": "Enjoying RN Starter?",
@@ -142,8 +142,8 @@
     "declineButton": "No thanks"
   },
   "rtlRestart": {
-    "title": "Layout update required",
-    "message": "Restarting in {{count}}s to apply the new layout.",
+    "title": "Switching reading direction",
+    "message": "Restarting in {{count}}s to apply it.",
     "restartNow": "Restart now",
     "restartManually": "Restart manually"
   },
@@ -160,7 +160,7 @@
     "restoreSuccess": "Subscription restored!",
     "restoreNotFound": "No active subscription found",
     "welcomePro": "Welcome to Pro!",
-    "errorGeneric": "Something went wrong. Please try again.",
+    "errorGeneric": "Something went wrong. Try again.",
     "errorNetwork": "No connection. Check your network and try again.",
     "errorStoreUnavailable": "Purchases aren't available on this device right now.",
     "errorAlreadyOwned": "You already own Pro with this account. Tap Restore purchases to bring it back.",
@@ -206,7 +206,7 @@
   },
   "subscription": {
     "graceBannerTitle": "Subscription may have expired",
-    "graceBannerMessage": "Connect to internet before {{date}} to verify your subscription.",
+    "graceBannerMessage": "Connect to the internet before {{date}} to verify your subscription.",
     "graceBannerCta": "Verify subscription",
     "billingIssueTitle": "Payment problem",
     "billingIssueMessage": "Your subscription couldn't be renewed. Update your payment method before {{date}} to keep Pro."

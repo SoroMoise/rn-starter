@@ -452,6 +452,7 @@ session for words it certainly needs. Everywhere else, a key with no reader is d
 **Translation policy:**
 - All code changes that touch i18n keys must provide values in **EN and FR only**. These two are the source of truth.
 - Translations into the 18 other languages are done in **dedicated sessions**, not alongside feature work. Never mix feature dev and mass translation in the same session.
+- **A dedicated session brings every language to full parity with `en.json`** — key for key, and one value per plural category the locale actually has: six in `ar`, four in `ru` and `pl`, three in `fr`, `es`, `it` and `pt-BR` (their `many` is for round millions), one in `ja`, `ko`, `zh-*`, `id` and `vi`, two everywhere else — `Intl.PluralRules(locale).resolvedOptions().pluralCategories` lists them. `fallbackLng: 'en'` renders a missing key, or a missing plural form, in English rather than failing, so a partial pass ships half-translated screens that nothing reports. A string that interpolates `count` is a plural: i18next looks up its suffixed forms before the bare key.
 - Translations must be contextually adapted — not literal. A translation that is grammatically correct but sounds mechanical is wrong.
 
 **Voice:**

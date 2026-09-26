@@ -10,6 +10,20 @@ const NON_RETRYABLE_STATUS_CODES = new Set([400, 401, 403, 404, 422])
 // to the server's message. Empty until the API defines codes of its own.
 const API_ERROR_I18N_KEYS: Record<string, string> = {}
 
+// What `withRetry` throws once it gives up: the message is ready to show, and the status and the
+// code say why it stopped, which a bare Error carrying only the message threw away.
+export class ApiRequestError extends Error {
+  readonly code?: string
+  readonly statusCode?: number
+
+  constructor({ message, code, statusCode }: ApiError) {
+    super(message)
+    this.name = 'ApiRequestError'
+    this.code = code
+    this.statusCode = statusCode
+  }
+}
+
 export function handleAxiosError(error: unknown): ApiError {
   if (isAxiosError(error)) {
     if (error.response) {

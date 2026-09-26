@@ -265,7 +265,10 @@ the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages
 `utils/retry.ts`, `utils/apiErrors.ts`, `services/api/backendClient.ts` and `exampleService.ts`,
 and `hooks/useNetworkStatus.ts` with `@react-native-community/netinfo`, whose one consumer is the
 query client. `withRetry` is for a call made outside a query; a `queryFn` calls
-`getBackendClient()` directly, or each of the client's attempts would retry again. deep-focus is the sibling that did exactly this when
+`getBackendClient()` directly, or each of the client's attempts would retry again. It gives up
+with an `ApiRequestError` (`utils/apiErrors.ts`): the message is ready to show, and `statusCode`
+and `code` say why it stopped — a caller branches on those, never on the message, which is
+translated. deep-focus is the sibling that did exactly this when
 its Worker went — the data-fetching layer has no reason to outlive the API it serves.
 
 ### Monetization

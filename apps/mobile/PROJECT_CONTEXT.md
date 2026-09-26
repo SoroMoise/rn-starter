@@ -175,7 +175,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 ## Data Fetching
 
-TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final.
+TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final. `withRetry`, for calls made outside a query, gives up with an `ApiRequestError` carrying `statusCode` and `code` beside its message.
 
 ---
 

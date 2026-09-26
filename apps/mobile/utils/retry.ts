@@ -1,7 +1,7 @@
 import i18n from '@/i18n/service'
 import type { ApiError } from '@/types'
 import { isAxiosError } from 'axios'
-import { handleAxiosError, isNonRetryableStatus } from './apiErrors'
+import { ApiRequestError, handleAxiosError, isNonRetryableStatus } from './apiErrors'
 
 function isAbortError(error: unknown): boolean {
   if (isAxiosError(error) && error.code === 'ERR_CANCELED') return true
@@ -66,6 +66,5 @@ export async function withRetry<T>({
     }
   }
 
-  const finalError = lastError ?? { message: i18n.t('error.apiError'), code: 'FETCH_FAILED' }
-  throw new Error(finalError.message)
+  throw new ApiRequestError(lastError ?? { message: i18n.t('error.apiError'), code: 'FETCH_FAILED' })
 }

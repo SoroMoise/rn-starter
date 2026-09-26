@@ -28,7 +28,7 @@ audit of that gap and the plan to close it.
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
 | — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
-| 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 7 | on `claude/lot-10-notifications` |
+| 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | on `claude/lot-10-notifications` |
 | 11–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
@@ -664,6 +664,30 @@ sibling apps that schedule notifications.
 
 Found along the way and fixed in their own commits: `pnpm lint` had failed on `main` since 5542d78
 left a line Prettier rejects, and the CHANGELOG still listed the onboarding's old third step.
+
+Reading the whole branch, then the code-review skill on the pull request, found five more, all
+fixed:
+
+- **A native failure rejected into an effect that never waits.** The sync resolves `'failed'` with a
+  non-fatal instead.
+- **A time out of range left the group half scheduled.** expo validates a daily trigger one call at
+  a time (`validateDateComponentsInTrigger`), after the group had been cancelled; every entry is
+  checked first now.
+- **iOS reports a provisional or ephemeral authorisation as `undetermined`.** The general status is
+  `granted` for `UNAuthorizationStatusAuthorized` only; `isGranted` reads `ios.status` too.
+- **The hook's reading could outlive a request.** One started before `request()` could land after it
+  and put the old grant back, and a failed one was an unhandled rejection; readings take a ticket.
+- **The docs let a regained grant go unsynced.** A sync without the grant empties the group, and the
+  natural caller, an effect keyed on the list, never re-runs when the grant comes back; the effect
+  depends on the grant too. The same paragraph credited `RECEIVE_BOOT_COMPLETED` with the re-arming
+  after an update, which is `MY_PACKAGE_REPLACED`'s and needs no permission.
+
+Declined, each with its reason on the record: fixed identifiers instead of the `data` marker
+(`mapNotificationRequest` parses Android's `dataString` back into `data`, which deep-focus relies
+on); creating the channel once instead of at each sync (an MMKV read and one native call, which also
+keep its name in the current language); stripping the two dropped settings from what `persist`
+holds (the starter has no installs, §4); a timeout on the queue (expo's native calls settle, and a
+call timed out but still running would race the next sync, which is what the queue prevents).
 
 ---
 

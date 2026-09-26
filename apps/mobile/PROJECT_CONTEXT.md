@@ -175,6 +175,8 @@ TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProv
 
 NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animations. `GradientButton` for primary CTAs. Gradient colours are `GRADIENTS` tokens in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`). `ToastProvider` for feedback; mount `ModalToastViewport` inside modals to surface toasts over them.
 
+Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s content container, and a `ScreenHeading` at `mt-3.5`.
+
 `AppSystemBars` sets the status and navigation bar styles — once for the app in `ThemeProvider`, again by a screen that forces its own — and restores the theme's navigation bar style when it unmounts.
 
 `ThemedText` derives a line height whenever `style` sets `fontSize` without one.

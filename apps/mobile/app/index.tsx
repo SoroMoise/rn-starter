@@ -46,26 +46,25 @@ export default function HomeScreen() {
   return (
     <ScreenContainer>
       <ScrollView
-        contentContainerStyle={{ paddingBottom: tabBarPadding }}
-        showsVerticalScrollIndicator={false}>
+        className="flex-1"
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: tabBarPadding }}>
         <MotiView
           from={{ opacity: 0, translateY: 12 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 400 }}>
-          <View className="mx-5 mt-6">
-            <ScreenHeading
-              title={t('home.hero.title')}
-              subtitle={t('home.hero.subtitle')}
-              className="mb-6"
-            />
-          </View>
+          <ScreenHeading
+            title={t('home.hero.title')}
+            subtitle={t('home.hero.subtitle')}
+            className="mb-6 mt-3.5"
+          />
         </MotiView>
 
         <MotiView
           from={{ opacity: 0, translateY: 20 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 400, delay: 120 }}>
-          <View className="mx-5 mb-4 rounded-2xl bg-white px-5 py-4 dark:bg-gray-800">
+          <View className="mb-4 rounded-2xl bg-white px-5 py-4 dark:bg-gray-800">
             <ThemedText variant="sectionHeader" color="muted" className="mb-3">
               {t('home.features.title')}
             </ThemedText>
@@ -97,7 +96,7 @@ export default function HomeScreen() {
           from={{ opacity: 0, translateY: 20 }}
           animate={{ opacity: 1, translateY: 0 }}
           transition={{ type: 'timing', duration: 400, delay: 240 }}>
-          <View className="mx-5 mt-2">
+          <View className="mt-2">
             {!isPremium && (
               <>
                 <GradientButton

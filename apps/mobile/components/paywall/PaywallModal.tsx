@@ -10,7 +10,7 @@ import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import { ModalToastViewport } from '@/providers/ToastProvider'
-import { analyticsService } from '@/services/api/analyticsService'
+import { paywallAnalytics } from '@/services/api/paywallAnalytics'
 import { openExternalLink } from '@/utils/linking'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -62,10 +62,10 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   }, [visible])
 
   const handleClose = () => {
-    analyticsService.track('paywall_dismissed', {
+    paywallAnalytics.trackDismissed({
       source,
-      time_on_paywall_s: Math.round((Date.now() - paywallOpenTimeRef.current) / 1000),
-      selected_plan: selectedPlan?.period ?? 'none',
+      openedAtMs: paywallOpenTimeRef.current,
+      selectedPlan: selectedPlan?.period ?? null,
     })
     onClose()
   }

@@ -13,10 +13,9 @@ import { useToast } from '@/providers/ToastProvider'
 import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
-import { engagementService } from '@/services/api/engagementService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
+import { paywallAnalytics } from '@/services/api/paywallAnalytics'
 import { purchaseService, type PurchaseFailure } from '@/services/api/purchaseService'
-import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import {
@@ -279,9 +278,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           return
         }
 
-        const sessionCtx = engagementService.getSessionContext()
-        const { paywallCount } = await engagementService.getPaywallContext()
-        const totalActions = engagementStorage.getActionCount()
+        const conversionContext = await paywallAnalytics.conversionContext()
         analyticsService.track('purchase_completed', {
           plan: plan.period,
           source,
@@ -292,10 +289,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           // reads as $3,499.
           revenue: product.price,
           currency: product.currencyCode,
-          session_count: sessionCtx?.sessionCount ?? 0,
-          days_since_install: sessionCtx?.daysSinceInstall ?? 0,
-          paywall_count: paywallCount,
-          total_actions: totalActions,
+          ...conversionContext,
           trial_started: plan.hasTrial,
         })
 
@@ -383,22 +377,17 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       if (!useOnboardingStore.getState().isCompleted) return false
 
       paywallSourceRef.current = source
-      const paywallCount = await engagementService.incrementPaywallCount()
-      const sessionCtx = engagementService.getSessionContext()
-      const totalActions = engagementStorage.getActionCount()
-      analyticsService.track('paywall_shown', {
+      await paywallAnalytics.trackShown({
         source,
-        session_count: sessionCtx?.sessionCount ?? 0,
-        paywall_count: paywallCount,
-        has_trial_offer: plans.some((plan) => plan.hasTrial),
-        offering_id: offering?.identifier ?? NO_OFFERING,
-        total_actions: totalActions,
+        offeringId: offering?.identifier ?? NO_OFFERING,
+        plans,
+        defaultPlan,
       })
       promoCoordinator.setPaywallVisible(true)
       setPaywallVisible(true)
       return true
     },
-    [isPremium, offering, plans]
+    [isPremium, offering, plans, defaultPlan]
   )
 
   const closePaywall = useCallback(() => {

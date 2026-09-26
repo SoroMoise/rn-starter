@@ -118,6 +118,10 @@ export type AnalyticsEventMap = {
     paywall_count: number
     has_trial_offer: boolean
     total_actions: number
+    // Absent when no plan has loaded; the price is in the store's own currency.
+    default_plan?: PlanPeriod
+    default_price?: number
+    currency?: string
   }
   paywall_dismissed: {
     source: string

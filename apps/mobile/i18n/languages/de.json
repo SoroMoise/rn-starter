@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Moment — teste Pro gratis",
-      "body": "7 Tage gratis, heute keine Abbuchung.\nMit 1 Tipp kündbar, jederzeit.",
       "ctaStart": "Ja, Gratis-Test starten",
       "ctaSkip": "Nein danke, kostenlos weitermachen"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Willkommen bei Pro!",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     "billedAnnually": "jährlich abgerechnet",
-    "compareHeaderFeature": "Funktion",
-    "compareHeaderFree": "Kostenlos",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/Monat",
-    "reassurance": "Keine Verpflichtung · Jederzeit kündbar"
+    "perMonth": "≈ {{price}}/Monat"
   },
   "premiumGate": {
     "unlock": "Freischalten",

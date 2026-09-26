@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "等等 — 免费试用 Pro",
-      "body": "7 天免费,今日不扣费。\n1 次轻点即可取消,随时可取消。",
       "ctaStart": "好的,开始我的免费试用",
       "ctaSkip": "不用了,继续免费版"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "欢迎加入 Pro！",
     "errorGeneric": "出了点问题。请重试。",
     "billedAnnually": "每年计费",
-    "compareHeaderFeature": "功能",
-    "compareHeaderFree": "免费版",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/月",
-    "reassurance": "无需承诺 · 随时可取消"
+    "perMonth": "≈ {{price}}/月"
   },
   "premiumGate": {
     "unlock": "解锁",

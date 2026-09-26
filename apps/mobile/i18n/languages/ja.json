@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "少しだけお待ちを — Pro を無料で",
-      "body": "7日間無料、今日は請求なし。\nワンタップでいつでも解約。",
       "ctaStart": "はい、無料トライアルを開始",
       "ctaSkip": "いいえ、無料版で続ける"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Proへようこそ！",
     "errorGeneric": "問題が発生しました。もう一度お試しください。",
     "billedAnnually": "年間請求",
-    "compareHeaderFeature": "機能",
-    "compareHeaderFree": "無料",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/月",
-    "reassurance": "契約なし · いつでもキャンセル可能"
+    "perMonth": "≈ {{price}}/月"
   },
   "premiumGate": {
     "unlock": "ロック解除",

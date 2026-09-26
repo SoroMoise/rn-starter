@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "একটু থামুন — Pro ফ্রিতে চেষ্টা করুন",
-      "body": "৭ দিন ফ্রি, আজ কোনো চার্জ নেই।\n১ ট্যাপে বাতিল, যেকোনো সময়।",
       "ctaStart": "হ্যাঁ, ফ্রি ট্রায়াল শুরু করুন",
       "ctaSkip": "না ধন্যবাদ, ফ্রিতেই চালিয়ে যান"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Pro-তে স্বাগতম!",
     "errorGeneric": "কিছু ভুল হয়েছে। আবার চেষ্টা করুন।",
     "billedAnnually": "বার্ষিক বিল করা হয়",
-    "compareHeaderFeature": "ফিচার",
-    "compareHeaderFree": "ফ্রি",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/মাস",
-    "reassurance": "কোনো প্রতিশ্রুতি নেই · যেকোনো সময় বাতিল করুন"
+    "perMonth": "≈ {{price}}/মাস"
   },
   "premiumGate": {
     "unlock": "আনলক করুন",

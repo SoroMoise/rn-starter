@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "잠깐만요 — Pro를 무료로 체험해 보세요",
-      "body": "7일 무료, 오늘은 청구 없음.\n1번의 탭으로 언제든지 해지.",
       "ctaStart": "네, 무료 체험을 시작할게요",
       "ctaSkip": "괜찮아요, 무료로 계속할게요"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Pro에 오신 것을 환영합니다!",
     "errorGeneric": "오류가 발생했습니다. 다시 시도해주세요.",
     "billedAnnually": "매년 청구",
-    "compareHeaderFeature": "기능",
-    "compareHeaderFree": "무료",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/월",
-    "reassurance": "약정 없음 · 언제든지 취소 가능"
+    "perMonth": "≈ {{price}}/월"
   },
   "premiumGate": {
     "unlock": "잠금 해제",

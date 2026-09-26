@@ -37,7 +37,7 @@
       },
       "paywall": {
         "label": "Paywall & abonnements",
-        "desc": "Intégration RevenueCat avec essai gratuit de 7 jours et accès premium."
+        "desc": "Intégration RevenueCat : un paywall construit à partir de l'offre du store, et l'accès premium."
       },
       "ads": {
         "label": "Pubs (AdMob)",
@@ -49,8 +49,7 @@
       }
     },
     "cta": {
-      "label": "Essayer Premium",
-      "sub": "Essai gratuit de 7 jours · Résiliable à tout moment"
+      "label": "Essayer Premium"
     },
     "demoAction": {
       "label": "Effectuer une action d'exemple",
@@ -104,25 +103,23 @@
     },
     "premium": {
       "headline": "Allez plus loin avec Pro",
-      "benefit": {
-        "noAds": "Aucune publicité, jamais",
-        "notifications": "Notifications push programmées",
-        "premium": "Toutes les fonctionnalités premium"
-      },
       "timelineHeader": "Comment fonctionne l'essai",
       "ctaSkip": "Continuer gratuitement",
-      "restore": "Restaurer mes achats",
       "dayUnlock": "Jour 0 — Pro débloqué immédiatement",
-      "dayReminder": "Jour {{day}} — Rappel avant la fin de l’essai",
-      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment",
-      "ctaStartTrial": "Démarrer mon essai gratuit de {{days}} jours",
-      "ctaStartNoTrial": "Débloquer Pro"
+      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment"
     },
     "exitIntent": {
-      "title": "Un instant — essaie Pro gratuitement",
-      "body": "7 jours gratuits, aucun débit aujourd'hui.\nAnnulable en 1 tap, à tout moment.",
+      "title": "Un instant — essayez Pro gratuitement",
       "ctaStart": "Oui, démarrer mon essai gratuit",
-      "ctaSkip": "Non merci, continuer gratuit"
+      "ctaSkip": "Non merci, continuer gratuitement",
+      "body": "{{days}} jours gratuits, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
+      "bodyNoDays": "Essai gratuit, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
+      "titleNoTrial": "Un instant — débloquez Pro",
+      "bodyNoTrial": "Tout ce que Pro débloque, dès maintenant.\nSans engagement, résiliable à tout moment.",
+      "ctaStartNoTrial": "Oui, débloquer Pro — {{price}}",
+      "titleOneTime": "Un instant — débloquez Pro pour de bon",
+      "bodyOneTime": "Un seul paiement, acquis pour toujours.\nAucun abonnement.",
+      "ctaOneTime": "Oui, débloquer pour de bon — {{price}}"
     },
     "proWelcome": {
       "title": "Bon retour !",
@@ -153,7 +150,6 @@
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Débloquez toutes les fonctionnalités",
-    "featureNoAds": "Aucune publicité, jamais",
     "planMonthly": "Mensuel",
     "planAnnual": "Annuel",
     "savingsBadge": "-{{percent}}%",
@@ -169,16 +165,7 @@
     "errorStoreUnavailable": "Les achats ne sont pas disponibles sur cet appareil pour le moment.",
     "errorAlreadyOwned": "Vous possédez déjà Pro avec ce compte. Touchez « Restaurer mes achats » pour le récupérer.",
     "billedAnnually": "facturé annuellement",
-    "compareHeaderFeature": "Fonctionnalité",
-    "compareHeaderFree": "Gratuit",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mois",
-    "reassurance": "Sans engagement · Annulable à tout moment",
-    "featureCore": "Toutes les fonctions de base",
-    "featureLimitedSupport": "Support communautaire",
-    "featureReminders": "Rappels programmés illimités",
-    "featureAll": "Toutes les fonctions premium",
-    "featurePrioritySupport": "Support prioritaire",
     "planWeekly": "Hebdomadaire",
     "planLifetime": "À vie",
     "planMonths": "{{months}} mois",
@@ -198,7 +185,20 @@
     "ctaSubscribeMonthly": "S'abonner — {{price}}/mois",
     "ctaSubscribeAnnual": "S'abonner — {{price}}/an",
     "pricesUnavailable": "Prix indisponibles.",
-    "pricesRetry": "Réessayer"
+    "pricesRetry": "Réessayer",
+    "benefit": {
+      "noAds": "Aucune publicité, jamais"
+    },
+    "priceWeekly": "{{price}}/semaine",
+    "priceMonthly": "{{price}}/mois",
+    "priceAnnual": "{{price}}/an",
+    "priceEveryMonths": "{{price}} tous les {{months}} mois",
+    "legalNoteTrial": "Gratuit pendant {{days}} jours, puis {{price}}. Renouvellement automatique jusqu'à résiliation.",
+    "legalNoteTrialNoDays": "Essai gratuit, puis {{price}}. Renouvellement automatique jusqu'à résiliation.",
+    "trustStore": "Paiement sécurisé par {{store}}",
+    "trustTrial": "Rien à payer pendant l'essai gratuit",
+    "trustCancel": "Résiliable à tout moment, sans engagement",
+    "trustOneTime": "Un seul paiement, aucun abonnement"
   },
   "premiumGate": {
     "unlock": "Débloquer",

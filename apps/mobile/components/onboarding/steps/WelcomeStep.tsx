@@ -1,4 +1,5 @@
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MotiView } from 'moti'
@@ -13,7 +14,7 @@ export function WelcomeStep() {
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
       <LinearGradient
-        colors={isDark ? ['#0f0c29', '#302b63', '#24243e'] : ['#f8faff', '#eef2ff', '#f5f3ff']}
+        colors={isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="absolute inset-0"

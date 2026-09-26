@@ -37,7 +37,7 @@
       },
       "paywall": {
         "label": "Paywall & subscriptions",
-        "desc": "RevenueCat integration with a 7-day free trial and premium gating."
+        "desc": "RevenueCat integration: a paywall rendered from the store's own offer, and premium gating."
       },
       "ads": {
         "label": "Ads (AdMob)",
@@ -49,8 +49,7 @@
       }
     },
     "cta": {
-      "label": "Try Premium",
-      "sub": "7-day free trial · Cancel anytime"
+      "label": "Try Premium"
     },
     "demoAction": {
       "label": "Perform a sample action",
@@ -104,25 +103,23 @@
     },
     "premium": {
       "headline": "Go further with Pro",
-      "benefit": {
-        "noAds": "No ads, ever",
-        "notifications": "Scheduled push notifications",
-        "premium": "Unlock all premium features"
-      },
       "timelineHeader": "How your trial works",
       "ctaSkip": "Continue for free",
-      "restore": "Restore purchases",
       "dayUnlock": "Day 0 — Pro unlocked instantly",
-      "dayReminder": "Day {{day}} — Reminder before your trial ends",
-      "dayBilling": "Day {{day}} — Billing starts, cancel anytime",
-      "ctaStartTrial": "Start my {{days}}-day free trial",
-      "ctaStartNoTrial": "Unlock Pro"
+      "dayBilling": "Day {{day}} — Billing starts, cancel anytime"
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",
-      "body": "7 days free, no charge today.\nCancel in 1 tap, anytime.",
       "ctaStart": "Yes, start my free trial",
-      "ctaSkip": "No thanks, continue free"
+      "ctaSkip": "No thanks, continue free",
+      "body": "{{days}} days free, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
+      "bodyNoDays": "Free to try, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
+      "titleNoTrial": "Hold on — unlock Pro",
+      "bodyNoTrial": "Everything Pro unlocks, starting now.\nNo commitment — cancel anytime.",
+      "ctaStartNoTrial": "Yes, unlock Pro — {{price}}",
+      "titleOneTime": "Hold on — unlock Pro for good",
+      "bodyOneTime": "One payment, yours for good.\nNo subscription.",
+      "ctaOneTime": "Yes, unlock for good — {{price}}"
     },
     "proWelcome": {
       "title": "Welcome back!",
@@ -153,7 +150,6 @@
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Unlock every feature",
-    "featureNoAds": "No ads, ever",
     "planMonthly": "Monthly",
     "planAnnual": "Annual",
     "savingsBadge": "-{{percent}}%",
@@ -169,16 +165,7 @@
     "errorStoreUnavailable": "Purchases aren't available on this device right now.",
     "errorAlreadyOwned": "You already own Pro with this account. Tap Restore purchases to bring it back.",
     "billedAnnually": "billed annually",
-    "compareHeaderFeature": "Feature",
-    "compareHeaderFree": "Free",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mo",
-    "reassurance": "No commitment · Cancel anytime",
-    "featureCore": "All core features",
-    "featureLimitedSupport": "Community support",
-    "featureReminders": "Unlimited scheduled reminders",
-    "featureAll": "Every premium feature",
-    "featurePrioritySupport": "Priority support",
     "planWeekly": "Weekly",
     "planLifetime": "Lifetime",
     "planMonths": "{{months}} months",
@@ -198,7 +185,20 @@
     "ctaSubscribeMonthly": "Subscribe — {{price}}/month",
     "ctaSubscribeAnnual": "Subscribe — {{price}}/year",
     "pricesUnavailable": "Prices unavailable.",
-    "pricesRetry": "Try again"
+    "pricesRetry": "Try again",
+    "benefit": {
+      "noAds": "No ads, ever"
+    },
+    "priceWeekly": "{{price}}/week",
+    "priceMonthly": "{{price}}/month",
+    "priceAnnual": "{{price}}/year",
+    "priceEveryMonths": "{{price}} every {{months}} months",
+    "legalNoteTrial": "Free for {{days}} days, then {{price}}. Renews automatically until you cancel.",
+    "legalNoteTrialNoDays": "Free trial, then {{price}}. Renews automatically until you cancel.",
+    "trustStore": "Payment secured by {{store}}",
+    "trustTrial": "Nothing to pay during the free trial",
+    "trustCancel": "Cancel anytime, no commitment",
+    "trustOneTime": "One payment, no subscription"
   },
   "premiumGate": {
     "unlock": "Unlock",

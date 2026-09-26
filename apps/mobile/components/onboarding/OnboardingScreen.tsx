@@ -5,34 +5,31 @@ import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
 import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
 import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { LanguagePicker } from '@/components/ui/LanguagePicker'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
-import type { Language } from '@/types'
+import type { Language, OnboardingStepKind } from '@/types'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
 import { getLanguageByCode } from '@constants/languages'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View } from 'react-native'
+import { BackHandler, Pressable, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-const STEPS = ['welcome', 'premium'] as const
-type StepKind = (typeof STEPS)[number]
-const STEP_INDEX: Record<StepKind, number> = {
-  welcome: 0,
-  premium: 1,
-}
-const TOTAL_STEPS = STEPS.length
-
-function stepName(index: number): StepKind {
-  return STEPS[index] ?? 'welcome'
+// A step that depends on the device — a permission, a platform, a feature flag — is added here
+// from what that capability reports. The answer can arrive after the first frame and change the
+// list under the user, which is why every move below goes by step name, never by index.
+function buildSteps(): OnboardingStepKind[] {
+  return ['welcome', 'premium']
 }
 
 export function OnboardingScreen() {
@@ -40,7 +37,7 @@ export function OnboardingScreen() {
   const insets = useSafeAreaInsets()
   const isDark = useThemedColor()
 
-  const [currentStep, setCurrentStep] = useState(0)
+  const [stepKind, setStepKind] = useState<OnboardingStepKind>('welcome')
   const [exitIntentVisible, setExitIntentVisible] = useState(false)
   const [proWelcomeVisible, setProWelcomeVisible] = useState(false)
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false)
@@ -51,7 +48,6 @@ export function OnboardingScreen() {
   const attemptedSkipTrial = useOnboardingStore((s) => s.attemptedSkipTrial)
   const markAttemptedSkipTrial = useOnboardingStore((s) => s.markAttemptedSkipTrial)
   const markCompleted = useOnboardingStore((s) => s.markCompleted)
-  const setCurrentSlide = useOnboardingStore((s) => s.setCurrentSlide)
   const hasSeenProWelcome = useOnboardingStore((s) => s.hasSeenProWelcome)
   const markProWelcomeSeen = useOnboardingStore((s) => s.markProWelcomeSeen)
 
@@ -60,28 +56,42 @@ export function OnboardingScreen() {
 
   const { isPremium, isInitialized: isSubscriptionInitialized } = usePremium()
 
+  const steps = useMemo(buildSteps, [])
+  const currentStep = Math.max(0, steps.indexOf(stepKind))
+
   useEffect(() => {
     analyticsService.track('onboarding_started')
-    analyticsService.logOnboardingStepViewed({ stepIndex: 0, timeOnPreviousStepS: null })
+    analyticsService.logOnboardingStepViewed({
+      stepIndex: 0,
+      stepName: 'welcome',
+      timeOnPreviousStepS: null,
+    })
   }, [])
 
   const goToStep = useCallback(
-    (step: number) => {
+    (step: OnboardingStepKind) => {
       triggerLight()
       const elapsedS = Math.round((Date.now() - slideStartTimeRef.current) / 1000)
       slideStartTimeRef.current = Date.now()
-      setCurrentStep(step)
-      setCurrentSlide(step)
+      setStepKind(step)
       analyticsService.logOnboardingStepViewed({
-        stepIndex: step,
+        stepIndex: steps.indexOf(step),
+        stepName: step,
         timeOnPreviousStepS: elapsedS,
       })
-      if (stepName(step) === 'premium') {
+      if (step === 'premium') {
         premiumEnteredAtRef.current = Date.now()
       }
     },
-    [setCurrentSlide]
+    [steps]
   )
+
+  const goNext = useCallback(() => {
+    const index = steps.indexOf(stepKind)
+    if (index < 0) return
+    const next = steps[index + 1]
+    if (next) goToStep(next)
+  }, [goToStep, stepKind, steps])
 
   const handleComplete = useCallback(() => {
     analyticsService.track('onboarding_completed', {
@@ -96,7 +106,7 @@ export function OnboardingScreen() {
   useEffect(() => {
     if (!isSubscriptionInitialized || !isPremium) return
 
-    if (stepName(currentStep) === 'premium') {
+    if (stepKind === 'premium') {
       if (exitIntentVisible) {
         setExitIntentVisible(false)
         analyticsService.track('onboarding_exit_intent_outcome', { outcome: 'recovered_to_trial' })
@@ -108,12 +118,12 @@ export function OnboardingScreen() {
     if (hasSeenProWelcome) return
     setProWelcomeVisible(true)
     markProWelcomeSeen()
-    analyticsService.track('onboarding_pro_detected', { step: stepName(currentStep) })
+    analyticsService.track('onboarding_pro_detected', { step: stepKind })
   }, [
     isSubscriptionInitialized,
     isPremium,
     hasSeenProWelcome,
-    currentStep,
+    stepKind,
     exitIntentVisible,
     markProWelcomeSeen,
     handleComplete,
@@ -130,10 +140,6 @@ export function OnboardingScreen() {
     analyticsService.track('onboarding_pro_welcome_outcome', { outcome: 'skip' })
     handleComplete()
   }, [handleComplete])
-
-  const handleNextFromWelcome = useCallback(() => {
-    goToStep(STEP_INDEX.premium)
-  }, [goToStep])
 
   const openLanguagePicker = useCallback(() => {
     triggerLight()
@@ -169,11 +175,22 @@ export function OnboardingScreen() {
   }, [handleComplete])
 
   const handlePrevious = useCallback(() => {
-    if (currentStep > 0) {
-      analyticsService.logOnboardingBackPressed(currentStep)
-      goToStep(currentStep - 1)
-    }
-  }, [currentStep, goToStep])
+    const previous = steps[steps.indexOf(stepKind) - 1]
+    if (!previous) return
+    analyticsService.logOnboardingBackPressed({ fromStep: currentStep, fromStepName: stepKind })
+    goToStep(previous)
+  }, [currentStep, goToStep, stepKind, steps])
+
+  // Not a route: nothing below takes the back key but the app's exit, which would throw the whole
+  // flow away. The first step lets that default through — there is nothing behind it.
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (currentStep === 0) return false
+      handlePrevious()
+      return true
+    })
+    return () => subscription.remove()
+  }, [currentStep, handlePrevious])
 
   const handleLanguageChange = useCallback(
     (language: Language) => {
@@ -186,18 +203,21 @@ export function OnboardingScreen() {
     [setLanguage, currentLanguage]
   )
 
-  const stepKind = stepName(currentStep)
   const activeLanguage = getLanguageByCode(currentLanguage)
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-[#0f0c29]' : 'bg-[#f8faff]'}`}>
+    <View
+      className="flex-1"
+      style={{
+        backgroundColor: (isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight)[0],
+      }}>
       <AppSystemBars
         statusStyle={isDark ? 'light' : 'dark'}
         navigationStyle={isDark ? 'dark' : 'light'}
       />
 
       <View className="absolute left-6 right-6 z-20" style={{ top: insets.top + 10 }}>
-        <OnboardingProgressBar totalSteps={TOTAL_STEPS} currentStep={currentStep} />
+        <OnboardingProgressBar totalSteps={steps.length} currentStep={currentStep} />
       </View>
 
       {stepKind === 'welcome' && (
@@ -223,7 +243,7 @@ export function OnboardingScreen() {
         </Animated.View>
       )}
 
-      <Animated.View key={currentStep} entering={FadeIn.duration(300)} className="flex-1">
+      <Animated.View key={stepKind} entering={FadeIn.duration(300)} className="flex-1">
         {stepKind === 'welcome' && <WelcomeStep />}
         {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
       </Animated.View>
@@ -231,8 +251,8 @@ export function OnboardingScreen() {
       {stepKind === 'welcome' && (
         <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
           <GradientButton
-            onPress={handleNextFromWelcome}
-            colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+            onPress={goNext}
+            colors={GRADIENTS.cta}
             style={{ height: 58, borderRadius: 16 }}
             gradientStyle={{ height: '100%', gap: 12 }}
             pressScale={0}
@@ -241,7 +261,7 @@ export function OnboardingScreen() {
             <ThemedText variant="buttonLarge" color="inverse">
               {t('onboarding.welcome.cta')}
             </ThemedText>
-            <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+            <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
           </GradientButton>
 
           <ThemedText variant="caption" color="muted" align="center" className="mt-2">
@@ -250,7 +270,7 @@ export function OnboardingScreen() {
         </View>
       )}
 
-      {stepKind === 'premium' && (
+      {currentStep > 0 && (
         <View className="absolute left-6 z-30" style={{ top: insets.top + 24 }}>
           <OnboardingBackButton onPress={handlePrevious} />
         </View>

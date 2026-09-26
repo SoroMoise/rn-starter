@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Vänta — testa Pro gratis",
-      "body": "7 dagar gratis, ingen debitering idag.\nSäg upp med 1 tryck, när som helst.",
       "ctaStart": "Ja, starta min gratis provperiod",
       "ctaSkip": "Nej tack, fortsätt gratis"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Välkommen till Pro!",
     "errorGeneric": "Något gick fel. Försök igen.",
     "billedAnnually": "debiteras årsvis",
-    "compareHeaderFeature": "Funktion",
-    "compareHeaderFree": "Gratis",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/mån",
-    "reassurance": "Inget åtagande · Avsluta när som helst"
+    "perMonth": "≈ {{price}}/mån"
   },
   "premiumGate": {
     "unlock": "Lås upp",

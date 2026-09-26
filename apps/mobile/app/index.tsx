@@ -1,7 +1,9 @@
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
 import { usePremium } from '@/hooks/usePremium'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
@@ -28,7 +30,12 @@ const FEATURE_ITEMS: FeatureItem[] = [
 
 export default function HomeScreen() {
   const { t } = useTranslation()
-  const { isPremium, openPaywall } = usePremium()
+  const { isPremium, openPaywall, defaultPlan } = usePremium()
+  const trialLabel = defaultPlan?.hasTrial
+    ? defaultPlan.trialDays
+      ? t('paywall.trialBadge', { days: defaultPlan.trialDays })
+      : t('paywall.trialBadgeNoDays')
+    : null
   const { isAdFreeActive } = useAdFree()
   const tabBarPadding = useTabBarPadding(24)
 
@@ -95,18 +102,20 @@ export default function HomeScreen() {
               <>
                 <GradientButton
                   onPress={() => void openPaywall({ source: 'home_cta' })}
-                  colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+                  colors={GRADIENTS.cta}
                   style={{ height: 58, borderRadius: 16 }}
                   gradientStyle={{ height: '100%', gap: 10 }}
                   accessibilityLabel={t('home.cta.label')}>
                   <ThemedText variant="buttonLarge" color="inverse">
                     {t('home.cta.label')}
                   </ThemedText>
-                  <Ionicons name="arrow-forward" size={20} color="#ffffff" />
+                  <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
                 </GradientButton>
-                <ThemedText variant="caption" color="muted" align="center" className="mt-2">
-                  {t('home.cta.sub')}
-                </ThemedText>
+                {trialLabel ? (
+                  <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+                    {trialLabel}
+                  </ThemedText>
+                ) : null}
               </>
             )}
 

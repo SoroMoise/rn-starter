@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "रुकें — Pro मुफ़्त आज़माएँ",
-      "body": "7 दिन मुफ़्त, आज कोई शुल्क नहीं।\n1 टैप में रद्द, कभी भी।",
       "ctaStart": "हाँ, मेरा मुफ़्त ट्रायल शुरू करें",
       "ctaSkip": "नहीं, मुफ़्त वर्ज़न जारी रखें"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Pro में आपका स्वागत है!",
     "errorGeneric": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
     "billedAnnually": "वार्षिक बिल",
-    "compareHeaderFeature": "सुविधा",
-    "compareHeaderFree": "फ्री",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/माह",
-    "reassurance": "कोई प्रतिबद्धता नहीं · कभी भी रद्द करें"
+    "perMonth": "≈ {{price}}/माह"
   },
   "premiumGate": {
     "unlock": "अनलॉक करें",

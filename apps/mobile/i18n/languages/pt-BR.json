@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Espera — experimente Pro grátis",
-      "body": "7 dias grátis, sem cobrança hoje.\nCancele com 1 toque, a qualquer hora.",
       "ctaStart": "Sim, começar meu teste grátis",
       "ctaSkip": "Não, obrigado, seguir grátis"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Bem-vindo ao Pro!",
     "errorGeneric": "Algo deu errado. Por favor, tente novamente.",
     "billedAnnually": "cobrado anualmente",
-    "compareHeaderFeature": "Recurso",
-    "compareHeaderFree": "Gratuito",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/mês",
-    "reassurance": "Sem compromisso · Cancele quando quiser"
+    "perMonth": "≈ {{price}}/mês"
   },
   "premiumGate": {
     "unlock": "Desbloquear",

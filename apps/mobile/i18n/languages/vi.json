@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Khoan đã — thử Pro miễn phí",
-      "body": "7 ngày miễn phí, hôm nay không tính phí.\nHủy bằng 1 chạm, bất cứ lúc nào.",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
       "ctaSkip": "Không, tiếp tục bản miễn phí"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "Chào mừng đến với Pro!",
     "errorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại.",
     "billedAnnually": "thanh toán hàng năm",
-    "compareHeaderFeature": "Tính năng",
-    "compareHeaderFree": "Miễn phí",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/tháng",
-    "reassurance": "Không ràng buộc · Hủy bất cứ lúc nào"
+    "perMonth": "≈ {{price}}/tháng"
   },
   "premiumGate": {
     "unlock": "Mở khóa",

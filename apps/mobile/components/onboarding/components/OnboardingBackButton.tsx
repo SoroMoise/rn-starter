@@ -1,5 +1,5 @@
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { triggerLight } from '@/utils/haptics'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useTranslation } from 'react-i18next'
 import { Pressable } from 'react-native'
@@ -27,7 +27,7 @@ export function OnboardingBackButton({ onPress }: OnboardingBackButtonProps) {
         }`}
         accessibilityRole="button"
         accessibilityLabel={t('onboarding.previous')}>
-        <Ionicons
+        <DirectionalIcon
           name="chevron-back"
           size={24}
           color={isDark ? 'white' : '#374151'}

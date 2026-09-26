@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "لحظة — جرّب Pro مجاناً",
-      "body": "7 أيام مجاناً، بلا خصم اليوم.\nإلغاء بنقرة واحدة، في أي وقت.",
       "ctaStart": "نعم، ابدأ تجربتي المجانية",
       "ctaSkip": "لا شكراً، متابعة بالمجانية"
     },
@@ -106,11 +105,7 @@
     "welcomePro": "مرحباً بك في Pro!",
     "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
     "billedAnnually": "يُحسب سنوياً",
-    "compareHeaderFeature": "الميزة",
-    "compareHeaderFree": "مجاني",
-    "compareHeaderPro": "Pro",
-    "perMonth": "≈ {{price}}/شهر",
-    "reassurance": "بدون التزام · إلغاء في أي وقت"
+    "perMonth": "≈ {{price}}/شهر"
   },
   "premiumGate": {
     "unlock": "فتح",

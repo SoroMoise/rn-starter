@@ -19,7 +19,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, View } from 'react-native'
+import { BackHandler, Pressable, View } from 'react-native'
 import Animated, { FadeIn } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -179,6 +179,17 @@ export function OnboardingScreen() {
     goToStep(previous)
   }, [currentStep, goToStep, stepKind, steps])
 
+  // Not a route: nothing below takes the back key but the app's exit, which would throw the whole
+  // flow away. The first step lets that default through — there is nothing behind it.
+  useEffect(() => {
+    const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (currentStep === 0) return false
+      handlePrevious()
+      return true
+    })
+    return () => subscription.remove()
+  }, [currentStep, handlePrevious])
+
   const handleLanguageChange = useCallback(
     (language: Language) => {
       analyticsService.track('settings_language_changed', {
@@ -253,7 +264,7 @@ export function OnboardingScreen() {
         </View>
       )}
 
-      {stepKind === 'premium' && (
+      {currentStep > 0 && (
         <View className="absolute left-6 z-30" style={{ top: insets.top + 24 }}>
           <OnboardingBackButton onPress={handlePrevious} />
         </View>

@@ -526,7 +526,7 @@ The Android release workflow installs the whole workspace, the site's dependenci
 
 ## Code Style
 
-- Self-documenting code; comments only when logic is non-obvious. No what-comments, no task-trace comments.
+- **Self-documenting code, and zero comments by default.** Naming carries the meaning, and a new type, constant, function or block gets no comment. A design choice, a naming rationale or a narration of why the code works is not reason enough, even when true and not obvious. A comment is kept for what the code cannot say — a crash or OOM history, a security boundary, a store or legal constraint (Play, GDPR/UMP), a platform or library trap (React Native, NativeWind, Reanimated) that breaks silently once "simplified" away — and it names the constraint and what breaks without it, never the intent in the abstract. Never a what-comment, a task-trace comment, a comment restating the line below, or one repeating an explanation that already lives at the definition being called. The softer wording this replaces is the one under which comments kept creeping back into bg-remover.
 - TypeScript strict (`strictNullChecks`, `noImplicitAny`).
 - Functional components with hooks.
 - **Functions with 2+ parameters use a single object parameter** — `fetchData({ id, signal })`, not `fetchData(id, signal)`.

@@ -25,7 +25,6 @@ type AppContext = {
 }
 
 export type AnalyticsEventMap = {
-  // App lifecycle
   app_session_started: {
     language: string
     theme: string
@@ -37,7 +36,6 @@ export type AnalyticsEventMap = {
     days_since_install: number
   }
 
-  // Onboarding
   onboarding_started: undefined
   // The name travels with the event: a step list gated on the device's capabilities gives the
   // same index to different steps, and a table resolving names from it would merge them.
@@ -61,23 +59,19 @@ export type AnalyticsEventMap = {
     outcome: 'skip' | 'continue'
   }
 
-  // Actions
   action_performed: { total_actions: number }
 
-  // Settings
   settings_theme_changed: { theme: string; previous_theme: string }
   settings_language_changed: { language_code: string; previous_language: string }
   external_link_opened: {
     link_type: 'privacy_policy' | 'terms_of_service' | 'support' | 'manage_subscription'
   }
 
-  // Ads
   rewarded_ad_result: {
     result: 'completed' | 'dismissed' | 'failed'
     ad_free_duration_minutes: number
   }
 
-  // Rating
   rate_app_clicked: undefined
   ad_privacy_options_opened: undefined
   // A moment qualified — never that the user rated. Play reports neither whether
@@ -105,7 +99,6 @@ export type AnalyticsEventMap = {
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }
 
-  // Purchases.
   // `source` (what brought the sale up), `surface` (the screen the tap landed on) and
   // `offering_id` (which RevenueCat experiment served it) ride on every step: several
   // surfaces can sell Pro, and one unattributed conversion count cannot say which of them

@@ -84,7 +84,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       presentationStyle="pageSheet"
       onRequestClose={handleClose}>
       <GestureHandlerRootView style={[styles.container, isDark && styles.containerDark]}>
-        {/* Close button floating over hero image */}
         <View style={[styles.header, { top: Math.max(insets.top, 8) }]}>
           <Pressable
             onPress={handleClose}

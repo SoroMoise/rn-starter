@@ -145,7 +145,7 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 2-step flow in `OnboardingScreen.tsx`:
 1. `WelcomeStep` — app introduction. A top-left pill opens the shared `LanguagePicker` bottom sheet for language selection.
-2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding.
+2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding, and so does becoming Pro on this step — a purchase from the pitch or the exit sheet, or a restore: an effect in `OnboardingScreen` keyed on the entitlement, never on the purchase call. A subscriber detected on the welcome step gets `ProWelcomeModal` once.
 
 After completion, `onboardingStore.markCompleted()` is called and `AppContent` renders the tabs.
 

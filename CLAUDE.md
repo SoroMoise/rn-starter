@@ -89,6 +89,8 @@ Expo Router file-based routing in `apps/mobile/app/`:
 
 Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` before tabs are shown. The welcome step exposes a top-left language selector that opens the shared `LanguagePicker` bottom sheet. Custom `PremiumTabBar` with blur and haptics.
 
+**The onboarding ends on the entitlement, never on a purchase call.** A `purchasePlan()` promise resolves before React commits the new tier, so a ref read in its `.then` still holds the old one — the user paid and stayed on the pitch — and a restore goes through no such callback at all. An effect in `OnboardingScreen`, keyed on `isPremium` once the subscription is initialized, completes the flow on the premium step, whatever made the user Pro there (the pitch, the exit sheet, a restore), and shows `ProWelcomeModal` once on an earlier step.
+
 ### Provider Tree
 
 Composition in `app/_layout.tsx` (outer → inner):

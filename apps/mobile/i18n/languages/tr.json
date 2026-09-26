@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Bekle — Pro'yu ücretsiz dene",
-      "body": "7 gün ücretsiz, bugün ödeme yok.\n1 dokunuşla, istediğin zaman iptal.",
       "ctaStart": "Evet, ücretsiz denememi başlat",
       "ctaSkip": "Hayır teşekkürler, ücretsiz devam"
     },

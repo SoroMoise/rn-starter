@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Un attimo — prova Pro gratis",
-      "body": "7 giorni gratis, nessun addebito oggi.\nAnnulli in 1 tocco, quando vuoi.",
       "ctaStart": "Sì, inizio la prova gratuita",
       "ctaSkip": "No grazie, continuo con il gratuito"
     },

@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Espera, prueba Pro gratis",
-      "body": "7 días gratis, sin cargos hoy.\nCancela en 1 toque, cuando quieras.",
       "ctaStart": "Sí, empezar mi prueba gratis",
       "ctaSkip": "No, gracias, seguir gratis"
     },

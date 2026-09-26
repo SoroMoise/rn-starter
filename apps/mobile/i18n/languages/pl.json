@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Chwila — wypróbuj Pro za darmo",
-      "body": "7 dni za darmo, dziś bez opłaty.\nAnulujesz 1 dotknięciem, w każdej chwili.",
       "ctaStart": "Tak, zacznij darmowy okres próbny",
       "ctaSkip": "Nie, dziękuję, zostaję na darmowej"
     },

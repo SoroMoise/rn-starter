@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Vänta — testa Pro gratis",
-      "body": "7 dagar gratis, ingen debitering idag.\nSäg upp med 1 tryck, när som helst.",
       "ctaStart": "Ja, starta min gratis provperiod",
       "ctaSkip": "Nej tack, fortsätt gratis"
     },

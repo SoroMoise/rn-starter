@@ -3,7 +3,7 @@ import { ModalBottomSheet } from '@/components/ui/ModalBottomSheet'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_EXIT_INTENT_ORIGIN } from '@/constants/purchases'
 import { GRADIENTS } from '@/constants/uiColors'
-import { usePremium } from '@/hooks/usePremium'
+import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useCallback } from 'react'
@@ -24,13 +24,40 @@ export function ExitIntentSheet({
 }: ExitIntentSheetProps) {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
-  const { defaultPlan, purchasePlan, isLoadingPurchase } = usePremium()
+  const { selectedPlan, selectedPrice, legalNote, isLoadingPurchase, purchaseSelected } =
+    usePaywallPlans(ONBOARDING_EXIT_INTENT_ORIGIN)
+
+  // The last word before the user leaves promises exactly what the default plan is: a trial,
+  // a subscription with none, or a one-time unlock.
+  const copy = (() => {
+    if (selectedPlan?.hasTrial) {
+      return {
+        title: t('onboarding.exitIntent.title'),
+        body: selectedPlan.trialDays
+          ? t('onboarding.exitIntent.body', { days: selectedPlan.trialDays })
+          : t('onboarding.exitIntent.bodyNoDays'),
+        cta: t('onboarding.exitIntent.ctaStart'),
+      }
+    }
+    if (selectedPlan?.period === 'lifetime') {
+      return {
+        title: t('onboarding.exitIntent.titleOneTime'),
+        body: t('onboarding.exitIntent.bodyOneTime'),
+        cta: t('onboarding.exitIntent.ctaOneTime', { price: selectedPrice }),
+      }
+    }
+    return {
+      title: t('onboarding.exitIntent.titleNoTrial'),
+      body: t('onboarding.exitIntent.bodyNoTrial'),
+      cta: t('onboarding.exitIntent.ctaStartNoTrial', { price: selectedPrice }),
+    }
+  })()
 
   const handleStart = useCallback(() => {
-    if (!defaultPlan || isLoadingPurchase) return
+    if (isLoadingPurchase) return
     triggerLight()
-    void purchasePlan({ plan: defaultPlan, ...ONBOARDING_EXIT_INTENT_ORIGIN })
-  }, [defaultPlan, isLoadingPurchase, purchasePlan])
+    void purchaseSelected()
+  }, [isLoadingPurchase, purchaseSelected])
 
   const handleSkip = useCallback(() => {
     triggerLight()
@@ -49,24 +76,37 @@ export function ExitIntentSheet({
           <Ionicons name="time-outline" size={28} color="#8b5cf6" />
         </View>
         <ThemedText variant="display" align="center" className="text-2xl">
-          {t('onboarding.exitIntent.title')}
+          {copy.title}
         </ThemedText>
         <ThemedText variant="body" color="muted" align="center" className="mt-3">
-          {t('onboarding.exitIntent.body')}
+          {copy.body}
         </ThemedText>
 
-        <GradientButton
-          onPress={handleStart}
-          isLoading={isLoadingPurchase}
-          disabled={!defaultPlan}
-          colors={GRADIENTS.cta}
-          style={{ height: 56, borderRadius: 14, marginTop: 24 }}
-          gradientStyle={{ height: '100%' }}
-          accessibilityLabel={t('onboarding.exitIntent.ctaStart')}>
-          <ThemedText variant="buttonLarge" color="inverse">
-            {t('onboarding.exitIntent.ctaStart')}
+        {selectedPlan ? (
+          <>
+            <GradientButton
+              onPress={handleStart}
+              isLoading={isLoadingPurchase}
+              colors={GRADIENTS.cta}
+              style={{ height: 56, borderRadius: 14, marginTop: 24 }}
+              gradientStyle={{ height: '100%' }}
+              accessibilityLabel={copy.cta}>
+              <ThemedText variant="buttonLarge" color="inverse">
+                {copy.cta}
+              </ThemedText>
+            </GradientButton>
+
+            {legalNote ? (
+              <ThemedText variant="caption" color="muted" align="center" className="mt-3">
+                {legalNote}
+              </ThemedText>
+            ) : null}
+          </>
+        ) : (
+          <ThemedText variant="body" color="muted" align="center" className="mt-6">
+            {t('paywall.offerUnavailable')}
           </ThemedText>
-        </GradientButton>
+        )}
 
         <Pressable
           onPress={handleSkip}

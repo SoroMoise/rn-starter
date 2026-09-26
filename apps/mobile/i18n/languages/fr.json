@@ -110,10 +110,17 @@
       "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment"
     },
     "exitIntent": {
-      "title": "Un instant — essaie Pro gratuitement",
-      "body": "7 jours gratuits, aucun débit aujourd'hui.\nAnnulable en 1 tap, à tout moment.",
+      "title": "Un instant — essayez Pro gratuitement",
       "ctaStart": "Oui, démarrer mon essai gratuit",
-      "ctaSkip": "Non merci, continuer gratuit"
+      "ctaSkip": "Non merci, continuer gratuitement",
+      "body": "{{days}} jours gratuits, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
+      "bodyNoDays": "Essai gratuit, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
+      "titleNoTrial": "Un instant — débloquez Pro",
+      "bodyNoTrial": "Tout ce que Pro débloque, dès maintenant.\nSans engagement, résiliable à tout moment.",
+      "ctaStartNoTrial": "Oui, débloquer Pro — {{price}}",
+      "titleOneTime": "Un instant — débloquez Pro pour de bon",
+      "bodyOneTime": "Un seul paiement, acquis pour toujours.\nAucun abonnement.",
+      "ctaOneTime": "Oui, débloquer pour de bon — {{price}}"
     },
     "proWelcome": {
       "title": "Bon retour !",

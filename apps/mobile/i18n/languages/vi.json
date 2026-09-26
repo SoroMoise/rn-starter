@@ -62,7 +62,6 @@
     },
     "exitIntent": {
       "title": "Khoan đã — thử Pro miễn phí",
-      "body": "7 ngày miễn phí, hôm nay không tính phí.\nHủy bằng 1 chạm, bất cứ lúc nào.",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
       "ctaSkip": "Không, tiếp tục bản miễn phí"
     },

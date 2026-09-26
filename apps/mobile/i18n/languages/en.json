@@ -111,9 +111,16 @@
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",
-      "body": "7 days free, no charge today.\nCancel in 1 tap, anytime.",
       "ctaStart": "Yes, start my free trial",
-      "ctaSkip": "No thanks, continue free"
+      "ctaSkip": "No thanks, continue free",
+      "body": "{{days}} days free, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
+      "bodyNoDays": "Free to try, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
+      "titleNoTrial": "Hold on — unlock Pro",
+      "bodyNoTrial": "Everything Pro unlocks, starting now.\nNo commitment — cancel anytime.",
+      "ctaStartNoTrial": "Yes, unlock Pro — {{price}}",
+      "titleOneTime": "Hold on — unlock Pro for good",
+      "bodyOneTime": "One payment, yours for good.\nNo subscription.",
+      "ctaOneTime": "Yes, unlock for good — {{price}}"
     },
     "proWelcome": {
       "title": "Welcome back!",

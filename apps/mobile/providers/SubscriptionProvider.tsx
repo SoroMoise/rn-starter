@@ -11,7 +11,7 @@ import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementService } from '@/services/api/engagementService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
-import { purchaseService } from '@/services/api/purchaseService'
+import { purchaseService, type PurchaseFailure } from '@/services/api/purchaseService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
 import { useOnboardingStore } from '@/stores/onboardingStore'
@@ -33,6 +33,15 @@ export type { SubscriptionContextValue }
 // A purchase made outside an offering still needs an attribution value, or the
 // per-offering funnel silently drops those conversions.
 const NO_OFFERING = 'none'
+
+const ENTITLEMENT_INACTIVE = 'entitlement_inactive'
+
+function failureMessageKey(reason: PurchaseFailure): string {
+  if (reason === 'network') return 'paywall.errorNetwork'
+  if (reason === 'not_allowed' || reason === 'store_problem') return 'paywall.errorStoreUnavailable'
+  if (reason === 'already_owned') return 'paywall.errorAlreadyOwned'
+  return 'paywall.errorGeneric'
+}
 
 export type RestoreOutcome = 'restored' | 'already_premium' | 'nothing_found'
 
@@ -167,7 +176,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         setIsPremium(flags.isPremium)
         setIsInGracePeriod(flags.isInGracePeriod)
       }
-      void crashlyticsService.recordError(err, { source: 'subscription_sync' })
+      purchaseService.reportFailure({ error: err, source: 'subscription_sync' })
     }
   }, [applyCustomerInfo])
 
@@ -179,7 +188,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       // and detach the purchase from the experiment measuring it.
       setOffering(offerings.current)
     } catch (err) {
-      void crashlyticsService.recordError(err, { source: 'offerings_load' })
+      purchaseService.reportFailure({ error: err, source: 'offerings_load' })
     } finally {
       setIsLoadingPrices(false)
     }
@@ -190,7 +199,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       try {
         await purchaseService.initialize()
       } catch (err) {
-        void crashlyticsService.recordError(err, { source: 'subscription_init' })
+        purchaseService.reportFailure({ error: err, source: 'subscription_init' })
         setIsInitialized(true)
         return
       }
@@ -229,18 +238,23 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       })
 
       try {
-        // The purchase's own answer is the answer: a call that did not throw is not a
-        // purchase that granted anything — a deferred transaction resolves with no
-        // entitlement, and "Welcome to Pro!" over a free tier is a lie the user cannot check.
         const customerInfo = await purchaseService.purchasePackage({ pkg: plan.pkg })
         const applied = applyCustomerInfo(customerInfo)
 
-        if (!applied.isPremium) {
-          analyticsService.track('purchase_pending', {
+        // The purchase's own answer is the answer. A pending payment rejects instead of
+        // resolving, so a purchase that resolves without the entitlement is a sale the
+        // dashboard never attached to ENTITLEMENT_PREMIUM: the user paid, and "Welcome to
+        // Pro!" would be a lie.
+        if (!purchaseService.isPremiumActive({ customerInfo })) {
+          const active = Object.keys(customerInfo.entitlements.active).join(', ') || 'none'
+          const message = `${product.identifier} granted no "${ENTITLEMENT_PREMIUM}" (active: ${active})`
+          void crashlyticsService.recordError(new Error(message), { source: 'purchase' })
+          analyticsService.track('purchase_failed', {
             plan: plan.period,
             source,
-            product_id: product.identifier,
+            error_code: ENTITLEMENT_INACTIVE,
           })
+          showToast({ message: t('paywall.errorGeneric'), type: 'error' })
           return
         }
 
@@ -263,10 +277,20 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           trial_started: plan.hasTrial,
         })
 
-        showToast({ message: t('paywall.welcomePro'), type: 'success' })
+        if (applied.isPremium) showToast({ message: t('paywall.welcomePro'), type: 'success' })
       } catch (e) {
-        if (purchaseService.isUserCancelledError(e)) {
+        const reason = purchaseService.reportFailure({ error: e, source: 'purchase' })
+        if (reason === 'cancelled') {
           analyticsService.track('purchase_cancelled', { plan: plan.period, source })
+          return
+        }
+        // The store's sheet has told the user; the entitlement follows once the store settles it.
+        if (reason === 'pending') {
+          analyticsService.track('purchase_pending', {
+            plan: plan.period,
+            source,
+            product_id: product.identifier,
+          })
           return
         }
         analyticsService.track('purchase_failed', {
@@ -274,7 +298,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           source,
           error_code: String((e as PurchasesError)?.code ?? 'unknown'),
         })
-        showToast({ message: t('paywall.errorGeneric'), type: 'error' })
+        showToast({ message: t(failureMessageKey(reason)), type: 'error' })
       } finally {
         setIsLoadingPurchase(false)
       }
@@ -311,10 +335,11 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         showToast({ message: t('paywall.restoreNotFound'), type: 'info' })
       }
     } catch (e) {
+      const reason = purchaseService.reportFailure({ error: e, source: 'restore' })
       analyticsService.track('restore_purchases_failed', {
         error_code: String((e as PurchasesError)?.code ?? 'unknown'),
       })
-      showToast({ message: t('paywall.errorGeneric'), type: 'error' })
+      showToast({ message: t(failureMessageKey(reason)), type: 'error' })
     } finally {
       setIsLoadingPurchase(false)
     }

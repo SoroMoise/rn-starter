@@ -133,8 +133,8 @@ export type AnalyticsEventMap = {
     product_id: string
     offering_id: string
   }
-  // A call that did not throw is not a purchase that granted anything: a deferred
-  // transaction resolves with no entitlement.
+  // A payment the store has taken but not settled: RevenueCat rejects the purchase with
+  // PAYMENT_PENDING_ERROR, and the entitlement follows once the store settles it.
   purchase_pending: { plan: PlanPeriod; source: string; product_id: string }
   purchase_completed: {
     plan: PlanPeriod

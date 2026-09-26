@@ -69,7 +69,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
-| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `managementUrl` (the store page of the subscription held, or null) |
+| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `managementUrl` (the store page of the subscription held, or null), `reportFailure` (classifies an error by its code; only `unknown` becomes a Crashlytics non-fatal) |
 | `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
 | `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
 | `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |

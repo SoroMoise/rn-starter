@@ -106,8 +106,7 @@
     "welcomePro": "Proへようこそ！",
     "errorGeneric": "問題が発生しました。もう一度お試しください。",
     "billedAnnually": "年間請求",
-    "perMonth": "≈ {{price}}/月",
-    "reassurance": "契約なし · いつでもキャンセル可能"
+    "perMonth": "≈ {{price}}/月"
   },
   "premiumGate": {
     "unlock": "ロック解除",

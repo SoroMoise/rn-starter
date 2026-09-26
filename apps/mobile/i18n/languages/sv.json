@@ -106,8 +106,7 @@
     "welcomePro": "Välkommen till Pro!",
     "errorGeneric": "Något gick fel. Försök igen.",
     "billedAnnually": "debiteras årsvis",
-    "perMonth": "≈ {{price}}/mån",
-    "reassurance": "Inget åtagande · Avsluta när som helst"
+    "perMonth": "≈ {{price}}/mån"
   },
   "premiumGate": {
     "unlock": "Lås upp",

@@ -106,8 +106,7 @@
     "welcomePro": "Bem-vindo ao Pro!",
     "errorGeneric": "Algo deu errado. Por favor, tente novamente.",
     "billedAnnually": "cobrado anualmente",
-    "perMonth": "≈ {{price}}/mês",
-    "reassurance": "Sem compromisso · Cancele quando quiser"
+    "perMonth": "≈ {{price}}/mês"
   },
   "premiumGate": {
     "unlock": "Desbloquear",

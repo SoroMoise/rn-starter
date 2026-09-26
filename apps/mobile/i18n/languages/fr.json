@@ -164,7 +164,6 @@
     "errorAlreadyOwned": "Vous possédez déjà Pro avec ce compte. Touchez « Restaurer mes achats » pour le récupérer.",
     "billedAnnually": "facturé annuellement",
     "perMonth": "≈ {{price}}/mois",
-    "reassurance": "Sans engagement · Annulable à tout moment",
     "planWeekly": "Hebdomadaire",
     "planLifetime": "À vie",
     "planMonths": "{{months}} mois",
@@ -193,7 +192,11 @@
     "priceAnnual": "{{price}}/an",
     "priceEveryMonths": "{{price}} tous les {{months}} mois",
     "legalNoteTrial": "Gratuit pendant {{days}} jours, puis {{price}}. Renouvellement automatique jusqu'à résiliation.",
-    "legalNoteTrialNoDays": "Essai gratuit, puis {{price}}. Renouvellement automatique jusqu'à résiliation."
+    "legalNoteTrialNoDays": "Essai gratuit, puis {{price}}. Renouvellement automatique jusqu'à résiliation.",
+    "trustStore": "Paiement sécurisé par {{store}}",
+    "trustTrial": "Rien à payer pendant l'essai gratuit",
+    "trustCancel": "Résiliable à tout moment, sans engagement",
+    "trustOneTime": "Un seul paiement, aucun abonnement"
   },
   "premiumGate": {
     "unlock": "Débloquer",

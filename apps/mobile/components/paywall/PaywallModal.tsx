@@ -1,26 +1,24 @@
+import { PaywallHero } from '@/components/paywall/PaywallHero'
+import { PaywallLegalLinks } from '@/components/paywall/PaywallLegalLinks'
 import { PaywallPerks } from '@/components/paywall/PaywallPerks'
 import { PaywallPlanCard } from '@/components/paywall/PaywallPlanCard'
+import { PaywallTrustRow } from '@/components/paywall/PaywallTrustRow'
 import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
-import { LEGAL_URLS } from '@/constants/legal'
 import { GRADIENTS } from '@/constants/uiColors'
 import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { paywallAnalytics } from '@/services/api/paywallAnalytics'
-import { openExternalLink } from '@/utils/linking'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
+import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-const heroLight = require('../../assets/images/paywall-illustration-light.webp')
-const heroDark = require('../../assets/images/paywall-illustration-dark.webp')
 
 type PaywallModalProps = {
   visible: boolean
@@ -34,7 +32,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const { t } = useTranslation()
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
-  const { isPremium, restorePurchases } = usePremium()
+  const { isPremium } = usePremium()
   const {
     options,
     selectedPlan,
@@ -45,8 +43,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     isLoadingPurchase,
     purchaseSelected,
   } = usePaywallPlans({ source, surface: 'paywall' })
-
-  const heroImage = isDark ? heroDark : heroLight
 
   const paywallOpenTimeRef = useRef<number>(0)
 
@@ -94,35 +90,14 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
         <ScrollView
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
           showsVerticalScrollIndicator={false}>
-          {/* Hero */}
-          <View style={styles.heroContainer}>
-            <Image source={heroImage} style={styles.heroImage} resizeMode="cover" />
-            <LinearGradient
-              colors={['transparent', 'rgba(0,0,0,0.65)']}
-              style={styles.heroOverlay}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}>
-              <ThemedText
-                variant="title"
-                weight="bold"
-                color="inverse"
-                style={styles.heroOverlayTitle}>
-                {t('paywall.title')}
-              </ThemedText>
-              <ThemedText
-                variant="body"
-                color="inherit"
-                style={[styles.heroOverlaySubtitle, styles.heroOverlayTextMuted]}>
-                {t('paywall.subtitle')}
-              </ThemedText>
-            </LinearGradient>
+          <View style={styles.hero}>
+            <PaywallHero title={t('paywall.title')} subtitle={t('paywall.subtitle')} />
           </View>
 
           <View style={styles.perks}>
             <PaywallPerks />
           </View>
 
-          {/* Plan selector */}
           {!hasPrices ? (
             // No offer loaded: showing a price that does not exist, behind an active
             // button that silently does nothing, is worse than saying so.
@@ -150,24 +125,22 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
                 ))}
               </View>
 
-              {/* CTA */}
               <GradientButton
                 onPress={() => void purchaseSelected()}
                 colors={GRADIENTS.pro}
                 isLoading={isLoadingPurchase}
                 disabled={!selectedPlan}
-                style={styles.ctaContainer}
                 gradientStyle={styles.ctaGradient}>
                 <ThemedText color="inherit" style={styles.ctaText}>
                   {ctaLabel}
                 </ThemedText>
               </GradientButton>
+
+              <View style={styles.trust}>
+                <PaywallTrustRow plan={selectedPlan} />
+              </View>
             </>
           )}
-
-          <ThemedText variant="label" weight="semibold" style={styles.reassurance}>
-            {t('paywall.reassurance')}
-          </ThemedText>
 
           {legalNote ? (
             <ThemedText variant="caption" color="muted" style={styles.legalNote}>
@@ -175,37 +148,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             </ThemedText>
           ) : null}
 
-          {/* Footer */}
-          <View style={styles.footer}>
-            <Pressable
-              onPress={() => void restorePurchases({ source, surface: 'paywall' })}
-              disabled={isLoadingPurchase}
-              accessibilityRole="button">
-              <ThemedText variant="label" color="muted" style={styles.footerLink}>
-                {t('paywall.restore')}
-              </ThemedText>
-            </Pressable>
-            <ThemedText variant="label" color="muted">
-              {' · '}
-            </ThemedText>
-            <Pressable
-              onPress={() => void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE ?? '' })}
-              accessibilityRole="link">
-              <ThemedText variant="label" color="muted" style={styles.footerLink}>
-                {t('settings.termsOfService')}
-              </ThemedText>
-            </Pressable>
-            <ThemedText variant="label" color="muted">
-              {' · '}
-            </ThemedText>
-            <Pressable
-              onPress={() => void openExternalLink({ url: LEGAL_URLS.PRIVACY_POLICY ?? '' })}
-              accessibilityRole="link">
-              <ThemedText variant="label" color="muted" style={styles.footerLink}>
-                {t('settings.privacyPolicy')}
-              </ThemedText>
-            </Pressable>
-          </View>
+          <PaywallLegalLinks origin={{ source, surface: 'paywall' }} />
         </ScrollView>
         <ModalToastViewport active={visible} />
       </GestureHandlerRootView>
@@ -244,38 +187,9 @@ const styles = StyleSheet.create({
   scroll: {
     paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
   },
-  heroContainer: {
+  hero: {
     marginHorizontal: -CONTENT_HORIZONTAL_PADDING,
-    height: 400,
-    overflow: 'hidden',
     marginBottom: 8,
-  },
-  heroImage: {
-    width: '100%',
-    height: '100%',
-  },
-  heroOverlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '60%',
-    paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
-    paddingBottom: 16,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-    gap: 4,
-  },
-  heroOverlayTitle: {
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  heroOverlaySubtitle: {
-    fontSize: 15,
-    textAlign: 'center',
-  },
-  heroOverlayTextMuted: {
-    color: 'rgba(255,255,255,0.75)',
   },
   perks: {
     marginVertical: 16,
@@ -287,9 +201,6 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginBottom: 20,
   },
-  ctaContainer: {
-    marginBottom: 2,
-  },
   ctaGradient: {
     minHeight: 54,
   },
@@ -298,25 +209,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
   },
-  reassurance: {
-    textAlign: 'center',
-    color: '#10b981',
-    marginTop: 12,
-    marginBottom: 6,
+  trust: {
+    marginTop: 14,
   },
   legalNote: {
     textAlign: 'center',
-    marginBottom: 20,
+    marginTop: 14,
+    marginBottom: 16,
     fontSize: 11,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 2,
-  },
-  footerLink: {
-    textDecorationLine: 'underline',
   },
 })

@@ -106,8 +106,7 @@
     "welcomePro": "欢迎加入 Pro！",
     "errorGeneric": "出了点问题。请重试。",
     "billedAnnually": "每年计费",
-    "perMonth": "≈ {{price}}/月",
-    "reassurance": "无需承诺 · 随时可取消"
+    "perMonth": "≈ {{price}}/月"
   },
   "premiumGate": {
     "unlock": "解锁",

@@ -106,8 +106,7 @@
     "welcomePro": "Pro'ya hoş geldiniz!",
     "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
     "billedAnnually": "yıllık faturalandırılır",
-    "perMonth": "≈ {{price}}/ay",
-    "reassurance": "Taahhüt yok · İstediğiniz zaman iptal edin"
+    "perMonth": "≈ {{price}}/ay"
   },
   "premiumGate": {
     "unlock": "Kilidi aç",

@@ -42,7 +42,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `/(tabs)/index` | `app/index.tsx` | Home — premium feature showcase, paywall CTA |
 | `/(tabs)/settings` | `app/settings.tsx` | Settings — theme, language, premium, ads, legal |
 | Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2-step flow: welcome → premium value (welcome has a top-left language selector) |
-| Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet |
+| Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet, assembled from the `components/paywall/` blocks (`PaywallHero`, `PaywallPerks`, `PaywallPlanCard`, `PaywallTrustRow`, `PaywallLegalLinks`, `PriceRetryNotice`) over `usePaywallPlans` |
 
 ---
 

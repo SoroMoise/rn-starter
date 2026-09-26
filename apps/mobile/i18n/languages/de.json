@@ -106,8 +106,7 @@
     "welcomePro": "Willkommen bei Pro!",
     "errorGeneric": "Etwas ist schiefgelaufen. Bitte versuche es erneut.",
     "billedAnnually": "jährlich abgerechnet",
-    "perMonth": "≈ {{price}}/Monat",
-    "reassurance": "Keine Verpflichtung · Jederzeit kündbar"
+    "perMonth": "≈ {{price}}/Monat"
   },
   "premiumGate": {
     "unlock": "Freischalten",

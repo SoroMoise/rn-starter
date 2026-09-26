@@ -164,7 +164,6 @@
     "errorAlreadyOwned": "You already own Pro with this account. Tap Restore purchases to bring it back.",
     "billedAnnually": "billed annually",
     "perMonth": "≈ {{price}}/mo",
-    "reassurance": "No commitment · Cancel anytime",
     "planWeekly": "Weekly",
     "planLifetime": "Lifetime",
     "planMonths": "{{months}} months",
@@ -193,7 +192,11 @@
     "priceAnnual": "{{price}}/year",
     "priceEveryMonths": "{{price}} every {{months}} months",
     "legalNoteTrial": "Free for {{days}} days, then {{price}}. Renews automatically until you cancel.",
-    "legalNoteTrialNoDays": "Free trial, then {{price}}. Renews automatically until you cancel."
+    "legalNoteTrialNoDays": "Free trial, then {{price}}. Renews automatically until you cancel.",
+    "trustStore": "Payment secured by {{store}}",
+    "trustTrial": "Nothing to pay during the free trial",
+    "trustCancel": "Cancel anytime, no commitment",
+    "trustOneTime": "One payment, no subscription"
   },
   "premiumGate": {
     "unlock": "Unlock",

@@ -106,8 +106,7 @@
     "welcomePro": "Добро пожаловать в Pro!",
     "errorGeneric": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
     "billedAnnually": "ежегодное списание",
-    "perMonth": "≈ {{price}}/мес",
-    "reassurance": "Без обязательств · Отмена в любое время"
+    "perMonth": "≈ {{price}}/мес"
   },
   "premiumGate": {
     "unlock": "Разблокировать",

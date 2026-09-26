@@ -106,8 +106,7 @@
     "welcomePro": "Selamat datang di Pro!",
     "errorGeneric": "Ada yang salah. Silakan coba lagi.",
     "billedAnnually": "ditagih setiap tahun",
-    "perMonth": "≈ {{price}}/bln",
-    "reassurance": "Tanpa komitmen · Batalkan kapan saja"
+    "perMonth": "≈ {{price}}/bln"
   },
   "premiumGate": {
     "unlock": "Buka kunci",

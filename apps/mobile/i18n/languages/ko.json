@@ -106,8 +106,7 @@
     "welcomePro": "Pro에 오신 것을 환영합니다!",
     "errorGeneric": "오류가 발생했습니다. 다시 시도해주세요.",
     "billedAnnually": "매년 청구",
-    "perMonth": "≈ {{price}}/월",
-    "reassurance": "약정 없음 · 언제든지 취소 가능"
+    "perMonth": "≈ {{price}}/월"
   },
   "premiumGate": {
     "unlock": "잠금 해제",

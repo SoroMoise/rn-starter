@@ -106,8 +106,7 @@
     "welcomePro": "Welkom bij Pro!",
     "errorGeneric": "Er ging iets mis. Probeer het opnieuw.",
     "billedAnnually": "jaarlijks gefactureerd",
-    "perMonth": "≈ {{price}}/maand",
-    "reassurance": "Geen verplichtingen · Altijd opzegbaar"
+    "perMonth": "≈ {{price}}/maand"
   },
   "premiumGate": {
     "unlock": "Ontgrendelen",

@@ -106,8 +106,7 @@
     "welcomePro": "Chào mừng đến với Pro!",
     "errorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại.",
     "billedAnnually": "thanh toán hàng năm",
-    "perMonth": "≈ {{price}}/tháng",
-    "reassurance": "Không ràng buộc · Hủy bất cứ lúc nào"
+    "perMonth": "≈ {{price}}/tháng"
   },
   "premiumGate": {
     "unlock": "Mở khóa",

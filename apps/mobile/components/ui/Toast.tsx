@@ -2,7 +2,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { triggerError, triggerSuccess, triggerWarning } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
-import React, { ComponentProps, useCallback, useEffect, useRef } from 'react'
+import React, { ComponentProps, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
@@ -75,47 +75,53 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
     return () => cancelTimer()
   }, [visible, type, cancelTimer, startTimer, opacity, scale, translateX, translateY])
 
-  const panGesture = Gesture.Pan()
-    .onBegin(() => {
-      runOnJS(cancelTimer)()
-    })
-    .onChange((event) => {
-      translateX.value = event.translationX
-      translateY.value = Math.max(0, event.translationY)
-      const dist = Math.sqrt(event.translationX ** 2 + event.translationY ** 2)
-      scale.value = Math.max(0.93, 1 - dist / 1800)
-    })
-    .onFinalize((event) => {
-      const horizDistThreshold = screenWidth * 0.35
-      const shouldDismissRight = event.translationX > horizDistThreshold || event.velocityX > 400
-      const shouldDismissLeft = event.translationX < -horizDistThreshold || event.velocityX < -400
-      const shouldDismissDown = event.translationY > 60 || event.velocityY > 300
+  const panGesture = useMemo(
+    () =>
+      Gesture.Pan()
+        .onBegin(() => {
+          runOnJS(cancelTimer)()
+        })
+        .onChange((event) => {
+          translateX.value = event.translationX
+          translateY.value = Math.max(0, event.translationY)
+          const dist = Math.sqrt(event.translationX ** 2 + event.translationY ** 2)
+          scale.value = Math.max(0.93, 1 - dist / 1800)
+        })
+        .onFinalize((event) => {
+          const horizDistThreshold = screenWidth * 0.35
+          const shouldDismissRight =
+            event.translationX > horizDistThreshold || event.velocityX > 400
+          const shouldDismissLeft =
+            event.translationX < -horizDistThreshold || event.velocityX < -400
+          const shouldDismissDown = event.translationY > 60 || event.velocityY > 300
 
-      if (shouldDismissRight) {
-        scale.value = withSpring(1, SPRING_CONFIG)
-        translateX.value = withSpring(screenWidth * 1.3, SPRING_CONFIG)
-        opacity.value = withTiming(0, { duration: 220 }, (finished) => {
-          if (finished) scheduleOnRN(onHide)
-        })
-      } else if (shouldDismissLeft) {
-        scale.value = withSpring(1, SPRING_CONFIG)
-        translateX.value = withSpring(-screenWidth * 1.3, SPRING_CONFIG)
-        opacity.value = withTiming(0, { duration: 220 }, (finished) => {
-          if (finished) scheduleOnRN(onHide)
-        })
-      } else if (shouldDismissDown) {
-        scale.value = withSpring(1, SPRING_CONFIG)
-        translateY.value = withSpring(150, { damping: 20, stiffness: 300 })
-        opacity.value = withTiming(0, { duration: 220 }, (finished) => {
-          if (finished) scheduleOnRN(onHide)
-        })
-      } else {
-        translateX.value = withSpring(0, SPRING_CONFIG)
-        translateY.value = withSpring(0, { damping: 20, stiffness: 250 })
-        scale.value = withSpring(1, SPRING_CONFIG)
-        runOnJS(startTimer)()
-      }
-    })
+          if (shouldDismissRight) {
+            scale.value = withSpring(1, SPRING_CONFIG)
+            translateX.value = withSpring(screenWidth * 1.3, SPRING_CONFIG)
+            opacity.value = withTiming(0, { duration: 220 }, (finished) => {
+              if (finished) scheduleOnRN(onHide)
+            })
+          } else if (shouldDismissLeft) {
+            scale.value = withSpring(1, SPRING_CONFIG)
+            translateX.value = withSpring(-screenWidth * 1.3, SPRING_CONFIG)
+            opacity.value = withTiming(0, { duration: 220 }, (finished) => {
+              if (finished) scheduleOnRN(onHide)
+            })
+          } else if (shouldDismissDown) {
+            scale.value = withSpring(1, SPRING_CONFIG)
+            translateY.value = withSpring(150, { damping: 20, stiffness: 300 })
+            opacity.value = withTiming(0, { duration: 220 }, (finished) => {
+              if (finished) scheduleOnRN(onHide)
+            })
+          } else {
+            translateX.value = withSpring(0, SPRING_CONFIG)
+            translateY.value = withSpring(0, { damping: 20, stiffness: 250 })
+            scale.value = withSpring(1, SPRING_CONFIG)
+            runOnJS(startTimer)()
+          }
+        }),
+    [cancelTimer, startTimer, onHide, screenWidth, opacity, scale, translateX, translateY]
+  )
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [

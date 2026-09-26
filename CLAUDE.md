@@ -296,6 +296,8 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti.
 
+**A font size raised from `style` takes its line height with it.** A `ThemedText` variant pins the line height to its own size, so a figure enlarged through `style={{ fontSize }}` alone was clipped, and a badge shrunk the same way sat in a line meant for body text. `ThemedText` now derives a line height whenever `style` sets `fontSize` without one (×1.45 up to 20, ×1.3 up to 30, ×1.15 above). A plain `Text` gets no such help: set both.
+
 Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. The onboarding and the selling surfaces read them; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
 
 Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit above the app window, so to surface a toast over one, mount `ModalToastViewport active={visible}` inside the modal.

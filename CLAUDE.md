@@ -220,6 +220,13 @@ day-stale snapshot would resurrect takes more out of cloud backup, as its own de
 keeps its own CustomerInfo cache in the SDK's preferences and `getCustomerInfo` serves it offline —
 this closes the cheap attack on the app's copy, not on the SDK's.
 
+**A last-used setting is remembered per feature, never by default.** A choice people make the same way
+every time — an export format, a brush size, a caption style — is worth keeping; one they take from what
+is in front of them — a crop, a tool, a value set for one item — is not, and restoring it opens the next
+visit on a choice made for something else. bg-remover keeps the first kind in a storage domain per feature and lets the
+second go with the screen. A kept setting that a tier gates is a preference, not an entitlement, and is
+clamped on every read (Monetization). The starter remembers the theme and the language, and nothing else.
+
 ### API Layer
 
 `apps/mobile/services/api/`:

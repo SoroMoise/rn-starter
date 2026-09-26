@@ -8,13 +8,13 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 
 - **Theme system** — light / dark mode with RTL support (Arabic and any RTL language)
 - **i18n** — 20 languages (EN, FR, ES, DE, PT-BR, ZH-CN, ZH-TW, JA, KO, AR, HI, BN, RU, ID, TR, IT, NL, SV, PL, VI), lazy-loaded
-- **RevenueCat paywall** — renders whatever the store's current offering holds (plans, prices, trial), with a payment-problem banner and an offline allowance for subscribers
+- **RevenueCat paywall** — renders whatever the store's current offering holds (plans, prices, trial), states beside every buy button what it will charge, and is built from blocks the onboarding reuses; a payment-problem banner and an offline allowance for subscribers
 - **Contextual paywall** — triggers on a generic action count fed by `useActionRating().recordAction()`, never during the first session — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
 - **Notification system** — `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
 - **App-store rating prompt** — Play's in-app review card, armed by an action and raised once the user is back; one pure policy decides and names every refusal; the store listing for explicit taps
-- **Onboarding flow** — welcome → premium value pitch → language picker
+- **Onboarding flow** — welcome (with a language picker) → premium pitch, navigated by step name so a step gated on the device can join; the Android back key steps back through it
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
 - **Custom tab bar** — blur effect, haptics, premium-aware
 - **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example`
@@ -78,7 +78,7 @@ apps/mobile/
 │                        #   SubscriptionProvider, ThemeProvider, ToastProvider
 ├── services/
 │   ├── api/             # adService, analyticsService, contextualPaywall/,
-│   │                    #   crashlyticsService, engagementService, purchaseService,
+│   │                    #   crashlyticsService, engagementService, paywallAnalytics, purchaseService,
 │   │                    #   ratingService, rewardedAdService
 │   ├── notifications/   # setup, channels
 │   ├── promo/           # promoCoordinator (anti-stacking authority)

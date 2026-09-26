@@ -19,6 +19,8 @@ until a store or a launcher enforces it:
   show as a disc; `splash.backgroundColor` fills the screen behind the mark.
 - notification-icon.png — a silhouette: Android paints every non-transparent pixel
   with the system tint and discards the colours, so it is pure white.
+- apps/web/app/icon.png and apple-icon.png — the site's favicon and home-screen
+  icon, the store icon at their sizes. Skipped once apps/web is gone.
 
 BACKGROUND must equal `splash.backgroundColor` and
 `android.adaptiveIcon.backgroundColor` in apps/mobile/app.config.js.
@@ -33,6 +35,7 @@ from PIL import Image, ImageDraw
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ASSETS = REPO_ROOT / "apps/mobile/assets"
+WEB_APP = REPO_ROOT / "apps/web/app"
 
 BACKGROUND = (0x63, 0x66, 0xF1)  # #6366f1
 WHITE = (255, 255, 255, 255)
@@ -73,13 +76,17 @@ def render(size: int, extent: float, background: tuple[int, int, int] | None = N
 
 def main() -> None:
     outputs = {
-        "images/icon.png": render(1024, ICON_EXTENT, BACKGROUND).convert("RGB"),
-        "images/adaptive-icon.png": render(1024, ADAPTIVE_EXTENT),
-        "images/splash-icon.png": render(1024, SPLASH_EXTENT),
-        "notification-icon.png": render(192, NOTIFICATION_EXTENT),
+        ASSETS / "images/icon.png": render(1024, ICON_EXTENT, BACKGROUND).convert("RGB"),
+        ASSETS / "images/adaptive-icon.png": render(1024, ADAPTIVE_EXTENT),
+        ASSETS / "images/splash-icon.png": render(1024, SPLASH_EXTENT),
+        ASSETS / "notification-icon.png": render(192, NOTIFICATION_EXTENT),
+        WEB_APP / "icon.png": render(512, ICON_EXTENT, BACKGROUND).convert("RGB"),
+        WEB_APP / "apple-icon.png": render(180, ICON_EXTENT, BACKGROUND).convert("RGB"),
     }
-    for relative, image in outputs.items():
-        path = ASSETS / relative
+    for path, image in outputs.items():
+        if not path.parent.is_dir():
+            print(f"skipped {path.relative_to(REPO_ROOT)}: {path.parent.relative_to(REPO_ROOT)} is gone")
+            continue
         image.save(path, "PNG", optimize=True)
         print(f"wrote {path.relative_to(REPO_ROOT)} ({image.width}x{image.height} {image.mode})")
 

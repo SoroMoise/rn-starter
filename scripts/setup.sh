@@ -192,6 +192,15 @@ patch('package.json', (src) => all(src, `"name": "${OLD_SLUG}"`, `"name": "${app
 patch('apps/mobile/constants/legal.ts', (src) =>
   all(all(src, OLD_WEBSITE, websiteUrl), OLD_SUPPORT_EMAIL, supportEmail)
 )
+// The site serving those links names the app, its store listing and the same address.
+patch('apps/web/lib/site.ts', (src) =>
+  [
+    [OLD_NAME, appName],
+    [OLD_BUNDLE, bundleId],
+    [OLD_WEBSITE, websiteUrl],
+    [OLD_SUPPORT_EMAIL, supportEmail],
+  ].reduce((acc, [from, to]) => all(acc, from, to), src)
+)
 
 const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
 if (fs.existsSync(localesDir)) {
@@ -207,7 +216,8 @@ success "Identity swept."
 
 if [[ "$WEBSITE_URL" == "https://yourapp.example.com" || "$SUPPORT_EMAIL" == "support@example.com" ]]; then
   warn "The legal links still point at the template's placeholders: set the site and the support"
-  warn "address in apps/mobile/constants/legal.ts before the first release, which refuses them."
+  warn "address in apps/mobile/constants/legal.ts and apps/web/lib/site.ts before the first"
+  warn "release, which refuses them."
 fi
 
 # ─── Start the release history here ───────────────────────────────────────────
@@ -266,6 +276,11 @@ echo ""
 echo "  6. Start dev servers:"
 echo "     pnpm dev:mobile"
 echo "     pnpm dev:api"
+echo "     pnpm dev:web"
+echo ""
+echo "  Before the site goes live: fill in the publisher and the date in"
+echo "  apps/web/lib/site.ts and the bracketed passages of apps/web/content/*/legal.ts,"
+echo "  and make the legal pages say what the app actually does. See README.md, Website."
 echo ""
 echo "  7. Before the first release: generate the upload keystore, fill in"
 echo "     apps/mobile/keystore.properties (from keystore.properties.example),"

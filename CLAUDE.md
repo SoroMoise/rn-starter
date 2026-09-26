@@ -8,11 +8,12 @@ Monorepo boilerplate for a premium React Native / Expo app:
 
 - **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable local notification system (the grant, the Android channel, a daily reminder scheduler — ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
+- **`apps/web`** — Next.js 16 static site, English at the root and French under `/fr`: a home page, the privacy policy and the terms — the pages the app's legal links open.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
 Workspace tooling: pnpm workspaces + Turborepo. App identity placeholders: name `RN Starter`, slug `rn-starter`, bundle ID `com.yourcompany.rnstarter`, scheme `rnstarter`.
 
-**`scripts/setup.sh` is what removes them, and it must stay exhaustive.** `app.config.js` only *declares* the identity; it is also written into `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, all twenty translation files, `google-services.json.example`, the Worker's name in `apps/api/wrangler.toml` and the root `package.json`. A sweep that stops at the config ships an app calling itself "RN Starter" in twenty languages, with a store URL pointing at the template's package id, and deploys a Worker that replaces the template's on the same Cloudflare account. The script also asks for the app's website and support address and writes them into `constants/legal.ts` (Legal links), and starts `.last_release_commit` at the current commit while nothing has been released, so the first release is not judged on the template's history. Anything new that hardcodes the name, the slug, the bundle id, the site or the support address belongs in the sweep in the same change.
+**`scripts/setup.sh` is what removes them, and it must stay exhaustive.** `app.config.js` only *declares* the identity; it is also written into `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, all twenty translation files, `google-services.json.example`, the site's `apps/web/lib/site.ts`, the Worker's name in `apps/api/wrangler.toml` and the root `package.json`. A sweep that stops at the config ships an app calling itself "RN Starter" in twenty languages, with a store URL pointing at the template's package id, and deploys a Worker that replaces the template's on the same Cloudflare account. The script also asks for the app's website and support address and writes them into `constants/legal.ts` (Legal links), and starts `.last_release_commit` at the current commit while nothing has been released, so the first release is not judged on the template's history. Anything new that hardcodes the name, the slug, the bundle id, the site or the support address belongs in the sweep in the same change.
 
 ## Living Documentation
 
@@ -28,6 +29,8 @@ From the repo root:
 pnpm dev              # Turbo dev (all workspaces)
 pnpm dev:mobile       # Expo dev server only
 pnpm dev:api          # Cloudflare Worker dev only
+pnpm dev:web          # Next.js dev server for the site
+pnpm build:web        # static export of the site into apps/web/out
 pnpm android          # expo run:android
 pnpm ios              # expo run:ios
 pnpm build            # Turbo build
@@ -389,11 +392,11 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 ### Brand assets
 
-**Every brand image is drawn from one mark by `scripts/generate-brand-assets.py`** — the store icon, Android's adaptive foreground, the splash image and the notification icon. Edit the script and re-run it (`pip install pillow`: a maintainer's tool outside the pnpm chain, not a build step); never hand-patch a PNG. Each output carries a constraint nothing reports until a store or a launcher enforces it: the store icon is full bleed and flattened to RGB, since both stores cut their own corners; the adaptive foreground sits over transparency at two thirds of the icon's mark, since the launcher shows the central 72 dp of a 108 dp layer; the splash image sits over transparency, since Android 12+ cuts it to a circle and a plate would show as a disc; and the notification icon is a **silhouette** — every non-transparent pixel takes the system tint and the colours are discarded, so it is pure white over transparency. The script's `BACKGROUND` is also `splash.backgroundColor` and `android.adaptiveIcon.backgroundColor` in `app.config.js`: they change together. The shipped mark is a deliberate placeholder; replacing it is part of setting up a new app.
+**Every brand image is drawn from one mark by `scripts/generate-brand-assets.py`** — the store icon, Android's adaptive foreground, the splash image, the notification icon, and the site's favicon and home-screen icon. Edit the script and re-run it (`pip install pillow`: a maintainer's tool outside the pnpm chain, not a build step); never hand-patch a PNG. Each output carries a constraint nothing reports until a store or a launcher enforces it: the store icon is full bleed and flattened to RGB, since both stores cut their own corners; the adaptive foreground sits over transparency at two thirds of the icon's mark, since the launcher shows the central 72 dp of a 108 dp layer; the splash image sits over transparency, since Android 12+ cuts it to a circle and a plate would show as a disc; and the notification icon is a **silhouette** — every non-transparent pixel takes the system tint and the colours are discarded, so it is pure white over transparency. The script's `BACKGROUND` is also `splash.backgroundColor` and `android.adaptiveIcon.backgroundColor` in `app.config.js`: they change together. The shipped mark is a deliberate placeholder; replacing it is part of setting up a new app.
 
 ### Legal links
 
-**The legal links are constants, never environment variables.** `constants/legal.ts` holds `APP_WEBSITE_URL` and builds `LEGAL_URLS` from it: the privacy policy, the terms and the support `mailto:`, opened from Settings and from `PaywallLegalLinks` beside every buy button. A public page is not a secret, and routing it through `.env` only bought a failure mode — an incomplete env shipped links that open nothing, on the one screen where both stores require them to work. `scripts/setup.sh` writes the app's own site and address there; until then they are placeholders the release workflow refuses. **The paths are a contract with every build already installed**: `/privacy` and `/terms` are never renamed, never translated and never given a locale prefix, and a move to another domain edits the constant in the same change that moves the site — a build in users' hands keeps the links it shipped with.
+**The legal links are constants, never environment variables.** `constants/legal.ts` holds `APP_WEBSITE_URL` and builds `LEGAL_URLS` from it: the privacy policy, the terms and the support `mailto:`, opened from Settings and from `PaywallLegalLinks` beside every buy button. A public page is not a secret, and routing it through `.env` only bought a failure mode — an incomplete env shipped links that open nothing, on the one screen where both stores require them to work. `scripts/setup.sh` writes the app's own site and address there; until then they are placeholders the release workflow refuses. **The paths are a contract with every build already installed**: `/privacy` and `/terms` are never renamed, never translated and never given a locale prefix, and a move to another domain edits the constant and `SITE.url` in `apps/web/lib/site.ts` in the same change — a build in users' hands keeps the links it shipped with. `apps/web` serves those pages (Architecture (web)).
 
 ### Safe area
 
@@ -458,6 +461,21 @@ Hono app at `apps/api/src/index.ts`. Routes:
 Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-api-key` header).
 
 `Env` type in `apps/api/src/types.ts`: `API_KEY`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PROJECT_ID`, `API_RATE_LIMITER` (Cloudflare binding).
+
+## Architecture (web)
+
+Next.js 16 App Router, **a static export** (`output: 'export'`): `pnpm build:web` writes `apps/web/out/`, which any static host serves with no runtime. Two duties fall to the host, because an export cannot carry them: serving `/privacy` from `privacy.html` — the path every installed build opens (Firebase Hosting needs `cleanUrls: true`; Cloudflare Pages, Netlify and Vercel do it on their own) — and sending the security headers, since an export ignores `headers()`. The README lists both. bg-remover's `Accept-Language` redirect needs a server runtime and is not here: English sits at the root, where a crawler and a shipped link find it without one.
+
+- **Every URL comes from `lib/routes.ts`.** Header, footer, language link, hreflang alternates and sitemap read the one table, so a page cannot move in one place and stay behind in another. The legal slugs are the same in every locale (`/fr/privacy`, never `/fr/confidentialite`).
+- **Each locale is its own root layout** (`app/(en)`, `app/(fr)/fr`), because only a root layout renders `<html lang>`; `app/not-found.tsx` has no layout above it and renders its document itself.
+- **Copy lives in typed dictionaries** (`content/{en,fr}/`), French checked against the same types as English. EN and FR only, like the app's own policy.
+- **`lib/site.ts` holds the site's identity**, swept by `setup.sh` from the same answers as the app. The legal pages print a template notice for as long as `SITE` or the document holds a bracketed placeholder or `example.com`.
+- **The site sets no cookie and loads no web font, no analytics and no third-party script.**
+- **No `aggregateRating` and no `offers` in the JSON-LD** (`lib/jsonLd.ts`): Google requires the first to reflect real reviews, and a price copied here drifts from the store's, which the app reads live.
+- **The site shares the mobile app's React, to the version.** `node-linker=hoisted` places one copy of each package at the root, and Metro resolves the mobile's React from there: whichever version wins the hoist is what the app bundles. So `react` and `react-dom` in `apps/web/package.json` pin the mobile's exact version, and a bump moves both in the same change. Any package both apps resolve follows the same rule, which is why the site is plain CSS with `light-dark()` tokens and no Tailwind: v4 beside NativeWind's v3 would leave the mobile depending on the hoist to keep v3 at the root. deep-focus runs React 19.3 and Tailwind 4 on its site, and its app gets 19.1 and v3 only because the hoist happened to favour them.
+- The favicon and the home-screen icon are drawn by `scripts/generate-brand-assets.py` with the app's icon (Brand assets).
+
+The Android release workflow installs the whole workspace, the site's dependencies included; it builds nothing of it.
 
 ## Testing
 

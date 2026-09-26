@@ -20,6 +20,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
 - **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (`exampleService` is its app-side call, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
+- **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to
 - **Shared types** — `packages/shared` consumed by both mobile and API
 
 ---
@@ -56,11 +57,13 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 rn-starter/
 ├── apps/
 │   ├── mobile/          # Expo SDK 54 / React Native app (iOS + Android)
+│   ├── web/             # Next.js static site — home, privacy policy, terms (EN + FR)
 │   └── api/             # Cloudflare Workers API (Hono)
 ├── packages/
 │   └── shared/          # Shared TypeScript types (HealthResponse, ApiErrorResponse)
 ├── scripts/
-│   └── setup.sh         # Interactive setup script — personalizes the template
+│   ├── setup.sh         # Interactive setup script — personalizes the template
+│   └── generate-brand-assets.py  # Draws the icon, splash, notification icon and favicon
 └── turbo.json
 ```
 
@@ -218,6 +221,52 @@ The AAB is kept as a build artifact only when no attempt landed; `.github/workfl
 
 ---
 
+## Website (`apps/web`)
+
+A static Next.js site: English at the root, French under `/fr`, with a home page, the privacy
+policy and the terms. The app opens `/privacy` and `/terms` on it from Settings and beside every
+buy button, and Play requires a privacy policy that opens — so the site goes live before the first
+release.
+
+```bash
+pnpm dev:web      # http://localhost:3000
+pnpm build:web    # writes apps/web/out/
+```
+
+### Before it goes live
+
+- `scripts/setup.sh` has written the app's name, domain, package and support address into
+  `apps/web/lib/site.ts`. Fill in the publisher and the date the pages take effect there.
+- Write the privacy policy and the terms in `apps/web/content/en/legal.ts` and `fr/legal.ts`. The
+  pages show a template notice for as long as a placeholder remains.
+- Fill in the home page's copy in `apps/web/content/*/site.ts`.
+
+### Hosting
+
+`out/` is plain files. Whatever the host, it must:
+
+- **Serve `/privacy` from `privacy.html`**, beside the `privacy/` folder the export also writes.
+  Cloudflare Pages, Netlify and Vercel do it on their own; Firebase Hosting needs
+  `"cleanUrls": true`.
+- **Send the security headers**, which a static export cannot set itself:
+  `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`,
+  `Referrer-Policy: strict-origin-when-cross-origin`,
+  `Permissions-Policy: camera=(), microphone=(), geolocation=()` and, once the domain is
+  HTTPS-only for good, `Strict-Transport-Security: max-age=63072000; includeSubDomains`.
+
+### The URLs are a contract
+
+Every build already installed opens `/privacy` and `/terms` on the domain it shipped with. So:
+
+- The two paths are never renamed and never translated — the French pages are `/fr/privacy` and
+  `/fr/terms` — and never lose their page: a dead privacy link beside a subscribe button is a Play
+  review rejection, and no later release reaches the builds already out.
+- Moving to another domain changes `APP_WEBSITE_URL` in `apps/mobile/constants/legal.ts` and
+  `SITE.url` in `apps/web/lib/site.ts` in the same commit — and keeps the old domain redirecting
+  for as long as builds carrying it are in use.
+
+---
+
 ## Commands
 
 All commands run from the repo root unless noted.
@@ -227,6 +276,8 @@ All commands run from the repo root unless noted.
 | `pnpm dev` | Turbo dev (all workspaces) |
 | `pnpm dev:mobile` | Expo dev server only |
 | `pnpm dev:api` | Cloudflare Worker local dev |
+| `pnpm dev:web` | Next.js dev server for the site |
+| `pnpm build:web` | Static export of the site into `apps/web/out` |
 | `pnpm android` | `expo run:android` |
 | `pnpm ios` | `expo run:ios` |
 | `pnpm build` | Turbo build |

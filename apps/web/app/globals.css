@@ -1,0 +1,124 @@
+/* The system's own fonts and colour scheme: no web font to download, no script to pick a theme. */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#ffffff, #0b0b12);
+  --surface: light-dark(#f4f4f8, #161622);
+  --text: light-dark(#111827, #f3f4f6);
+  --text-dim: light-dark(#4b5563, #a1a1aa);
+  --border: light-dark(#e5e7eb, #27272f);
+  --accent: light-dark(#4f46e5, #818cf8);
+  --on-accent: #ffffff;
+  --measure: 70ch;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  color: var(--accent);
+}
+
+main,
+.site-header,
+.site-footer {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-block: 20px;
+}
+
+.site-name {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-footer {
+  margin-top: 64px;
+  padding-block: 24px 40px;
+  border-top: 1px solid var(--border);
+}
+
+.site-footer nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+}
+
+.hero {
+  padding-block: 48px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.1;
+}
+
+.tagline {
+  color: var(--text-dim);
+  font-size: 1.25rem;
+}
+
+.cta {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.legal h1 {
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.legal h2 {
+  margin-top: 40px;
+  font-size: 1.25rem;
+}
+
+.updated {
+  margin-top: 0;
+  color: var(--text-dim);
+}
+
+.template-notice {
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.not-found {
+  padding-block: 96px;
+  text-align: center;
+}

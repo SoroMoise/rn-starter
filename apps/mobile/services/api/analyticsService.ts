@@ -1,6 +1,7 @@
 import type { PurchaseSurface } from '@/constants/purchases'
 import type { RatingMoment } from '@/constants/rating'
 import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
+import type { OnboardingStepKind } from '@/types'
 import type { PlanPeriod } from '@/utils/offerings'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import {
@@ -14,8 +15,6 @@ import Constants from 'expo-constants'
 
 let _analytics: ReturnType<typeof getAnalytics> | null = null
 const analytics = () => (_analytics ??= getAnalytics())
-
-const ONBOARDING_STEP_NAMES = ['welcome', 'premium', 'language'] as const
 
 type EventParams = Record<string, string | number | boolean>
 
@@ -41,18 +40,15 @@ export type AnalyticsEventMap = {
 
   // Onboarding
   onboarding_started: undefined
+  // The name travels with the event: a step list gated on the device's capabilities gives the
+  // same index to different steps, and a table resolving names from it would merge them.
   onboarding_step_viewed: {
     step_index: number
-    step_name: string
+    step_name: OnboardingStepKind
     time_on_previous_step_s?: number
   }
-  onboarding_step_skipped: {
-    from_step: number
-    from_step_name: string
-    time_on_step_s: number
-  }
   onboarding_completed: { duration_s: number }
-  onboarding_back_pressed: { from_step: number; from_step_name: string }
+  onboarding_back_pressed: { from_step: number; from_step_name: OnboardingStepKind }
   onboarding_exit_intent_shown: {
     time_on_pitch_s: number
   }
@@ -60,7 +56,7 @@ export type AnalyticsEventMap = {
     outcome: 'recovered_to_trial' | 'confirmed_skip' | 'dismissed_outside'
   }
   onboarding_pro_detected: {
-    step: 'welcome' | 'premium' | 'language'
+    step: OnboardingStepKind
   }
   onboarding_pro_welcome_outcome: {
     outcome: 'skip' | 'continue'
@@ -253,28 +249,24 @@ export const analyticsService = {
     }
   },
 
-  logOnboardingStepViewed(params: { stepIndex: number; timeOnPreviousStepS: number | null }): void {
+  logOnboardingStepViewed(params: {
+    stepIndex: number
+    stepName: OnboardingStepKind
+    timeOnPreviousStepS: number | null
+  }): void {
     this.track('onboarding_step_viewed', {
       step_index: params.stepIndex,
-      step_name: ONBOARDING_STEP_NAMES[params.stepIndex] ?? `step_${params.stepIndex}`,
+      step_name: params.stepName,
       ...(params.timeOnPreviousStepS !== null && {
         time_on_previous_step_s: params.timeOnPreviousStepS,
       }),
     })
   },
 
-  logOnboardingStepSkipped(params: { fromStep: number; timeOnStepS: number }): void {
-    this.track('onboarding_step_skipped', {
-      from_step: params.fromStep,
-      from_step_name: ONBOARDING_STEP_NAMES[params.fromStep] ?? `step_${params.fromStep}`,
-      time_on_step_s: params.timeOnStepS,
-    })
-  },
-
-  logOnboardingBackPressed(fromStep: number): void {
+  logOnboardingBackPressed(params: { fromStep: number; fromStepName: OnboardingStepKind }): void {
     this.track('onboarding_back_pressed', {
-      from_step: fromStep,
-      from_step_name: ONBOARDING_STEP_NAMES[fromStep] ?? `step_${fromStep}`,
+      from_step: params.fromStep,
+      from_step_name: params.fromStepName,
     })
   },
 }

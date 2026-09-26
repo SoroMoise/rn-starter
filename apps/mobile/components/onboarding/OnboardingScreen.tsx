@@ -59,7 +59,11 @@ export function OnboardingScreen() {
 
   useEffect(() => {
     analyticsService.track('onboarding_started')
-    analyticsService.logOnboardingStepViewed({ stepIndex: 0, timeOnPreviousStepS: null })
+    analyticsService.logOnboardingStepViewed({
+      stepIndex: 0,
+      stepName: 'welcome',
+      timeOnPreviousStepS: null,
+    })
   }, [])
 
   const goToStep = useCallback(
@@ -70,6 +74,7 @@ export function OnboardingScreen() {
       setStepKind(step)
       analyticsService.logOnboardingStepViewed({
         stepIndex: steps.indexOf(step),
+        stepName: step,
         timeOnPreviousStepS: elapsedS,
       })
       if (step === 'premium') {
@@ -170,7 +175,7 @@ export function OnboardingScreen() {
   const handlePrevious = useCallback(() => {
     const previous = steps[steps.indexOf(stepKind) - 1]
     if (!previous) return
-    analyticsService.logOnboardingBackPressed(currentStep)
+    analyticsService.logOnboardingBackPressed({ fromStep: currentStep, fromStepName: stepKind })
     goToStep(previous)
   }, [currentStep, goToStep, stepKind, steps])
 

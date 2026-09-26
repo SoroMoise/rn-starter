@@ -110,8 +110,7 @@
     "compareHeaderFree": "무료",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/월",
-    "reassurance": "약정 없음 · 언제든지 취소 가능",
-    "socialProof": "★ {{rating}} · {{users}}명 이용 중"
+    "reassurance": "약정 없음 · 언제든지 취소 가능"
   },
   "premiumGate": {
     "unlock": "잠금 해제",

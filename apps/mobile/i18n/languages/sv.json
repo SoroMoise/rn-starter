@@ -110,8 +110,7 @@
     "compareHeaderFree": "Gratis",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mån",
-    "reassurance": "Inget åtagande · Avsluta när som helst",
-    "socialProof": "★ {{rating}} · {{users}} användare"
+    "reassurance": "Inget åtagande · Avsluta när som helst"
   },
   "premiumGate": {
     "unlock": "Lås upp",

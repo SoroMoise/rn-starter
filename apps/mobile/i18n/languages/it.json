@@ -110,8 +110,7 @@
     "compareHeaderFree": "Gratis",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mese",
-    "reassurance": "Nessun impegno · Annulla quando vuoi",
-    "socialProof": "★ {{rating}} · {{users}} utenti"
+    "reassurance": "Nessun impegno · Annulla quando vuoi"
   },
   "premiumGate": {
     "unlock": "Sblocca",

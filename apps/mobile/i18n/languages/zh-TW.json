@@ -110,8 +110,7 @@
     "compareHeaderFree": "免費版",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/月",
-    "reassurance": "無需承諾 · 隨時可取消",
-    "socialProof": "★ {{rating}} · {{users}} 位使用者"
+    "reassurance": "無需承諾 · 隨時可取消"
   },
   "premiumGate": {
     "unlock": "解鎖",

@@ -110,8 +110,7 @@
     "compareHeaderFree": "Gratis",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/bln",
-    "reassurance": "Tanpa komitmen · Batalkan kapan saja",
-    "socialProof": "★ {{rating}} · {{users}} pengguna"
+    "reassurance": "Tanpa komitmen · Batalkan kapan saja"
   },
   "premiumGate": {
     "unlock": "Buka kunci",

@@ -75,10 +75,10 @@ export default () => {
           'android.permission.WRITE_EXTERNAL_STORAGE',
         ],
       },
-      privacy: {
-        privacyPolicyUrl: process.env.LEGAL_PRIVACY_POLICY_URL,
-        termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,
-      },
+      // No `privacy` block: that key was expo.dev's project visibility, never a place for legal
+      // URLs, and SDK 54's config schema no longer has it. The links the app opens are
+      // `extra.legal` below (constants/legal.ts); the ones the stores show are entered in their
+      // consoles.
 
       plugins: [
         withAndroidConfigChanges,

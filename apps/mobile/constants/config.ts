@@ -21,6 +21,10 @@ export const DEFAULT_SETTINGS = {
 export const UI_CONFIG = {
   ANIMATION_DURATION: 300,
   DEBOUNCE_DELAY: 300,
+  // Android 16 ignores `screenOrientation` past 600 dp, so tablets, open foldables and freeform
+  // windows hand the app widths its screens were never drawn for. Content is capped at that same
+  // threshold and centred: below it the cap never binds and a phone is untouched.
+  MAX_CONTENT_WIDTH: 600,
 }
 
 export const RTL_RESTART_BANNER_ENABLED: boolean = appConfig?.rtlRestartBannerEnabled !== false

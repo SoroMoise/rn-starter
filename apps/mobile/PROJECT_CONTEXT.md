@@ -175,6 +175,8 @@ TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProv
 
 NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animations. `GradientButton` for primary CTAs. Gradient colours are `GRADIENTS` tokens in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`). `ToastProvider` for feedback; mount `ModalToastViewport` inside modals to surface toasts over them.
 
+`ScreenContainer` caps its content at `UI_CONFIG.MAX_CONTENT_WIDTH` (600), centred — a cap that never binds on a phone. A native `Modal` is outside that column and caps itself (`PaywallModal` caps its scroll view and, on a large screen, its hero's height); `useResponsiveLayout()` gives `width`, `height`, `contentWidth`, `gutter` and `isLargeScreen` for what a style cannot express. Never read `Dimensions.get()` at module scope.
+
 `ModalBottomSheet` assembles `useSheetSnap` (springs, snap points, the dismiss pan) and `components/ui/modalSheet/` (`contexts.ts`, and `scrollables.tsx` — `ModalBottomSheetFlatList` / `ModalBottomSheetScrollView`, re-exported from `ModalBottomSheet`, with `useModalSheetPanGesture()` for a scrollable that must block the sheet's pan). Content that drags inside a sheet raises its `dragLock` while it holds the finger; a pan it held never dismisses the sheet.
 
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.

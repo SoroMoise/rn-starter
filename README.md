@@ -17,7 +17,9 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Onboarding flow** — welcome (with a language picker) → premium pitch, navigated by step name so a step gated on the device can join; the Android back key steps back through it
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
 - **Custom tab bar** — blur effect, haptics, premium-aware
-- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example`
+- **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
+- **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
+- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (called from the app by `exampleService`, through one axios client and `withRetry`)
 - **Shared types** — `packages/shared` consumed by both mobile and API
 
 ---
@@ -72,14 +74,15 @@ apps/mobile/
 │   └── settings.tsx     # Settings tab
 ├── components/          # ads/, layout/, onboarding/, paywall/, settings/, ui/
 ├── constants/           # admob, config, legal, rating
-├── hooks/               # usePremium, useTabBarPadding, useThemedColor, ...
+├── hooks/               # usePremium, useCappedByTier, useHardwareBack, useKeyboardHeight,
+│                        #   useResponsiveLayout, useSheetSnap, useTabBarPadding, ...
 ├── i18n/                # service.ts + languages/ (20 JSON files)
 ├── providers/           # AdFreeProvider, QueryProvider,
 │                        #   SubscriptionProvider, ThemeProvider, ToastProvider
 ├── services/
-│   ├── api/             # adService, analyticsService, contextualPaywall/,
-│   │                    #   crashlyticsService, engagementService, paywallAnalytics, purchaseService,
-│   │                    #   ratingService, rewardedAdService
+│   ├── api/             # adService, analyticsService, backendClient, contextualPaywall/,
+│   │                    #   crashlyticsService, engagementService, exampleService, paywallAnalytics,
+│   │                    #   purchaseService, ratingService, rewardedAdService
 │   ├── notifications/   # setup, channels
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
 │   └── storage/         # mmkv, adapter, keys, domains/

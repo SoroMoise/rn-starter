@@ -55,6 +55,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `settingsStore` | Yes | User preferences (theme, language), RTL restart state |
 | `onboardingStore` | Yes | Onboarding completion, the exit sheet already offered (`attemptedSkipTrial`), Pro welcome seen — the current step is not persisted |
 
+A `merge` result is not written back until the next `setState` (only a `migrate` is): a store whose `merge` changes what was on disk forces one write from `onRehydrateStorage`, deferred by a microtask past the synchronous hydration.
+
 ---
 
 ## Services
@@ -75,6 +77,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
 | `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
+| `backendClient.ts` | `getBackendClient()` — the one axios instance for `apps/api` (`BACKEND_CONFIG` base URL, timeout, `x-api-key` header); throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY` |
+| `exampleService.ts` | `fetchExample({ signal })` — the app-side call to `GET /example` through `withRetry`, the pattern a backend call copies (no caller yet); a query's `queryFn` calls `getBackendClient()` directly instead |
 
 ### `services/notifications/`
 
@@ -113,7 +117,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source, surface })` / `restorePurchases({ source, surface })` — no product id, plan count or trial length is hardcoded. `usePaywallPlans({ source, surface })` turns the offer into what a surface says (plan labels, captions, badges, CTA, legal note) and buys the selected plan. `source` is what brought the sale up, `surface` (`PurchaseSurface`) the screen the tap landed on; both ride on every `purchase_*` and `restore_*` event. The store owns the grace period after a failed payment — RevenueCat flags it with `billingIssueDetectedAtMillis`, which becomes `billingIssue` on the context and `BillingIssueBanner` in Settings, informational only. `PRO_BENEFITS` (`constants/purchases.ts`) is the one list of what Pro unlocks, rendered by `PaywallPerks` on the paywall and on the onboarding's premium step; each entry names a limit the free tier enforces — in the starter, only its ads. `PremiumBanner` offers a subscriber a *Manage subscription* row whenever `managementUrl` is non-null. `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only before the store has answered or when it could not be reached, and `SubscriptionGraceBanner` then says the clock is running. `FORCE_FREE` / `FORCE_PRO` (development only, `FORCE_FREE` winning) replace the store's answer inside `applyCustomerInfo` and never reach `subscriptionStorage`; the release workflow refuses a `MOBILE_DOTENV` that sets either.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source, surface })` / `restorePurchases({ source, surface })` — no product id, plan count or trial length is hardcoded. `usePaywallPlans({ source, surface })` turns the offer into what a surface says (plan labels, captions, badges, CTA, legal note) and buys the selected plan. `source` is what brought the sale up, `surface` (`PurchaseSurface`) the screen the tap landed on; both ride on every `purchase_*` and `restore_*` event. The store owns the grace period after a failed payment — RevenueCat flags it with `billingIssueDetectedAtMillis`, which becomes `billingIssue` on the context and `BillingIssueBanner` in Settings, informational only. `PRO_BENEFITS` (`constants/purchases.ts`) is the one list of what Pro unlocks, rendered by `PaywallPerks` on the paywall and on the onboarding's premium step; each entry names a limit the free tier enforces — in the starter, only its ads. A free-tier limit applies on read: the store keeps the whole selection and `useCappedByTier({ items, freeLimit })` returns what the tier allows (`items`, `allItems`, `limit`, `isCapped`, `canAdd`), off the cached tier, never waiting on `isInitialized`. `PremiumBanner` offers a subscriber a *Manage subscription* row whenever `managementUrl` is non-null. `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only before the store has answered or when it could not be reached, and `SubscriptionGraceBanner` then says the clock is running. `FORCE_FREE` / `FORCE_PRO` (development only, `FORCE_FREE` winning) replace the store's answer inside `applyCustomerInfo` and never reach `subscriptionStorage`; the release workflow refuses a `MOBILE_DOTENV` that sets either.
 
 ### Contextual Paywall
 
@@ -141,6 +145,10 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 `AppContent` gates the tabs behind onboarding: shows `OnboardingScreen` until `onboardingStore.isCompleted` is true.
 
+`useHardwareBack(onBack)` takes the Android back key for the focused route only (`useFocusEffect`); a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
+
+A flow that ends goes home through `resetToHome(href?)` (`utils/navigation.ts`: dismiss to the root, then replace), never a bare `router.replace('/')`, which leaves the flow's earlier screens under Home. A route whose session is gone returns `<ExitToHome />` (`components/layout/`), not `<Redirect href="/" />`.
+
 ---
 
 ## Onboarding
@@ -159,7 +167,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 ## i18n
 
-20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`).
+20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`). RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
 
 **Translation policy:** EN + FR are the source of truth. Other languages are updated in dedicated sessions, never mixed with feature work.
 
@@ -167,13 +175,29 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 ## Data Fetching
 
-TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version.
+TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final.
 
 ---
 
 ## Styling
 
 NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animations. `GradientButton` for primary CTAs. Gradient colours are `GRADIENTS` tokens in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`). `ToastProvider` for feedback; mount `ModalToastViewport` inside modals to surface toasts over them.
+
+Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s content container, and a `ScreenHeading` at `mt-3.5`.
+
+`AppSystemBars` sets the status and navigation bar styles — once for the app in `ThemeProvider`, again by a screen that forces its own — and stacks the forced navigation bar styles, since `setStyle` is global: the last one mounted wins, the theme's when none is left.
+
+`ThemedText` derives a line height whenever `style` sets `fontSize` without one.
+
+`ScreenContainer` caps its content at `UI_CONFIG.MAX_CONTENT_WIDTH` (600), centred — a cap that never binds on a phone. A native `Modal` is outside that column and caps itself (`PaywallModal` caps its scroll view and, on a large screen, its hero's height); `useResponsiveLayout()` gives `width`, `height`, `contentWidth`, `gutter` and `isLargeScreen` for what a style cannot express. Never read `Dimensions.get()` at module scope.
+
+`ModalBottomSheet` assembles `useSheetSnap` (springs, snap points, the dismiss pan) and `components/ui/modalSheet/` (`contexts.ts`, and `scrollables.tsx` — `ModalBottomSheetFlatList` / `ModalBottomSheetScrollView`, re-exported from `ModalBottomSheet`, with `useModalSheetPanGesture()` for a scrollable that must block the sheet's pan). Content that drags inside a sheet raises its `dragLock` while it holds the finger; a pan it held never dismisses the sheet.
+
+`ModalDialog` — the centred sibling of `ModalBottomSheet` (title, subtitle, body, a `footer` outside the body); it pads itself by `useKeyboardHeight()`, since the keyboard no longer resizes a modal window on Android.
+
+`SettingsRow` — the settings row (icon plate, title, description, value, `pro` badge, accessory, chevron); `toggle` makes the whole row a switch, drawing `AppSwitch` (decoration only) and carrying the switch role and state. The language row in `DisplaySection` is built on it; `SettingsLinkRow` stays for plain links. `ProBadge` marks what the free tier cannot use.
+
+`WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
 ---
 

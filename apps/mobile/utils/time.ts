@@ -1,5 +1,7 @@
 import { Language } from '@/types'
-import { format, formatDistanceToNow, formatDuration } from 'date-fns'
+import { format } from 'date-fns/format'
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow'
+import { formatDuration } from 'date-fns/formatDuration'
 import { getDateFnsLocale, getIntlLocale } from './date'
 
 export function formatMonthYear(date: Date | number, language: Language = 'en'): string {

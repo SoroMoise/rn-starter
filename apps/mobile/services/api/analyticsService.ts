@@ -36,7 +36,6 @@ export type AnalyticsEventMap = {
     session_count: number
     days_since_install: number
   }
-  offline_banner_shown: undefined
 
   // Onboarding
   onboarding_started: undefined

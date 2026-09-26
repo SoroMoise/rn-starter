@@ -95,6 +95,10 @@ Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` be
 
 **Whatever owns the screen without being a route takes the back key itself.** At the root of the tab stack, a key left to the navigator exits the app — for the onboarding, which `AppContent` renders in place of the tabs, that throws the whole flow away with nothing persisted to come back to. `OnboardingScreen` listens to `BackHandler` and steps back, like its on-screen back button, from every step but the first, which lets the default through because nothing is behind it. Its sheets and modals are native `Modal`s and answer the key first.
 
+**A route that answers the back key itself uses `useHardwareBack(onBack)`** — an editor whose back commits its edit, a flow that steps back before it leaves. The listener lives in a `useFocusEffect`, so only the focused route hears the press and two stacked screens never both answer it. The hook needs a navigator above it: a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
+
+**A flow that ends resets the stack; it never `replace`s its way home.** `router.replace('/')` swaps the top entry only: a flow that moved forward by `replace` (import → edit → export → done) still has its earlier screens underneath, and back then walks into an editor whose session was cleared, then a second Home, before the app exits. `resetToHome(href?)` (`utils/navigation.ts`) dismisses to the root first, then replaces. A route that finds its session gone — a stack restored after process death meets an empty store — returns `<ExitToHome />`, a focus-gated `resetToHome()`, never `<Redirect href="/" />`, which is a `replace` and leaves the same stale entries behind.
+
 **The onboarding ends on the entitlement, never on a purchase call.** A `purchasePlan()` promise resolves before React commits the new tier, so a ref read in its `.then` still holds the old one — the user paid and stayed on the pitch — and a restore goes through no such callback at all. An effect in `OnboardingScreen`, keyed on `isPremium` once the subscription is initialized, completes the flow on the premium step, whatever made the user Pro there (the pitch, the exit sheet, a restore), and shows `ProWelcomeModal` once on an earlier step.
 
 ### Provider Tree
@@ -152,6 +156,27 @@ rehydration silently falls back to the store's defaults on the next launch, and 
 `domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
 is only named after it — it is handed the MMKV adapter here.)
 
+**What a store's `merge` decides stays in memory until something writes it.** `persist` writes on
+`setState` only: hydration hands the persisted state to `merge` and sets the result without writing
+it back — only a `migrate` that ran is written. Whatever `merge` resolves — a restored timer closed,
+a stale entry purged, a field normalised — is resolved again at every cold start, and the symptom
+lands one launch after its cause: deep-focus credited the same session once per launch. A store whose
+`merge` changes what was on disk raises a module flag there and forces one write once hydration is
+done:
+
+```ts
+onRehydrateStorage: () => () => {
+  if (!mergeResolvedSomething) return
+  mergeResolvedSomething = false
+  queueMicrotask(() => useStore.setState({}))
+},
+```
+
+The microtask is not optional: MMKV hydrates synchronously, inside `create()`, before `useStore` is
+assigned. On the way out, normalise transient state in `partialize` (`phase: phase === 'running' ?
+'running' : 'idle'`) rather than persisting it as it is. Neither starter store needs the flush —
+`settingsStore`'s `merge` only fills defaults, and fills them again on the next launch.
+
 **What grants something lives in its own encrypted instance, and only there.** `secure.ts` opens a
 second MMKV instance with an `encryptionKey` for the subscription cache and the ad-free window, so
 the file no longer reads as plain text to whoever pulls it. It is obfuscation, not secrecy: the key
@@ -189,6 +214,8 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `consentService` — Google's UMP consent gate, and the only caller of `mobileAds().initialize()`
 - `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
+- `backendClient` — `getBackendClient()`, the one axios instance for `apps/api` (base URL, timeout, `x-api-key`); it throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY`, rather than let a relative URL fail as an outage
+- `exampleService` — `fetchExample({ signal })`, the app-side call to `GET /example` through `withRetry`: the pattern a backend call copies. Nothing calls it yet
 
 `apps/mobile/services/notifications/` — reusable notification system: permission handling +
 foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`,
@@ -225,9 +252,20 @@ persister and the app version as cache buster. **Nothing is persisted until you 
 start — add the key prefixes your app wants back. It shipped whitelisting one key belonging to
 another app, which reads as configured and persists nothing.
 
+**Connectivity feeds the query client.** React Native has no browser `online` event, so the client
+read the app as always online: retries burned through while the device was offline, and
+`refetchOnReconnect` never fired. `QueryProvider` hands `onlineManager` the one NetInfo subscription
+`useNetworkStatus` holds. A query retries three times at most, and never a status that cannot
+succeed (`isNonRetryableError`: 400, 401, 403, 404, 422 — one list, in `utils/apiErrors.ts`, that
+`withRetry` reads too). Connectivity decides nothing else: whether the store answered is read off
+the failed request, never off this flag (Monetization).
+
 `QueryProvider` is here because `apps/api` is. **An app with no backend should remove both in
 the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages, `axios`,
-`utils/retry.ts` and `utils/apiErrors.ts`. deep-focus is the sibling that did exactly this when
+`utils/retry.ts`, `utils/apiErrors.ts`, `services/api/backendClient.ts` and `exampleService.ts`,
+and `hooks/useNetworkStatus.ts` with `@react-native-community/netinfo`, whose one consumer is the
+query client. `withRetry` is for a call made outside a query; a `queryFn` calls
+`getBackendClient()` directly, or each of the client's attempts would retry again. deep-focus is the sibling that did exactly this when
 its Worker went — the data-fetching layer has no reason to outlive the API it serves.
 
 ### Monetization
@@ -258,6 +296,7 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 - **A free trial is only a trial when `introPrice.price === 0`, and its length comes off the product** (`readFreeTrial` in `utils/offerings.ts`, surfaced as `OfferingPlan.hasTrial` / `trialDays`). A paid intro price is an offer, not a trial, and promising days the store does not grant is a false commercial claim inside the app — a Play/Apple rejection and a consumer-law problem, not a cosmetic slip. Never reintroduce a hardcoded trial length: the paywall badge, the CTA and the onboarding frieze all render from `hasTrial` / `trialDays`, and the frieze is not drawn at all when there is no trial. The frieze also promises only what happens on its own — unlock today, billing on the last day: it once announced a reminder before the trial ends that nothing in the app sends.
 - **No social proof the store cannot back.** The paywall carries no rating and no user count: a figure written into the template is the one a new app ships on day one, before it has a single review — a fabricated claim on the screen where the user pays. An app with real store numbers adds its own, fed from them.
 - **One list sells Pro, and it names only what the free tier cannot do.** `PRO_BENEFITS` (`constants/purchases.ts`) is what `PaywallPerks` renders, on the paywall and on the onboarding's premium step alike: two lists had already drifted apart, and the onboarding's sold a home-screen widget the starter does not have. Each entry names a limit the free tier enforces. The starter gates its ads and nothing else, so that is its one entry, and an app adds each benefit in the change that adds its gate. A benefit that depends on the build is keyed off what delivers it — a native module present — never `Platform.OS`: gated and deliverable are the same test. A limit interpolated into the copy goes in `params` as `limit`, never `count`, which i18next reserves for plural resolution.
+- **A free-tier limit applies on read, never on write.** The store keeps everything the user chose; `useCappedByTier({ items, freeLimit })` returns what the tier allows — `items`, `allItems`, `limit`, `isCapped`, `canAdd` — and every screen, sync and scheduler reads that, never the store's field. A limit enforced only on the add button let deep-focus's reminders created during a month of Pro keep firing forever after it lapsed; truncating the store instead destroys a choice a renewal should hand back. The hook reads the tier seeded from the cached entitlement and never waits on `isInitialized`, which gave a free user Pro's list for the first frames. The limit counts what the user sees as one item; a long list whose rows each need their state reads it per row from the store against the same `limit`, rather than receiving it from above. And a remembered setting is not an entitlement: a preference that outlives its gate — an export resolution, a format — is clamped on every read, including the ones no screen stands in front of. The starter caps nothing yet: its first limit is the hook's first caller, and the `PRO_BENEFITS` entry naming it lands in the same change.
 - **Contextual paywall** — `contextualPaywallService` triggers the paywall at a value moment once the generic action count (`engagementStorage.getActionCount()`) reaches `minActions`. The session count only holds it back during the first session: coming back proves nothing about value drawn from the app, and as an OR beside the action count it always fired first. `power_action` / `after_n_actions` / `rewarded_ad_dismissed` name the source; none fires at launch — a cold start is not a value moment. `rewarded_ad_dismissed` follows only a video the user closed before its reward: never one just watched in full, and never one that failed to open (`showRewardedAd` resolves `earned` / `dismissed` / `failed`).
 - **The grace period after a failed payment belongs to the store, not to the app.** Play and Apple keep a lapsed subscription giving access for the window they define, so RevenueCat still reports the entitlement as active and every gate follows on its own. Granting a local window *on top of that* handed every cancelling subscriber a free week. `persistFromEntitlement` therefore writes only what a CustomerInfo the store actually answered with says — "no active entitlement" is a verified answer and clears the cache. What the app adds is one line of information: an active entitlement carrying `billingIssueDetectedAtMillis` becomes `billingIssue` on the context, and `BillingIssueBanner` (Settings) names the date access ends unless the payment is fixed — no CTA, and it grants and withholds nothing. It is not the offline banner: that one says the store could not be reached, this one says the store answered and the payment failed.
 - **Cancelling is reachable from the app.** `purchaseService.managementUrl` returns `customerInfo.managementURL` — the page of the store that sold the subscription actually held — and `PremiumBanner` adds a *Manage subscription* row only when it is non-null: never a guess between Play and the App Store, and no row where there is nothing to manage. A cancellation the user cannot find becomes a refund request and a one-star review.
@@ -284,9 +323,11 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 ### Safe area
 
-**One surface owns the bottom inset, and it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`.
+**One surface owns the bottom inset, and it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`: a fixed `pb-8` reads fine under gesture navigation and buries the last row under a three-button bar.
 
 ### Large screens
+
+**A large screen gets a centred column, never a second one.** Android 16 ignores `screenOrientation` above 600 dp, so tablets, open foldables and freeform windows run the app in landscape at widths no screen was drawn for; the `orientation: 'portrait'` lock stays, since below 600 dp it still holds. `ScreenContainer` caps its content at `UI_CONFIG.MAX_CONTENT_WIDTH` (600) through `maxWidth` + `alignSelf` — a cap that never binds on a phone, so a phone's layout is unchanged to the pixel, with no dimension read and no re-render on resize. What lives outside `ScreenContainer` is outside the column and caps itself: a native `Modal` is its own window, and `PaywallModal` caps its scroll view (and its hero's height, on a short landscape window); the tab bar and the bottom sheets span the window, and the onboarding, drawn in place of the tabs, is not capped yet. Inside the column, the anchored ad banner is handed the column's width: left to size itself from the device, it hung past its container, where Android delivers no touch (`ADS.md`). Inside the column, anything sized from `useWindowDimensions().width` overflows it — size against the container (`onLayout`) — and `Dimensions.get()` is never read at module scope: the value is captured at import and never follows a resize. `useResponsiveLayout()` (`width`, `height`, `contentWidth`, `gutter`, `isLargeScreen`) serves what a style cannot express: `isLargeScreen` gates an adjustment that must not reach a phone, `gutter` lets an overlay reach back out to the window's edges.
 
 **Resizing must never recreate the activity.** `withAndroidConfigChanges` adds `smallestScreenSize` to `MainActivity`'s `configChanges` — the Expo template omits it where React Native's own manifest declares it, so unfolding a foldable or resizing a freeform window destroyed and rebuilt the activity. React Native only refuses to dismiss a `Modal`'s `Dialog` when the activity `isFinishing`; a destroy-without-finish leaves it dismissing a `DecorView` the WindowManager has already detached, which crashes the app whenever a sheet was open. The guard is still missing upstream, so the manifest is the only lever. Android 16 ignores `screenOrientation` above 600 dp, so tablets, open foldables and freeform windows reach this path on their own.
 
@@ -294,13 +335,29 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti.
 
+**Every tab shares one gutter and one heading line.** A tab's `ScrollView` is `flex-1` with `paddingHorizontal: 20` on its content container — never a margin on the scroll view, which narrows its scroll track and touch area, and never a margin per block — and its `ScreenHeading` starts at `mt-3.5`, so nothing shifts sideways or vertically when the user switches tabs.
+
+**A screen that forces the system bars hands them back.** `ThemeProvider` mounts one `AppSystemBars` for the whole app; a screen with chrome of its own mounts a second with an explicit `statusStyle` / `navigationStyle`. The status bar keeps a stack of its mounted props, the navigation bar does not: `setStyle` is one global value that sticks. `AppSystemBars` stacks the forced navigation styles itself — the last one mounted wins, and when none is left the theme's comes back — so a screen popped off another that forces its own hands the bar back to that one, and the last to go hands it back to the theme.
+
+**A font size raised from `style` takes its line height with it.** A `ThemedText` variant pins the line height to its own size, so a figure enlarged through `style={{ fontSize }}` alone was clipped, and a badge shrunk the same way sat in a line meant for body text. `ThemedText` derives a line height whenever `style` sets `fontSize` without one (×1.45 up to 20, ×1.3 up to 30, ×1.15 above), unless a `leading-*` class already sets it. A plain `Text` gets no such help: set both.
+
 Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. The onboarding and the selling surfaces read them; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
 
 Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit above the app window, so to surface a toast over one, mount `ModalToastViewport active={visible}` inside the modal.
 
+**`ModalBottomSheet` is assembly only.** `useSheetSnap` (`hooks/`) owns the springs, the snap points and the dismiss pan; `components/ui/modalSheet/` holds the contexts and the two scrollables, `ModalBottomSheetFlatList` and `ModalBottomSheetScrollView` — re-exported from `ModalBottomSheet`, where callers import them — whose native gesture runs alongside that pan: a downward drag that starts with the list scrolled scrolls it, one that starts at its top moves the sheet. A scrollable that is neither — a wheel, a carousel — reads the pan through `useModalSheetPanGesture()` (null outside a sheet) and blocks it with `Gesture.Native().blocksExternalGesture(pan)`, or the sheet wins every flick that starts a few pixels off. Content that drags on its own — a reorderable list, a slider — raises `dragLock` (a `SharedValue<boolean>`) while it holds the finger, and a pan it held at any point springs the sheet back on release instead of being judged as a dismiss: the lock stops the sheet moving, never the pan's translation from accumulating.
+
+**A dialog is `ModalDialog`, the centred sibling of `ModalBottomSheet`**: a title, an optional subtitle and close button, the body, and a `footer` kept outside the body so the actions that end the dialog never scroll away — a long body brings its own `ScrollView`. **The keyboard does not resize a native modal on Android.** A `Modal` is its own window, and under edge-to-edge `SOFT_INPUT_ADJUST_RESIZE` — which React Native still sets on that window — resizes nothing, while `useWindowDimensions` keeps reporting the whole screen: a centred card stays centred behind a keyboard covering its lower half, footer included. `useKeyboardHeight({ enabled })` reads the height off the keyboard's own events, and `ModalDialog` pads its centring box by it and takes it out of its height cap. A `KeyboardAvoidingView` inside a `Modal` does not cover this on Android — do not swap it back in. Like the sheet, the dialog mounts its own `GestureHandlerRootView`: on Android a gesture inside a native modal, the toast's swipe included, is only recognised under a root view in that window.
+
+**A settings row is `SettingsRow`, and the whole row is the touch target**: an icon plate, a title and description, a `value`, a `pro` badge (`ProBadge`), an `accessory`, a chevron. A switch row passes `toggle`: the row draws `AppSwitch`, a decoration with no press handler of its own, and carries `accessibilityRole="switch"` with its `checked` state. An interactive `Switch` inside a pressable row is two targets that can disagree about what a tap does. `SettingsLinkRow` stays for the plain links (legal, manage subscription).
+
+**A wheel is turned with a thumb, not a cursor.** `WheelPicker`'s touch column is much wider than the digits it shows (`contentWidth` centred in a column that shares its row, or fills a column's width, unless given a `width`), and its `unit` is drawn inside that column with `pointerEvents="none"`: every pixel between two wheels scrolls one of them. Don't narrow the columns or leave a gap between them that nothing scrolls. Inside a sheet the wheel blocks the sheet's pan, a long wheel (past 24 options) decelerates normally rather than `'fast'`, and a screen under 700 dp shows five rows instead of seven.
+
 ### Internationalization
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Config `i18n/service.ts`, translations in `i18n/languages/`. Lazy-loaded per language. RTL (`ar`) triggers `I18nManager.forceRTL` + restart.
+
+**RTL mirrors the layout, never a transform.** In Arabic React Native reverses a row and, by default, reads `left`/`right` as `start`/`end`, but a `translateX` still moves right. Something that slides along a row keeps its position logical — placed from the start edge — and flips only its travel by `I18nManager.isRTL` (`SlidingSelector`'s indicator); a directional glyph is flipped by hand (`DirectionalIcon`). Anchoring it with a physical `left: 0` and reversing the index instead only holds while the left/right swap is off, which it is not.
 
 **`common.*` is the shared UI vocabulary**, and the one namespace allowed to hold a key with no
 current reader: *Cancel*, *Save*, *Retry* and their neighbours are already translated into all twenty
@@ -322,7 +379,7 @@ No `@providers/*` alias — import as `@/providers/*`. No `@contexts/*` alias �
 
 Hono app at `apps/api/src/index.ts`. Routes:
 - `GET /health` — health check (unauthenticated)
-- `GET /example` — example auth-protected route
+- `GET /example` — example auth-protected route; `exampleService` is its app-side call
 
 Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-api-key` header).
 
@@ -339,4 +396,6 @@ Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-
 - Functional components with hooks.
 - **Functions with 2+ parameters use a single object parameter** — `fetchData({ id, signal })`, not `fetchData(id, signal)`.
 - **Atomic Zustand selectors** — `useStore((s) => s.field)`, never object selectors.
+- **A memo keys on content, never on the identity of an array its callers build.** A hook that takes an array callers pass as a literal (`[code]`) keys its `useMemo` on `codes.join('|')`, not on `codes`: a new array each render is a cache miss each render. A default for such a parameter is a module constant (`const NO_CODES: readonly string[] = []`), never `= []` inline — a fresh default that reaches an effect's dependencies re-runs it on every render.
+- **`date-fns` is imported per function** — `import { format } from 'date-fns/format'`, never from the package index. Metro does not tree-shake: the index puts all ~200 functions (~250 KB minified) in the bundle, which is part of the Play download. A type-only import (`import type { Locale } from 'date-fns'`) costs nothing.
 - Environment variables: `apps/mobile/.env` (see `.env.example`), `apps/api/.dev.vars` (see `.dev.vars.example`).

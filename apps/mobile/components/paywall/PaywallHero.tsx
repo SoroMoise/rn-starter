@@ -6,11 +6,21 @@ import { Image, StyleSheet, View } from 'react-native'
 const heroLight = require('../../assets/images/paywall-illustration-light.webp')
 const heroDark = require('../../assets/images/paywall-illustration-dark.webp')
 
-export function PaywallHero({ title, subtitle }: { title: string; subtitle: string }) {
+export const PAYWALL_HERO_HEIGHT = 400
+
+export function PaywallHero({
+  title,
+  subtitle,
+  height = PAYWALL_HERO_HEIGHT,
+}: {
+  title: string
+  subtitle: string
+  height?: number
+}) {
   const isDark = useThemedColor()
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { height }]}>
       <Image source={isDark ? heroDark : heroLight} style={styles.image} resizeMode="cover" />
       <LinearGradient
         colors={['transparent', 'rgba(0,0,0,0.65)']}
@@ -30,7 +40,6 @@ export function PaywallHero({ title, subtitle }: { title: string; subtitle: stri
 
 const styles = StyleSheet.create({
   container: {
-    height: 400,
     overflow: 'hidden',
   },
   image: {

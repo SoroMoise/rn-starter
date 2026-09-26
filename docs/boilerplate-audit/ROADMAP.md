@@ -26,13 +26,13 @@ audit of that gap and the plan to close it.
 | 6 | Rating by moments: one pure policy, the ask deferred to the user's return | 9 | **merged into `main`** |
 | 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
-| 9–13 | See §3 | — | not started |
+| 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
+| 10–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**162 have shipped** (63 in lots 1–3, 29 in lot 4, 29 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8) and **70 remain**, spread over lots 9 to 13. Three more were deliberately held back out of
-lot 4 — see §4. The per-lot counts in §3 are remaining work only; the console's lot cards also
-count those three, which is why its lot 7 figure is one higher and its lot 9 figure two.
+**196 have shipped** (63 in lots 1–3, 29 in lot 4, 30 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8, 33 in lot 9) and **39 remain**, spread over lots 10 to 13. The three held back out of lot 4
+(§4) closed with lot 9, so nothing is deferred any more and the console's lot cards match §3.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -63,6 +63,20 @@ Four items it touched stay open, each with a note saying what is left: `hook-har
 the route-scoped hook), `claude-navigation-back` (lot 13, resetting the stack when a flow ends),
 `gradients-tokens` (lot 13, two files still literal) and `brand-color-tokens` (later, the literal
 violets and greens).
+
+Lot 9's 33 include the three held back out of lot 4 — the network layer: `util-retry-dedupe`,
+`doc-keep-network-api-utils`, and `drop-netinfo-from-entitlement`, closed with its deletion decided
+against (§4) — and seven the audit had filed under lot 13: `datefns-imports-par-fonction`,
+`datefns-locale-map-hoist`, `themedtext-lineheight-derive`, `claude-caps-on-read`,
+`claude-large-screens`, `claude-safe-area-contract` and `claude-navigation-back`, each marked in
+every copy with a note naming what covered it. Seven "later" items shipped with them:
+`sheet-usesheetsnap`, `use-responsive-layout`, `hook-keyboard-height`, `util-date-locale-cache` and
+`claude-persist-rehydrate` (copies of lot-9 items), `modal-self-cap-large-screen` (the paywall caps
+itself) and `pro-badge-component`. One lot-9 item had shipped unrecorded — `hook-ad-visible` is
+lot 5's `useAdPlacementActive` (29d7640) — and is counted there now, which is why lot 5's figure
+moved by one. Three lot-13 items it touched stay open, each with a note saying what is left:
+`claude-nativewind-footguns` (three of its four traps), `claude-android-modal-keyboard` (the
+measured-height echo) and `claude-bundle-size` (the Metro stub and the `analyze` discipline).
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -104,15 +118,6 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 9 — UI library and layout (24 items)
-
-`ModalDialog` with `useKeyboardHeight` (Android edge-to-edge stopped resizing modal windows),
-`SettingsRow`/`AppSwitch`/`ProBadge`, `useModalSheetPanGesture` and the drag lock, `WheelPicker`,
-`ThemedText` deriving a line height whenever a caller sets `fontSize` alone, `SlidingSelector` in
-RTL, the centred column at `MAX_CONTENT_WIDTH` with `useResponsiveLayout`, `useHardwareBack`,
-`resetToHome`/`ExitToHome`, and the "free cap applies on read, never on write" pattern extracted as
-a hook. The three items deferred out of lot 4 (§4) land here too.
-
 ### Lot 10 — Notifications (4 items)
 
 The **permission is never requested**: `notificationService.requestPermission` has no caller
@@ -142,16 +147,19 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (25 items)
+### Lot 13 — Documentation and conventions (18 items)
 
-Last, deliberately. The CLAUDE.md sections still missing: large screens, the safe-area contract, the
-NativeWind and RN footguns that break silently, Play store policy (urgency, reviews, aggregate
-ratings, declared permissions), the i18n voice charter and plural parity, bundle size (Metro does
-not tree-shake — import `date-fns` per function), and the frozen structure of
-`PROJECT_CONTEXT.md`. The promo-coordination invariants, `ADS.md` and the AdMob-literals rationale
-shipped in lot 5, the rating doctrine in lot 6, the grace-period doctrine, the entitlement-storage
-rules and the social-proof rule in lot 7, the back-key and step-name rules in lot 8 — what is left
-of the navigation item is the stack reset when a flow ends.
+Last, deliberately. The CLAUDE.md sections still missing: the NativeWind and RN footguns that break
+silently (the line-height one is written), the measured-height echo beside the modal-keyboard rule,
+Play store policy (urgency, reviews, aggregate ratings, declared permissions), the i18n voice
+charter and plural parity, a bundle-size section (the `date-fns` rule is in the code style; the
+Metro stub and `pnpm analyze` are not), code-style layers and comments, and the frozen structure of
+`PROJECT_CONTEXT.md` — which by now needs its "Hooks" section: lot 9 put a dozen hooks and
+components in its Styling section for want of one. The promo-coordination invariants, `ADS.md` and
+the AdMob-literals rationale shipped in lot 5, the rating doctrine in lot 6, the grace-period
+doctrine, the entitlement-storage rules and the social-proof rule in lot 7, the back-key and
+step-name rules in lot 8, large screens, the safe-area contract, limits on read, the persist flush
+and the stack reset in lot 9.
 
 ---
 
@@ -165,9 +173,26 @@ of the navigation item is the stack reset when a flow ends.
 **The HTTP layer stays while `apps/api` ships.** Lot 4's audit contained two contradictory
 families: one wanted `utils/retry.ts`, `utils/apiErrors.ts` and `hooks/useNetworkStatus.ts`
 deleted as dead; the other wanted them kept and wired. They are kept. They are not converter
-vestiges — they are unwired generic infrastructure for a backend this repo ships. Their wiring
-(`onlineManager` so `refetchOnReconnect` stops being inert in React Native, an `exampleService`
-calling `/example`) belongs to lot 9. `@react-native-community/netinfo` stays for the same reason.
+vestiges — they are generic infrastructure for a backend this repo ships, wired in lot 9:
+`onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
+React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
+`@react-native-community/netinfo` stays for the same reason; an app without a backend removes all
+of it together (CLAUDE.md, Data Fetching).
+
+**`withRetry` is for calls made outside a query.** A `queryFn` calls the client directly: the
+query client retries on its own, and a `withRetry` inside it would multiply the attempts.
+
+**A position that slides along a row is logical, and only its travel flips in RTL.** Never
+bg-remover's `slotOf` over a physical `left: 0`: React Native swaps `left` and `right` in RTL by
+default, so that anchor starts on the right (§10).
+
+**The column caps content, not chrome.** `ScreenContainer`'s column holds what a screen draws; the
+tab bar and the bottom sheets span the window, and a native modal with content of its own caps
+itself (`PaywallModal`, `ModalDialog`). The onboarding is not capped yet — a design pass, not a
+structural one.
+
+**The persist flush is documented, not shipped as a helper.** No starter store has a `merge` that
+changes what was on disk; a helper would have no caller, and the four lines are in CLAUDE.md.
 
 **`common.*` keeps keys with no reader.** It is UI vocabulary — *Cancel*, *Save*, *Retry* — already
 translated into all twenty languages. Deleting it would bill the next app a translation session for
@@ -333,7 +358,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§10, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§11, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -489,7 +514,80 @@ the priceless onboarding CTAs this lot removed here.
 
 ---
 
-## 10. Resuming in a new session
+## 10. What verification caught on lot 9
+
+Both stages ran in the session, as on lots 6 to 8, against the three apps' sources and the
+libraries in `node_modules` — React Native 0.81's Android sources and Fabric's C++, zustand 5.0.8,
+TanStack Query 5, react-native-google-mobile-ads 15.8.3.
+
+- **`slotOf` is wrong under React Native's defaults (stage 1, fatal to the audit's proposal).**
+  `I18nUtil.doLeftAndRightSwapInRTL` defaults to true on Android (iOS swaps too), and Fabric's
+  `swapStyleLeftAndRight` turns `left` into `start` in RTL: bg-remover's physical `left: 0` anchor
+  starts on the right, and its reversed index sends the indicator off the other end. The
+  selector keeps its position logical and flips only its travel; `AppSwitch`'s knob, which had the
+  same bare `translateX`, does the same. bg-remover's `DockRail` and `DockSegments` carry the
+  pattern — left there, since it is another repository.
+- **The drag-lock fix left a sheet where the finger did (stage 2).** bg-remover returns from
+  `onEnd` while the lock is up: a sheet that moved before the content took the pan stayed
+  displaced, and the fix depended on the lock still being up when the sheet's `onEnd` ran. The
+  sheet now remembers that the content held the pan and springs back.
+- **deep-focus's dialog had no gesture root (stage 1).** On Android a gesture inside a native modal
+  is only recognised under a `GestureHandlerRootView` in that window: the toast the dialog hosts
+  could not be swiped away. Its card was also a `Pressable`, which groups everything inside it into
+  one accessibility node; a plain view stops the tap just as well, the backdrop being a sibling.
+- **deep-focus's settings row announced every switch as a button (stage 1).** A `toggle` prop now
+  draws the switch and carries its role and state.
+- **The wheel's unit inset only worked in Arabic by accident (stage 1).** `paddingRight` landed on
+  the unit's side because of the same left/right swap; it is `paddingEnd`.
+- **all-currency-converter's toast comment was false here (stage 1).** Only the frontmost host
+  renders a toast; the memo stands on the library's own advice, not on hidden viewports.
+- **The line-height derivation is visible (stage 1).** Nine starter texts set a size from `style`;
+  their lines moved, listed in the commit, as they already had in deep-focus.
+- **`hook-ad-visible` had shipped with lot 5**, as `useAdPlacementActive`.
+- **The query client read the app as always online (stage 1).** React Native has no `online`
+  event and nothing fed `onlineManager`: retries burned through offline and `refetchOnReconnect`
+  never fired. It also retried a 401 three times. `useNetworkStatus` had had no consumer since
+  lots 1–3, and it tracked `offline_banner_shown` for a banner the starter does not have — the
+  event is gone.
+- **zustand's hydration writes only after a `migrate` (stage 1).** Read in `persistImpl`, which is
+  what the documented flush rests on, with the reason its microtask is required: MMKV hydrates
+  inside `create()`, before the store's binding exists.
+
+Reading the whole branch before the push, then the code-review skill, found ten more, all fixed:
+
+- **The centred column put the ad banner in a 600 dp box** while the anchored adaptive banner took
+  the device's width: on a tablet it hung past its container, where Android delivers no touch.
+  `AdBanner` passes the column's width now, and `ADS.md` states the invariant.
+- **Restoring the theme's navigation bar on unmount broke two stacked forcing screens**: popping
+  the top one handed the theme's style to the one still in front. Forced styles are stacked, as
+  React Native stacks the status bar's.
+- **`flex: 1` on the wheel overrode its height in a column**, collapsing it in a dialog or a sheet;
+  `minHeight`/`maxHeight` hold it. `WHEEL_VISIBLE_ITEMS` was exported as 7 while short screens get
+  5, and is private now; the wheel reads the sheet's pan from `modalSheet/contexts` directly.
+- **NetInfo's unknown state read as offline** in the listener — harmless until it drove
+  `onlineManager`, where it would pause every query on a connection that works.
+- **A `leading-*` class lost to the derived line height**; it now wins.
+- **A keyboard already up when a dialog opens was never counted**; the hook seeds from
+  `Keyboard.metrics()`.
+- **The docs said `/example` is called from the app**; nothing calls `exampleService` yet, and they
+  say so. And a missing `BACKEND_URL` or `BACKEND_API_KEY` sent a relative request that
+  `withRetry` retried as an outage; `getBackendClient()` throws by name first.
+
+One review claim was checked and declined: that on a theme change `ThemeProvider`'s bars instance
+runs after a screen's and overrides its forced style. It is `ThemeProvider`'s first child, so its
+effect runs first.
+
+Found along the way and left out of this lot: React Native reports the Android keyboard's height
+above the navigation bar (`ReactRootView`: `ime.bottom − systemBars.bottom`) while an edge-to-edge
+dialog window spans under it, so a dialog at its height cap can reach under the keyboard by up to a
+navigation bar — not verifiable without a device; `withRetry` throws a new `Error` carrying only the
+message, so a caller cannot read the status it gave up on; the onboarding is not capped on large
+screens; `ModalBottomSheet`'s close button has no accessibility label (the later a11y pass); and
+bg-remover's `slotOf`, above.
+
+---
+
+## 11. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -497,7 +595,7 @@ the priceless onboarding CTAs this lot removed here.
    audit filed some under a neighbouring lot:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==8 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==10 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

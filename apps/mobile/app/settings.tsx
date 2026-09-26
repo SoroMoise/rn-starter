@@ -97,13 +97,14 @@ export default function SettingsScreen() {
   return (
     <ScreenContainer>
       <ScrollView
-        className="mx-3 flex-1"
+        className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          marginTop: 10,
-          paddingBottom: tabBarPadding,
-        }}>
-        <ScreenHeading title={t('settings.title')} subtitle={t('settings.subtitle')} />
+        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: tabBarPadding }}>
+        <ScreenHeading
+          className="mb-4 mt-3.5"
+          title={t('settings.title')}
+          subtitle={t('settings.subtitle')}
+        />
 
         <PremiumBanner />
         <SubscriptionGraceBanner />

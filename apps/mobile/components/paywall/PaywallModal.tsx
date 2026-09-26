@@ -1,4 +1,4 @@
-import { PaywallHero } from '@/components/paywall/PaywallHero'
+import { PAYWALL_HERO_HEIGHT, PaywallHero } from '@/components/paywall/PaywallHero'
 import { PaywallLegalLinks } from '@/components/paywall/PaywallLegalLinks'
 import { PaywallPerks } from '@/components/paywall/PaywallPerks'
 import { PaywallPlanCard } from '@/components/paywall/PaywallPlanCard'
@@ -7,9 +7,11 @@ import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
+import { UI_CONFIG } from '@/constants/config'
 import { GRADIENTS } from '@/constants/uiColors'
 import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
+import { useResponsiveLayout } from '@/hooks/useResponsiveLayout'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { paywallAnalytics } from '@/services/api/paywallAnalytics'
@@ -27,11 +29,13 @@ type PaywallModalProps = {
 }
 
 const CONTENT_HORIZONTAL_PADDING = 15
+const HERO_MAX_VIEWPORT_RATIO = 0.42
 
 export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const { t } = useTranslation()
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
+  const { height: screenHeight, isLargeScreen } = useResponsiveLayout()
   const { isPremium } = usePremium()
   const {
     options,
@@ -43,6 +47,13 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     isLoadingPurchase,
     purchaseSelected,
   } = usePaywallPlans({ source, surface: 'paywall' })
+
+  // A short landscape window would hand most of the viewport to the illustration before the plans
+  // scroll into view. Gated on width, not height: below 600 dp the portrait lock still holds, and
+  // there the hero keeps the height it was drawn at.
+  const heroHeight = isLargeScreen
+    ? Math.min(PAYWALL_HERO_HEIGHT, screenHeight * HERO_MAX_VIEWPORT_RATIO)
+    : PAYWALL_HERO_HEIGHT
 
   const paywallOpenTimeRef = useRef<number>(0)
 
@@ -88,10 +99,15 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
         </View>
 
         <ScrollView
+          style={styles.scrollColumn}
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
           showsVerticalScrollIndicator={false}>
           <View style={styles.hero}>
-            <PaywallHero title={t('paywall.title')} subtitle={t('paywall.subtitle')} />
+            <PaywallHero
+              title={t('paywall.title')}
+              subtitle={t('paywall.subtitle')}
+              height={heroHeight}
+            />
           </View>
 
           <View style={styles.perks}>
@@ -183,6 +199,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.3)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  // The modal is its own window, outside ScreenContainer's column, so it caps itself. Capping the
+  // scroll view rather than its content keeps the hero's full-bleed margin on the column's edge.
+  scrollColumn: {
+    width: '100%',
+    maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
+    alignSelf: 'center',
   },
   scroll: {
     paddingHorizontal: CONTENT_HORIZONTAL_PADDING,

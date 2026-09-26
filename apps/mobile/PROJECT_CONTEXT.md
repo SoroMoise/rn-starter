@@ -183,6 +183,8 @@ NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animati
 
 `ModalDialog` — the centred sibling of `ModalBottomSheet` (title, subtitle, body, a `footer` outside the body); it pads itself by `useKeyboardHeight()`, since the keyboard no longer resizes a modal window on Android.
 
+`SettingsRow` — the settings row (icon plate, title, description, value, `pro` badge, accessory, chevron); `toggle` makes the whole row a switch, drawing `AppSwitch` (decoration only) and carrying the switch role and state. The language row in `DisplaySection` is built on it; `SettingsLinkRow` stays for plain links. `ProBadge` marks what the free tier cannot use.
+
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
 ---

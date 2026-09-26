@@ -20,6 +20,11 @@ export const purchaseService = {
     return Purchases.getCustomerInfo()
   },
 
+  // The store page for the subscription actually held; null when there is nothing to manage.
+  managementUrl({ customerInfo }: { customerInfo: CustomerInfo }): string | null {
+    return customerInfo.managementURL
+  },
+
   isPremiumActive({ customerInfo }: { customerInfo: CustomerInfo }): boolean {
     return !!customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
   },

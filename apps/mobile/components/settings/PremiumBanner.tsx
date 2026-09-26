@@ -1,14 +1,17 @@
-import { Section, SectionContent } from '@/components/settings/SettingsSection'
+import { Divider, Section, SectionContent } from '@/components/settings/SettingsSection'
+import { SettingsLinkRow } from '@/components/ui/SettingsLinkRow'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { usePremium } from '@/hooks/usePremium'
+import { analyticsService } from '@/services/api/analyticsService'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
+import { openExternalLink } from '@/utils/linking'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useTranslation } from 'react-i18next'
 import { TouchableOpacity, View } from 'react-native'
 
 export function PremiumBanner() {
   const { t, i18n } = useTranslation()
-  const { isPremium, isInitialized, openPaywall } = usePremium()
+  const { isPremium, isInitialized, managementUrl, openPaywall } = usePremium()
 
   if (!isInitialized) return null
 
@@ -46,6 +49,22 @@ export function PremiumBanner() {
             </View>
             <Ionicons name="checkmark-circle" size={20} color="#10b981" />
           </View>
+
+          {managementUrl !== null && (
+            <>
+              <Divider />
+              <SettingsLinkRow
+                icon="card-outline"
+                label={t('settings.manageSubscription')}
+                onPress={() => {
+                  analyticsService.track('external_link_opened', {
+                    link_type: 'manage_subscription',
+                  })
+                  void openExternalLink({ url: managementUrl })
+                }}
+              />
+            </>
+          )}
         </SectionContent>
       </Section>
     )

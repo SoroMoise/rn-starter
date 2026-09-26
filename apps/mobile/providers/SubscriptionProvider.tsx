@@ -93,6 +93,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [isPremium, setIsPremium] = useState(cached.isPremium)
   const [isInGracePeriod, setIsInGracePeriod] = useState(cached.isInGracePeriod)
   const [billingIssue, setBillingIssue] = useState<BillingIssue | null>(null)
+  const [managementUrl, setManagementUrl] = useState<string | null>(null)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoadingPurchase, setIsLoadingPurchase] = useState(false)
   const [activeSubscription, setActiveSubscription] = useState<PlanPeriod | null>(null)
@@ -125,6 +126,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         setIsPremium(TIER_OVERRIDE.isPremium)
         setIsInGracePeriod(false)
         setBillingIssue(null)
+        setManagementUrl(null)
         setActiveSubscription(null)
         analyticsService.updateContext({ isPremium: TIER_OVERRIDE.isPremium })
         return { isPremium: TIER_OVERRIDE.isPremium, plan: null }
@@ -142,6 +144,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       setIsPremium(isActive)
       setIsInGracePeriod(false)
       setBillingIssue(readBillingIssue(customerInfo))
+      setManagementUrl(purchaseService.managementUrl({ customerInfo }))
       setActiveSubscription(plan)
       analyticsService.updateContext({ isPremium: isActive })
 
@@ -356,6 +359,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isLoadingPurchase,
       isInGracePeriod,
       billingIssue,
+      managementUrl,
       isPaywallVisible: paywallVisible,
       activeSubscription,
       plans,
@@ -374,6 +378,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isLoadingPurchase,
       isInGracePeriod,
       billingIssue,
+      managementUrl,
       paywallVisible,
       activeSubscription,
       plans,

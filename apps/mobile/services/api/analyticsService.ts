@@ -71,7 +71,9 @@ export type AnalyticsEventMap = {
   // Settings
   settings_theme_changed: { theme: string; previous_theme: string }
   settings_language_changed: { language_code: string; previous_language: string }
-  external_link_opened: { link_type: 'privacy_policy' | 'terms_of_service' | 'support' }
+  external_link_opened: {
+    link_type: 'privacy_policy' | 'terms_of_service' | 'support' | 'manage_subscription'
+  }
 
   // Ads
   rewarded_ad_result: {

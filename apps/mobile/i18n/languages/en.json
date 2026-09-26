@@ -74,6 +74,7 @@
     "premiumActive": "You're a Pro member",
     "premiumActiveUntil": "Active until {{date}}",
     "premiumLifetime": "Lifetime access",
+    "manageSubscription": "Manage subscription",
     "removeAds": "Remove Ads",
     "removeAdsDescription": "Enjoy ad-free experience",
     "watchAdButton": "Watch ad for {{duration}} ad-free",

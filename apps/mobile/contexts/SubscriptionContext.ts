@@ -9,6 +9,7 @@ export type SubscriptionContextValue = {
   isLoadingPurchase: boolean
   isInGracePeriod: boolean
   billingIssue: BillingIssue | null
+  managementUrl: string | null
   isPaywallVisible: boolean
   activeSubscription: PlanPeriod | null
   plans: OfferingPlan[]
@@ -28,6 +29,7 @@ const initial: SubscriptionContextValue = {
   isLoadingPurchase: false,
   isInGracePeriod: false,
   billingIssue: null,
+  managementUrl: null,
   isPaywallVisible: false,
   activeSubscription: null,
   plans: [],

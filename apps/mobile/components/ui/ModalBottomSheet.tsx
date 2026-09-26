@@ -8,6 +8,7 @@ import { useSheetSnap } from '@/hooks/useSheetSnap'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { SHEET_TOP_OFFSET } from '@utils/snapBottomSheet'
 import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Modal, TouchableOpacity, View } from 'react-native'
 import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler'
 import type { SharedValue } from 'react-native-reanimated'
@@ -57,6 +58,7 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
     },
     ref
   ) {
+    const { t } = useTranslation()
     const sheet = useSheetSnap({ visible, initialSnap, dragLock, onClose })
     const { close, hasSnapPoints, snapToFull } = sheet
 
@@ -84,7 +86,15 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
           />
           <GestureDetector gesture={sheet.panGesture}>
             <View className={`flex-1 ${compact ? 'justify-end' : ''}`}>
-              {compact && <TouchableOpacity className="flex-1" activeOpacity={1} onPress={close} />}
+              {compact && (
+                <TouchableOpacity
+                  className="flex-1"
+                  activeOpacity={1}
+                  onPress={close}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('common.close')}
+                />
+              )}
               <Animated.View
                 style={[sheet.sheetStyle, compact ? null : { marginTop: SHEET_TOP_OFFSET }]}
                 className={compact ? '' : 'flex-1'}>
@@ -108,6 +118,8 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                       {showCloseButton ? (
                         <TouchableOpacity
                           onPress={close}
+                          accessibilityRole="button"
+                          accessibilityLabel={t('common.close')}
                           className="h-8 w-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700"
                           activeOpacity={0.7}>
                           <ThemedText

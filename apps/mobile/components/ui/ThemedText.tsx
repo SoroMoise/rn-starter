@@ -41,18 +41,28 @@ const ALIGN_CLASSES = {
   right: 'text-right',
 } as const
 
-// A caller setting `fontSize` without a matching `lineHeight` gets clipped glyphs, so derive one here.
+// A caller setting `fontSize` without a matching `lineHeight` gets clipped glyphs, so derive one here
+// — unless a `leading-*` class already sets it, which the inline style would otherwise override.
 const LINE_HEIGHT_RATIOS = [
   { upTo: 20, ratio: 1.45 },
   { upTo: 30, ratio: 1.3 },
   { upTo: Number.POSITIVE_INFINITY, ratio: 1.15 },
 ] as const
 
-function withDerivedLineHeight(style: StyleProp<TextStyle>): StyleProp<TextStyle> {
+const LEADING_CLASS = /(^|[\s:])leading-/
+
+function withDerivedLineHeight({
+  style,
+  className,
+}: {
+  style: StyleProp<TextStyle>
+  className: string
+}): StyleProp<TextStyle> {
   const flattened = StyleSheet.flatten(style)
   const fontSize = flattened?.fontSize
 
   if (fontSize === undefined || flattened?.lineHeight !== undefined) return style
+  if (LEADING_CLASS.test(className)) return style
 
   const ratio = LINE_HEIGHT_RATIOS.find((entry) => fontSize <= entry.upTo)?.ratio ?? 1.15
 
@@ -89,5 +99,11 @@ export function ThemedText({
   const combinedClassName =
     `${variantClass} ${colorClass} ${weightClass} ${alignClass} ${className ?? ''}`.trim()
 
-  return <Text className={combinedClassName} style={withDerivedLineHeight(style)} {...textProps} />
+  return (
+    <Text
+      className={combinedClassName}
+      style={withDerivedLineHeight({ style, className: combinedClassName })}
+      {...textProps}
+    />
+  )
 }

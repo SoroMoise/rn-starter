@@ -29,7 +29,7 @@ audit of that gap and the plan to close it.
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
 | — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
 | 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
-| 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | on `claude/lot-11-plugins-android` |
+| 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,

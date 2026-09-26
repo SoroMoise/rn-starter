@@ -27,13 +27,15 @@ audit of that gap and the plan to close it.
 | 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
-| — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | on `claude/off-audit-fixes` |
-| 10–13 | See §3 | — | not started |
+| — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
+| 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 7 | on `claude/lot-10-notifications` |
+| 11–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**199 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8, 33 in lot 9) and **36 remain**, spread over lots 10 to 13. The three held back out of lot 4
-(§4) closed with lot 9, so nothing is deferred any more and the console's lot cards match §3.
+**204 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8, 33 in lot 9, 5 in lot 10) and **31 remain**, spread over lots 11 to 13. The three held back
+out of lot 4 (§4) closed with lot 9, so nothing is deferred any more and the console's lot cards
+match §3.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -85,6 +87,15 @@ code: `claude-build-release` and `claude-ci-release` with lot 2's plugins and wo
 — and `claude-ads-consent`, whose rule came with lot 1's consent gate and whose show-time re-read with
 lot 5 (0d989e4). They are counted there now, which is why those two figures moved.
 
+Lot 10's five include one the audit had filed under lot 13, `claude-notification-permission`: its
+rules went into CLAUDE.md with the code they describe. One item shipped otherwise than proposed —
+`notif-channel-immutable`, whose delete-and-recreate changes nothing on Android (§11): the channel
+is frozen and the two settings it ignored are gone. No "later" item shipped with them;
+`notif-channels-table` stays later, since one channel needs no table. The lot's onboarding step did
+not ship either, by decision (§4). The branch also carries two commits outside the audit:
+`pnpm lint` had been red on `main` since 5542d78, and the CHANGELOG still listed the onboarding's
+old third step.
+
 The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
 onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
 blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
@@ -133,22 +144,10 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 10 — Notifications (4 items)
-
-The **permission is never requested**: `notificationService.requestPermission` has no caller
-anywhere, so on Android 13+ a fresh install never sees the prompt. Ask in context, re-read the
-grant on every foreground, expose `canAskAgain`, and add a generic local reminder scheduler
-(cancel the whole set, then re-schedule). Android channels are immutable once created — a change
-to sound or importance needs a new channel id, not an edit. Read the grant, never
-`NOTIFICATION_PERMISSION_REQUESTED` alone: that flag lives in the main MMKV instance, which cloud
-backup and device transfer carry to a phone the OS grant does not follow. The in-context ask
-belongs in an onboarding step built on `OnboardingStepLayout` and listed by `buildSteps()` with the
-grant as its capability, which makes it the first caller of both. (The lot's funnel and Crashlytics
-items shipped in lot 7, its onboarding analytics item in lot 8.)
-
 ### Lot 11 — Plugins and Android build (8 items)
 
-`android.blockedPermissions` (a declared permission is a promise on the store listing),
+`android.blockedPermissions` (a declared permission is a promise on the store listing — never
+`POST_NOTIFICATIONS` nor `RECEIVE_BOOT_COMPLETED`, §4),
 `withAndroidFontFilter` upgraded to bg-remover's guarded version, the Metro stub for
 `@revenuecat/purchases-js-hybrid-mappings` (~750 KB of web SDK in the native bundle), removing the
 `privacy` block that never carried legal URLs, and `scripts/setup.sh` propagating the bundle id all
@@ -162,7 +161,7 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (15 items)
+### Lot 13 — Documentation and conventions (14 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: the NativeWind and RN footguns that break
 silently (the line-height one is written), the measured-height echo beside the modal-keyboard rule,
@@ -174,7 +173,7 @@ components in its Styling section for want of one. The promo-coordination invari
 the AdMob-literals rationale shipped in lot 5, the rating doctrine in lot 6, the grace-period
 doctrine, the entitlement-storage rules and the social-proof rule in lot 7, the back-key and
 step-name rules in lot 8, large screens, the safe-area contract, limits on read, the persist flush
-and the stack reset in lot 9.
+and the stack reset in lot 9, the notification permission and channel rules in lot 10.
 
 ---
 
@@ -226,11 +225,14 @@ commercial choices rather than reusable machinery: `SoftAskCard`, `LifetimeOffer
 families keyed by source, per-feature rewarded unlocks, the two-tier interstitial cadence, Google
 Drive backup, coach-marks. A boilerplate ships the coordinator, not the campaign.
 
-**Only the entitlement store stays out of backups.** bg-remover takes the whole of `mmkv/` out of
-cloud backup, and the audit's lot-13 storage item proposed writing that down as the rule. It is that
-app's product choice — a photo library a day-stale snapshot resurrected. Here the main instance
-holds preferences, the onboarding, the review and paywall spacing, which a reinstall should keep;
-excluding more is a decision an app takes for itself, and CLAUDE.md says so.
+**Only the entitlement store stays out of backups, of what the app itself writes.** bg-remover
+takes the whole of `mmkv/` out of cloud backup, and the audit's lot-13 storage item proposed writing
+that down as the rule. It is that app's product choice — a photo library a day-stale snapshot
+resurrected. Here the main instance holds preferences, the onboarding, the review and paywall
+spacing, which a reinstall should keep; excluding more is a decision an app takes for itself, and
+CLAUDE.md says so. The one other exclusion, since lot 10, holds no user data: expo-modules-core's
+record of the permissions it asked for on the device, which restored elsewhere reads as a permanent
+denial (§11).
 
 **The starter ships no data migration.** It has no installs. Lot 4 left AsyncStorage's
 `migration.ts` behind for that reason (`pas-de-migration-asyncstorage`), lot 6 the old `@rating_*`
@@ -249,8 +251,24 @@ had nothing behind it, and a benefit written into the template is one every deri
 day one. An app adds a benefit in the change that adds its gate.
 
 **No example onboarding step ships.** `OnboardingStepLayout` has no caller until an app adds a step
-(lot 10's notification ask is the natural first one): a demo step would be a screen every app
+(an app's notification ask is the natural first one): a demo step would be a screen every app
 shows on day one, asking nothing.
+
+**The starter asks for no permission and schedules nothing; the notification plumbing stays for the
+apps built on it.** Decided on 2026-09-26, against the lot-10 plan to make an onboarding step the
+first caller of the ask. The starter sends no notification, so a step asking for the permission
+would be the demo step above. But removing `POST_NOTIFICATIONS` would leave a derived app failing
+without knowing why — on Android 13+ a notification from an app that never asked is dropped with no
+error — when the fix is only ever the ask. So the permission stays declared, the ask and the grant's
+readback ship as ready helpers, and a missing grant is loud: the scheduler refuses, and says so.
+Lot 11's `blockedPermissions` must never list `POST_NOTIFICATIONS`, nor `RECEIVE_BOOT_COMPLETED`,
+which expo-notifications declares to re-arm scheduled triggers after a reboot.
+
+**Sound and vibration belong to the channel, not to a setting.** A channel's sound is frozen at
+creation and survives a delete-and-recreate under the same id (§11), so an in-app toggle needs a new
+channel id per change, the old one deleted and every trigger scheduled again. The starter offers
+none: the user sets both per channel in the system settings. An app that wants the toggle takes on
+that migration knowingly.
 
 **The paywall keeps its illustration.** bg-remover's gradient `PaywallHero` was not ported; the
 starter's hero is the converter's illustration with its currencies removed, drawn for the template.
@@ -373,7 +391,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§11, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§12, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -602,7 +620,54 @@ bg-remover's `slotOf`, above.
 
 ---
 
-## 11. Resuming in a new session
+## 11. What verification caught on lot 10
+
+Both stages ran in the session, as on lots 6 to 9, against expo-notifications 0.32.17's Android
+and iOS sources, expo-modules-core's `PermissionsService`, AOSP's `PreferencesHelper`, and the two
+sibling apps that schedule notifications.
+
+- **Delete-and-recreate changes nothing (fatal to the audit's proposal).**
+  `PreferencesHelper.createNotificationChannel` un-deletes a channel re-created under its old id,
+  with the settings it had, and on a channel that exists applies only the name, the description,
+  a group where there was none and a lower importance while the user has not touched it — never the
+  sound or the vibration. all-currency-converter's `recreateRateAlertsChannel`, the reference, has
+  therefore never changed anything; its switches only reach the foreground handler. Left there,
+  since it is another repository.
+- **The two settings had no writer.** Nothing in the starter wrote `notificationSound` or
+  `notificationVibration`. Making them work takes a new channel id per change, the old one deleted
+  and every trigger scheduled again — a migration, not a setting — so they went, with
+  `domains/userSettings.ts`, their only reader. `shouldPlaySound: false` would also have dropped the
+  heads-up banner on Android, by expo's own documentation.
+- **A trigger on a missing channel is not dropped (correction to deep-focus's comment).**
+  expo-notifications sends it to its own fallback channel, "Miscellaneous" (`BaseNotificationBuilder`).
+  Creating the channel before scheduling is still right, for that reason.
+- **A reminder with no sound is silent on iOS (not in the audit).** `Records.swift` sets
+  `content.sound` only when one is given, and deep-focus's reminders and session alerts carry none.
+  The scheduler sets `'default'`; deep-focus is left as it is.
+- **Android reports a never-asked notification permission as `denied`.** On API 33+,
+  `NotificationPermissionsModule` answers `denied` whenever `areNotificationsEnabled()` is false,
+  which it is before any ask; only `canAskAgain` differs. The scheduler cannot tell a wiring bug from
+  a refusal, which is why a missing grant is a warning and a breadcrumb, never a non-fatal.
+- **Removing the app's flag left expo's (not in the audit).** `PermissionsService` records every
+  permission it asks for in the `expo.modules.permissions.asked` shared preferences, which Auto
+  Backup carries by default; recorded but not granted, a permission reads as `denied` with
+  `canAskAgain` taken from `shouldShowRequestPermissionRationale` — false where nothing was ever
+  asked. On a restored phone every runtime permission would have sent the user to the settings
+  instead of the dialog. The file is out of the backup rules.
+- **Two overlapping syncs duplicated the reminders (not in the audit).** deep-focus's sync cancels,
+  then schedules, with nothing ordering two calls; an effect firing twice cancels twice and
+  schedules twice. The starter's calls are queued.
+- **deep-focus's session-alert ask is guarded by the backed-up flag.** `requestSessionAlertPermission`
+  asks only while `NOTIFICATION_PERMISSION_REQUESTED` is unset — on a restored phone, never. Left
+  there.
+- **An item filed under another lot.** `claude-notification-permission` sits under lot 13.
+
+Found along the way and fixed in their own commits: `pnpm lint` had failed on `main` since 5542d78
+left a line Prettier rejects, and the CHANGELOG still listed the onboarding's old third step.
+
+---
+
+## 12. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -610,7 +675,7 @@ bg-remover's `slotOf`, above.
    audit filed some under a neighbouring lot:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==10 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==11 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

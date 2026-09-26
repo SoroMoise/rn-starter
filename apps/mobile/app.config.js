@@ -44,6 +44,8 @@ export default () => {
       ios: {
         supportsTablet: true,
         bundleIdentifier: 'com.yourcompany.rnstarter',
+        // @react-native-firebase/app refuses an iOS prebuild without this path, or without the file.
+        googleServicesFile: './GoogleService-Info.plist',
         infoPlist: {
           NSUserTrackingUsageDescription:
             'This identifier will be used to deliver personalized ads to you.',

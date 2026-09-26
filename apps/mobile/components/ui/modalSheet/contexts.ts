@@ -16,6 +16,12 @@ export function useIsSheetAtFullSnap(): boolean {
   return useContext(ModalSnapContext) === 1
 }
 
+// What a scrollable child that is not a list — a wheel, a carousel — blocks to keep a flick for
+// itself; the sheet's pan wins it otherwise. Null outside a sheet.
+export function useModalSheetPanGesture(): PanGestureType | null {
+  return useContext(ModalDraggableContext)
+}
+
 export function useSheetScrollable() {
   const panGesture = useContext(ModalDraggableContext)
   const scrollY = useContext(ModalScrollContext)

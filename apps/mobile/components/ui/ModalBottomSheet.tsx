@@ -13,7 +13,7 @@ import { GestureDetector, GestureHandlerRootView } from 'react-native-gesture-ha
 import type { SharedValue } from 'react-native-reanimated'
 import Animated from 'react-native-reanimated'
 
-export { useIsSheetAtFullSnap } from '@/components/ui/modalSheet/contexts'
+export { useIsSheetAtFullSnap, useModalSheetPanGesture } from '@/components/ui/modalSheet/contexts'
 export {
   ModalBottomSheetFlatList,
   ModalBottomSheetScrollView,

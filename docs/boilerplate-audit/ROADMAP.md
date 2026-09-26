@@ -32,12 +32,23 @@ audit of that gap and the plan to close it.
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
+| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | — | planned (§3) |
+| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | — | planned (§3) |
+| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
+| 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
+| 18 | Primitives for a first caller, and the render path | — | planned (§3) |
+| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | planned (§3) |
+| 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
+| 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | — | planned (§3) |
+| 22 | The store listing: the listing's limits, release notes, the licences page | — | planned (§3) |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit.
+says what comes after the audit. Of the 84 "later" items, 37 have shipped (twelve with lots 1–3,
+three of them recorded only when the rest were scheduled), 5 are closed without shipping, and the
+other 42 are scheduled into lots 14 to 22 (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -139,8 +150,10 @@ that is not a string. Whoever stubs `@revenuecat/purchases-js-hybrid-mappings` i
 know that browser mode is what the stub removes — harmless while MMKV, Firebase and AdMob already
 keep the app out of Expo Go.
 
-The 84 "later" items are not pending work. They were judged useful but never blocking, and they
-stay in `audit-items.json` so the judgement does not have to be made twice.
+The 84 "later" items were judged useful but never blocking. Until 2026-09-26 none was scheduled;
+the 42 still open are now planned work, lots 14 to 22, each carrying its lot in `plannedLot` and a
+note saying what verification found left of it (§3). The audit's judgement stays as it was: their
+`decision` is still `later`.
 
 ---
 
@@ -178,16 +191,146 @@ always `git rev-list --count origin/main..HEAD`.
 
 ## 3. After the audit
 
-Every kept item has shipped. What is left is not in the audit's lots:
+Every kept item has shipped. What is left is the "later" items, scheduled below into lots 14 to 22,
+and one translation session, which runs between two of them.
 
-- **A translation session**, the one the parity rule describes (CLAUDE.md, Internationalization).
-  Each of the 18 other languages lacks 72 of `en.json`'s 163 keys — most of the paywall and its legal
-  notes, the onboarding's pitch, the home screen, the billing banner — which its speakers read in
-  English; of the 91 they hold, the ones this lot rewrote in EN and FR keep the old wording.
-  `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`) against the table the voice charter
-  sets. The session brings every file to parity and to the charter, and nothing else.
-- **The "later" items**, judged useful but never blocking (§1): 50 of the 84 are still open. None
-  is scheduled.
+### The "later" items, scheduled
+
+Scheduled on 2026-09-26. Of the 84, 34 had shipped with lots 1–13 and 50 were open. Each open item
+was checked against the code before it was given a lot, and eight left the list that way:
+
+- **Three had shipped unrecorded**, all with lots 1–3, and are counted there now:
+  `expo-nav-bar-blur-versions` (d38a0a0 pinned both packages to the SDK 54 line),
+  `analytics-restore-outcome` (8886c68, lot 3's three restore outcomes) and
+  `crashlytics-context-source` (its two `reason` calls left with lot 1's rating rewrite, 5247058;
+  every `recordError` passes `source`).
+- **Five are closed without shipping** (`status: 'closed'`, a note saying why):
+  `telemetry-effects-ras` is itself the finding and has nothing to ship; `a11y-namespace`'s key and
+  button left with lot 4; `turbo-web-outputs-env`'s remaining mobile half keys nothing, since no
+  Turborepo task builds the app — Gradle does, outside Turbo's cache; and
+  `onboarding-transition-view-drop-moti` and `moti-chemin-de-boot` would re-open "Moti stays,
+  measured" (§4).
+
+The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
+that covers them. The order puts first what a user or the AdMob account meets, then what a derived
+app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
+earlier one. Each lot still runs as §2 and §15 say — verify, then refute, before anything ships —
+and the notes below are where that verification starts, not its result.
+
+| Lot | Subject | Items | i18n |
+|---|---|---|---|
+| 14 | Ads: nothing offered that cannot be served | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
+| 15 | Session signals: friction, connectivity, settle | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
+| 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
+| 17 | Colour tokens and the onboarding | `brand-color-tokens`, `gradients-tokens`, `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
+| 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
+| 19 | The Worker's recurring patterns | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
+| 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
+| 21 | The offer's record and its prices | `doc-monetization-template`, `doc-living-documentation`, `play-price-sync` | none |
+| 22 | The store listing | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` | one row, if the app links the licences |
+
+**A helper with no caller is judged, not assumed.** Lot 18 holds most of them, but lot 15's
+`sessionSignals`, lot 17's `FeatureStep` and lot 19's cron raise the same question, and the
+decisions already taken answer it both ways: the persist flush is documented rather than shipped as
+a helper nobody calls (§4), while `OnboardingStepLayout` and the notification ask (§4) and
+`useCappedByTier` (CLAUDE.md, Monetization) ship ready with no caller. The line they draw: a helper
+ships when it carries a trap its first caller would otherwise meet, and CLAUDE.md names it as the
+integration point; a rule that needs no code is written down instead; and nothing ships that a user
+of a derived app would see on day one. An item that fails the line is closed with its rule written
+down, not shipped anyway.
+
+**Lot 14 — Ads: nothing offered that cannot be served.** Settings shows the rewarded section
+whenever the unit is configured and the user is free: with consent refused, on a Test Lab device or
+before the store has answered, its button can only say that no ad is available. The service holds
+one unit (`ADMOB_REWARDED_ID`), so a second rewarded surface would share it, which `ADS.md` forbids.
+The home screen mounts no banner, though `ADMOB_INDEX_BANNER_ID` and `AD_BANNER_INDEX_ENABLED`
+exist and lot 5 shipped the two prerequisites the item named (`useAdPlacementActive`,
+`AD_BANNER_RESERVED_HEIGHT`). `adService`, `rewardedAdService` and `fullScreenAd` still
+`console.warn`, where `consentService` already reports; a failed load is mostly no-fill, a condition,
+so it leaves a breadcrumb and only the unexpected is a non-fatal — the purchase rule, applied to ads.
+`ADS.md` changes in the same commits.
+
+**Lot 15 — Session signals: friction, connectivity, settle.** Nothing marks a session in which
+something failed; `sessionSignals` is bg-remover's thirty-line answer, with one consumer in the
+contextual paywall and one in the review policy. The settle before Play's card shipped on the call
+side with lot 6 (`RATING_ASK_SETTLE_MS`, in `RatingAskHost`); what is left is a settle inside
+`requestNativeReview`, for a moment an app raises itself. The offline guard and the banner hang on
+one decision, taken first: `useNetworkStatus` and NetInfo exist only for `apps/api`, leave with
+`remove-api.sh`, and CLAUDE.md says connectivity feeds the query client and decides nothing else.
+Either NetInfo becomes the app's own — out of the script's list, and Data Fetching rewritten — or
+the guard does without it and the banner joins the script's list. An ask made offline spends an
+attempt and 42 days, which is the case for the guard. `offline_banner_shown` left with lot 9
+(ade8480), since nothing showed.
+
+**Lot 16 — Accessibility.** `ModalBottomSheet`'s close button has been labelled since the off-audit
+fixes and `RatingModal` left with lot 4; `SlidingSelector`, `LanguagePicker`, `SettingsLinkRow` and
+`RTLRestartBanner` still carry no role, state or label. `AppRatingModal` is mounted nowhere: its
+star labels would be the lot's only plural keys, and leaving it to whoever wires it back is a fair
+call. The clear-search label is a `common.*` key, the one namespace kept as shared vocabulary. The
+banner still sits `TAB_BAR_HEIGHT + 50` above the bottom inset though it also shows during the
+onboarding, where the switch to Arabic happens and no tab bar is drawn — the same file.
+
+**The translation session runs after lot 16**, the last lot that adds keys: the session the parity
+rule describes (CLAUDE.md, Internationalization), bringing each of the 18 other languages to parity
+with `en.json` and to the voice charter, and nothing else. Each lacks 72 of `en.json`'s 163 keys — most of the
+paywall and its legal notes, the onboarding's pitch, the home screen, the billing banner — which its
+speakers read in English; of the 91 they hold, the ones lot 13 rewrote in EN and FR keep the old
+wording; and `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`).
+The starter has no installs, so nothing is lost by waiting, and every key is translated once. Lot
+22's licences row, if the app links the page, is the only key foreseen after it, and waits for the
+next session.
+
+**Lot 17 — Colour tokens and the onboarding.** `UI_COLORS` exists and none of the surfaces that
+should read it does: `#8b5cf6` and `#10b981` are literal in `PremiumGate`, `PaywallPlanCard`,
+`PremiumBanner`, `ProWelcomeModal`, `PremiumValueStep`, `ExitIntentSheet`, the home screen, `Toast`
+and `SlidingSelector`, and `RewardedAdButton` and `AppRatingModal` still write their gradients by
+hand. `InitialLoadingScreen`, the fallback the lazy import was to use, left with lot 4, so the lot
+writes a light one; with Moti still reached from the home screen (§4), the gain is counted with
+`analyze` in modules evaluated at launch, not in bytes. Only the welcome step keeps its CTA as an
+overlay (`insets.bottom + 16`, 58 high): the lot settles whether that CTA moves into the step, as
+`OnboardingStepLayout`'s steps carry theirs — and the reserve hook has no reader — or the hook
+ships for the overlay, checked at the largest font scale either way. `FeatureStep` comes after the
+tokens its kicker colours need.
+
+**Lot 18 — Primitives for a first caller, and the render path.** All but one are shapes the starter
+would ship without a caller — lot 10 left the channel table "later" for exactly that reason — so
+this lot is where the line above is drawn, one item at a time. `util-intl-cache` is the exception:
+`utils/time.ts` builds a formatter per call in three functions and `utils/pricing.ts` one per price.
+`Reveal` and `useMeasuredHeight` size themselves from their own content, so they are the first
+components that owe CLAUDE.md's one-pixel echo guard (Styling). Of `claude-render-path`'s five
+rules, the memo one shipped with lot 13 (Code Style) and the banner's unmount on blur covers part of
+the fifth; the windowing preset is the fourth rule's constant.
+
+**Lot 19 — The Worker's recurring patterns.** The Worker has held a KV binding since lot 12
+(`ENTITLEMENT_CACHE`) but no cache helper, exports `fetch` only, and carries an `FCMError.errorCode`
+that nothing interprets. A cron declared active would bill an empty job from the first deploy, so it
+ships commented out. `remove-api.sh` takes all of it with `apps/api`, so the script's list does not
+move; `pnpm --filter api build` (`wrangler deploy --dry-run`) is the check beside typecheck and lint.
+
+**Lot 20 — Day one and the build.** The Firebase example still carries plausible values and no
+instructions; `setup.sh` rewrites its `package_name`, and the new shape must stay sweepable.
+`buildArchs` stays off — an emulator is x86_64 — and becomes a release decision written in CLAUDE.md
+(Build & Release) and the README, not a commented block in `app.config.js`. The root has `dev:web`
+and `build:web` but no `preb`. The README's Troubleshooting section is all that is left of its item.
+
+**Lot 21 — The offer's record and its prices.** Most of what the monetization template proposed as
+the code contract is CLAUDE.md's Monetization section now (lots 3, 7 and 8), and nothing lives in
+two places. What is left is the record an app fills in — prices, plans, what was rejected and why —,
+the Play Console, App Store Connect and RevenueCat checklists, and the commercial traps: a lifetime
+priced under about 2.5 times the annual, dropping the monthly anchor, an A/B test without the users
+to read it. Living Documentation gains the general rule for a reference document, which
+`docs/MONETIZATION.md` joins beside `ADS.md`, and the rule for a plan document. The price script is
+all-currency-converter's version, in the root `scripts/` beside the brand script, dry-run by default,
+reading the price matrix the record decides.
+
+**Lot 22 — The store listing.** Nothing in the starter says what a Play listing takes: the limits
+(30, 80 and 4,000 characters) and the twenty listings that twenty languages imply. Release notes are
+written in the Play Console (CHANGELOG, lot 11) and the workflow uploads none, so the template is a
+paste-ready reference — Play's locale codes in one order — not an `artifacts/` folder nobody reads.
+The licences registry becomes a page of `apps/web`: the site serves only `/privacy` and `/terms`,
+`LEGAL_LICENSES_URL` left with lot 12 (87d660c), and `/licenses` joins the paths contract the moment
+a build links it. Its list follows what the APK ships — Hono is the Worker's — and is kept in step
+as living documentation, or it lies without failing.
 
 ---
 
@@ -901,15 +1044,18 @@ ever did.
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
-3. Pick the lot. Pull its items, then search the other lots for items on the same files — the
-   audit filed some under a neighbouring lot:
+3. Pick the lot, in §3's order. Pull its items — a planned lot is read off `plannedLot`, which
+   also carries the copies the audit filed twice — then search the other lots for items on the same
+   files:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==13 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['plannedLot']==14 and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.
 6. Update `status` in `audit-items.json` for what shipped (`done-lotN`, in every copy of an item the
-   audit filed twice), then the `ITEMS` line of `audit-console.html`, which embeds its own copy of
-   the data, and its `SHIPPED_LOT` map, which must learn the new status; then this file's §1 table.
+   audit filed twice), or `closed` with a note for an item the lot closes without shipping; then
+   the `ITEMS` line of `audit-console.html`, which embeds its own copy of the data — its
+   `SHIPPED_LOT` map already knows `done-lot14` to `done-lot22`; then this file's §1 table, and the
+   lot's paragraph in §3, which is a plan and goes once the lot has shipped.
 7. Push the branch, open the pull request, review it, fix what the review finds, and merge.

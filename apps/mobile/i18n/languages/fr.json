@@ -74,6 +74,7 @@
     "premiumActive": "Vous êtes membre Pro",
     "premiumActiveUntil": "Actif jusqu'au {{date}}",
     "premiumLifetime": "Accès à vie",
+    "manageSubscription": "Gérer l'abonnement",
     "removeAds": "Retirer les publicités",
     "removeAdsDescription": "Profitez d'une expérience sans publicités",
     "watchAdButton": "Regarder une pub pour {{duration}} sans pub",
@@ -164,13 +165,15 @@
     "restoreNotFound": "Aucun abonnement actif trouvé",
     "welcomePro": "Bienvenue dans Pro !",
     "errorGeneric": "Une erreur est survenue. Réessaie.",
+    "errorNetwork": "Pas de connexion. Vérifiez votre réseau et réessayez.",
+    "errorStoreUnavailable": "Les achats ne sont pas disponibles sur cet appareil pour le moment.",
+    "errorAlreadyOwned": "Vous possédez déjà Pro avec ce compte. Touchez « Restaurer mes achats » pour le récupérer.",
     "billedAnnually": "facturé annuellement",
     "compareHeaderFeature": "Fonctionnalité",
     "compareHeaderFree": "Gratuit",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mois",
     "reassurance": "Sans engagement · Annulable à tout moment",
-    "socialProof": "★ {{rating}} · {{users}} utilisateurs",
     "featureCore": "Toutes les fonctions de base",
     "featureLimitedSupport": "Support communautaire",
     "featureReminders": "Rappels programmés illimités",
@@ -204,7 +207,9 @@
   "subscription": {
     "graceBannerTitle": "Votre abonnement a peut-être expiré",
     "graceBannerMessage": "Connectez-vous à internet avant le {{date}} pour vérifier votre abonnement.",
-    "graceBannerCta": "Vérifier l'abonnement"
+    "graceBannerCta": "Vérifier l'abonnement",
+    "billingIssueTitle": "Problème de paiement",
+    "billingIssueMessage": "Votre abonnement n'a pas pu être renouvelé. Mettez à jour votre moyen de paiement avant le {{date}} pour conserver Pro."
   },
   "notifications": {
     "channelName": "Rappels",

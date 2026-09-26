@@ -110,8 +110,7 @@
     "compareHeaderFree": "Miễn phí",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/tháng",
-    "reassurance": "Không ràng buộc · Hủy bất cứ lúc nào",
-    "socialProof": "★ {{rating}} · {{users}} người dùng"
+    "reassurance": "Không ràng buộc · Hủy bất cứ lúc nào"
   },
   "premiumGate": {
     "unlock": "Mở khóa",

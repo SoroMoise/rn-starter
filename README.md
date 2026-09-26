@@ -8,7 +8,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 
 - **Theme system** — light / dark mode with RTL support (Arabic and any RTL language)
 - **i18n** — 20 languages (EN, FR, ES, DE, PT-BR, ZH-CN, ZH-TW, JA, KO, AR, HI, BN, RU, ID, TR, IT, NL, SV, PL, VI), lazy-loaded
-- **RevenueCat paywall** — monthly + annual subscriptions, 7-day free trial, grace period banner
+- **RevenueCat paywall** — renders whatever the store's current offering holds (plans, prices, trial), with a payment-problem banner and an offline allowance for subscribers
 - **Contextual paywall** — triggers on a generic action count fed by `useActionRating().recordAction()`, never during the first session — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
@@ -192,7 +192,8 @@ All commands run from the repo root unless noted.
 
 See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
-- **REVENUECAT_*** — API keys, entitlement ID, product IDs
+- **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
+- **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 

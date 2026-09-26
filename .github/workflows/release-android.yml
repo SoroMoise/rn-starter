@@ -180,6 +180,16 @@ jobs:
           MOBILE_DOTENV: ${{ secrets.MOBILE_DOTENV }}
         run: printf '%s' "$MOBILE_DOTENV" > .env
 
+      # FORCE_FREE and FORCE_PRO replace the store's answer for every user of the build:
+      # shipped, one locks every subscriber out of what they pay for, the other gives Pro away.
+      - name: Refuse a forced subscription tier
+        working-directory: apps/mobile
+        run: |
+          if grep -Eq "^[[:space:]]*(export[[:space:]]+)?FORCE_(FREE|PRO)[[:space:]]*=[[:space:]]*[\"']?true[\"']?[[:space:]]*(#.*)?$" .env; then
+            echo "::error::MOBILE_DOTENV sets FORCE_FREE or FORCE_PRO to true. Both are development overrides: remove them from the secret before releasing."
+            exit 1
+          fi
+
       - name: Restore google-services.json from secret
         working-directory: apps/mobile
         env:

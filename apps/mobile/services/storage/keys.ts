@@ -1,8 +1,6 @@
 export const KEYS = {
-  // Ad-free reward
+  // Entitlements: the encrypted store (secure.ts) holds these, never `mmkv`
   AD_FREE_UNTIL: '@ad_free_until',
-
-  // Subscription offline cache
   SUBSCRIPTION_EXPIRES_AT: '@subscription_expires_at',
   SUBSCRIPTION_IS_LIFETIME: '@subscription_is_lifetime',
 

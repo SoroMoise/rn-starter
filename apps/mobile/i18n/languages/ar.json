@@ -110,8 +110,7 @@
     "compareHeaderFree": "مجاني",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/شهر",
-    "reassurance": "بدون التزام · إلغاء في أي وقت",
-    "socialProof": "★ {{rating}} · {{users}} مستخدم"
+    "reassurance": "بدون التزام · إلغاء في أي وقت"
   },
   "premiumGate": {
     "unlock": "فتح",

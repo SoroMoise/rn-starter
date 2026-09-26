@@ -1,5 +1,6 @@
 const withAndroidConfigChanges = require('./plugins/withAndroidConfigChanges')
 const withAndroidSigning = require('./plugins/withAndroidSigning')
+const withBackupRules = require('./plugins/withBackupRules')
 const withCrashlyticsMapping = require('./plugins/withCrashlyticsMapping')
 const withGradleBuildCache = require('./plugins/withGradleBuildCache')
 const withGradleMemory = require('./plugins/withGradleMemory')
@@ -69,6 +70,7 @@ export default () => {
       plugins: [
         withAndroidConfigChanges,
         withAndroidSigning,
+        withBackupRules,
         withGradleMemory,
         withGradleBuildCache,
         withCrashlyticsMapping,
@@ -120,6 +122,7 @@ export default () => {
           iosApiKey: process.env.REVENUECAT_IOS_API_KEY ?? '',
           androidApiKey: process.env.REVENUECAT_ANDROID_API_KEY ?? '',
           forceFree: process.env.FORCE_FREE === 'true',
+          forcePro: process.env.FORCE_PRO === 'true',
           gracePeriodDays: parseInt(process.env.SUBSCRIPTION_GRACE_PERIOD_DAYS || '7', 10),
         },
       },

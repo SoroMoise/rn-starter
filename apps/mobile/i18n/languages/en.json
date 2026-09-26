@@ -74,6 +74,7 @@
     "premiumActive": "You're a Pro member",
     "premiumActiveUntil": "Active until {{date}}",
     "premiumLifetime": "Lifetime access",
+    "manageSubscription": "Manage subscription",
     "removeAds": "Remove Ads",
     "removeAdsDescription": "Enjoy ad-free experience",
     "watchAdButton": "Watch ad for {{duration}} ad-free",
@@ -164,13 +165,15 @@
     "restoreNotFound": "No active subscription found",
     "welcomePro": "Welcome to Pro!",
     "errorGeneric": "Something went wrong. Please try again.",
+    "errorNetwork": "No connection. Check your network and try again.",
+    "errorStoreUnavailable": "Purchases aren't available on this device right now.",
+    "errorAlreadyOwned": "You already own Pro with this account. Tap Restore purchases to bring it back.",
     "billedAnnually": "billed annually",
     "compareHeaderFeature": "Feature",
     "compareHeaderFree": "Free",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mo",
     "reassurance": "No commitment · Cancel anytime",
-    "socialProof": "★ {{rating}} · {{users}} users",
     "featureCore": "All core features",
     "featureLimitedSupport": "Community support",
     "featureReminders": "Unlimited scheduled reminders",
@@ -204,7 +207,9 @@
   "subscription": {
     "graceBannerTitle": "Subscription may have expired",
     "graceBannerMessage": "Connect to internet before {{date}} to verify your subscription.",
-    "graceBannerCta": "Verify subscription"
+    "graceBannerCta": "Verify subscription",
+    "billingIssueTitle": "Payment problem",
+    "billingIssueMessage": "Your subscription couldn't be renewed. Update your payment method before {{date}} to keep Pro."
   },
   "notifications": {
     "channelName": "Reminders",

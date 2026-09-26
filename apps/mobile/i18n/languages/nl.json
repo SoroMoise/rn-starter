@@ -110,8 +110,7 @@
     "compareHeaderFree": "Gratis",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/maand",
-    "reassurance": "Geen verplichtingen · Altijd opzegbaar",
-    "socialProof": "★ {{rating}} · {{users}} gebruikers"
+    "reassurance": "Geen verplichtingen · Altijd opzegbaar"
   },
   "premiumGate": {
     "unlock": "Ontgrendelen",

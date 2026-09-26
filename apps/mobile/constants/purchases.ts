@@ -10,6 +10,24 @@ export const REVENUECAT_API_KEY: string =
 // RevenueCat entitlement identifier — set this to match your RevenueCat dashboard.
 export const ENTITLEMENT_PREMIUM = 'premium'
 
+export type PurchaseSurface = 'paywall' | 'onboarding_premium' | 'onboarding_exit_intent'
+
+// `source` is what brought the sale up and `surface` the screen the tap landed on. `source`
+// reuses the vocabulary `openPaywall` takes: the funnel groups on it, and a new spelling splits
+// the funnel in two with no error anywhere.
+export type PurchaseOrigin = { source: string; surface: PurchaseSurface }
+
+// The onboarding sells without `openPaywall`, so each of its surfaces is its own entry point.
+export const ONBOARDING_PREMIUM_ORIGIN: PurchaseOrigin = {
+  source: 'onboarding_premium',
+  surface: 'onboarding_premium',
+}
+
+export const ONBOARDING_EXIT_INTENT_ORIGIN: PurchaseOrigin = {
+  source: 'onboarding_exit_intent',
+  surface: 'onboarding_exit_intent',
+}
+
 export const FREE_FEATURES = [
   { key: 'core', i18nKey: 'paywall.featureCore' },
   { key: 'limitedSupport', i18nKey: 'paywall.featureLimitedSupport' },

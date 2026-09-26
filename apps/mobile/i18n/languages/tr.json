@@ -110,8 +110,7 @@
     "compareHeaderFree": "Ücretsiz",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/ay",
-    "reassurance": "Taahhüt yok · İstediğiniz zaman iptal edin",
-    "socialProof": "★ {{rating}} · {{users}} kullanıcı"
+    "reassurance": "Taahhüt yok · İstediğiniz zaman iptal edin"
   },
   "premiumGate": {
     "unlock": "Kilidi aç",

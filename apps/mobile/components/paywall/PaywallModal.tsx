@@ -5,7 +5,6 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { LEGAL_URLS } from '@/constants/legal'
 import { FREE_FEATURES, PREMIUM_FEATURES } from '@/constants/purchases'
-import { SOCIAL_PROOF } from '@/constants/socialProof'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import i18n from '@/i18n/service'
@@ -165,7 +164,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
 
   const handleSubscribe = useCallback(async () => {
     if (!selectedPlan) return
-    await purchasePlan({ plan: selectedPlan, source })
+    await purchasePlan({ plan: selectedPlan, source, surface: 'paywall' })
   }, [selectedPlan, purchasePlan, source])
 
   const handlePlanSelect = useCallback((plan: OfferingPlan) => {
@@ -230,14 +229,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
                 style={[styles.heroOverlaySubtitle, styles.heroOverlayTextMuted]}>
                 {t('paywall.subtitle')}
               </ThemedText>
-              <View style={styles.socialProof}>
-                <ThemedText variant="caption" color="inherit" style={styles.socialProofText}>
-                  {t('paywall.socialProof', {
-                    rating: SOCIAL_PROOF.rating,
-                    users: SOCIAL_PROOF.usersLabel,
-                  })}
-                </ThemedText>
-              </View>
             </LinearGradient>
           </View>
 
@@ -363,7 +354,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           {/* Footer */}
           <View style={styles.footer}>
             <Pressable
-              onPress={restorePurchases}
+              onPress={() => void restorePurchases({ source, surface: 'paywall' })}
               disabled={isLoadingPurchase}
               accessibilityRole="button">
               <ThemedText variant="label" color="muted" style={styles.footerLink}>
@@ -536,17 +527,5 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     textDecorationLine: 'underline',
-  },
-  socialProof: {
-    marginTop: 8,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 99,
-  },
-  socialProofText: {
-    color: '#ffffff',
-    fontSize: 12,
-    fontWeight: '600',
   },
 })

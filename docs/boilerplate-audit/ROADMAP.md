@@ -24,13 +24,14 @@ audit of that gap and the plan to close it.
 | 4 | Converter vestiges: dead code, dead keys, dead config | 15 | **merged into `main`** |
 | 5 | Promo coordination and AdMob | 18 | **merged into `main`** |
 | 6 | Rating by moments: one pure policy, the ask deferred to the user's return | 9 | **merged into `main`** |
-| 7–13 | See §3 | — | not started |
+| 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
+| 8–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**125 have shipped** (62 in lots 1–3, 29 in lot 4, 28 in lot 5, 6 in lot 6) and **107 remain**,
-spread over lots 7 to 13. Three more were deliberately held back out of lot 4 — see §4. The per-lot
-counts in §3 are remaining work only; the console's lot cards also count those three, which is why
-its lot 7 figure is one higher and its lot 9 figure two.
+**146 have shipped** (63 in lots 1–3, 29 in lot 4, 29 in lot 5, 6 in lot 6, 19 in lot 7) and
+**86 remain**, spread over lots 8 to 13. Three more were deliberately held back out of lot 4 — see
+§4. The per-lot counts in §3 are remaining work only; the console's lot cards also count those
+three, which is why its lot 7 figure is one higher and its lot 9 figure two.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -40,6 +41,17 @@ Lot 6's six include two the audit had filed under other lots: `review-storage` (
 `claude-rating-play-policy` (lot 13), whose last point needed lot 6. One "later" item,
 `rating-storage-keys`, shipped with them, bar the `retryAfter` only the dormant sentiment path
 would read.
+
+Lot 7's 19 include nine the audit had filed under other lots — two under lot 8, one under lot 9,
+three under lot 10, one under lot 11, two under lot 13 — marked in every copy with a note naming
+the lot-7 item that covered them. Six "later" items shipped with them (`entitlement-secure-storage`,
+`ads-adfree-encrypted-store`, `subscription-provider-lecture-disque-par-rendu`, `env-force-pro`,
+`cles-billing-issue`, `cles-settings-generiques`). Two items it touched stay open, each with a note
+saying what is left: `exit-intent-entitlement-keyed` (lot 8, the sheet's copy) and
+`claude-storage-security` (lot 13, the rule on remembered settings). Checking the lot also found
+two items that had shipped unrecorded — `analytics-has-trial-offer` with lots 1–3,
+`adfree-stacking-cap` with lot 5 (c59f846) — now counted there, which is why those two figures
+moved by one.
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -81,25 +93,18 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 7 — Subscription: security and funnel (10 items)
+### Lot 8 — Selling surfaces and onboarding (13 items)
 
-Encrypted MMKV instance for entitlement keys plus `withBackupRules` (excluding the entitlement
-store from cloud backup and device transfer closes the "pull the store, flip the flag, restore"
-attack), `BillingIssueBanner`, `managementURL`, the `FORCE_PRO` dev override, purchase and
-Crashlytics errors classified **by code** with only `unknown` recorded as non-fatal, and the full
-purchase funnel — `source`, `offering_id`, `product_id`, `currency` (never `revenue_usd`: a ₹3,499
-plan logged as USD reads as $3,499), plus the `PurchaseSurface` axis.
+`PRO_BENEFITS` as the single list behind every Pro pitch, the paywall split into reusable blocks
+with `usePaywallPlans` and a `paywallAnalytics`, `PremiumGate` blurring instead of erasing, the
+exit sheet's copy following the offer — it still promises "7 days free" whatever the store sells —
+and on the onboarding side: navigation **by step name** (`OnboardingStepKind`) rather than index,
+hardware back stepping back instead of leaving the app, and `OnboardingStepLayout`. (The guard that
+makes the flow sell exactly once, at its last step, shipped in lot 5 with the `openPaywall` choke
+point; the removal of the fabricated social proof, and the flow ending on the entitlement, in
+lot 7.)
 
-### Lot 8 — Selling surfaces and onboarding (15 items)
-
-`PRO_BENEFITS` as the single list behind every Pro pitch, removal of the fabricated social proof,
-the paywall split into reusable blocks with `usePaywallPlans` and a `paywallAnalytics`,
-`PremiumGate` blurring instead of erasing, and on the onboarding side: navigation **by step name**
-(`OnboardingStepKind`) rather than index, hardware back stepping back instead of leaving the app,
-and `OnboardingStepLayout`. (The guard that makes the flow sell exactly once, at its last step,
-shipped in lot 5 with the `openPaywall` choke point.)
-
-### Lot 9 — UI library and layout (26 items)
+### Lot 9 — UI library and layout (25 items)
 
 `ModalDialog` with `useKeyboardHeight` (Android edge-to-edge stopped resizing modal windows),
 `SettingsRow`/`AppSwitch`/`ProBadge`, `useModalSheetPanGesture` and the drag lock, `WheelPicker`,
@@ -108,15 +113,18 @@ RTL, the centred column at `MAX_CONTENT_WIDTH` with `useResponsiveLayout`, `useH
 `resetToHome`/`ExitToHome`, and the "free cap applies on read, never on write" pattern extracted as
 a hook. The three items deferred out of lot 4 (§4) land here too.
 
-### Lot 10 — Notifications (10 items)
+### Lot 10 — Notifications (5 items)
 
 The **permission is never requested**: `notificationService.requestPermission` has no caller
 anywhere, so on Android 13+ a fresh install never sees the prompt. Ask in context, re-read the
 grant on every foreground, expose `canAskAgain`, and add a generic local reminder scheduler
 (cancel the whole set, then re-schedule). Android channels are immutable once created — a change
-to sound or importance needs a new channel id, not an edit.
+to sound or importance needs a new channel id, not an edit. Read the grant, never
+`NOTIFICATION_PERMISSION_REQUESTED` alone: that flag lives in the main MMKV instance, which cloud
+backup and device transfer carry to a phone the OS grant does not follow. (The lot's funnel and
+Crashlytics items shipped in lot 7.)
 
-### Lot 11 — Plugins and Android build (9 items)
+### Lot 11 — Plugins and Android build (8 items)
 
 `android.blockedPermissions` (a declared permission is a promise on the store listing),
 `withAndroidFontFilter` upgraded to bg-remover's guarded version, the Metro stub for
@@ -132,14 +140,15 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (28 items)
+### Lot 13 — Documentation and conventions (26 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: large screens, the safe-area contract, the
 NativeWind and RN footguns that break silently, Play store policy (urgency, reviews, aggregate
 ratings, declared permissions), the i18n voice charter and plural parity, bundle size (Metro does
 not tree-shake — import `date-fns` per function), and the frozen structure of
 `PROJECT_CONTEXT.md`. The promo-coordination invariants, `ADS.md` and the AdMob-literals rationale
-shipped in lot 5, the rating doctrine in lot 6.
+shipped in lot 5, the rating doctrine in lot 6, the grace-period doctrine, the entitlement-storage
+rules and the social-proof rule in lot 7.
 
 ---
 
@@ -173,6 +182,17 @@ option, not yet taken.
 commercial choices rather than reusable machinery: `SoftAskCard`, `LifetimeOfferCard`, pitch
 families keyed by source, per-feature rewarded unlocks, the two-tier interstitial cadence, Google
 Drive backup, coach-marks. A boilerplate ships the coordinator, not the campaign.
+
+**Only the entitlement store stays out of backups.** bg-remover takes the whole of `mmkv/` out of
+cloud backup, and the audit's lot-13 storage item proposed writing that down as the rule. It is that
+app's product choice — a photo library a day-stale snapshot resurrected. Here the main instance
+holds preferences, the onboarding, the review and paywall spacing, which a reinstall should keep;
+excluding more is a decision an app takes for itself, and CLAUDE.md says so.
+
+**The starter ships no data migration.** It has no installs. Lot 4 left AsyncStorage's
+`migration.ts` behind for that reason (`pas-de-migration-asyncstorage`), lot 6 the old `@rating_*`
+counters (`rating-no-legacy-migration`), lot 7 the plaintext entitlement keys; each time the doc says
+what an app porting the change onto a released build owes its users instead.
 
 ---
 
@@ -287,7 +307,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§8, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§9, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -325,7 +345,79 @@ where the store URLs come from.
 
 ---
 
-## 8. Resuming in a new session
+## 8. What verification caught on lot 7
+
+Both stages were launched as sub-agents on Sonnet, one per family — storage and backup, subscription
+and funnel — and both died on the account's usage limit before reporting. They ran in the session
+instead, against the SDKs' own sources: react-native-mmkv's C++ core in `node_modules`, and
+RevenueCat's Android SDK checked out at its tag — purchases-android 10.2.0, the version
+purchases-hybrid-common 18.1.0 pins under react-native-purchases 10.0.1.
+
+- **A pending payment rejects; it never resolves (fatal to the audit's table).** `PostReceiptHelper`
+  ends a PENDING purchase in `onError(PaymentPendingError)`. bg-remover's `FAILURE_BY_CODE`, the
+  reference, files code 20 under `unknown`: a Crashlytics non-fatal and "Something went wrong" for a
+  purchase the store has taken. Here it is `pending` — `purchase_pending`, and nothing shown.
+- **The same fact refuted the living docs.** CLAUDE.md, the provider and `analyticsService` all said
+  a deferred transaction resolves with no entitlement, and the provider traced that path as
+  `purchase_pending`. A purchase that resolves without `ENTITLEMENT_PREMIUM` is a sale the dashboard
+  never attached to it, or an entitlement id left at the template's `'premium'`: the user paid for
+  nothing and the funnel called it pending. It is a `purchase_failed` with
+  `error_code: 'entitlement_inactive'` now, and a non-fatal naming the entitlements that are active.
+- **ITEM_ALREADY_OWNED is not a bug.** Play's code reaches the app as
+  `PRODUCT_ALREADY_PURCHASED_ERROR` (`google/errors.kt`), which the reference also filed under
+  `unknown`. It is `already_owned`, and the toast points at *Restore purchases*.
+- **MMKV reads 16 bytes of the key and ignores the rest.** `AESCrypt` copies `min(length, 16)`, and
+  react-native-mmkv only complains when an instance fails to open: bg-remover's 27-byte key is its
+  first 16 characters. The starter's is exactly 16 bytes, and its comment says why.
+- **Every Play subscriber read as `other` (not in the audit).** The store product of a subscription
+  is `subId:basePlanId` (`GoogleStoreProduct`) while the entitlement reports the two apart, and
+  `deriveActiveSubscription` compared the joined id with the bare one. Both spellings match now, as
+  in deep-focus.
+- **A forced tier could ship.** The release restores `.env` from `MOBILE_DOTENV`, so a `FORCE_PRO`
+  left in the secret would give every user Pro, and a `FORCE_FREE` lock every subscriber out. The
+  workflow refuses either, the way it refuses Google's sample AdMob app id; its grep was run
+  against the step's script as extracted from the YAML.
+- **What the encryption does not cover.** RevenueCat keeps its own CustomerInfo in the SDK's shared
+  preferences (`DeviceCache`) and serves it offline by default (`CacheFetchPolicy.CACHED_OR_FETCHED`),
+  so the app's copy only seeds the first frames and the launches the SDK has nothing cached for.
+  CLAUDE.md says the lot closes the cheap attack on the app's copy, not on the SDK's.
+- **The backup scope** is the entitlement store only (§4). A prebuild run in the session produced
+  both rule files and both manifest attributes; neither Expo's template nor any library in
+  `node_modules` sets either attribute, and bg-remover ships the same two over the same Firebase,
+  AdMob and RevenueCat SDKs.
+- **The premium step stranded a paying user.** Beyond the ref race the audit named, the effect
+  watching the tier returned early on the premium step: a purchase from `PremiumValueStep` itself
+  left the subscriber on the pitch, whose skip link then offered them the exit sheet's trial.
+
+Reading the whole branch before the push — once in the session, once with the code-review skill —
+found:
+
+- `ADS.md` still filed `@ad_free_until` under "plain MMKV", and CLAUDE.md said the encrypted file
+  "can no longer be pulled, edited into Pro and put back", which a key shipped in the bundle does
+  not stop. Both corrected.
+- The commit writing down the offline signal first misdescribed the sibling apps: they clear their
+  cache on a verified "no entitlement" only while NetInfo reads online, which ignores an answer the
+  store did give. Corrected before the push.
+- The code-review skill's one finding, the missing plaintext-to-encrypted migration, is declined
+  with its reason on the record (§4).
+
+Declined as well: a per-app encryption key generated by `setup.sh` (the key is obfuscation whatever
+its value, and one regenerated after a release would drop every offline cache); a toast for a
+pending payment (the store's own flow has told the user); and hiding a billing-issue date already
+past (the store's next answer clears it).
+
+Found along the way and left out of this lot: when `purchaseService.initialize()` throws — Expo Go,
+where the native module is missing — the provider returns before `loadOfferings` and
+`isLoadingPrices` stays true, so the price notice spins for good (the retry of lots 1–3 covers a
+failed fetch, not a failed configure); and `NOTIFICATION_PERMISSION_REQUESTED` rides the backups
+(lot 10, above). Fixed on the way instead: `utils/trialOffer.ts`, dead since lot 3
+while CLAUDE.md still cited it; a `PostPurchaseModal` PROJECT_CONTEXT.md credited the provider with;
+and a README still promising a monthly and annual pair with a 7-day trial, and listing an
+entitlement id and product ids among the env variables.
+
+---
+
+## 9. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -333,7 +425,7 @@ where the store URLs come from.
    audit filed some under a neighbouring lot:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==7 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==8 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

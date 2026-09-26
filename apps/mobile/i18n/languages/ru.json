@@ -110,8 +110,7 @@
     "compareHeaderFree": "Бесплатно",
     "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/мес",
-    "reassurance": "Без обязательств · Отмена в любое время",
-    "socialProof": "★ {{rating}} · {{users}} пользователей"
+    "reassurance": "Без обязательств · Отмена в любое время"
   },
   "premiumGate": {
     "unlock": "Разблокировать",

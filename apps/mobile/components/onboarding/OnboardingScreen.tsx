@@ -65,16 +65,6 @@ export function OnboardingScreen() {
     analyticsService.logOnboardingStepViewed({ stepIndex: 0, timeOnPreviousStepS: null })
   }, [])
 
-  useEffect(() => {
-    if (!isSubscriptionInitialized || !isPremium || hasSeenProWelcome) return
-    if (currentStep >= STEP_INDEX.premium) return
-    setProWelcomeVisible(true)
-    markProWelcomeSeen()
-    analyticsService.track('onboarding_pro_detected', {
-      step: stepName(currentStep),
-    })
-  }, [isSubscriptionInitialized, isPremium, hasSeenProWelcome, currentStep, markProWelcomeSeen])
-
   const goToStep = useCallback(
     (step: number) => {
       triggerLight()
@@ -100,6 +90,34 @@ export function OnboardingScreen() {
     markCompleted()
     triggerSuccess()
   }, [markCompleted])
+
+  // Keyed on the entitlement, not on a purchase call: a promise resolves before React
+  // commits the new tier, and a restore or a purchase from the pitch itself calls nothing.
+  useEffect(() => {
+    if (!isSubscriptionInitialized || !isPremium) return
+
+    if (stepName(currentStep) === 'premium') {
+      if (exitIntentVisible) {
+        setExitIntentVisible(false)
+        analyticsService.track('onboarding_exit_intent_outcome', { outcome: 'recovered_to_trial' })
+      }
+      handleComplete()
+      return
+    }
+
+    if (hasSeenProWelcome) return
+    setProWelcomeVisible(true)
+    markProWelcomeSeen()
+    analyticsService.track('onboarding_pro_detected', { step: stepName(currentStep) })
+  }, [
+    isSubscriptionInitialized,
+    isPremium,
+    hasSeenProWelcome,
+    currentStep,
+    exitIntentVisible,
+    markProWelcomeSeen,
+    handleComplete,
+  ])
 
   const handleProWelcomeContinue = useCallback(() => {
     triggerLight()
@@ -133,14 +151,6 @@ export function OnboardingScreen() {
     })
     setExitIntentVisible(true)
   }, [attemptedSkipTrial, markAttemptedSkipTrial, handleComplete])
-
-  const handleExitRecovered = useCallback(() => {
-    setExitIntentVisible(false)
-    analyticsService.track('onboarding_exit_intent_outcome', {
-      outcome: 'recovered_to_trial',
-    })
-    handleComplete()
-  }, [handleComplete])
 
   const handleExitConfirmedSkip = useCallback(() => {
     setExitIntentVisible(false)
@@ -248,7 +258,6 @@ export function OnboardingScreen() {
 
       <ExitIntentSheet
         visible={exitIntentVisible}
-        onRecovered={handleExitRecovered}
         onConfirmedSkip={handleExitConfirmedSkip}
         onDismissedOutside={handleExitDismissedOutside}
       />

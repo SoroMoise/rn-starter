@@ -25,7 +25,7 @@ SafeAreaProvider
         > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
           > ThemeProvider      <- light/dark via NativeWind 'class' strategy
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
-              > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal
+              > SubscriptionProvider   <- RevenueCat, offline allowance, billing issue, PaywallModal
                 > AdFreeProvider       <- ad-free session window tracking
                   > AppContent         <- onboarding gate, then TabLayout (+ RatingAskHost once the session started)
       RTLRestartBanner         <- outside provider tree
@@ -69,7 +69,7 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
-| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases` |
+| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `managementUrl` (the store page of the subscription held, or null), `reportFailure` (classifies an error by its code; only `unknown` becomes a Crashlytics non-fatal) |
 | `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
 | `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
 | `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
@@ -91,14 +91,15 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 | File/Dir | Description |
 |---|---|
-| `mmkv.ts` | Single MMKV instance |
+| `mmkv.ts` | Main MMKV instance |
+| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one. `plugins/withBackupRules.js` keeps its files out of cloud backup and device transfer |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
-| `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
+| `domains/adFree.ts` | Ad-free window expiry (encrypted instance) — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
-| `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
+| `domains/subscription.ts` | Subscription expiry + lifetime flag (encrypted instance); `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
 ---
@@ -111,7 +112,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only when the store could not be reached, and `SubscriptionGraceBanner` then says the clock is running.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source, surface })` / `restorePurchases({ source, surface })` — no product id, plan count or trial length is hardcoded. `source` is what brought the sale up, `surface` (`PurchaseSurface`) the screen the tap landed on; both ride on every `purchase_*` and `restore_*` event. The store owns the grace period after a failed payment — RevenueCat flags it with `billingIssueDetectedAtMillis`, which becomes `billingIssue` on the context and `BillingIssueBanner` in Settings, informational only. `PremiumBanner` offers a subscriber a *Manage subscription* row whenever `managementUrl` is non-null. `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only before the store has answered or when it could not be reached, and `SubscriptionGraceBanner` then says the clock is running. `FORCE_FREE` / `FORCE_PRO` (development only, `FORCE_FREE` winning) replace the store's answer inside `applyCustomerInfo` and never reach `subscriptionStorage`; the release workflow refuses a `MOBILE_DOTENV` that sets either.
 
 ### Contextual Paywall
 
@@ -145,7 +146,7 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 2-step flow in `OnboardingScreen.tsx`:
 1. `WelcomeStep` — app introduction. A top-left pill opens the shared `LanguagePicker` bottom sheet for language selection.
-2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding.
+2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding, and so does becoming Pro on this step — a purchase from the pitch or the exit sheet, or a restore: an effect in `OnboardingScreen` keyed on the entitlement, never on the purchase call. A subscriber detected on the welcome step gets `ProWelcomeModal` once.
 
 After completion, `onboardingStore.markCompleted()` is called and `AppContent` renders the tabs.
 

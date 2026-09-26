@@ -61,11 +61,24 @@ export default () => {
           backgroundColor: '#ffffff',
         },
         permissions: ['android.permission.POST_NOTIFICATIONS'],
+        // Every permission in the release manifest is listed on the store page and read by Play's
+        // review. The Expo template declares these three and expo-file-system the two storage
+        // ones again, so they are removed from the whole merge rather than from the template's
+        // manifest alone; nothing here calls for any of them. A blocked permission fails at
+        // runtime, never at build time: a feature that needs one takes it off this list in the same
+        // change — a media picker needs READ_EXTERNAL_STORAGE up to Android 12, beside the
+        // READ_MEDIA_* its library declares. Never block POST_NOTIFICATIONS or
+        // RECEIVE_BOOT_COMPLETED: the notification system needs both (CLAUDE.md, Notifications).
+        blockedPermissions: [
+          'android.permission.SYSTEM_ALERT_WINDOW',
+          'android.permission.READ_EXTERNAL_STORAGE',
+          'android.permission.WRITE_EXTERNAL_STORAGE',
+        ],
       },
-      privacy: {
-        privacyPolicyUrl: process.env.LEGAL_PRIVACY_POLICY_URL,
-        termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,
-      },
+      // No `privacy` block: that key was expo.dev's project visibility, never a place for legal
+      // URLs, and SDK 54's config schema no longer has it. The links the app opens are
+      // `extra.legal` below (constants/legal.ts); the ones the stores show are entered in their
+      // consoles.
 
       plugins: [
         withAndroidConfigChanges,

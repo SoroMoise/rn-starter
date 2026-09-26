@@ -170,6 +170,54 @@ pnpm ios       # expo run:ios
 
 ---
 
+## Android release (GitHub Actions)
+
+`.github/workflows/release-android.yml` versions, builds, signs and publishes the Android app to the Play Console's **internal** track, with no local machine. It runs when a pull request carrying the **`release`** label is **merged** into `main`, or by hand (`workflow_dispatch`). Closing a pull request, or merging one without the label, releases nothing.
+
+### Versioning
+
+The next version comes from the Conventional Commits since `.last_release_commit`:
+
+| Commits since the last release | Bump |
+|---|---|
+| a `type!:` subject or a `BREAKING CHANGE` footer | major — `2.0.0` |
+| at least one `feat:` | minor — `1.1.0` |
+| anything else | patch — `1.0.1` |
+
+The base is `const version` in `apps/mobile/app.config.js`, and `versionCode` follows that file's formula. Once the build is on Play, the workflow pushes `chore(release): vX.Y.Z [skip ci]` to `main` with the new version and marker — the git history is the changelog (see `CHANGELOG.md`). The pull request's title becomes the release's name in the Play Console, cut at 50 characters, so lead with what the release does.
+
+### First release
+
+The Play Developer API only publishes to an app that already holds a build, so the first one goes up by hand:
+
+1. Generate the upload keystore (the command is in `apps/mobile/keystore.properties.example`), copy that file to `keystore.properties` and fill it in. Keep the keystore out of the repository and somewhere it cannot be lost: every later build must be signed with it.
+2. `pnpm --filter mobile preb:android`, then `pnpm --filter mobile build:aab`, and upload `apps/mobile/android/app/build/outputs/bundle/release/app-release.aab` to the internal track in the Play Console. It is `1.0.0`, versionCode `1000000`.
+3. Record it — `git rev-parse HEAD > .last_release_commit`, committed — so the workflow's first run counts only what came after.
+4. In Google Cloud, create a service account with a JSON key and enable the Google Play Android Developer API; in the Play Console, invite its email under *Users and permissions* with release rights on the app.
+
+### Repository secrets
+
+| Secret | Holds | Where it comes from |
+|---|---|---|
+| `MOBILE_DOTENV` | the whole `apps/mobile/.env` | the file's contents — never with `FORCE_FREE` or `FORCE_PRO`, which the workflow refuses |
+| `GOOGLE_SERVICES_JSON` | `apps/mobile/google-services.json` | the file's contents, from the Firebase Console |
+| `ANDROID_KEYSTORE_BASE64` | the upload keystore | `base64 -w0 apps/mobile/release.keystore` (macOS: `base64 -i`) |
+| `ANDROID_KEYSTORE_PASSWORD` | the keystore's password | `STORE_PASSWORD` in `keystore.properties` |
+| `ANDROID_KEY_ALIAS` | the key's alias | `KEY_ALIAS` |
+| `ANDROID_KEY_PASSWORD` | the key's password | `KEY_PASSWORD` |
+| `PLAY_SERVICE_ACCOUNT_JSON` | the Play Developer API key | the service account's JSON key |
+
+The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`.
+
+### When a release fails
+
+- **`main` refuses direct pushes.** The version commit is pushed with the workflow's own `GITHUB_TOKEN`, which neither a ruleset nor branch protection can exempt. On a protected `main` the build reaches Play, the bump is refused, and the next run recomputes the same version, which Play rejects. Leave `main` open to that push, or give the checkout step (`actions/checkout`'s `token`) a GitHub App token or a PAT the rule lets through.
+- **All three publish attempts failed.** Read the first attempt and the job summary before re-running: an attempt can commit its Play edit and still report failure, and the later ones then die on `apkUpgradeVersionConflict`. Bump `app.config.js` and `.last_release_commit` by hand to match what the Play Console holds — a plain re-run recomputes the same rejected version.
+
+The AAB is kept as a build artifact only when no attempt landed; `.github/workflows/purge-artifacts.yml` clears them on demand, since Actions storage is billed on a private repository.
+
+---
+
 ## Commands
 
 All commands run from the repo root unless noted.

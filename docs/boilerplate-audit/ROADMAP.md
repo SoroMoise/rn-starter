@@ -28,12 +28,13 @@ audit of that gap and the plan to close it.
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
 | — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
-| 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | on `claude/lot-10-notifications` |
-| 11–13 | See §3 | — | not started |
+| 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
+| 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | on `claude/lot-11-plugins-android` |
+| 12–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**204 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8, 33 in lot 9, 5 in lot 10) and **31 remain**, spread over lots 11 to 13. The three held back
+**213 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11) and **22 remain**, spread over lots 12 and 13. The three held back
 out of lot 4 (§4) closed with lot 9, so nothing is deferred any more and the console's lot cards
 match §3.
 
@@ -96,6 +97,14 @@ not ship either, by decision (§4). The branch also carries two commits outside 
 `pnpm lint` had been red on `main` since 5542d78, and the CHANGELOG still listed the onboarding's
 old third step.
 
+Lot 11's nine are its eight and one the audit had filed under lot 13, `config-privacy-block`, the
+same block as `privacy-block-removal`. One "later" item shipped with them,
+`gitignore-modules-and-play-key` (lot 12), bar its `service-account.json` rule, declined (§12). Two
+lot-13 items it touched stay open, each with a note saying what is left: `claude-play-policy` (its
+permissions point shipped with `blockedPermissions`) and `claude-bundle-size` (the `analyze`
+discipline). Two items shipped otherwise than proposed: the release documentation is a README
+section rather than a new file, and `setup.sh` copies no `keystore.properties` (§12).
+
 The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
 onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
 blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
@@ -144,15 +153,6 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 11 — Plugins and Android build (8 items)
-
-`android.blockedPermissions` (a declared permission is a promise on the store listing — never
-`POST_NOTIFICATIONS` nor `RECEIVE_BOOT_COMPLETED`, §4),
-`withAndroidFontFilter` upgraded to bg-remover's guarded version, the Metro stub for
-`@revenuecat/purchases-js-hybrid-mappings` (~750 KB of web SDK in the native bundle), removing the
-`privacy` block that never carried legal URLs, and `scripts/setup.sh` propagating the bundle id all
-the way to the Play publication step.
-
 ### Lot 12 — Assets, legal, api/monorepo (9 items)
 
 A brand-asset generator (the starter ships one 512px RGBA icon doing duty as splash too), a privacy
@@ -161,19 +161,21 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (14 items)
+### Lot 13 — Documentation and conventions (13 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: the NativeWind and RN footguns that break
 silently (the line-height one is written), the measured-height echo beside the modal-keyboard rule,
-Play store policy (urgency, reviews, aggregate ratings, declared permissions), the i18n voice
-charter and plural parity, a bundle-size section (the `date-fns` rule is in the code style; the
-Metro stub and `pnpm analyze` are not), code-style layers and comments, and the frozen structure of
+Play store policy (urgency, reviews, aggregate ratings, sensitive-permission declarations — the
+declared-permissions rule shipped in lot 11), the i18n voice charter and plural parity, a
+bundle-size section (the `date-fns` rule and the Metro stub are in the code style; `pnpm analyze`
+is not), code-style layers and comments, and the frozen structure of
 `PROJECT_CONTEXT.md` — which by now needs its "Hooks" section: lot 9 put a dozen hooks and
 components in its Styling section for want of one. The promo-coordination invariants, `ADS.md` and
 the AdMob-literals rationale shipped in lot 5, the rating doctrine in lot 6, the grace-period
 doctrine, the entitlement-storage rules and the social-proof rule in lot 7, the back-key and
 step-name rules in lot 8, large screens, the safe-area contract, limits on read, the persist flush
-and the stack reset in lot 9, the notification permission and channel rules in lot 10.
+and the stack reset in lot 9, the notification permission and channel rules in lot 10, the font
+filter, blocked permissions and CNG rationale in lot 11.
 
 ---
 
@@ -182,7 +184,9 @@ and the stack reset in lot 9, the notification permission and channel rules in l
 **Keep Continuous Native Generation.** `android/` and `ios/` stay uncommitted. bg-remover commits
 `android/` (45 files, 2.3 MB, touched by 12 of its last 60 commits) and pays for it: it must
 `prebuild --clean` and restore the tree in CI. A committed `android/` would also bake
-`com.yourcompany.rnstarter` into ~45 files that `setup.sh` would then have to sweep.
+the app's identity into 7 of its ~50 files, two of them under a package path, that `setup.sh` would
+then have to sweep and move — counted on a fresh prebuild in lot 11; the "~45 files" first written
+here was the size of bg-remover's whole tree.
 
 **The HTTP layer stays while `apps/api` ships.** Lot 4's audit contained two contradictory
 families: one wanted `utils/retry.ts`, `utils/apiErrors.ts` and `hooks/useNetworkStatus.ts`
@@ -261,7 +265,7 @@ would be the demo step above. But removing `POST_NOTIFICATIONS` would leave a de
 without knowing why — on Android 13+ a notification from an app that never asked is dropped with no
 error — when the fix is only ever the ask. So the permission stays declared, the ask and the grant's
 readback ship as ready helpers, and a missing grant is loud: the scheduler refuses, and says so.
-Lot 11's `blockedPermissions` must never list `POST_NOTIFICATIONS`, nor `RECEIVE_BOOT_COMPLETED`,
+`blockedPermissions` (lot 11) never lists `POST_NOTIFICATIONS`, nor `RECEIVE_BOOT_COMPLETED`,
 which expo-notifications declares to re-arm scheduled triggers after a reboot.
 
 **Sound and vibration belong to the channel, not to a setting.** A channel's sound is frozen at
@@ -391,7 +395,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§12, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§13, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -691,7 +695,73 @@ call timed out but still running would race the next sync, which is what the que
 
 ---
 
-## 12. Resuming in a new session
+## 12. What verification caught on lot 11
+
+The first stage ran in the session, against the libraries in `node_modules`, two exports of the
+Android bundle, a scratch prebuild with a debug manifest merge, and `setup.sh` run on a clone.
+
+- **The reference's anchored suffix strips the multi-file families (fatal to the audit's proposal).**
+  bg-remover keeps `_${family.toLowerCase()}.ttf`. FontAwesome5 and 6 load `FontAwesome5_Regular`,
+  `_Solid` and `_Brands`, so keeping FontAwesome5 would have deleted all three. The suffixes are read
+  off the package's own requires, one per file, and a name that is not a family is refused.
+- **The block was skipped once present (not in the audit).** A prebuild without `--clean` re-runs the
+  mod on the existing build.gradle, so a family added after the guard asked for it never reached the
+  build: the guard would have asked, been obeyed, and the release would still have stripped the font.
+  It is replaced at every prebuild.
+- **The reference's guard counted what is not a family.** `import { createIconSet }`, a `build/` path
+  or a type-only import would have refused the prebuild; only modules that require a font count.
+- **Metro only bundles the fonts of the families imported.** The starter's 24 subpath imports put
+  one font in the resources; the filter guards against an index import (all fifteen families, 4 MB)
+  and against dependencies, which is why the guard is the half that matters.
+- **The web SDK was the largest package in the bundle.** 743 KiB of 4.9 MB, ahead of reanimated and
+  react-native; the stub takes the bundle to 4,172,648 bytes. Every access to it sits inside a
+  browser-mode function, so `{ type: 'empty' }` replaces the stub file. The audit's ordering risk
+  does not hold — NativeWind's resolver calls the one it found for everything but `global.css`, so
+  either order works — and its claim that the starter keeps a web script is false; the web gate stays
+  anyway.
+- **expo-file-system declares the two storage permissions too.** Removing them from the template's
+  manifest alone would have left them in the merge; `blockedPermissions` removes them from it.
+  RECORD_AUDIO, which the audit listed, is declared by nothing here, and VIBRATE is expo-haptics'.
+- **SDK 54 has no `privacy` field at all.** Only an unused enum is left in @expo/config.
+- **The CNG item's figure was wrong** (§4), and the starter's own local module already needed the
+  two ignore rules the item filed as future-proofing.
+- **The publish action uploads no release notes**, so bg-remover's `artifacts/` folder would reach no
+  one; the changelog says the notes are written in the Play Console.
+- **The protected-branch advice cannot be followed.** all-currency-converter tells the reader to let
+  `github-actions[bot]` bypass the protection; the GITHUB_TOKEN cannot go on a ruleset's bypass list.
+  Its page also describes a push trigger the workflow does not have, names keystore keys the plugin
+  does not read and omits GOOGLE_SERVICES_JSON. Neither source said the first build goes up by hand.
+- **The bundle id already reached the publication**, through the workflow reading `app.config.js`
+  (lot 2). What `setup.sh` missed was elsewhere: the Worker's name, which would have had a second app
+  replace the template's Worker on a shared Cloudflare account, the Firebase example the README
+  copies into place, and the root package name.
+
+The second stage, a sub-agent reading the whole branch against the same sources, found three more,
+all fixed:
+
+- **A dynamic `import()` of a family was invisible to the guard.** Metro bundles it like any other,
+  so the font would have been stripped with the guard silent. The call regex takes `import(` now.
+- **A commented-out import counted as one**, and refused the prebuild over a family nothing draws.
+  Comments are dropped before the scan.
+- **`platform !== 'web'` is not "Android and iOS".** Metro's resolver treats the platform as nullable,
+  and a request made without one would have lost the real SDK; the stub names the two platforms.
+
+It also claimed that `blockedPermissions` strips `SYSTEM_ALERT_WINDOW` from the debug build too,
+reading it as a library's permission; the debug merge measured in the first stage keeps it, from the
+app's own `src/debug` manifest, so CLAUDE.md is unchanged. And it found `com.yourcompany.appenvironment`
+in the local module's namespace and Kotlin package — left as it is: it is neither the name, the slug
+nor the bundle id, nothing outside the APK's classes shows it, and renaming it would have `setup.sh`
+move sources.
+
+Declined, each with its reason on the record: copying `keystore.properties.example` into place (a
+file with empty passwords would replace withAndroidSigning's failure naming the missing file with a
+Gradle signing error that names neither); `service-account.json` in `.gitignore` (the key travels as
+a secret, and an arbitrary file name guards nothing); a `RELEASE_ANDROID.md` of its own (CLAUDE.md
+holds the mechanics, and a third copy is one more to keep in step).
+
+---
+
+## 13. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.

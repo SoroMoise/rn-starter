@@ -45,7 +45,7 @@
       },
       "notifications": {
         "label": "Notifications",
-        "desc": "Permission request, foreground banners and Android channels, ready for the notifications your app sends."
+        "desc": "A permission request for the screen that needs it, foreground banners, the Android channel and daily reminders — ready for the notifications your app sends."
       }
     },
     "cta": {

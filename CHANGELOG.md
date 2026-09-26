@@ -12,7 +12,7 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Theme system (light/dark + RTL) with NativeWind v4 and a design-system component set.
 - Internationalization with i18next — 20 languages, lazy-loaded, EN/FR as source of truth.
 - Monetization: RevenueCat paywall with a contextual paywall driven by a generic action counter, AdMob (banner/interstitial/rewarded), and an app-store rating prompt.
-- Notification system (`expo-notifications`): permission request, foreground presentation and Android channels, ready to wire up. Nothing is scheduled yet, and remote push is not wired on the device.
+- Local notification system (`expo-notifications`): the grant read off the OS and a request for the screen that needs it, foreground presentation, the Android channel and a daily reminder scheduler, ready to wire up. Nothing asks or schedules until an app does, and remote push is not wired on the device.
 - Onboarding flow (welcome → premium → language) and a premium demo home screen.
 - Generic Cloudflare Worker API (`/health` + an authenticated example route + an FCM push helper).
 - Template tooling: `scripts/setup.sh`, environment and Firebase config templates.

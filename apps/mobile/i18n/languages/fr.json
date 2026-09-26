@@ -45,7 +45,7 @@
       },
       "notifications": {
         "label": "Notifications",
-        "desc": "Demande de permission, bannières au premier plan et canaux Android, prêts pour les notifications de votre app."
+        "desc": "Une demande de permission pour l'écran qui en a besoin, les bannières au premier plan, le canal Android et des rappels quotidiens — prêts pour les notifications de votre app."
       }
     },
     "cta": {

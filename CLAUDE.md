@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 Monorepo boilerplate for a premium React Native / Expo app:
 
-- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable notification system (permissions + Android channels, ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
+- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable local notification system (the grant, the Android channel, a daily reminder scheduler — ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -222,8 +222,8 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 `apps/mobile/services/notifications/` — reusable notification system: the grant
 (`notificationService.readPermission()` / `requestPermission()`, and `useNotificationPermission()`,
 which reads it again at every foreground), foreground presentation, the Android channel
-(`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled
-notifications for your own features. The starter itself asks for nothing: the permission is there
+(`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) and daily reminders
+(`syncDailyReminders`). The starter itself asks for nothing and schedules nothing: all of it is there
 for the app's own notifications, and the first feature that sends one is its first caller.
 
 **The permission is asked by the feature that needs it, where the user sees what it buys.**
@@ -246,6 +246,20 @@ but not granted reads as `denied`, with `canAskAgain` taken from the system's ra
 false where nothing was ever asked. Restored onto a new phone, it would send the user to the system
 settings instead of the dialog, for every runtime permission, so `withBackupRules` keeps it on the
 device.
+
+**The scheduler never asks, and never fails quietly.** `syncDailyReminders({ group, reminders,
+content })` cancels every reminder of its group, then schedules one daily trigger per entry; an
+empty list clears the group. Calls are queued, so the latest one holds — two overlapping syncs would
+each cancel, then both schedule. Without the grant it schedules nothing and says so: it resolves
+`'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; a native failure
+resolves `'failed'` with a non-fatal, since its callers are effects that never wait for it. It never
+asks itself, because it runs wherever the list changes, the app's exit included; the app syncs again
+when the grant comes back, which `useNotificationPermission` sees at the next foreground. The title
+and body are the caller's, frozen at scheduling, so a language change syncs again too. A reminder
+fires within Android's inexact window: the manifest holds no exact-alarm permission, and Play
+grants `USE_EXACT_ALARM` only to alarm, timer and calendar apps. expo-notifications re-arms the
+triggers after a reboot or an update through `RECEIVE_BOOT_COMPLETED`, from its own manifest — a
+blocked permission list must never name it, nor `POST_NOTIFICATIONS`.
 
 **A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
 applies only a new name and description to a channel that exists — importance can only be lowered,

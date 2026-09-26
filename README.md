@@ -12,7 +12,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Contextual paywall** — triggers on a generic action count fed by `useActionRating().recordAction()`, never during the first session — no business logic baked in
 - **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
 - **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
-- **Notification system** — `expo-notifications`; permission handling, foreground presentation, and Android channel setup ready to wire up for push or local notifications
+- **Local notifications** — `expo-notifications`; the grant read off the OS and asked in context (`useNotificationPermission`), foreground presentation, the Android channel and a daily reminder scheduler that says why when it cannot schedule — nothing asks or schedules until your app does. Remote push is not wired on the device
 - **App-store rating prompt** — Play's in-app review card, armed by an action and raised once the user is back; one pure policy decides and names every refusal; the store listing for explicit taps
 - **Onboarding flow** — welcome (with a language picker) → premium pitch, navigated by step name so a step gated on the device can join; the Android back key steps back through it
 - **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
@@ -42,7 +42,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 | @react-native-firebase | ^24.0.0 | Analytics, Crashlytics |
 | react-native-google-mobile-ads | ^15.5.0 | AdMob |
 | react-native-purchases | ^10.0.1 | RevenueCat IAP |
-| expo-notifications | latest | Push + local notifications |
+| expo-notifications | latest | Local notifications |
 | expo-store-review | ^55.0.13 | In-app rating |
 | Hono | ^4 | API framework (Cloudflare Workers) |
 | TypeScript | 5.x | Strict typing throughout |
@@ -83,7 +83,7 @@ apps/mobile/
 │   ├── api/             # adService, analyticsService, backendClient, contextualPaywall/,
 │   │                    #   crashlyticsService, engagementService, exampleService, paywallAnalytics,
 │   │                    #   purchaseService, ratingService, rewardedAdService
-│   ├── notifications/   # setup, channels
+│   ├── notifications/   # permission, channel, daily reminders
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
 │   └── storage/         # mmkv, adapter, keys, domains/
 ├── stores/              # onboardingStore, settingsStore

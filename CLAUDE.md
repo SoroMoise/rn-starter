@@ -60,6 +60,8 @@ Local native modules live in `apps/mobile/modules/` and are autolinked through `
 
 **`withCrashlyticsMapping` uploads the R8 mapping only when `CI=true`**: a minified release whose mapping never reached Crashlytics reports every frame as `a.b.c(SourceFile:1)`, while a local `bundleRelease` has no business overwriting the mapping of the release that is actually live. Force one locally with `CI=true ./gradlew bundleRelease`. It is wrapped in `plugins.withId` because the Firebase Crashlytics config plugin appends its `apply plugin:` at the end of `app/build.gradle` — the DSL does not exist yet when the initial `android { }` block is evaluated.
 
+**`withAndroidFontFilter` strips every `@expo/vector-icons` font outside `KEEP_FONTS` from the Android build, and refuses a prebuild that would strip one the app imports.** The list is kept by hand, since a dependency can draw a family the app never imports; the guard scans the app's imports and names any family missing from it — left to the build, the omission shows only in a release, as empty squares where the icons were. A family's font files are read off the package (FontAwesome5 loads three), and the generated block is replaced at every prebuild, so a family added to the list reaches a build prebuilt without `--clean`. Import a family by its subpath (`@expo/vector-icons/Ionicons`): an import from the index puts all fifteen families in the bundle, 4 MB of fonts the filter then has to take back out.
+
 ### Continuous delivery (GitHub Actions)
 
 `.github/workflows/release-android.yml` builds and publishes the Android release with no local machine. It fires on `workflow_dispatch`, or on a PR **merged into `main` carrying the `release` label** — closing a PR, or merging one without the label, releases nothing.

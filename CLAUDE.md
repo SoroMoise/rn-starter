@@ -419,7 +419,7 @@ when its Worker went — the data-fetching layer has no reason to outlive the AP
 
 ### Styling
 
-NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti.
+NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti (what Moti costs: Bundle size).
 
 **The theme setting stores an intention, never a scheme.** The selector is Light / Dark / System and `DEFAULT_SETTINGS.theme` is `'auto'`: a fresh install follows the phone before it follows a preference nobody expressed. Three vocabularies sit in three neighbouring files — `'auto'` stored by `settingsStore`, `'system'` for NativeWind (`applyColorScheme` maps one to the other), `light` / `dark` resolved — so whatever needs the scheme on screen reads `useThemedColor()`, never `settings.theme`: `settings.theme === 'dark'` is false on a dark phone left on System, with no error. `UI_COLORS` (`constants/uiColors.ts`) holds the raw values for the props a class cannot reach (an icon's `color`), and follows `tailwind.config.js` by hand.
 
@@ -454,6 +454,7 @@ Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit
 
 - **`date-fns` is imported per function** — `import { format } from 'date-fns/format'`, never from the package index, which puts all ~200 functions (~250 KB minified) in the bundle. A type-only import (`import type { Locale } from 'date-fns'`) costs nothing. Most of what date-fns weighs here (~210 KB) is its twenty locales, one per language the app offers.
 - **`@revenuecat/purchases-js-hybrid-mappings` resolves to an empty module on Android and iOS** (`metro.config.js`). react-native-purchases requires its browser implementation at import, whatever the platform, and runs it only without the native module (Expo Go, web): ~740 KB, the largest package in the bundle, that no native build runs. The stub is gated on `android` and `ios` by name, never on `platform !== 'web'`: web's only purchase path is that SDK, and Metro can resolve without a platform at all.
+- **Moti costs ~250 KB, 6 % of the starter's bundle, for six entrance animations.** It pulls framer-motion, a web animation library, with popmotion and `@motionone/dom`; the starter uses it for the mount transitions of the home screen and `WelcomeStep`. all-currency-converter replaced its few `MotiView`s with a Reanimated-only `TransitionView` and got that back; deep-focus and bg-remover kept it. It stays in the starter, where convenience wins, but an app whose Moti is only entrances is the case where replacing it pays — `analyze` decides — and an app that removed it does not bring it back.
 
 ### Internationalization
 

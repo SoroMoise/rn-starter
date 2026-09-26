@@ -27,8 +27,6 @@ export type Language =
 export interface UserSettings {
   theme: ThemeMode
   language: Language
-  notificationSound: boolean
-  notificationVibration: boolean
 }
 
 export interface ThemeOption {

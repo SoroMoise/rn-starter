@@ -85,7 +85,7 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | File | Description |
 |---|---|
 | `setup.ts` | `notificationService` — permission request/primer, foreground presentation handler |
-| `channels.ts` | Android notification channel setup (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) |
+| `channels.ts` | The Android channel (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) — its sound, vibration and importance are frozen at creation, so a change takes a new id; the app has no sound or vibration setting of its own |
 
 ### `services/promo/`
 
@@ -105,7 +105,6 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag (encrypted instance); `derive(now, gracePeriodMs)` = offline allowance only |
-| `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
 ---
 

@@ -135,7 +135,7 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `secure.ts` — the encrypted instance for entitlement keys, and nothing else
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
-- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`, `userSettings`
+- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`
 
 Notable domains:
 - `engagementStorage` — session count, install date, paywall counter, and the **generic action counter**
@@ -153,8 +153,9 @@ at boot; reintroducing an async store would put the gate back for every screen. 
 reading a persisted store from outside Zustand: `persist` wraps what it writes in its own
 `{ state, version }` envelope, so a hand-written value stored under that key has no `state` field,
 rehydration silently falls back to the store's defaults on the next launch, and nothing reports it.
-`domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
-is only named after it — it is handed the MMKV adapter here.)
+`getActiveLanguageFromStorage` (`i18n/service.ts`) is the example that does it right.
+(`@tanstack/query-async-storage-persister` is only named after it — it is handed the MMKV adapter
+here.)
 
 **What a store's `merge` decides stays in memory until something writes it.** `persist` writes on
 `setState` only: hydration hands the persisted state to `merge` and sets the result without writing
@@ -218,8 +219,19 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `exampleService` — `fetchExample({ signal })`, the app-side call to `GET /example` through `withRetry`: the pattern a backend call copies. Nothing calls it yet
 
 `apps/mobile/services/notifications/` — reusable notification system: permission handling +
-foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`,
+foreground presentation (`notificationService`), the Android channel (`ensureNotificationChannels`,
 `NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled notifications for your own features.
+
+**A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
+applies only a new name and description to a channel that exists — importance can only be lowered,
+and only while the user has not touched the channel — and a channel deleted then re-created under
+the same id comes back with the settings it had, so neither an edit nor a delete-and-recreate
+changes how it sounds. The user sets that per channel, in the system settings. A channel that must
+sound differently takes a new id: `defaultChannel` in `app.config.js` follows it, the old one is
+deleted, and whatever was scheduled on it is scheduled again — a trigger names its channel when it
+is scheduled, and one whose channel is gone lands in expo-notifications' fallback channel,
+"Miscellaneous". The foreground handler always asks for the sound too: on Android,
+`shouldPlaySound: false` also drops the heads-up banner.
 
 **Remote push is not wired on the device, and `@react-native-firebase/messaging` is not installed.**
 `apps/api` still ships an FCM sender, so the server half is there; the client half is a deliberate

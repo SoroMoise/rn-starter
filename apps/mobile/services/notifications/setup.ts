@@ -1,21 +1,18 @@
-import { readUserSettingsFromStorage } from '@/services/storage/domains/userSettings'
 import { KEYS } from '@/services/storage/keys'
 import { mmkv } from '@/services/storage/mmkv'
 import * as Notifications from 'expo-notifications'
 
 // Notifications delivered while the app is in the foreground are presented as
-// system banners with optional sound — no badge increment.
+// system banners with sound — no badge increment. On Android, `shouldPlaySound: false`
+// would also drop the heads-up banner, whatever the channel says.
 Notifications.setNotificationHandler({
-  handleNotification: async () => {
-    const { notificationSound } = readUserSettingsFromStorage()
-    return {
-      shouldShowAlert: true,
-      shouldPlaySound: notificationSound,
-      shouldSetBadge: false,
-      shouldShowBanner: true,
-      shouldShowList: true,
-    }
-  },
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
 })
 
 export const notificationService = {

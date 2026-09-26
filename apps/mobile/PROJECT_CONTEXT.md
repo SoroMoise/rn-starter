@@ -185,7 +185,7 @@ NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animati
 
 Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s content container, and a `ScreenHeading` at `mt-3.5`.
 
-`AppSystemBars` sets the status and navigation bar styles — once for the app in `ThemeProvider`, again by a screen that forces its own — and restores the theme's navigation bar style when it unmounts.
+`AppSystemBars` sets the status and navigation bar styles — once for the app in `ThemeProvider`, again by a screen that forces its own — and stacks the forced navigation bar styles, since `setStyle` is global: the last one mounted wins, the theme's when none is left.
 
 `ThemedText` derives a line height whenever `style` sets `fontSize` without one.
 

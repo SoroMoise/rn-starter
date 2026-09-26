@@ -164,13 +164,15 @@ take, and an incomplete env silently shipped a sibling app's release with no ads
 
 ## 6. Storage
 
-Plain MMKV (`services/storage/domains/`).
+The cadence counters live in the main MMKV instance (`services/storage/domains/ads.ts`). The ad-free
+window grants something, so it lives in the encrypted entitlement instance (`services/storage/secure.ts`,
+`domains/adFree.ts`), which no backup or device transfer carries.
 
 | Key | Constant | Holds |
 |-----|----------|-------|
 | `@ad_execution_count` | `KEYS.AD_EXECUTION_COUNT` | actions offered to the interstitial since the last one was seen |
 | `@ad_last_shown` | `KEYS.AD_LAST_SHOWN` | timestamp of the last interstitial seen, for the interval floor |
-| `@ad_free_until` | `KEYS.AD_FREE_UNTIL` | end of the rewarded ad-free window |
+| `@ad_free_until` | `KEYS.AD_FREE_UNTIL` | end of the rewarded ad-free window (encrypted instance) |
 
 The session's interruption budget and the visible surfaces are in memory (`promoCoordinator`),
 reset at every launch.

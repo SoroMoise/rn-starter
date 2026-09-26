@@ -148,9 +148,10 @@ is only named after it — it is handed the MMKV adapter here.)
 
 **What grants something lives in its own encrypted instance, and only there.** `secure.ts` opens a
 second MMKV instance with an `encryptionKey` for the subscription cache and the ad-free window, so
-the file can no longer be pulled, edited into Pro and put back. It is obfuscation, not secrecy: the
-key ships in the bundle, MMKV reads only its first 16 bytes, and it never changes once released —
-what it wrote would become unreadable. A new entitlement key goes there; a preference does not.
+the file no longer reads as plain text to whoever pulls it. It is obfuscation, not secrecy: the key
+ships in the bundle, and editing the file into Pro now only starts with digging it out. MMKV reads
+the key's first 16 bytes and ignores the rest, and the key never changes once released — what it
+wrote would become unreadable. A new entitlement key goes there; a preference does not.
 Never encrypt the main instance: whatever an install already wrote there would become unreadable.
 An app porting this onto a build already in users' hands copies the plaintext values across once,
 at import, before any reader — the starter has no installs, so it ships no migration.

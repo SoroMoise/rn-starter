@@ -57,6 +57,7 @@ export function useSheetSnap({
   const scrollY = useSharedValue(0)
   // Distinguishes an actual drag from a pan that only fires because scrolled content moved.
   const sheetMoved = useSharedValue(false)
+  const heldByContent = useSharedValue(false)
   const beganAtTop = useSharedValue(true)
 
   const isClosing = useRef(false)
@@ -114,10 +115,14 @@ export function useSheetSnap({
       .onBegin(() => {
         dragBaseY.value = snapIndexSv.value === 1 ? 0 : partialYSv.value
         sheetMoved.value = false
+        heldByContent.value = false
         beganAtTop.value = scrollY.value <= 0
       })
       .onUpdate((e) => {
-        if (dragLock?.value) return
+        if (dragLock?.value) {
+          heldByContent.value = true
+          return
+        }
         if (hasSnapPoints) {
           const rawY = dragBaseY.value + e.translationY
           const clampedY = rawY < 0 ? rawY * 0.25 : rawY
@@ -133,7 +138,9 @@ export function useSheetSnap({
         }
       })
       .onEnd((e) => {
-        if (!sheetMoved.value) {
+        // While the content holds the drag, onUpdate stops moving the sheet but `e.translationY`
+        // keeps accumulating: judged on it, a reorder or a slider inside the sheet reads as a dismiss.
+        if (heldByContent.value || dragLock?.value || !sheetMoved.value) {
           const base = hasSnapPoints ? (snapIndexSv.value === 1 ? 0 : partialYSv.value) : 0
           translateY.value = withSpring(base, SPRING_BOUNCE)
           if (!hasSnapPoints) {

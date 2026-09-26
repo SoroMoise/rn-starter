@@ -19,8 +19,9 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Custom tab bar** — blur effect, haptics, premium-aware
 - **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
-- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (`exampleService` is its app-side call, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
-- **Shared types** — `packages/shared` consumed by both mobile and API
+- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, a server-side RevenueCat entitlement check cached in KV, FCM push service, `/health` + `/example` + `/example/premium` (`exampleService` holds their app-side calls, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
+- **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to, written for the SDKs the starter ships, placeholders marked
+- **Shared types** — `packages/shared`, the API's response types
 
 ---
 
@@ -56,11 +57,14 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 rn-starter/
 ├── apps/
 │   ├── mobile/          # Expo SDK 54 / React Native app (iOS + Android)
-│   └── api/             # Cloudflare Workers API (Hono)
+│   ├── web/             # Next.js static site — home, privacy policy, terms (EN + FR)
+│   └── api/             # Cloudflare Workers API (Hono) — optional
 ├── packages/
-│   └── shared/          # Shared TypeScript types (HealthResponse, ApiErrorResponse)
+│   └── shared/          # The API's TypeScript types (HealthResponse, ApiErrorResponse)
 ├── scripts/
-│   └── setup.sh         # Interactive setup script — personalizes the template
+│   ├── setup.sh         # Interactive setup script — personalizes the template
+│   ├── remove-api.sh    # Takes out apps/api, packages/shared and the app's network layer
+│   └── generate-brand-assets.py  # Draws the icon, splash, notification icon and favicon
 └── turbo.json
 ```
 
@@ -103,7 +107,7 @@ cd rn-starter
 
 ### 2. Run the setup script
 
-The interactive setup script personalizes the template (app name, bundle ID, scheme) and copies the example secret files:
+The interactive setup script personalizes the template (app name, bundle ID, scheme, the website serving the legal pages, the support address) and copies the example secret files:
 
 ```bash
 bash scripts/setup.sh
@@ -146,6 +150,68 @@ pnpm dev:mobile     # Expo dev server
 pnpm dev:api        # Cloudflare Worker local dev
 ```
 
+### No backend?
+
+`apps/api` is there for the app that needs a server of its own — the entitlement checked server-side,
+push sent by FCM. Most apps need neither, and a Worker nobody deploys still costs an install, a
+workspace package, a CI workflow and two `.env` variables that look wired. Take it out, with the
+network layer the app keeps only to talk to it, before writing any code:
+
+```bash
+bash scripts/remove-api.sh
+```
+
+It lists what goes and asks first, refuses a working tree with uncommitted changes (git is the only
+way back), and updates the lockfile. What it does not touch is the prose: the sections of
+`CLAUDE.md`, `apps/mobile/PROJECT_CONTEXT.md` and this README that describe the backend.
+
+---
+
+## Day one: what the app needs, and what can wait
+
+The app runs on an Android device before a single account exists. What a missing piece actually
+does:
+
+| Missing | What happens |
+|---|---|
+| `apps/mobile/google-services.json` | The Android prebuild refuses. The example, which `setup.sh` names after your package, is enough to build and launch; analytics and crash reports go nowhere until it is the one the Firebase Console gives you. |
+| `apps/mobile/GoogleService-Info.plist` | The iOS prebuild refuses — and `pnpm --filter mobile preb` prebuilds both platforms. There is no example: use `preb:android` until the Firebase project exists. |
+| AdMob ids | Nothing in development: every placement serves Google's test ads. A release requests nothing from a unit left pending, and the release workflow refuses Google's sample app id. |
+| RevenueCat keys | The paywall and the onboarding's premium step say the offer is unavailable and offer a retry. `FORCE_PRO=true` in `.env` walks the Pro paths meanwhile. |
+| `BACKEND_URL`, `BACKEND_API_KEY` | Nothing until the app calls its backend: the first call throws, naming both. |
+| The website and the support address | The legal links open the placeholder domain; the release workflow refuses it. |
+| `apps/mobile/keystore.properties` | Nothing until a release build, which fails on purpose and says what to write. |
+
+### Files that are not committed
+
+| File | Start from | Needed for |
+|---|---|---|
+| `apps/mobile/.env` | `.env.example` — `setup.sh` copies it | every build; its placeholders run |
+| `apps/mobile/google-services.json` | `google-services.json.example`, then the Firebase Console's | the Android prebuild |
+| `apps/mobile/GoogleService-Info.plist` | the Firebase Console — no example | the iOS prebuild |
+| `apps/mobile/keystore.properties` | `keystore.properties.example` | a release build |
+| `apps/mobile/release.keystore` | the `keytool` command in `keystore.properties.example` | every release build, for the life of the app — keep it where it cannot be lost |
+| `apps/api/.dev.vars` | `.dev.vars.example` — `setup.sh` copies it | the Worker in local development |
+
+### The accounts, in order
+
+- [ ] **Firebase** — one project, with the Android app (your package id) and the iOS app (your
+  bundle id). Replace both config files: everything after this step reports its crashes.
+- [ ] **Play Console** — create the app and upload the first build by hand to the internal track
+  (Android release, *First release*), then create the subscriptions or products Pro is sold as.
+  Play only lets you create them once a build that uses Play Billing is on a track.
+- [ ] **RevenueCat** — a project connected to the Play app, the products imported, an entitlement
+  whose identifier is `ENTITLEMENT_PREMIUM` (`'premium'`, in `apps/mobile/constants/purchases.ts`)
+  with every product attached, and a current offering. The public SDK keys go in `.env`.
+- [ ] **AdMob** — the app and one unit per placement: the app ids in `app.config.js`, the unit ids
+  in `constants/admob.ts` (`apps/mobile/ADS.md`).
+- [ ] **The website** — `apps/web` live with its legal pages filled in (Website). The Play listing
+  asks for the privacy policy's URL, and the data safety form must say what the policy says.
+- [ ] **Release automation** — the Play service account and the repository secrets (Android
+  release).
+- [ ] **Cloudflare**, if the app keeps `apps/api` — the Worker's secrets, RevenueCat's secret key
+  among them (Configuration), then `BACKEND_URL` and `BACKEND_API_KEY` in `.env`.
+
 ---
 
 ## Native Build (Continuous Native Generation)
@@ -166,6 +232,16 @@ After prebuild, use:
 ```bash
 pnpm android   # expo run:android
 pnpm ios       # expo run:ios
+```
+
+Nothing under `android/` is edited by hand — the next prebuild rewrites it; what the native project
+needs is a config plugin in `apps/mobile/plugins/`. And when a native build breaks, never reach for
+`./gradlew clean`: it wipes the `build/` folders of the React Native modules in `node_modules/`,
+codegen included, which the new architecture's CMake build points at, and the build fails further
+on, somewhere that looks unrelated. Start over with a clean prebuild instead:
+
+```bash
+pnpm --filter mobile preb:android --clean
 ```
 
 ---
@@ -207,7 +283,7 @@ The Play Developer API only publishes to an app that already holds a build, so t
 | `ANDROID_KEY_PASSWORD` | the key's password | `KEY_PASSWORD` |
 | `PLAY_SERVICE_ACCOUNT_JSON` | the Play Developer API key | the service account's JSON key |
 
-The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`.
+The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`, or with the template's placeholder site or support address still in `apps/mobile/constants/legal.ts`.
 
 ### When a release fails
 
@@ -215,6 +291,56 @@ The workflow also refuses to publish with Google's sample AdMob app id still in 
 - **All three publish attempts failed.** Read the first attempt and the job summary before re-running: an attempt can commit its Play edit and still report failure, and the later ones then die on `apkUpgradeVersionConflict`. Bump `app.config.js` and `.last_release_commit` by hand to match what the Play Console holds — a plain re-run recomputes the same rejected version.
 
 The AAB is kept as a build artifact only when no attempt landed; `.github/workflows/purge-artifacts.yml` clears them on demand, since Actions storage is billed on a private repository.
+
+---
+
+## Website (`apps/web`)
+
+A static Next.js site: English at the root, French under `/fr`, with a home page, the privacy
+policy and the terms. The app opens `/privacy` and `/terms` on it from Settings and beside every
+buy button, and Play requires a privacy policy that opens — so the site goes live before the first
+release.
+
+```bash
+pnpm dev:web      # http://localhost:3000
+pnpm build:web    # writes apps/web/out/
+```
+
+### Before it goes live
+
+- `scripts/setup.sh` has written the app's name, domain, package and support address into
+  `apps/web/lib/site.ts`. Fill in the publisher and the date the pages take effect there.
+- Replace every bracketed passage in `apps/web/content/en/legal.ts` and `fr/legal.ts`, and make
+  both documents say what your app does: remove a section it does not need (notifications, for an
+  app that sends none), add one for every SDK, permission or server it adds. The text is written
+  for the SDKs the starter ships — AdMob, Firebase Analytics and Crashlytics, RevenueCat — and
+  follows the categories of Play's data safety form; it is a starting point, not legal advice, so
+  have it reviewed. The pages show a template notice for as long as a placeholder remains.
+- Fill in the home page's copy in `apps/web/content/*/site.ts`.
+
+### Hosting
+
+`out/` is plain files. Whatever the host, it must:
+
+- **Serve `/privacy` from `privacy.html`**, beside the `privacy/` folder the export also writes.
+  Cloudflare Pages, Netlify and Vercel do it on their own; Firebase Hosting needs
+  `"cleanUrls": true`.
+- **Send the security headers**, which a static export cannot set itself:
+  `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`,
+  `Referrer-Policy: strict-origin-when-cross-origin`,
+  `Permissions-Policy: camera=(), microphone=(), geolocation=()` and, once the domain is
+  HTTPS-only for good, `Strict-Transport-Security: max-age=63072000; includeSubDomains`.
+
+### The URLs are a contract
+
+Every build already installed opens `/privacy` and `/terms` on the domain it shipped with. So:
+
+- The two paths are never renamed and never translated — the French pages are `/fr/privacy` and
+  `/fr/terms` — and never lose their page: a dead privacy link beside a subscribe button is a Play
+  review rejection, and no later release reaches the builds already out.
+- Moving to another domain changes `APP_WEBSITE_URL` in `apps/mobile/constants/legal.ts` and
+  `SITE.url` in `apps/web/lib/site.ts` in the same commit — and keeps the old domain redirecting
+  for as long as builds carrying it are in use.
 
 ---
 
@@ -227,6 +353,8 @@ All commands run from the repo root unless noted.
 | `pnpm dev` | Turbo dev (all workspaces) |
 | `pnpm dev:mobile` | Expo dev server only |
 | `pnpm dev:api` | Cloudflare Worker local dev |
+| `pnpm dev:web` | Next.js dev server for the site |
+| `pnpm build:web` | Static export of the site into `apps/web/out` |
 | `pnpm android` | `expo run:android` |
 | `pnpm ios` | `expo run:ios` |
 | `pnpm build` | Turbo build |
@@ -246,12 +374,16 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 - **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
 - **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
-- **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 
 AdMob identifiers are not environment variables: the app IDs are literals in
 `apps/mobile/app.config.js` (Google's sample IDs until you replace them) and the ad unit IDs
 in `apps/mobile/constants/admob.ts`. `apps/mobile/ADS.md` is the advertising reference —
 placements, cadence, gates, and what to set before the first release.
+
+Legal links are not environment variables either: `apps/mobile/constants/legal.ts` builds the
+privacy policy and terms URLs from the app's website, beside the support address, and
+`scripts/setup.sh` asks for both. A public page is not a secret, and a build keeps the links it
+shipped with.
 
 Store URLs are not environment variables either: `apps/mobile/constants/rating.ts` derives the
 Play Store ones from the package id, and the App Store one waits for App Store Connect's numeric
@@ -266,14 +398,13 @@ wrangler secret put API_KEY
 wrangler secret put FIREBASE_PROJECT_ID
 wrangler secret put FIREBASE_CLIENT_EMAIL
 wrangler secret put FIREBASE_PRIVATE_KEY
+wrangler secret put REVENUECAT_SECRET_API_KEY
 ```
 
-### Firebase config files
-
-| File | Purpose |
-|---|---|
-| `apps/mobile/google-services.json` | Android Firebase (gitignored — use `.example` as template) |
-| `apps/mobile/GoogleService-Info.plist` | iOS Firebase (gitignored — download from Firebase Console) |
+`REVENUECAT_PROJECT_ID` is not a secret: it sits in `[vars]` in `apps/api/wrangler.toml`. Until it and
+`REVENUECAT_SECRET_API_KEY` are both set, the Worker's entitlement check lets every caller through
+and says so in its logs. The KV namespace that caches its answers is created by the first
+`pnpm deploy:api`.
 
 ---
 

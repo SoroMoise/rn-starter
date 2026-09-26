@@ -8,6 +8,8 @@
     "android": "pnpm --filter mobile android",
     "ios": "pnpm --filter mobile ios",
     "dev:api": "turbo dev --filter=api",
+    "dev:web": "turbo dev --filter=web",
+    "build:web": "turbo build --filter=web",
     "build": "turbo build",
     "typecheck": "turbo run typecheck",
     "lint": "turbo lint",

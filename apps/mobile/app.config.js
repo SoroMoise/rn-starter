@@ -31,19 +31,23 @@ export default () => {
       },
 
       orientation: 'portrait',
+      // The icon, the splash image and the adaptive foreground are drawn by
+      // scripts/generate-brand-assets.py, and the two background colours below match its BACKGROUND.
       icon: './assets/images/icon.png',
 
       // userInterfaceStyle: 'automatic', For IOS
 
       splash: {
-        image: './assets/images/icon.png',
+        image: './assets/images/splash-icon.png',
         resizeMode: 'contain',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#6366f1',
       },
       assetBundlePatterns: ['assets/images/*'],
       ios: {
         supportsTablet: true,
         bundleIdentifier: 'com.yourcompany.rnstarter',
+        // @react-native-firebase/app refuses an iOS prebuild without this path, or without the file.
+        googleServicesFile: './GoogleService-Info.plist',
         infoPlist: {
           NSUserTrackingUsageDescription:
             'This identifier will be used to deliver personalized ads to you.',
@@ -57,8 +61,8 @@ export default () => {
         package: 'com.yourcompany.rnstarter',
         googleServicesFile: './google-services.json',
         adaptiveIcon: {
-          foregroundImage: './assets/images/icon.png',
-          backgroundColor: '#ffffff',
+          foregroundImage: './assets/images/adaptive-icon.png',
+          backgroundColor: '#6366f1',
         },
         permissions: ['android.permission.POST_NOTIFICATIONS'],
         // Every permission in the release manifest is listed on the store page and read by Play's
@@ -76,9 +80,8 @@ export default () => {
         ],
       },
       // No `privacy` block: that key was expo.dev's project visibility, never a place for legal
-      // URLs, and SDK 54's config schema no longer has it. The links the app opens are
-      // `extra.legal` below (constants/legal.ts); the ones the stores show are entered in their
-      // consoles.
+      // URLs, and SDK 54's config schema no longer has it. The links the app opens are constants
+      // (constants/legal.ts); the ones the stores show are entered in their consoles.
 
       plugins: [
         withAndroidConfigChanges,
@@ -124,13 +127,6 @@ export default () => {
         rtlRestartBannerEnabled: process.env.RTL_RESTART_BANNER_ENABLED !== 'false',
         backendUrl: process.env.BACKEND_URL,
         backendApiKey: process.env.BACKEND_API_KEY,
-        websiteUrl: process.env.APP_WEBSITE_URL,
-        legal: {
-          privacyPolicyUrl: process.env.LEGAL_PRIVACY_POLICY_URL,
-          termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,
-          licensesUrl: process.env.LEGAL_LICENSES_URL,
-          supportEmail: process.env.LEGAL_SUPPORT_EMAIL,
-        },
         purchases: {
           iosApiKey: process.env.REVENUECAT_IOS_API_KEY ?? '',
           androidApiKey: process.env.REVENUECAT_ANDROID_API_KEY ?? '',

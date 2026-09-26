@@ -4,6 +4,14 @@ compatibility_date = "2024-01-01"
 
 [vars]
 ENVIRONMENT = "production"
+# RevenueCat → Project settings → General. Left empty, or without REVENUECAT_SECRET_API_KEY, the
+# entitlement check lets every caller through (src/services/revenueCatService.ts).
+REVENUECAT_PROJECT_ID = ""
+
+# The entitlement cache. It has no id on purpose: the first `wrangler deploy` creates the
+# namespace, and the deploys after it keep the one the Worker is bound to.
+[[kv_namespaces]]
+binding = "ENTITLEMENT_CACHE"
 
 [observability]
 enabled = true

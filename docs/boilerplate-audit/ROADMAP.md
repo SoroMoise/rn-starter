@@ -30,11 +30,12 @@ audit of that gap and the plan to close it.
 | — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
 | 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
-| 12–13 | See §3 | — | not started |
+| 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **in review** |
+| 13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**213 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11) and **22 remain**, spread over lots 12 and 13. The three held back
+**222 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12) and **13 remain**, all in lot 13. The three held back
 out of lot 4 (§4) closed with lot 9, so nothing is deferred any more and the console's lot cards
 match §3.
 
@@ -105,6 +106,15 @@ permissions point shipped with `blockedPermissions`) and `claude-bundle-size` (t
 discipline). Two items shipped otherwise than proposed: the release documentation is a README
 section rather than a new file, and `setup.sh` copies no `keystore.properties` (§12).
 
+Lot 12's nine are its own. One "later" item shipped with them, `claude-legal-urls-contract` (lot
+13), which the CLAUDE.md paragraph on the legal links covers. Three "later" items it touched stay
+open, each with a note saying what is left: `readme-troubleshooting` (its `./gradlew clean` point
+shipped), `turbo-web-outputs-env` (the Next.js outputs shipped) and `root-scripts-preb` (`dev:web`
+and `build:web` shipped). Two items shipped otherwise than proposed: the site carries three pages,
+not seven, and the backend's removal takes the app's network layer with it (§13). The branch also
+carries one commit outside the audit: the iOS prebuild had never been able to find
+`GoogleService-Info.plist`.
+
 The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
 onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
 blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
@@ -148,18 +158,9 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 
 ---
 
-## 3. The remaining lots
+## 3. The remaining lot
 
-Ordered so that lots touching the same files run near each other, and so that documentation comes
-last — documenting code that is still moving is work done twice.
-
-### Lot 12 — Assets, legal, api/monorepo (9 items)
-
-A brand-asset generator (the starter ships one 512px RGBA icon doing duty as splash too), a privacy
-policy template — the template already bundles AdMob, RevenueCat and Firebase, so it collects data
-on day one — legal URLs as constants rather than optional env vars, `apps/api` and
-`packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
-pages the APK hardcodes.
+Documentation comes last — documenting code that is still moving is work done twice.
 
 ### Lot 13 — Documentation and conventions (13 items)
 
@@ -175,7 +176,8 @@ the AdMob-literals rationale shipped in lot 5, the rating doctrine in lot 6, the
 doctrine, the entitlement-storage rules and the social-proof rule in lot 7, the back-key and
 step-name rules in lot 8, large screens, the safe-area contract, limits on read, the persist flush
 and the stack reset in lot 9, the notification permission and channel rules in lot 10, the font
-filter, blocked permissions and CNG rationale in lot 11.
+filter, blocked permissions and CNG rationale in lot 11, the legal-URL contract, the brand assets,
+the server-side entitlement, the backend's removal and the `./gradlew clean` rule in lot 12.
 
 ---
 
@@ -277,6 +279,20 @@ that migration knowingly.
 **The paywall keeps its illustration.** bg-remover's gradient `PaywallHero` was not ported; the
 starter's hero is the converter's illustration with its currencies removed, drawn for the template.
 Replacing it is a design decision, not a structural one.
+
+**The site is a static export, and holds only what the app links to.** Home, privacy policy, terms:
+the pages Play and the app need, and nothing a derived app would have to delete on day one — no
+features, pricing or blog. English sits at the root because bg-remover's `Accept-Language` redirect
+needs a server runtime; a licences page is the "later" item `licenses-registry`.
+
+**The server's entitlement check lets everyone through until it is configured.** all-currency-converter's
+choice, kept: a Worker deployed before its RevenueCat secret refuses no subscriber, at the price of
+serving a free caller too. It says so in the logs, once per isolate, where the reference was silent.
+
+**Removing the backend is a script of its own, and it takes the app's network layer with it.** Not a
+`setup.sh` flag: a deletion only git can undo is its own decision, taken on a clean tree. And since
+lot 9 wired `QueryProvider`, `withRetry` and NetInfo to `apps/api`, removing the Worker alone would
+leave five packages and a provider serving nothing.
 
 **The onboarding does not emit `paywall_shown`.** bg-remover counts its onboarding offer as a paywall
 impression. Here `paywall_count` rides on every `purchase_completed`, and the step and the exit
@@ -395,7 +411,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§13, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§14, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -761,7 +777,59 @@ holds the mechanics, and a third copy is one more to keep in step).
 
 ---
 
-## 13. Resuming in a new session
+## 13. What verification caught on lot 12
+
+The lot ran over two sessions. The first shipped the brand assets, the legal links, the site and its
+legal content; the second, the entitlement check, the backend's removal and the two pieces of
+documentation, and read the first session's commits against the code before recording the lot. Both
+ran their stages in the session, against the libraries in `node_modules` — `@react-native-firebase/app`'s
+config plugins, wrangler 4.76's provisioning — and a local `wrangler dev`.
+
+- **deep-focus's splash comment is wrong on SDK 54.** The splash is not padded so `contain` does not
+  fill the screen: SDK 54 draws it at 200 dp on both platforms, and Android 12+ cuts it to a circle,
+  which is the constraint the script and CLAUDE.md now state. The adaptive foreground sits at two
+  thirds of the icon's mark, since a launcher shows the central 72 dp of the 108 dp layer.
+- **The iOS prebuild could never succeed (not in the audit).** Nothing named
+  `ios.googleServicesFile`, and `@react-native-firebase/app` refuses an iOS prebuild without it,
+  whether the plist is there or not.
+- **A constant only moves the risk to a placeholder that looks real.** Hence `setup.sh` asking for
+  the site and the support address, and the release workflow refusing the template's.
+- **A static export ignores `headers()`**, so bg-remover's security headers could not come along in
+  `next.config.ts`; the README hands them to the host, with the clean URL every installed build opens.
+- **The hoist decides the app's React.** Under `node-linker=hoisted`, Metro resolves the root's copy:
+  deep-focus's site runs React 19.3 and Tailwind 4, and its app gets 19.1 and v3 only because the hoist
+  happened to favour them. The site pins the app's React exactly and uses plain CSS; an Android export
+  still bundles React 19.1.0.
+- **The audit's removal was no longer mechanical.** "No import of `@repo/shared` on the mobile side,
+  so the deletion cannot break the build" held when it was written; since lot 9, `QueryProvider`,
+  `withRetry` and NetInfo serve `apps/api`, and four `error.*` keys are read only by them. The
+  script takes all of it, and was run on a clone: typecheck and lint green, a second run changes
+  nothing. It also found that `setup.sh` copied `.dev.vars.example` unconditionally under `set -e`,
+  and would have failed once `apps/api` was gone.
+- **A KV namespace needs no id any more.** wrangler 4.76 creates one declared without an id at the
+  first deploy and inherits it at the next (`provisionBindings`, `experimental-auto-create`
+  defaulting to true), so the template declares its entitlement cache and still deploys with nothing
+  created by hand.
+- **v2 reports an entitlement by its internal id**, never the lookup key the app reads, so "any
+  active entitlement is premium" is an assumption the code and CLAUDE.md now state, with the filter
+  a second entitlement needs. The negative cache means a purchase can take a minute to reach a
+  premium route; CLAUDE.md says so.
+- **"`google-services.json` is required" is true of Android only.** `pnpm preb` prebuilds both
+  platforms and the iOS plist has no example, so day one prebuilds with `preb:android`. Play only lets
+  an app create subscriptions once a build using Play Billing is on a track, which puts the first hand
+  upload before RevenueCat in the order of accounts.
+- **The privacy policy was checked against the code**: no analytics user id is ever set, Crashlytics
+  carries the language and the theme, RevenueCat runs on its anonymous id, and the entitlement copy is
+  kept out of backups — as the policy says.
+
+Found along the way and left out of this lot: every build opens `/privacy` and `/terms` in English,
+whatever its language, though the site serves `/fr/privacy` — a static export cannot redirect on
+`Accept-Language`, and the app choosing the French path for a French user is a change to the paths
+contract, to be decided rather than slipped in.
+
+---
+
+## 14. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.

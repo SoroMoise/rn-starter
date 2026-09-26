@@ -22,7 +22,7 @@ export function PaywallLegalLinks({ origin }: { origin: PurchaseOrigin }) {
         </ThemedText>
       </Pressable>
       <Pressable
-        onPress={() => void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE ?? '' })}
+        onPress={() => void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE })}
         hitSlop={8}
         accessibilityRole="link">
         <ThemedText variant="label" color="muted" className="underline">
@@ -30,7 +30,7 @@ export function PaywallLegalLinks({ origin }: { origin: PurchaseOrigin }) {
         </ThemedText>
       </Pressable>
       <Pressable
-        onPress={() => void openExternalLink({ url: LEGAL_URLS.PRIVACY_POLICY ?? '' })}
+        onPress={() => void openExternalLink({ url: LEGAL_URLS.PRIVACY_POLICY })}
         hitSlop={8}
         accessibilityRole="link">
         <ThemedText variant="label" color="muted" className="underline">

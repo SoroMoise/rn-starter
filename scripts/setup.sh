@@ -7,7 +7,9 @@
 #     --name "My App" \
 #     --slug "my-app" \
 #     --bundle "com.acme.myapp" \
-#     --scheme "myapp"                           # non-interactive
+#     --scheme "myapp" \
+#     --website "https://myapp.acme.com" \
+#     --support-email "support@acme.com"         # non-interactive
 #
 # Idempotent: safe to run multiple times.
 
@@ -37,6 +39,8 @@ APP_NAME=""
 APP_SLUG=""
 BUNDLE_ID=""
 SCHEME=""
+WEBSITE_URL=""
+SUPPORT_EMAIL=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -44,6 +48,8 @@ while [[ $# -gt 0 ]]; do
     --slug)   APP_SLUG="$2";   shift 2 ;;
     --bundle) BUNDLE_ID="$2";  shift 2 ;;
     --scheme) SCHEME="$2";     shift 2 ;;
+    --website) WEBSITE_URL="$2"; shift 2 ;;
+    --support-email) SUPPORT_EMAIL="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
@@ -76,10 +82,22 @@ prompt APP_NAME   "App display name (e.g. My App)"       "RN Starter"
 prompt APP_SLUG   "Expo slug (lowercase, hyphens only)"   "rn-starter"
 prompt BUNDLE_ID  "Bundle ID (reverse-DNS)"               "com.yourcompany.rnstarter"
 prompt SCHEME     "URL scheme (lowercase, no hyphens)"    "rnstarter"
+prompt WEBSITE_URL   "Website serving /privacy and /terms"  "https://yourapp.example.com"
+prompt SUPPORT_EMAIL "Support e-mail address"                "support@example.com"
+
+WEBSITE_URL="${WEBSITE_URL%/}"
 
 # Basic validation
 if [[ -z "$APP_NAME" || -z "$APP_SLUG" || -z "$BUNDLE_ID" || -z "$SCHEME" ]]; then
-  echo "Error: all four values are required." >&2
+  echo "Error: name, slug, bundle ID and scheme are all required." >&2
+  exit 1
+fi
+if [[ ! "$WEBSITE_URL" =~ ^https://[^[:space:]]+$ ]]; then
+  echo "Error: the website must be an https:// URL (got '$WEBSITE_URL')." >&2
+  exit 1
+fi
+if [[ ! "$SUPPORT_EMAIL" =~ ^[^[:space:]@:]+@[^[:space:]@]+$ ]]; then
+  echo "Error: the support e-mail must be a bare address, without mailto: (got '$SUPPORT_EMAIL')." >&2
   exit 1
 fi
 
@@ -124,6 +142,8 @@ info "  name     = $APP_NAME"
 info "  slug     = $APP_SLUG"
 info "  bundleId = $BUNDLE_ID"
 info "  scheme   = $SCHEME"
+info "  website  = $WEBSITE_URL"
+info "  support  = $SUPPORT_EMAIL"
 
 # ─── Sweep the template identity out of the rest of the tree ──────────────────
 # app.config.js is only where the identity is DECLARED. It is also written into
@@ -133,14 +153,16 @@ info "  scheme   = $SCHEME"
 # template's. Everything below is driven by the same four answers.
 header "Sweeping the template identity"
 
-node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" <<'NODE_SCRIPT'
+node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" "$WEBSITE_URL" "$SUPPORT_EMAIL" <<'NODE_SCRIPT'
 const fs = require('fs')
 const path = require('path')
-const [, , repoRoot, appName, appSlug, bundleId] = process.argv
+const [, , repoRoot, appName, appSlug, bundleId, websiteUrl, supportEmail] = process.argv
 
 const OLD_NAME = 'RN Starter'
 const OLD_SLUG = 'rn-starter'
 const OLD_BUNDLE = 'com.yourcompany.rnstarter'
+const OLD_WEBSITE = 'https://yourapp.example.com'
+const OLD_SUPPORT_EMAIL = 'support@example.com'
 
 const edits = []
 
@@ -166,6 +188,19 @@ patch('apps/mobile/google-services.json.example', (src) => all(src, OLD_BUNDLE, 
 // under the template's name replaces the first one's.
 patch('apps/api/wrangler.toml', (src) => all(src, OLD_SLUG, appSlug))
 patch('package.json', (src) => all(src, `"name": "${OLD_SLUG}"`, `"name": "${appSlug}"`))
+// Every installed build opens these links, and the release workflow refuses the placeholders.
+patch('apps/mobile/constants/legal.ts', (src) =>
+  all(all(src, OLD_WEBSITE, websiteUrl), OLD_SUPPORT_EMAIL, supportEmail)
+)
+// The site serving those links names the app, its store listing and the same address.
+patch('apps/web/lib/site.ts', (src) =>
+  [
+    [OLD_NAME, appName],
+    [OLD_BUNDLE, bundleId],
+    [OLD_WEBSITE, websiteUrl],
+    [OLD_SUPPORT_EMAIL, supportEmail],
+  ].reduce((acc, [from, to]) => all(acc, from, to), src)
+)
 
 const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
 if (fs.existsSync(localesDir)) {
@@ -178,6 +213,12 @@ console.log(edits.length ? edits.map((e) => `  ${e}`).join('\n') : '  nothing le
 NODE_SCRIPT
 
 success "Identity swept."
+
+if [[ "$WEBSITE_URL" == "https://yourapp.example.com" || "$SUPPORT_EMAIL" == "support@example.com" ]]; then
+  warn "The legal links still point at the template's placeholders: set the site and the support"
+  warn "address in apps/mobile/constants/legal.ts and apps/web/lib/site.ts before the first"
+  warn "release, which refuses them."
+fi
 
 # ─── Start the release history here ───────────────────────────────────────────
 # The release workflow versions the app from the commits since .last_release_commit,
@@ -206,7 +247,9 @@ else
   warn "apps/mobile/.env already exists — skipped."
 fi
 
-if [[ ! -f "$API_VARS" ]]; then
+if [[ ! -f "$API_VARS_EXAMPLE" ]]; then
+  info "apps/api is gone — no .dev.vars to create."
+elif [[ ! -f "$API_VARS" ]]; then
   cp "$API_VARS_EXAMPLE" "$API_VARS"
   success "Created apps/api/.dev.vars from .dev.vars.example — fill in your real values."
 else
@@ -218,7 +261,7 @@ header "Next steps"
 echo ""
 echo "  1. pnpm install"
 echo ""
-echo "  2. Edit apps/mobile/.env with your RevenueCat, Backend, and other keys."
+echo "  2. Edit apps/mobile/.env with your RevenueCat and other keys."
 echo "     See apps/mobile/.env.example for all variables and comments."
 echo "     AdMob ids are not env vars: app ids in apps/mobile/app.config.js,"
 echo "     unit ids in apps/mobile/constants/admob.ts — see apps/mobile/ADS.md."
@@ -227,14 +270,27 @@ echo "  3. Add Firebase config files:"
 echo "     - apps/mobile/google-services.json  (Android — use google-services.json.example as template)"
 echo "     - apps/mobile/GoogleService-Info.plist  (iOS — download from Firebase Console)"
 echo ""
-echo "  4. Edit apps/api/.dev.vars with your API_KEY and Firebase credentials."
+if [[ -d "$REPO_ROOT/apps/api" ]]; then
+  echo "  4. Edit apps/api/.dev.vars with your API_KEY, Firebase and RevenueCat credentials."
+  echo "     An app with no backend removes it, and the network layer that serves it:"
+  echo "     bash scripts/remove-api.sh"
+else
+  echo "  4. No backend: apps/api has been removed."
+fi
 echo ""
 echo "  5. Generate native projects:"
 echo "     pnpm --filter mobile preb"
 echo ""
 echo "  6. Start dev servers:"
 echo "     pnpm dev:mobile"
-echo "     pnpm dev:api"
+if [[ -d "$REPO_ROOT/apps/api" ]]; then
+  echo "     pnpm dev:api"
+fi
+echo "     pnpm dev:web"
+echo ""
+echo "  Before the site goes live: fill in the publisher and the date in"
+echo "  apps/web/lib/site.ts and the bracketed passages of apps/web/content/*/legal.ts,"
+echo "  and make the legal pages say what the app actually does. See README.md, Website."
 echo ""
 echo "  7. Before the first release: generate the upload keystore, fill in"
 echo "     apps/mobile/keystore.properties (from keystore.properties.example),"

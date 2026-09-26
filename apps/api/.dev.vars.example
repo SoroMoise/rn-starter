@@ -11,3 +11,8 @@ API_KEY=
 FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
+
+# RevenueCat REST API v2 secret key, read-only on customer information
+# (RevenueCat → Project settings → API keys → New secret API key). Never the SDK's public key.
+# Unset, the entitlement check lets every caller through.
+REVENUECAT_SECRET_API_KEY=

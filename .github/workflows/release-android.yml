@@ -174,6 +174,17 @@ jobs:
             echo "::warning::Every Android unit in apps/mobile/constants/admob.ts is still UNIT_PENDING: this release requests no ad."
           fi
 
+      # The legal links are constants, and the template's point at a placeholder site. Play requires
+      # a privacy policy that opens, the paywall links it beside every buy button, and a build
+      # already installed keeps its links whatever a later release fixes.
+      - name: Refuse the template's legal links
+        working-directory: apps/mobile
+        run: |
+          if grep -Eq "yourapp\.example\.com|support@example\.com" constants/legal.ts; then
+            echo "::error::apps/mobile/constants/legal.ts still points at the template's placeholder site or support address. Set the app's own site and support address there before releasing."
+            exit 1
+          fi
+
       - name: Write mobile .env from secret
         working-directory: apps/mobile
         env:

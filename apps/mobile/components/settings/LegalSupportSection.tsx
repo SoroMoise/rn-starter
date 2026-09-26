@@ -32,7 +32,7 @@ export function LegalSupportSection() {
         label: t('settings.privacyPolicy'),
         onPress: () => {
           analyticsService.track('external_link_opened', { link_type: 'privacy_policy' })
-          void openExternalLink({ url: LEGAL_URLS.PRIVACY_POLICY! })
+          void openExternalLink({ url: LEGAL_URLS.PRIVACY_POLICY })
         },
       },
       {
@@ -41,7 +41,7 @@ export function LegalSupportSection() {
         label: t('settings.termsOfService'),
         onPress: () => {
           analyticsService.track('external_link_opened', { link_type: 'terms_of_service' })
-          void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE! })
+          void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE })
         },
       },
       {
@@ -50,7 +50,7 @@ export function LegalSupportSection() {
         label: t('settings.support'),
         onPress: () => {
           analyticsService.track('external_link_opened', { link_type: 'support' })
-          void openExternalLink({ url: LEGAL_URLS.SUPPORT_EMAIL! })
+          void openExternalLink({ url: LEGAL_URLS.SUPPORT_EMAIL })
         },
       },
       {

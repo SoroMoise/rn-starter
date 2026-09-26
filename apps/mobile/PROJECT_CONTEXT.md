@@ -8,7 +8,7 @@ Keep this in sync with CLAUDE.md and the code — update both as part of any cha
 ## Overview
 
 - **Bundle ID placeholder:** `com.yourcompany.rnstarter`
-- **Monorepo:** `apps/mobile/` (this app), `apps/api/` (Cloudflare Worker), `packages/shared/`
+- **Monorepo:** `apps/mobile/` (this app), `apps/web/` (the site serving the legal pages), `apps/api/` (Cloudflare Worker, optional — `scripts/remove-api.sh`), `packages/shared/` (the Worker's types)
 - **Version:** `versionCode` computed in `app.config.js` — `major*1000000 + minor*1000 + patch`. Base 1000 per field, so the code stays strictly increasing up to `x.999.999`; Play only ever accepts a higher code than the last upload.
 
 ---
@@ -72,13 +72,13 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | `paywallAnalytics.ts` | `trackShown` / `trackDismissed` compose `paywall_shown` (with the default plan's price and currency) and `paywall_dismissed`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count); paywall counter; exposes `getPaywallContext` |
-| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `managementUrl` (the store page of the subscription held, or null), `reportFailure` (classifies an error by its code; only `unknown` becomes a Crashlytics non-fatal) |
+| `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `getAppUserId` (the id a backend call sends for the Worker's entitlement check), `managementUrl` (the store page of the subscription held, or null), `reportFailure` (classifies an error by its code; only `unknown` becomes a Crashlytics non-fatal) |
 | `consentService.ts` | Google UMP consent gate; only caller of `mobileAds().initialize()` |
 | `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
 | `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
 | `backendClient.ts` | `getBackendClient()` — the one axios instance for `apps/api` (`BACKEND_CONFIG` base URL, timeout, `x-api-key` header); throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY` |
-| `exampleService.ts` | `fetchExample({ signal })` — the app-side call to `GET /example` through `withRetry`, the pattern a backend call copies (no caller yet); a query's `queryFn` calls `getBackendClient()` directly instead |
+| `exampleService.ts` | `fetchExample({ signal })` and `fetchPremiumExample({ signal })` — the app-side calls to `GET /example` and `GET /example/premium` through `withRetry`, the pattern a backend call copies (no caller yet); the second sends `x-rc-customer-id` (`purchaseService.getAppUserId()`) for the Worker's entitlement check, and a free caller's `403` is not retried. A query's `queryFn` calls `getBackendClient()` directly instead |
 
 ### `services/notifications/`
 
@@ -178,6 +178,8 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 ## Data Fetching
 
 TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final. `withRetry`, for calls made outside a query, gives up with an `ApiRequestError` carrying `statusCode` and `code` beside its message.
+
+All of it serves `apps/api`: `scripts/remove-api.sh` removes the layer with the Worker, for an app with no backend (CLAUDE.md, Data Fetching).
 
 ---
 

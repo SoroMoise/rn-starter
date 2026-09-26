@@ -20,11 +20,19 @@ export interface NotificationPermission {
   canAskAgain: boolean
 }
 
+// iOS reports a provisional or ephemeral authorisation as `undetermined`, though it delivers.
+const DELIVERING_IOS_STATUSES: readonly Notifications.IosAuthorizationStatus[] = [
+  Notifications.IosAuthorizationStatus.PROVISIONAL,
+  Notifications.IosAuthorizationStatus.EPHEMERAL,
+]
+
 const toPermission = ({
   status,
   canAskAgain,
+  ios,
 }: Notifications.NotificationPermissionsStatus): NotificationPermission => ({
-  isGranted: status === 'granted',
+  isGranted:
+    status === 'granted' || (ios !== undefined && DELIVERING_IOS_STATUSES.includes(ios.status)),
   canAskAgain,
 })
 

@@ -66,5 +66,7 @@ export async function withRetry<T>({
     }
   }
 
-  throw new ApiRequestError(lastError ?? { message: i18n.t('error.apiError'), code: 'FETCH_FAILED' })
+  throw new ApiRequestError(
+    lastError ?? { message: i18n.t('error.apiError'), code: 'FETCH_FAILED' }
+  )
 }

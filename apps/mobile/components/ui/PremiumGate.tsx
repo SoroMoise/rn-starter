@@ -10,12 +10,11 @@ import { Pressable, StyleSheet, View } from 'react-native'
 const BLUR_INTENSITY = 18
 
 type PremiumGateProps = {
-  feature: string
   source: string
   children: React.ReactNode
 }
 
-export function PremiumGate({ feature: _feature, source, children }: PremiumGateProps) {
+export function PremiumGate({ source, children }: PremiumGateProps) {
   const { isPremium, isInitialized, openPaywall } = usePremium()
   const isDark = useThemedColor()
   const { t } = useTranslation()

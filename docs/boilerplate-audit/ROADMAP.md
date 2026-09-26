@@ -27,11 +27,12 @@ audit of that gap and the plan to close it.
 | 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
+| — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | on `claude/off-audit-fixes` |
 | 10–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**196 have shipped** (63 in lots 1–3, 29 in lot 4, 30 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
-lot 8, 33 in lot 9) and **39 remain**, spread over lots 10 to 13. The three held back out of lot 4
+**199 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8, 33 in lot 9) and **36 remain**, spread over lots 10 to 13. The three held back out of lot 4
 (§4) closed with lot 9, so nothing is deferred any more and the console's lot cards match §3.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
@@ -77,6 +78,20 @@ lot 5's `useAdPlacementActive` (29d7640) — and is counted there now, which is 
 moved by one. Three lot-13 items it touched stay open, each with a note saying what is left:
 `claude-nativewind-footguns` (three of its four traps), `claude-android-modal-keyboard` (the
 measured-height echo) and `claude-bundle-size` (the Metro stub and the `analyze` discipline).
+
+Three lot-13 items had shipped unrecorded, found when the remaining lots were planned against the
+code: `claude-build-release` and `claude-ci-release` with lot 2's plugins and workflow (5f72702,
+79cc993) — bar the first one's `./gradlew clean` rule, which stays with `doc-gradlew-clean-interdit`
+— and `claude-ads-consent`, whose rule came with lot 1's consent gate and whose show-time re-read with
+lot 5 (0d989e4). They are counted there now, which is why those two figures moved.
+
+The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
+onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
+blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
+(`shouldUseBrowserMode`), so what reaches that catch is a build without the native module, or a key
+that is not a string. Whoever stubs `@revenuecat/purchases-js-hybrid-mappings` in lot 11 should
+know that browser mode is what the stub removes — harmless while MMKV, Firebase and AdMob already
+keep the app out of Expo Go.
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -147,7 +162,7 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (18 items)
+### Lot 13 — Documentation and conventions (15 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: the NativeWind and RN footguns that break
 silently (the line-height one is written), the measured-height echo beside the modal-keyboard rule,

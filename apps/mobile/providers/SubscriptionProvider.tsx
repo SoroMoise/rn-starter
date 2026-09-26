@@ -129,6 +129,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const [paywallVisible, setPaywallVisible] = useState(false)
 
   const appState = useRef(AppState.currentState)
+  const isConfiguredRef = useRef(false)
   const paywallSourceRef = useRef<string>('')
   // Read inside applyCustomerInfo, which must not re-create itself when the offer
   // reloads — the init effect depends on it.
@@ -212,28 +213,46 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     }
   }, [])
 
+  const startStore = useCallback(async () => {
+    try {
+      await purchaseService.initialize()
+    } catch (err) {
+      purchaseService.reportFailure({ error: err, source: 'subscription_init' })
+      // Nothing will quote a price: the notice offers its retry instead of spinning for good.
+      setIsLoadingPrices(false)
+      return
+    }
+    isConfiguredRef.current = true
+
+    // Entitlement and prices are two independent calls, each with its own error
+    // boundary: a store that will not quote a price must not cost the subscriber
+    // their tier, which is what a single try around Promise.all did.
+    await Promise.all([syncPremiumState(), loadOfferings()])
+  }, [loadOfferings, syncPremiumState])
+
+  // What the user retries starts the store again when configure failed: an SDK that was never
+  // configured can only fail the same way.
+  const retryPrices = useCallback(
+    () => (isConfiguredRef.current ? loadOfferings() : startStore()),
+    [loadOfferings, startStore]
+  )
+  const refreshSubscription = useCallback(
+    () => (isConfiguredRef.current ? syncPremiumState() : startStore()),
+    [syncPremiumState, startStore]
+  )
+
   useEffect(() => {
     const init = async () => {
-      try {
-        await purchaseService.initialize()
-      } catch (err) {
-        purchaseService.reportFailure({ error: err, source: 'subscription_init' })
-        setIsInitialized(true)
-        return
-      }
-
-      // Entitlement and prices are two independent calls, each with its own error
-      // boundary: a store that will not quote a price must not cost the subscriber
-      // their tier, which is what a single try around Promise.all did.
-      await Promise.all([syncPremiumState(), loadOfferings()])
+      await startStore()
       setIsInitialized(true)
     }
     void init()
-  }, [loadOfferings, syncPremiumState])
+  }, [startStore])
 
   useEffect(() => {
     const sub = AppState.addEventListener('change', (nextState: AppStateStatus) => {
-      if (appState.current.match(/inactive|background/) && nextState === 'active') {
+      const isReturn = /inactive|background/.test(appState.current) && nextState === 'active'
+      if (isReturn && isConfiguredRef.current) {
         void syncPremiumState()
         void loadOfferings()
       }
@@ -409,11 +428,11 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       defaultPlan,
       hasPrices: plans.length > 0,
       isLoadingPrices,
-      retryPrices: loadOfferings,
+      retryPrices,
       purchasePlan,
       restorePurchases,
       openPaywall,
-      refreshSubscription: syncPremiumState,
+      refreshSubscription,
     }),
     [
       isPremium,
@@ -427,11 +446,11 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       plans,
       defaultPlan,
       isLoadingPrices,
-      loadOfferings,
+      retryPrices,
       purchasePlan,
       restorePurchases,
       openPaywall,
-      syncPremiumState,
+      refreshSubscription,
     ]
   )
 

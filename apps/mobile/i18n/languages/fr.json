@@ -203,7 +203,9 @@
   "subscription": {
     "graceBannerTitle": "Votre abonnement a peut-être expiré",
     "graceBannerMessage": "Connectez-vous à internet avant le {{date}} pour vérifier votre abonnement.",
-    "graceBannerCta": "Vérifier l'abonnement"
+    "graceBannerCta": "Vérifier l'abonnement",
+    "billingIssueTitle": "Problème de paiement",
+    "billingIssueMessage": "Votre abonnement n'a pas pu être renouvelé. Mettez à jour votre moyen de paiement avant le {{date}} pour conserver Pro."
   },
   "notifications": {
     "channelName": "Rappels",

@@ -1,6 +1,10 @@
 import { PaywallModal } from '@/components/paywall/PaywallModal'
 import { ENTITLEMENT_PREMIUM, SUBSCRIPTION_GRACE_PERIOD_MS } from '@/constants/purchases'
-import { SubscriptionContext, type SubscriptionContextValue } from '@/contexts/SubscriptionContext'
+import {
+  SubscriptionContext,
+  type BillingIssue,
+  type SubscriptionContextValue,
+} from '@/contexts/SubscriptionContext'
 import { useToast } from '@/providers/ToastProvider'
 import { AdService } from '@/services/api/adService'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -48,6 +52,15 @@ function deriveActiveSubscription({
   return plan?.period ?? 'other'
 }
 
+// The store keeps a subscription whose payment failed active through its own grace period, and
+// RevenueCat flags that period; the date is when access ends if the payment is never fixed.
+function readBillingIssue(customerInfo: CustomerInfo): BillingIssue | null {
+  const entitlement = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
+  if (!entitlement?.billingIssueDetectedAtMillis) return null
+  if (entitlement.expirationDateMillis == null) return null
+  return { accessEndsAtMs: entitlement.expirationDateMillis }
+}
+
 type PremiumFlags = { isPremium: boolean; isInGracePeriod: boolean }
 
 // Development overrides, read once. They replace the store's answer inside
@@ -79,6 +92,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
   const [isPremium, setIsPremium] = useState(cached.isPremium)
   const [isInGracePeriod, setIsInGracePeriod] = useState(cached.isInGracePeriod)
+  const [billingIssue, setBillingIssue] = useState<BillingIssue | null>(null)
   const [isInitialized, setIsInitialized] = useState(false)
   const [isLoadingPurchase, setIsLoadingPurchase] = useState(false)
   const [activeSubscription, setActiveSubscription] = useState<PlanPeriod | null>(null)
@@ -110,6 +124,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       if (TIER_OVERRIDE) {
         setIsPremium(TIER_OVERRIDE.isPremium)
         setIsInGracePeriod(false)
+        setBillingIssue(null)
         setActiveSubscription(null)
         analyticsService.updateContext({ isPremium: TIER_OVERRIDE.isPremium })
         return { isPremium: TIER_OVERRIDE.isPremium, plan: null }
@@ -126,6 +141,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
       setIsPremium(isActive)
       setIsInGracePeriod(false)
+      setBillingIssue(readBillingIssue(customerInfo))
       setActiveSubscription(plan)
       analyticsService.updateContext({ isPremium: isActive })
 
@@ -339,6 +355,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isInitialized,
       isLoadingPurchase,
       isInGracePeriod,
+      billingIssue,
       isPaywallVisible: paywallVisible,
       activeSubscription,
       plans,
@@ -356,6 +373,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isInitialized,
       isLoadingPurchase,
       isInGracePeriod,
+      billingIssue,
       paywallVisible,
       activeSubscription,
       plans,

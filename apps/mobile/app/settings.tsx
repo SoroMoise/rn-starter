@@ -1,5 +1,6 @@
 import { AdBanner } from '@/components/ads/AdBanner'
 import { RewardedAdButton } from '@/components/ads/RewardedAdButton'
+import { BillingIssueBanner } from '@/components/settings/BillingIssueBanner'
 import { DisplaySection } from '@/components/settings/DisplaySection'
 import { LegalSupportSection } from '@/components/settings/LegalSupportSection'
 import { PremiumBanner } from '@/components/settings/PremiumBanner'
@@ -106,6 +107,7 @@ export default function SettingsScreen() {
 
         <PremiumBanner />
         <SubscriptionGraceBanner />
+        <BillingIssueBanner />
 
         <Section>
           <SectionHeader>{t('settings.appearance')}</SectionHeader>

@@ -25,7 +25,7 @@ SafeAreaProvider
         > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
           > ThemeProvider      <- light/dark via NativeWind 'class' strategy
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
-              > SubscriptionProvider   <- RevenueCat, offline allowance, PostPurchaseModal
+              > SubscriptionProvider   <- RevenueCat, offline allowance, billing issue, PaywallModal
                 > AdFreeProvider       <- ad-free session window tracking
                   > AppContent         <- onboarding gate, then TabLayout (+ RatingAskHost once the session started)
       RTLRestartBanner         <- outside provider tree
@@ -112,7 +112,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only before the store has answered or when it could not be reached, and `SubscriptionGraceBanner` then says the clock is running. `FORCE_FREE` / `FORCE_PRO` (development only, `FORCE_FREE` winning) replace the store's answer inside `applyCustomerInfo` and never reach `subscriptionStorage`; the release workflow refuses a `MOBILE_DOTENV` that sets either.
+`SubscriptionProvider` wraps `Purchases` SDK. `usePremium()` hook exposes `isPremium`, `isInitialized`, `openPaywall({ source })` — which resolves `false` without opening or tracking anything for a subscriber or before the onboarding is complete. `applyCustomerInfo` is the single place a CustomerInfo becomes the tier (boot, foreground sync, purchase, restore). The offer itself is data: `utils/offerings.ts` turns `offerings.current` into `OfferingPlan[]`, and the context exposes `plans` / `defaultPlan` / `purchasePlan({ plan, source })` — no product id, plan count or trial length is hardcoded. The store owns the grace period after a failed payment — RevenueCat flags it with `billingIssueDetectedAtMillis`, which becomes `billingIssue` on the context and `BillingIssueBanner` in Settings, informational only; `subscriptionStorage.derive(now, gracePeriodMs)` is an offline allowance read only before the store has answered or when it could not be reached, and `SubscriptionGraceBanner` then says the clock is running. `FORCE_FREE` / `FORCE_PRO` (development only, `FORCE_FREE` winning) replace the store's answer inside `applyCustomerInfo` and never reach `subscriptionStorage`; the release workflow refuses a `MOBILE_DOTENV` that sets either.
 
 ### Contextual Paywall
 

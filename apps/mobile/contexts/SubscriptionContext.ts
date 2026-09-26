@@ -1,11 +1,14 @@
 import type { OfferingPlan, PlanPeriod } from '@/utils/offerings'
 import { createContext } from 'react'
 
+export type BillingIssue = { accessEndsAtMs: number }
+
 export type SubscriptionContextValue = {
   isPremium: boolean
   isInitialized: boolean
   isLoadingPurchase: boolean
   isInGracePeriod: boolean
+  billingIssue: BillingIssue | null
   isPaywallVisible: boolean
   activeSubscription: PlanPeriod | null
   plans: OfferingPlan[]
@@ -24,6 +27,7 @@ const initial: SubscriptionContextValue = {
   isInitialized: false,
   isLoadingPurchase: false,
   isInGracePeriod: false,
+  billingIssue: null,
   isPaywallVisible: false,
   activeSubscription: null,
   plans: [],

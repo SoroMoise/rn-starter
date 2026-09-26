@@ -144,7 +144,7 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 ## Onboarding
 
-2-step flow in `OnboardingScreen.tsx`:
+Steps are `OnboardingStepKind`s (`types/onboarding.ts`) listed in order by `buildSteps()` in `OnboardingScreen.tsx`; a step gated on a device capability joins the list there, so navigation (`goToStep(kind)`, `goNext()`) goes by name and the progress bar reads `steps.length`. The current flow:
 1. `WelcomeStep` — app introduction. A top-left pill opens the shared `LanguagePicker` bottom sheet for language selection.
 2. `PremiumValueStep` — premium pitch (triggers paywall/trial). Skipping (via `ExitIntentSheet`) completes onboarding, and so does becoming Pro on this step — a purchase from the pitch or the exit sheet, or a restore: an effect in `OnboardingScreen` keyed on the entitlement, never on the purchase call. A subscriber detected on the welcome step gets `ProWelcomeModal` once.
 

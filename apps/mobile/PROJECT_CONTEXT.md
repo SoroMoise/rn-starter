@@ -3,6 +3,9 @@
 Concise reference for the generic starter's architecture as it actually exists.
 Keep this in sync with CLAUDE.md and the code — update both as part of any change.
 
+This file says what exists — routes, providers, stores, services, hooks, storage keys. CLAUDE.md says
+why, and what not to do: a convention lives there and only there. Both stay in English.
+
 ---
 
 ## Overview
@@ -111,6 +114,34 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 ---
 
+## Hooks
+
+Three layers, one responsibility each: **`services/`** holds logic (no React, no `router`, no `t()`), **`hooks/`** the React orchestration, **`app/`** and **`components/`** the assembly and JSX.
+
+| Hook | Description |
+|---|---|
+| `usePremium` | The subscription context (`SubscriptionProvider`): tier, plans and `defaultPlan`, `purchasePlan`, `restorePurchases`, `openPaywall`, `billingIssue`, `managementUrl` |
+| `usePaywallPlans` | `usePaywallPlans({ source, surface })` — what a selling surface says about the offer (plan options, CTA, legal note) and `purchaseSelected` for the plan it has selected |
+| `useContextualPaywall` | `maybeTrigger(trigger)` — opens the paywall at a value moment when the policy allows; the impression is recorded only once it opened |
+| `useActionRating` | `recordAction({ allowPromos })` — where an app wires its value moments: counts the action, offers it to the contextual paywall, then the interstitial, and otherwise arms the rating ask |
+| `useRatingPrompt` | `maybeAskForRating({ moment })` — gathers the state, runs `evaluateReviewRequest`, and asks for Play's card or traces the refusal |
+| `useCappedByTier` | `useCappedByTier({ items, freeLimit })` → `items`, `allItems`, `limit`, `isCapped`, `canAdd`: a free-tier limit applied on read (no caller yet) |
+| `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — whether a placement runs: kill switch, configured unit, tier, ad-free window, consent, environment |
+| `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
+| `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
+| `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
+| `useNetworkStatus` | `{ isOnline }` off NetInfo; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager` |
+| `useHardwareBack` | `useHardwareBack(onBack)` — the Android back key, for the focused route only |
+| `useStageActive` | True while the screen is focused and the app in the foreground — what `AdBanner` mounts on |
+| `useSheetSnap` | `ModalBottomSheet`'s springs, snap points and dismiss pan |
+| `useKeyboardHeight` | `useKeyboardHeight({ enabled })` — the keyboard's height, off its own events |
+| `useResponsiveLayout` | `width`, `height`, `contentWidth`, `gutter`, `isLargeScreen` |
+| `useTabBarPadding` | `useTabBarPadding(extra)` — `TAB_BAR_HEIGHT + insets.bottom + extra`, the room under the absolute tab bar |
+| `useThemedColor` | Whether the scheme on screen is dark |
+| `useDebounce` | `useDebounce(value, delay)` — the value once it has settled (no caller yet) |
+
+---
+
 ## Monetization
 
 ### AdMob
@@ -171,7 +202,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`). RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
 
-**Translation policy:** EN + FR are the source of truth. Other languages are updated in dedicated sessions, never mixed with feature work.
+EN and FR are the source of truth; the translation policy, the voice charter and the parity a translation session owes are in CLAUDE.md.
 
 ---
 
@@ -193,7 +224,7 @@ Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s cont
 
 `ThemedText` derives a line height whenever `style` sets `fontSize` without one.
 
-`ScreenContainer` caps its content at `UI_CONFIG.MAX_CONTENT_WIDTH` (600), centred — a cap that never binds on a phone. A native `Modal` is outside that column and caps itself (`PaywallModal` caps its scroll view and, on a large screen, its hero's height); `useResponsiveLayout()` gives `width`, `height`, `contentWidth`, `gutter` and `isLargeScreen` for what a style cannot express. Never read `Dimensions.get()` at module scope.
+`ScreenContainer` caps its content at `UI_CONFIG.MAX_CONTENT_WIDTH` (600), centred — a cap that never binds on a phone. A native `Modal` is outside that column and caps itself (`PaywallModal` caps its scroll view and, on a large screen, its hero's height); `useResponsiveLayout()` gives `width`, `height`, `contentWidth`, `gutter` and `isLargeScreen` for what a style cannot express.
 
 `ModalBottomSheet` assembles `useSheetSnap` (springs, snap points, the dismiss pan) and `components/ui/modalSheet/` (`contexts.ts`, and `scrollables.tsx` — `ModalBottomSheetFlatList` / `ModalBottomSheetScrollView`, re-exported from `ModalBottomSheet`, with `useModalSheetPanGesture()` for a scrollable that must block the sheet's pan). Content that drags inside a sheet raises its `dragLock` while it holds the finger; a pan it held never dismisses the sheet.
 
@@ -202,6 +233,25 @@ Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s cont
 `SettingsRow` — the settings row (icon plate, title, description, value, `pro` badge, accessory, chevron); `toggle` makes the whole row a switch, drawing `AppSwitch` (decoration only) and carrying the switch role and state. The language row in `DisplaySection` is built on it; `SettingsLinkRow` stays for plain links. `ProBadge` marks what the free tier cannot use.
 
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
+
+---
+
+## Known gaps
+
+Deliberate and documented — do not "fix" them blindly. Each has its reason in CLAUDE.md or `docs/boilerplate-audit/ROADMAP.md` §4.
+
+- **No onboarding step asks anything.** `OnboardingStepLayout` has no caller: a demo step would be a screen every app ships asking nothing. An app's first question — its notification ask, typically — is its first caller.
+- **The starter asks for no permission and schedules nothing.** `POST_NOTIFICATIONS` stays declared and the ask, the grant's readback and `syncDailyReminders` wait for the app's first notification.
+- **Remote push is not wired on the device.** `apps/api` ships the FCM sender; `@react-native-firebase/messaging` is not installed, since a handler nothing registers would look like working push.
+- **`aps-environment` is declared though nothing is pushed.** `expo-notifications` writes the entitlement whatever the config says; the declaration only states it.
+- **`AppRatingModal` compiles and is mounted nowhere.** Play forbids pre-filtering the review; `SENTIMENT_GATE_ENABLED` is read by nothing, so bringing it back means wiring it.
+- **Nothing is capped, persisted or called yet.** `useCappedByTier` and `useDebounce` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
+- **The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set**, and says so in its logs.
+- **The onboarding is not capped on large screens**, unlike every tab: a design pass, not a structural one.
+- **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing that path from the app changes the paths contract.
+- **`APP_STORE_APP_ID` is `null`** until the iOS release; the App Store opens nothing from a bundle id.
+- **The starter ships no data migration**: it has no installs. An app porting a storage change onto a released build owes its users one.
+- **The 18 other languages lag `en.json`**, most of the paywall, the onboarding and the home screen showing in English; they are brought to parity in a translation session, never alongside feature work.
 
 ---
 

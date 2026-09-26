@@ -21,6 +21,8 @@ Workspace tooling: pnpm workspaces + Turborepo. App identity placeholders: name 
 
 `CLAUDE.md` (this file) and `apps/mobile/PROJECT_CONTEXT.md` must stay in sync with the code. Whenever a change alters something either file documents — navigation/routes, provider tree, stores, services, hooks, storage keys, premium gates, i18n policy, conventions — **update both files as part of the same change, without being asked**. Keep edits surgical: touch only the sections the change affects.
 
+**The two split the work, and nothing lives in both.** `PROJECT_CONTEXT.md` says what exists — routes, providers, stores, services, hooks, storage keys, and the known gaps a reader must not "fix"; this file says why, and what not to do. A convention lives here only. Both stay in English: all-currency-converter's context file, rewritten in French with its own code conventions, error handling and workflows, ended up a second CLAUDE.md that neither file kept in step.
+
 `apps/mobile/ADS.md` is the same contract for advertising: every placement's unit, cadence and gates, and the invariants that keep the AdMob account alive. A change to any ad surface, unit or frequency updates it in the same commit.
 
 ## Commands

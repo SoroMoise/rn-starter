@@ -298,6 +298,8 @@ Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`ct
 
 Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit above the app window, so to surface a toast over one, mount `ModalToastViewport active={visible}` inside the modal.
 
+**`ModalBottomSheet` is assembly only.** `useSheetSnap` (`hooks/`) owns the springs, the snap points and the dismiss pan; `components/ui/modalSheet/` holds the contexts and the two scrollables, `ModalBottomSheetFlatList` and `ModalBottomSheetScrollView` — re-exported from `ModalBottomSheet`, where callers import them — whose native gesture runs alongside that pan: a drag that starts with the list at its top moves the sheet, any other scrolls the list.
+
 ### Internationalization
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Config `i18n/service.ts`, translations in `i18n/languages/`. Lazy-loaded per language. RTL (`ar`) triggers `I18nManager.forceRTL` + restart.

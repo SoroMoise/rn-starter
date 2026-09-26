@@ -48,10 +48,24 @@ function deriveActiveSubscription({
   return plan?.period ?? 'other'
 }
 
-// Reached only when the store could not be asked at all — a subscriber on a plane
-// keeps their Pro while the banner says the clock is running. A response that
-// reports no active entitlement is a verified answer and never lands here.
-function unverifiedFlags(): { isPremium: boolean; isInGracePeriod: boolean } {
+type PremiumFlags = { isPremium: boolean; isInGracePeriod: boolean }
+
+// Development overrides, read once. They replace the store's answer inside
+// applyCustomerInfo and never reach subscriptionStorage, so dropping the variable
+// brings the real tier back with nothing to undo. FORCE_FREE wins over FORCE_PRO.
+function readTierOverride(): PremiumFlags | null {
+  const purchases = Constants.expoConfig?.extra?.purchases
+  if (purchases?.forceFree === true) return { isPremium: false, isInGracePeriod: false }
+  if (purchases?.forcePro === true) return { isPremium: true, isInGracePeriod: false }
+  return null
+}
+
+const TIER_OVERRIDE = readTierOverride()
+
+// Read before the store has answered, and when it could not be asked at all — a
+// subscriber on a plane keeps their Pro while the banner says the clock is running.
+// A response that reports no active entitlement is a verified answer and never lands here.
+function unverifiedFlags(): PremiumFlags {
   const derived = subscriptionStorage.derive(Date.now(), SUBSCRIPTION_GRACE_PERIOD_MS)
   return { isPremium: derived.isPremium, isInGracePeriod: derived.isInGracePeriod }
 }
@@ -60,11 +74,8 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const { showToast } = useToast()
   const { t } = useTranslation()
 
-  const forceFree = Constants.expoConfig?.extra?.purchases?.forceFree === true
-
-  const cached = forceFree
-    ? { isPremium: false, isInGracePeriod: false }
-    : subscriptionStorage.derive(Date.now(), SUBSCRIPTION_GRACE_PERIOD_MS)
+  // Read once: it only seeds the two states below, and it goes to disk to do it.
+  const cached = useMemo(() => TIER_OVERRIDE ?? unverifiedFlags(), [])
 
   const [isPremium, setIsPremium] = useState(cached.isPremium)
   const [isInGracePeriod, setIsInGracePeriod] = useState(cached.isInGracePeriod)
@@ -96,12 +107,12 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   // foreground sync, a purchase and a restore cannot disagree.
   const applyCustomerInfo = useCallback(
     (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanPeriod | null } => {
-      if (forceFree) {
-        setIsPremium(false)
+      if (TIER_OVERRIDE) {
+        setIsPremium(TIER_OVERRIDE.isPremium)
         setIsInGracePeriod(false)
         setActiveSubscription(null)
-        analyticsService.updateContext({ isPremium: false })
-        return { isPremium: false, plan: null }
+        analyticsService.updateContext({ isPremium: TIER_OVERRIDE.isPremium })
+        return { isPremium: TIER_OVERRIDE.isPremium, plan: null }
       }
 
       const isActive = purchaseService.isPremiumActive({ customerInfo })
@@ -120,7 +131,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
       return { isPremium: isActive, plan }
     },
-    [forceFree]
+    []
   )
 
   const syncPremiumState = useCallback(async () => {
@@ -132,14 +143,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         plan: applied.plan ?? 'none',
       })
     } catch (err) {
-      if (!forceFree) {
+      if (!TIER_OVERRIDE) {
         const flags = unverifiedFlags()
         setIsPremium(flags.isPremium)
         setIsInGracePeriod(flags.isInGracePeriod)
       }
       void crashlyticsService.recordError(err, { source: 'subscription_sync' })
     }
-  }, [applyCustomerInfo, forceFree])
+  }, [applyCustomerInfo])
 
   const loadOfferings = useCallback(async () => {
     setIsLoadingPrices(true)

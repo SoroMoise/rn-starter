@@ -192,7 +192,8 @@ All commands run from the repo root unless noted.
 
 See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
-- **REVENUECAT_*** — API keys, entitlement ID, product IDs
+- **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
+- **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 - **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 

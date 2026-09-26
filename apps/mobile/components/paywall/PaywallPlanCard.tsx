@@ -57,7 +57,6 @@ export function PaywallPlanCard({
       ]}
       accessibilityRole="radio"
       accessibilityState={{ checked: isSelected, disabled: isDisabled }}>
-      {/* Badges */}
       {(savingsBadge || trialBadge) && (
         <View style={styles.badges}>
           {savingsBadge && (
@@ -77,7 +76,6 @@ export function PaywallPlanCard({
         </View>
       )}
 
-      {/* Info */}
       <View style={styles.info}>
         <ThemedText variant="body" weight="semibold">
           {label}
@@ -87,7 +85,6 @@ export function PaywallPlanCard({
         </ThemedText>
       </View>
 
-      {/* Price + radio */}
       <View style={styles.right}>
         <ThemedText variant="body" weight="bold">
           {priceString}

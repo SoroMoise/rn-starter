@@ -159,11 +159,9 @@ export function RTLRestartBanner() {
             blurReductionFactor={10}
             tint={isDark ? 'dark' : 'light'}
             experimentalBlurMethod="dimezisBlurView">
-            {/* Tint overlay on top of blur */}
             <View style={[StyleSheet.absoluteFillObject, { backgroundColor: glassBg }]} />
 
             <View style={styles.content}>
-              {/* Header row */}
               <View style={styles.headerRow}>
                 <View
                   style={[
@@ -178,12 +176,10 @@ export function RTLRestartBanner() {
                 </ThemedText>
               </View>
 
-              {/* Message */}
               <ThemedText variant="label" color="muted" style={styles.message}>
                 {t('rtlRestart.message', { count })}
               </ThemedText>
 
-              {/* Progress bar */}
               <View
                 onLayout={(e) => {
                   const width = e.nativeEvent.layout.width
@@ -199,7 +195,6 @@ export function RTLRestartBanner() {
                 />
               </View>
 
-              {/* Action buttons */}
               <View style={styles.buttonsRow}>
                 <AnimatedPressable
                   onPress={restartApp}

@@ -1,6 +1,7 @@
 import { Divider, Section, SectionContent } from '@/components/settings/SettingsSection'
 import { SettingsLinkRow } from '@/components/ui/SettingsLinkRow'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { PRO_BENEFITS } from '@/constants/purchases'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
@@ -84,7 +85,7 @@ export function PremiumBanner() {
             </ThemedText>
           </View>
           <ThemedText color="inherit" className="mb-3 text-sm text-violet-200">
-            {t('settings.premiumDescription')}
+            {PRO_BENEFITS.map((benefit) => t(benefit.i18nKey, benefit.params)).join(' · ')}
           </ThemedText>
           <View className="self-start rounded-full bg-white px-4 py-1.5">
             <ThemedText color="inherit" weight="bold" className="text-sm text-violet-700">

@@ -362,6 +362,7 @@ All commands run from the repo root unless noted.
 | `pnpm lint` | ESLint (all workspaces) |
 | `pnpm deploy:api` | `wrangler deploy` |
 | `pnpm --filter mobile preb` | `expo prebuild` (generate native projects) |
+| `pnpm --filter mobile analyze` | Android bundle broken down by package, in `apps/mobile/report.html` — run it before and after a dependency change |
 
 ---
 

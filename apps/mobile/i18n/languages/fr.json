@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Chargement...",
+    "loading": "Chargement…",
     "error": "Erreur",
     "retry": "Réessayer",
     "cancel": "Annuler",
@@ -22,7 +22,7 @@
   },
   "home": {
     "hero": {
-      "title": "Starter Premium",
+      "title": "Starter premium",
       "subtitle": "Publiez une app React Native soignée et monétisée — thème, i18n, paywall et pubs déjà configurés."
     },
     "features": {
@@ -49,7 +49,7 @@
       }
     },
     "cta": {
-      "label": "Essayer Premium"
+      "label": "Essayer Pro"
     },
     "demoAction": {
       "label": "Effectuer une action d'exemple",
@@ -66,32 +66,31 @@
     "display": "Affichage",
     "language": "Langue",
     "selectLanguage": "Sélectionner la langue",
-    "searchLanguage": "Rechercher des langues...",
+    "searchLanguage": "Rechercher une langue…",
     "ads": "Publicités",
     "goPremium": "Passer à Pro",
-    "premiumDescription": "Sans pub · Fonctionnalités premium · Support prioritaire",
     "premiumActive": "Vous êtes membre Pro",
     "premiumActiveUntil": "Actif jusqu'au {{date}}",
     "premiumLifetime": "Accès à vie",
     "manageSubscription": "Gérer l'abonnement",
     "removeAds": "Retirer les publicités",
-    "removeAdsDescription": "Profitez d'une expérience sans publicités",
-    "watchAdButton": "Regarder une pub pour {{duration}} sans pub",
+    "removeAdsDescription": "Regardez une pub, faites une pause sur toutes les autres",
+    "watchAdButton": "Regarder une pub, gagner {{duration}} sans pub",
     "adFreeActive": "Sans pub actif ({{duration}} restantes)",
     "adNotAvailableTitle": "Publicité non disponible",
-    "adNotAvailableMessage": "Aucune publicité disponible pour le moment. Veuillez réessayer plus tard.",
+    "adNotAvailableMessage": "Aucune publicité n'est prête pour le moment. Réessayez dans quelques minutes.",
     "adRewardTitle": "Récompense débloquée !",
-    "adRewardMessage": "Vous avez {{duration}} d'expérience sans publicité. Profitez-en !",
+    "adRewardMessage": "{{duration}} sans la moindre pub, à partir de maintenant. Profitez-en !",
     "adErrorTitle": "Erreur",
-    "adErrorMessage": "Échec du chargement de la publicité. Veuillez réessayer plus tard.",
+    "adErrorMessage": "La publicité n'a pas pu se charger. Réessayez dans quelques minutes.",
     "about": "À propos",
     "version": "Version",
-    "legalAndSupport": "Légal et Support",
+    "legalAndSupport": "Légal et support",
     "privacyPolicy": "Politique de confidentialité",
     "termsOfService": "Conditions d'utilisation",
     "support": "Support",
     "rateApp": "Noter cette application",
-    "languageChanged": "Langue mise à jour avec succès",
+    "languageChanged": "Langue mise à jour",
     "adPrivacy": "Confidentialité publicitaire"
   },
   "onboarding": {
@@ -123,16 +122,16 @@
     },
     "proWelcome": {
       "title": "Bon retour !",
-      "body": "On a retrouvé ton abonnement Pro — il est déjà actif sur cet appareil.",
+      "body": "Nous avons retrouvé votre abonnement Pro — il est déjà actif sur cet appareil.",
       "ctaSkip": "Passer l'intro",
       "ctaContinue": "Continuer la visite"
     }
   },
   "error": {
-    "networkError": "Erreur réseau. Veuillez vérifier votre connexion.",
-    "apiError": "Impossible de charger les données. Veuillez réessayer.",
-    "serverError": "Erreur serveur. Veuillez réessayer plus tard.",
-    "unknownError": "Une erreur inconnue s'est produite"
+    "networkError": "Connexion impossible. Vérifiez votre réseau et réessayez.",
+    "apiError": "Impossible de charger les données. Réessayez.",
+    "serverError": "Problème de notre côté. Réessayez dans un instant.",
+    "unknownError": "Une erreur est survenue"
   },
   "appRating": {
     "title": "Vous aimez RN Starter ?",
@@ -142,8 +141,8 @@
     "declineButton": "Non merci"
   },
   "rtlRestart": {
-    "title": "Mise à jour du layout requise",
-    "message": "Redémarrage dans {{count}}s pour appliquer le nouveau sens.",
+    "title": "Changement du sens de lecture",
+    "message": "Redémarrage dans {{count}} s pour l'appliquer.",
     "restartNow": "Redémarrer",
     "restartManually": "Plus tard"
   },
@@ -160,7 +159,7 @@
     "restoreSuccess": "Abonnement restauré !",
     "restoreNotFound": "Aucun abonnement actif trouvé",
     "welcomePro": "Bienvenue dans Pro !",
-    "errorGeneric": "Une erreur est survenue. Réessaie.",
+    "errorGeneric": "Une erreur est survenue. Réessayez.",
     "errorNetwork": "Pas de connexion. Vérifiez votre réseau et réessayez.",
     "errorStoreUnavailable": "Les achats ne sont pas disponibles sur cet appareil pour le moment.",
     "errorAlreadyOwned": "Vous possédez déjà Pro avec ce compte. Touchez « Restaurer mes achats » pour le récupérer.",

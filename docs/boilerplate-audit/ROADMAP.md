@@ -120,10 +120,12 @@ branch also carries one commit outside the audit: the iOS prebuild had never bee
 identity rather than Claude's (§2) and a subject longer than the convention; it was already on the
 pushed branch when the second session began, and was left as it is rather than rewritten.
 
-Lot 13's thirteen are its own. No "later" item shipped with them. Two it touched stay open, each
-with a note saying what is left: `readme-troubleshooting` (its `analyze` line shipped; the
-Troubleshooting section remains) and `onboarding-transition-view-drop-moti` (Moti's cost is measured
-and written down; the starter keeps Moti, §4). Two items shipped otherwise than proposed: the comment
+Lot 13's thirteen are its own. One "later" item shipped with them, `tabbar-blur-cout-documente`,
+which the Styling paragraph on `BlurView` covers. Three it touched stay open, each with a note saying
+what is left: `readme-troubleshooting` (its `analyze` line shipped; the Troubleshooting section
+remains), and `onboarding-transition-view-drop-moti` and `moti-chemin-de-boot` (Moti's cost is
+measured and written down; the starter keeps Moti, §4). One "later" item had shipped unrecorded:
+`release-workflow-android` is lot 2's pipeline (79cc993, 0b311c8), counted there now. Two items shipped otherwise than proposed: the comment
 rule carries no one-line cap (§4), and `project-context-structure`'s Known gaps are the starter's
 current ones, its proposed examples having gone stale (§14). The branch also carries one commit
 outside the audit: Settings' Pro banner sold "Premium features · Priority support", neither of which
@@ -184,7 +186,8 @@ Every kept item has shipped. What is left is not in the audit's lots:
   English; of the 91 they hold, the ones this lot rewrote in EN and FR keep the old wording.
   `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`) against the table the voice charter
   sets. The session brings every file to parity and to the charter, and nothing else.
-- **The 84 "later" items**, judged useful but never blocking (§1). None is scheduled.
+- **The "later" items**, judged useful but never blocking (§1): 50 of the 84 are still open. None
+  is scheduled.
 
 ---
 

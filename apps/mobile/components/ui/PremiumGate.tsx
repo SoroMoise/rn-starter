@@ -2,9 +2,12 @@ import { ThemedText } from '@components/ui/ThemedText'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { usePremium } from '@hooks/usePremium'
 import { useThemedColor } from '@hooks/useThemedColor'
+import { BlurView } from 'expo-blur'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, StyleSheet, View } from 'react-native'
+
+const BLUR_INTENSITY = 18
 
 type PremiumGateProps = {
   feature: string
@@ -24,6 +27,15 @@ export function PremiumGate({ feature: _feature, source, children }: PremiumGate
   return (
     <View style={styles.container}>
       {children}
+      {/* Android renders no blur at all without `experimentalBlurMethod`, and samples the screen
+          the view sits in: inside a native Modal it would blur the screen under the modal. */}
+      <BlurView
+        intensity={BLUR_INTENSITY}
+        tint={isDark ? 'dark' : 'light'}
+        experimentalBlurMethod="dimezisBlurView"
+        style={styles.blur}
+        pointerEvents="none"
+      />
       <Pressable
         style={[styles.overlay, isDark && styles.overlayDark]}
         onPress={() => void openPaywall({ source })}
@@ -51,15 +63,20 @@ const styles = StyleSheet.create({
   container: {
     position: 'relative',
   },
+  blur: {
+    ...StyleSheet.absoluteFillObject,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.88)',
+    backgroundColor: 'rgba(255, 255, 255, 0.55)',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
   overlayDark: {
-    backgroundColor: 'rgba(15, 15, 20, 0.88)',
+    backgroundColor: 'rgba(15, 15, 20, 0.55)',
   },
   lockContent: {
     alignItems: 'center',

@@ -251,10 +251,12 @@ device.
 content })` cancels every reminder of its group, then schedules one daily trigger per entry; an
 empty list clears the group. Calls are queued, so the latest one holds — two overlapping syncs would
 each cancel, then both schedule. Without the grant it schedules nothing and says so: it resolves
-`'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; a native failure
-resolves `'failed'` with a non-fatal, since its callers are effects that never wait for it. It never
-asks itself, because it runs wherever the list changes, the app's exit included; the app syncs again
-when the grant comes back, which `useNotificationPermission` sees at the next foreground. The title
+`'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; a native failure,
+or a time out of range — checked before anything is cancelled, since expo rejects one trigger at a
+time and would leave the group half scheduled — resolves `'failed'` with a non-fatal, because its
+callers are effects that never wait for it. It never asks itself, because it runs wherever the
+list changes, the app's exit included; the app syncs again when the grant comes back, which
+`useNotificationPermission` sees at the next foreground. The title
 and body are the caller's, frozen at scheduling, so a language change syncs again too. A reminder
 fires within Android's inexact window: the manifest holds no exact-alarm permission, and Play
 grants `USE_EXACT_ALARM` only to alarm, timer and calendar apps. expo-notifications re-arms the

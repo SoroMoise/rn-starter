@@ -85,7 +85,7 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | File | Description |
 |---|---|
 | `setup.ts` | `notificationService` — `readPermission()` / `requestPermission()` (`{ isGranted, canAskAgain }`, read off the OS, never a stored flag; the request only from the screen that shows what it is for), foreground presentation handler |
-| `dailyReminders.ts` | `syncDailyReminders({ group, reminders, content })` — cancels the group, then one daily trigger per `{ id, hour, minute }`; queued, so the latest call holds. Never asks: without the grant it resolves `'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; it never rejects — a native failure is `'failed'` and a non-fatal |
+| `dailyReminders.ts` | `syncDailyReminders({ group, reminders, content })` — cancels the group, then one daily trigger per `{ id, hour, minute }`; queued, so the latest call holds. Never asks: without the grant it resolves `'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; it never rejects — a native failure, or a time out of range (checked before the group is touched), is `'failed'` and a non-fatal |
 | `channels.ts` | The Android channel (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) — its sound, vibration and importance are frozen at creation, so a change takes a new id; the app has no sound or vibration setting of its own |
 
 `useNotificationPermission()` (`hooks/`) holds the grant for a screen and reads it again at every foreground; `request()` asks and returns what the OS answered. The starter asks for nothing and schedules nothing itself: both are there for the app's own notifications.

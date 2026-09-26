@@ -43,7 +43,24 @@ function reportMissingPermission(group: string): void {
   }
 }
 
+const isValidTime = ({ hour, minute }: DailyReminder): boolean =>
+  Number.isInteger(hour) &&
+  hour >= 0 &&
+  hour <= 23 &&
+  Number.isInteger(minute) &&
+  minute >= 0 &&
+  minute <= 59
+
 async function sync({ group, reminders, content }: SyncParams): Promise<DailyReminderSyncOutcome> {
+  // Checked before anything is cancelled: expo rejects an out-of-range time one trigger at a time,
+  // which would leave the group half scheduled.
+  const invalid = reminders.find((reminder) => !isValidTime(reminder))
+  if (invalid) {
+    throw new RangeError(
+      `Reminder "${invalid.id}" has no valid time: ${invalid.hour}:${invalid.minute}`
+    )
+  }
+
   // The whole group goes first, so a changed or removed reminder leaves no trigger behind.
   await cancelGroup(group)
   if (reminders.length === 0) return 'cleared'

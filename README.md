@@ -19,7 +19,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Custom tab bar** — blur effect, haptics, premium-aware
 - **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
-- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (called from the app by `exampleService`, through one axios client and `withRetry`)
+- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (`exampleService` is its app-side call, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
 - **Shared types** — `packages/shared` consumed by both mobile and API
 
 ---

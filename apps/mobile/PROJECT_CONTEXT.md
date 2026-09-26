@@ -55,6 +55,8 @@ All stores in `apps/mobile/stores/`. Persisted stores use Zustand `persist` + MM
 | `settingsStore` | Yes | User preferences (theme, language), RTL restart state |
 | `onboardingStore` | Yes | Onboarding completion, the exit sheet already offered (`attemptedSkipTrial`), Pro welcome seen — the current step is not persisted |
 
+A `merge` result is not written back until the next `setState` (only a `migrate` is): a store whose `merge` changes what was on disk forces one write from `onRehydrateStorage`, deferred by a microtask past the synchronous hydration.
+
 ---
 
 ## Services

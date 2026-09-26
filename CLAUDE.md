@@ -156,6 +156,27 @@ rehydration silently falls back to the store's defaults on the next launch, and 
 `domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
 is only named after it — it is handed the MMKV adapter here.)
 
+**What a store's `merge` decides stays in memory until something writes it.** `persist` writes on
+`setState` only: hydration hands the persisted state to `merge` and sets the result without writing
+it back — only a `migrate` that ran is written. Whatever `merge` resolves — a restored timer closed,
+a stale entry purged, a field normalised — is resolved again at every cold start, and the symptom
+lands one launch after its cause: deep-focus credited the same session once per launch. A store whose
+`merge` changes what was on disk raises a module flag there and forces one write once hydration is
+done:
+
+```ts
+onRehydrateStorage: () => () => {
+  if (!mergeResolvedSomething) return
+  mergeResolvedSomething = false
+  queueMicrotask(() => useStore.setState({}))
+},
+```
+
+The microtask is not optional: MMKV hydrates synchronously, inside `create()`, before `useStore` is
+assigned. On the way out, normalise transient state in `partialize` (`phase: phase === 'running' ?
+'running' : 'idle'`) rather than persisting it as it is. Neither starter store needs the flush —
+`settingsStore`'s `merge` only fills defaults, and fills them again on the next launch.
+
 **What grants something lives in its own encrypted instance, and only there.** `secure.ts` opens a
 second MMKV instance with an `encryptionKey` for the subscription cache and the ad-free window, so
 the file no longer reads as plain text to whoever pulls it. It is obfuscation, not secrecy: the key

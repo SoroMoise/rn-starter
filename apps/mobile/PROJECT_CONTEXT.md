@@ -91,14 +91,15 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 
 | File/Dir | Description |
 |---|---|
-| `mmkv.ts` | Single MMKV instance |
+| `mmkv.ts` | Main MMKV instance |
+| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
-| `domains/adFree.ts` | Ad-free window expiry — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
+| `domains/adFree.ts` | Ad-free window expiry (encrypted instance) — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
-| `domains/subscription.ts` | Subscription expiry + lifetime flag; `derive(now, gracePeriodMs)` = offline allowance only |
+| `domains/subscription.ts` | Subscription expiry + lifetime flag (encrypted instance); `derive(now, gracePeriodMs)` = offline allowance only |
 | `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
 ---

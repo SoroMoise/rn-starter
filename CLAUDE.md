@@ -121,7 +121,8 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 ### Storage
 
 `apps/mobile/services/storage/`:
-- `mmkv.ts` — single MMKV instance
+- `mmkv.ts` — the main MMKV instance
+- `secure.ts` — the encrypted instance for entitlement keys, and nothing else
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
 - `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`, `userSettings`
@@ -133,8 +134,8 @@ Notable domains:
   alone moves the counter and offers the moment to nothing. It is never reset: the
   policy's own cooldown and lifetime cap are what pace the paywall, and a counter that could be rewound
   would make both meaningless.
-- `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating and grace period banner
-- `adFree` — tracks the ad-free window granted after a rewarded ad. A video watched while a window is open adds to what is left, up to `AD_REWARDED_FREE_MAX_MINUTES` — overwriting took back minutes already earned
+- `subscriptionStorage` — persists expiry + lifetime flag for offline Pro gating and grace period banner, in the encrypted instance
+- `adFree` — tracks the ad-free window granted after a rewarded ad, in the encrypted instance. A video watched while a window is open adds to what is left, up to `AD_REWARDED_FREE_MAX_MINUTES` — overwriting took back minutes already earned
 
 **MMKV is the only key-value store, and `@react-native-async-storage/async-storage` does not come
 back.** The persisted stores hydrate synchronously because of it, which is what removes the async gate
@@ -144,6 +145,15 @@ reading a persisted store from outside Zustand: `persist` wraps what it writes i
 rehydration silently falls back to the store's defaults on the next launch, and nothing reports it.
 `domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
 is only named after it — it is handed the MMKV adapter here.)
+
+**What grants something lives in its own encrypted instance, and only there.** `secure.ts` opens a
+second MMKV instance with an `encryptionKey` for the subscription cache and the ad-free window, so
+the file can no longer be pulled, edited into Pro and put back. It is obfuscation, not secrecy: the
+key ships in the bundle, MMKV reads only its first 16 bytes, and it never changes once released —
+what it wrote would become unreadable. A new entitlement key goes there; a preference does not.
+Never encrypt the main instance: whatever an install already wrote there would become unreadable.
+An app porting this onto a build already in users' hands copies the plaintext values across once,
+at import, before any reader — the starter has no installs, so it ships no migration.
 
 ### API Layer
 

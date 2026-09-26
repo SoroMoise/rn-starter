@@ -1,9 +1,9 @@
 import { KEYS } from '../keys'
-import { mmkv } from '../mmkv'
+import { secureMmkv } from '../secure'
 
 export const subscriptionStorage = {
   getExpiresAt(): number | null {
-    const raw = mmkv.getString(KEYS.SUBSCRIPTION_EXPIRES_AT)
+    const raw = secureMmkv.getString(KEYS.SUBSCRIPTION_EXPIRES_AT)
     if (!raw) return null
     const n = parseInt(raw, 10)
     return Number.isFinite(n) ? n : null
@@ -11,21 +11,21 @@ export const subscriptionStorage = {
 
   setExpiresAt(ms: number | null): void {
     if (ms === null) {
-      mmkv.delete(KEYS.SUBSCRIPTION_EXPIRES_AT)
+      secureMmkv.delete(KEYS.SUBSCRIPTION_EXPIRES_AT)
     } else {
-      mmkv.set(KEYS.SUBSCRIPTION_EXPIRES_AT, ms.toString())
+      secureMmkv.set(KEYS.SUBSCRIPTION_EXPIRES_AT, ms.toString())
     }
   },
 
   getIsLifetime(): boolean {
-    return mmkv.getBoolean(KEYS.SUBSCRIPTION_IS_LIFETIME) ?? false
+    return secureMmkv.getBoolean(KEYS.SUBSCRIPTION_IS_LIFETIME) ?? false
   },
 
   setIsLifetime(value: boolean): void {
     if (value) {
-      mmkv.set(KEYS.SUBSCRIPTION_IS_LIFETIME, true)
+      secureMmkv.set(KEYS.SUBSCRIPTION_IS_LIFETIME, true)
     } else {
-      mmkv.delete(KEYS.SUBSCRIPTION_IS_LIFETIME)
+      secureMmkv.delete(KEYS.SUBSCRIPTION_IS_LIFETIME)
     }
   },
 

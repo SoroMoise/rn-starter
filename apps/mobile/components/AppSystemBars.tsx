@@ -12,7 +12,9 @@ export function AppSystemBars({ statusStyle, navigationStyle }: Props) {
   const isDark = useThemedColor()
 
   useEffect(() => {
-    setStyle(navigationStyle ?? (isDark ? 'dark' : 'light'))
+    const themeDefault = isDark ? 'dark' : 'light'
+    setStyle(navigationStyle ?? themeDefault)
+    return () => setStyle(themeDefault)
   }, [isDark, navigationStyle])
 
   return <StatusBar style={statusStyle ?? (isDark ? 'light' : 'dark')} />

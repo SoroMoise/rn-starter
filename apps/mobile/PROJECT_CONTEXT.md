@@ -143,6 +143,8 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 `useHardwareBack(onBack)` takes the Android back key for the focused route only (`useFocusEffect`); a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
 
+A flow that ends goes home through `resetToHome(href?)` (`utils/navigation.ts`: dismiss to the root, then replace), never a bare `router.replace('/')`, which leaves the flow's earlier screens under Home. A route whose session is gone returns `<ExitToHome />` (`components/layout/`), not `<Redirect href="/" />`.
+
 ---
 
 ## Onboarding

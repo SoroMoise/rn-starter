@@ -97,6 +97,8 @@ Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` be
 
 **A route that answers the back key itself uses `useHardwareBack(onBack)`** — an editor whose back commits its edit, a flow that steps back before it leaves. The listener lives in a `useFocusEffect`, so only the focused route hears the press and two stacked screens never both answer it. The hook needs a navigator above it: a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
 
+**A flow that ends resets the stack; it never `replace`s its way home.** `router.replace('/')` swaps the top entry only: a flow that moved forward by `replace` (import → edit → export → done) still has its earlier screens underneath, and back then walks into an editor whose session was cleared, then a second Home, before the app exits. `resetToHome(href?)` (`utils/navigation.ts`) dismisses to the root first, then replaces. A route that finds its session gone — a stack restored after process death meets an empty store — returns `<ExitToHome />`, a focus-gated `resetToHome()`, never `<Redirect href="/" />`, which is a `replace` and leaves the same stale entries behind.
+
 **The onboarding ends on the entitlement, never on a purchase call.** A `purchasePlan()` promise resolves before React commits the new tier, so a ref read in its `.then` still holds the old one — the user paid and stayed on the pitch — and a restore goes through no such callback at all. An effect in `OnboardingScreen`, keyed on `isPremium` once the subscription is initialized, completes the flow on the premium step, whatever made the user Pro there (the pitch, the exit sheet, a restore), and shows `ProWelcomeModal` once on an earlier step.
 
 ### Provider Tree

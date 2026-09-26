@@ -49,6 +49,7 @@ pnpm preb:android     # expo prebuild --platform android
 pnpm preb:ios         # expo prebuild --platform ios
 pnpm build:aab        # signed .aab for the Play Console
 pnpm build:install    # signed .apk, installed on the connected device
+pnpm analyze          # the Android bundle by package, in report.html (Bundle size)
 ```
 
 Native `ios/` and `android/` are NOT committed (Continuous Native Generation). Run `pnpm --filter mobile preb` to generate them locally before running on a device.
@@ -447,6 +448,13 @@ Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit
 
 **A wheel is turned with a thumb, not a cursor.** `WheelPicker`'s touch column is much wider than the digits it shows (`contentWidth` centred in a column that shares its row, or fills a column's width, unless given a `width`), and its `unit` is drawn inside that column with `pointerEvents="none"`: every pixel between two wheels scrolls one of them. Don't narrow the columns or leave a gap between them that nothing scrolls. Inside a sheet the wheel blocks the sheet's pan, a long wheel (past 24 options) decelerates normally rather than `'fast'`, and a screen under 700 dp shows five rows instead of seven.
 
+### Bundle size
+
+**The JS bundle is part of the Play download, and Metro does not tree-shake**: an import from a package's index brings the whole package. `pnpm --filter mobile analyze` exports the Android bundle with its source map and writes `apps/mobile/report.html`, the bundle broken down by package — run it before and after any change to the dependencies, and read the difference.
+
+- **`date-fns` is imported per function** — `import { format } from 'date-fns/format'`, never from the package index, which puts all ~200 functions (~250 KB minified) in the bundle. A type-only import (`import type { Locale } from 'date-fns'`) costs nothing. Most of what date-fns weighs here (~210 KB) is its twenty locales, one per language the app offers.
+- **`@revenuecat/purchases-js-hybrid-mappings` resolves to an empty module on Android and iOS** (`metro.config.js`). react-native-purchases requires its browser implementation at import, whatever the platform, and runs it only without the native module (Expo Go, web): ~740 KB, the largest package in the bundle, that no native build runs. The stub is gated on `android` and `ios` by name, never on `platform !== 'web'`: web's only purchase path is that SDK, and Metro can resolve without a platform at all.
+
 ### Internationalization
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Config `i18n/service.ts`, translations in `i18n/languages/`. Lazy-loaded per language. RTL (`ar`) triggers `I18nManager.forceRTL` + restart.
@@ -523,6 +531,4 @@ The Android release workflow installs the whole workspace, the site's dependenci
 - **Functions with 2+ parameters use a single object parameter** — `fetchData({ id, signal })`, not `fetchData(id, signal)`.
 - **Atomic Zustand selectors** — `useStore((s) => s.field)`, never object selectors.
 - **A memo keys on content, never on the identity of an array its callers build.** A hook that takes an array callers pass as a literal (`[code]`) keys its `useMemo` on `codes.join('|')`, not on `codes`: a new array each render is a cache miss each render. A default for such a parameter is a module constant (`const NO_CODES: readonly string[] = []`), never `= []` inline — a fresh default that reaches an effect's dependencies re-runs it on every render.
-- **`date-fns` is imported per function** — `import { format } from 'date-fns/format'`, never from the package index. Metro does not tree-shake: the index puts all ~200 functions (~250 KB minified) in the bundle, which is part of the Play download. A type-only import (`import type { Locale } from 'date-fns'`) costs nothing.
-- **`@revenuecat/purchases-js-hybrid-mappings` resolves to an empty module on Android and iOS** (`metro.config.js`). react-native-purchases requires its browser implementation at import, whatever the platform, and runs it only without the native module (Expo Go, web): ~740 KB, the largest package in the bundle, that no native build runs. The stub is gated on `android` and `ios` by name, never on `platform !== 'web'`: web's only purchase path is that SDK, and Metro can resolve without a platform at all.
 - Environment variables: `apps/mobile/.env` (see `.env.example`), `apps/api/.dev.vars` (see `.dev.vars.example`).

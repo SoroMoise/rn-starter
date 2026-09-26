@@ -30,7 +30,7 @@ audit of that gap and the plan to close it.
 | — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
 | 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
-| 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **in review** |
+| 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
@@ -110,10 +110,15 @@ Lot 12's nine are its own. One "later" item shipped with them, `claude-legal-url
 13), which the CLAUDE.md paragraph on the legal links covers. Three "later" items it touched stay
 open, each with a note saying what is left: `readme-troubleshooting` (its `./gradlew clean` point
 shipped), `turbo-web-outputs-env` (the Next.js outputs shipped) and `root-scripts-preb` (`dev:web`
-and `build:web` shipped). Two items shipped otherwise than proposed: the site carries three pages,
-not seven, and the backend's removal takes the app's network layer with it (§13). The branch also
-carries one commit outside the audit: the iOS prebuild had never been able to find
-`GoogleService-Info.plist`.
+and `build:web` shipped). Five items shipped otherwise than proposed, each note saying how: the site
+carries three pages, not seven; the backend's removal takes the app's network layer with it (§13);
+the entitlement check is one middleware, with no `memo` and a KV binding declared without an id;
+the brand script sits in the root `scripts/` and sizes the splash for Android's circle; and the
+About row stays, opening the site, rather than giving way to the name-and-version line alone. The
+branch also carries one commit outside the audit: the iOS prebuild had never been able to find
+`GoogleService-Info.plist`. One of its commits, `03eba63` (the legal content), carries the owner's
+identity rather than Claude's (§2) and a subject longer than the convention; it was already on the
+pushed branch when the second session began, and was left as it is rather than rewritten.
 
 The off-audit fixes are the five things §8 to §10 found along the way and left out, bar the
 onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another repository). §8
@@ -140,7 +145,8 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
   key is not translating: it is removed from all 20 files at once.
 - **Living documentation.** `CLAUDE.md` and `apps/mobile/PROJECT_CONTEXT.md` are updated in the
   same commit as the code they describe, surgically.
-- **Commit author is `Claude <noreply@anthropic.com>`**, matching lots 1–3 already in `main`.
+- **Commit author is `Claude <noreply@anthropic.com>`**, matching lots 1–3 already in `main`. One
+  commit breaks it, `03eba63` in lot 12 (§1).
 - **Verify, then refute.** Each lot is investigated by a workflow of two stages: one agent per
   family of items establishes the facts and writes a plan, then a second, adversarial agent tries
   to find the reference it missed. On lot 4 that second stage returned two fatal verdicts and six
@@ -151,10 +157,11 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
 ### Pushing
 
 Pushes to `SoroMoise/rn-starter` work from this environment since lot 5: a lot is pushed to its
-`claude/*` branch, opened as a pull request, reviewed, fixed and merged. Lots 1–4 predate that — the
-session identity had no write access then, so they were handed over as git bundles and merged by
-hand, which is why the remote still carries a stale `claude/rn-starter-boilerplate-improvements-nst9w1`
-at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
+`claude/*` branch, opened as a pull request, reviewed, fixed and merged — bar lot 12, merged with no
+review (§13). Lots 1–4 predate that — the session identity had no write access then, so they were
+handed over as git bundles and merged by hand, which is why the remote long carried a stale
+`claude/rn-starter-boilerplate-improvements-nst9w1` at `0b311c8`, since deleted. The real gap is
+always `git rev-list --count origin/main..HEAD`.
 
 ---
 
@@ -197,7 +204,7 @@ vestiges — they are generic infrastructure for a backend this repo ships, wire
 `onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
 React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
 `@react-native-community/netinfo` stays for the same reason; an app without a backend removes all
-of it together (CLAUDE.md, Data Fetching).
+of it together, with `scripts/remove-api.sh` (below, and CLAUDE.md, Data Fetching).
 
 **`withRetry` is for calls made outside a query.** A `queryFn` calls the client directly: the
 query client retries on its own, and a `withRetry` inside it would multiply the attempts.
@@ -780,10 +787,17 @@ holds the mechanics, and a third copy is one more to keep in step).
 ## 13. What verification caught on lot 12
 
 The lot ran over two sessions. The first shipped the brand assets, the legal links, the site and its
-legal content; the second, the entitlement check, the backend's removal and the two pieces of
-documentation, and read the first session's commits against the code before recording the lot. Both
-ran their stages in the session, against the libraries in `node_modules` — `@react-native-firebase/app`'s
-config plugins, wrangler 4.76's provisioning — and a local `wrangler dev`.
+legal content; its commit messages record a first stage only. The second shipped the entitlement
+check, the backend's removal and the two pieces of documentation, checking its own work in the
+session against the libraries in `node_modules` — `@react-native-firebase/app`'s config plugins,
+wrangler 4.76's source — and a local `wrangler dev`, then read the first session's commits against
+the code before recording the lot.
+
+**Less ran than on the lots before it.** No adversarial second stage is recorded for either
+session's work, and the review did not run: nobody read the whole branch before the merge, the
+code-review skill was never run on it, and the pull request was merged less than a minute after it
+left draft. Lots 5 to 11 each record what reading the whole branch found — from two things to ten.
+Nothing below comes from such a read, and whoever next touches these files reads them knowing that.
 
 - **deep-focus's splash comment is wrong on SDK 54.** The splash is not padded so `contain` does not
   fill the screen: SDK 54 draws it at 200 dp on both platforms, and Android 12+ cuts it to a circle,
@@ -806,10 +820,11 @@ config plugins, wrangler 4.76's provisioning — and a local `wrangler dev`.
   script takes all of it, and was run on a clone: typecheck and lint green, a second run changes
   nothing. It also found that `setup.sh` copied `.dev.vars.example` unconditionally under `set -e`,
   and would have failed once `apps/api` was gone.
-- **A KV namespace needs no id any more.** wrangler 4.76 creates one declared without an id at the
-  first deploy and inherits it at the next (`provisionBindings`, `experimental-auto-create`
-  defaulting to true), so the template declares its entitlement cache and still deploys with nothing
-  created by hand.
+- **A KV namespace needs no id any more — read in wrangler's source, not deployed.** wrangler 4.76
+  creates one declared without an id at the first deploy and inherits it at the next
+  (`provisionBindings`, `experimental-auto-create` defaulting to true), so the template declares its
+  entitlement cache and should deploy with nothing created by hand. No deploy was run: the session
+  had no Cloudflare account, and `wrangler dev` and `--dry-run` never provision.
 - **v2 reports an entitlement by its internal id**, never the lookup key the app reads, so "any
   active entitlement is premium" is an assumption the code and CLAUDE.md now state, with the filter
   a second entitlement needs. The negative cache means a purchase can take a minute to reach a
@@ -837,7 +852,7 @@ contract, to be decided rather than slipped in.
    audit filed some under a neighbouring lot:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['lot']==11 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['lot']==13 and x['decision']=='keep' and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

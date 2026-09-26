@@ -25,13 +25,14 @@ audit of that gap and the plan to close it.
 | 5 | Promo coordination and AdMob | 18 | **merged into `main`** |
 | 6 | Rating by moments: one pure policy, the ask deferred to the user's return | 9 | **merged into `main`** |
 | 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
-| 8–13 | See §3 | — | not started |
+| 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
+| 9–13 | See §3 | — | not started |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**146 have shipped** (63 in lots 1–3, 29 in lot 4, 29 in lot 5, 6 in lot 6, 19 in lot 7) and
-**86 remain**, spread over lots 8 to 13. Three more were deliberately held back out of lot 4 — see
-§4. The per-lot counts in §3 are remaining work only; the console's lot cards also count those
-three, which is why its lot 7 figure is one higher and its lot 9 figure two.
+**162 have shipped** (63 in lots 1–3, 29 in lot 4, 29 in lot 5, 6 in lot 6, 19 in lot 7, 16 in
+lot 8) and **70 remain**, spread over lots 9 to 13. Three more were deliberately held back out of
+lot 4 — see §4. The per-lot counts in §3 are remaining work only; the console's lot cards also
+count those three, which is why its lot 7 figure is one higher and its lot 9 figure two.
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -52,6 +53,16 @@ saying what is left: `exit-intent-entitlement-keyed` (lot 8, the sheet's copy) a
 two items that had shipped unrecorded — `analytics-has-trial-offer` with lots 1–3,
 `adfree-stacking-cap` with lot 5 (c59f846) — now counted there, which is why those two figures
 moved by one.
+
+Lot 8's 16 include three the audit had filed under other lots — `onboarding-store-trim` (lot 9),
+`analytics-step-name` (lot 10) and `paywall-cles-offre` (lot 13) — marked in every copy with a note
+naming what covered them. Seven "later" items shipped with them: `paywall-analytics-service` and
+`use-paywall-plans-hook` (the lot-7 copies), `premiumgate-blur`, `analytics-paywall-helper`,
+`onboarding-offer-driven-copy`, `onboarding-pro-benefits-single-list`, `onboarding-gradient-tokens`.
+Four items it touched stay open, each with a note saying what is left: `hook-hardware-back` (lot 9,
+the route-scoped hook), `claude-navigation-back` (lot 13, resetting the stack when a flow ends),
+`gradients-tokens` (lot 13, two files still literal) and `brand-color-tokens` (later, the literal
+violets and greens).
 
 The 84 "later" items are not pending work. They were judged useful but never blocking, and they
 stay in `audit-items.json` so the judgement does not have to be made twice.
@@ -93,18 +104,7 @@ at `0b311c8`. The real gap is always `git rev-list --count origin/main..HEAD`.
 Ordered so that lots touching the same files run near each other, and so that documentation comes
 last — documenting code that is still moving is work done twice.
 
-### Lot 8 — Selling surfaces and onboarding (13 items)
-
-`PRO_BENEFITS` as the single list behind every Pro pitch, the paywall split into reusable blocks
-with `usePaywallPlans` and a `paywallAnalytics`, `PremiumGate` blurring instead of erasing, the
-exit sheet's copy following the offer — it still promises "7 days free" whatever the store sells —
-and on the onboarding side: navigation **by step name** (`OnboardingStepKind`) rather than index,
-hardware back stepping back instead of leaving the app, and `OnboardingStepLayout`. (The guard that
-makes the flow sell exactly once, at its last step, shipped in lot 5 with the `openPaywall` choke
-point; the removal of the fabricated social proof, and the flow ending on the entitlement, in
-lot 7.)
-
-### Lot 9 — UI library and layout (25 items)
+### Lot 9 — UI library and layout (24 items)
 
 `ModalDialog` with `useKeyboardHeight` (Android edge-to-edge stopped resizing modal windows),
 `SettingsRow`/`AppSwitch`/`ProBadge`, `useModalSheetPanGesture` and the drag lock, `WheelPicker`,
@@ -113,7 +113,7 @@ RTL, the centred column at `MAX_CONTENT_WIDTH` with `useResponsiveLayout`, `useH
 `resetToHome`/`ExitToHome`, and the "free cap applies on read, never on write" pattern extracted as
 a hook. The three items deferred out of lot 4 (§4) land here too.
 
-### Lot 10 — Notifications (5 items)
+### Lot 10 — Notifications (4 items)
 
 The **permission is never requested**: `notificationService.requestPermission` has no caller
 anywhere, so on Android 13+ a fresh install never sees the prompt. Ask in context, re-read the
@@ -121,8 +121,10 @@ grant on every foreground, expose `canAskAgain`, and add a generic local reminde
 (cancel the whole set, then re-schedule). Android channels are immutable once created — a change
 to sound or importance needs a new channel id, not an edit. Read the grant, never
 `NOTIFICATION_PERMISSION_REQUESTED` alone: that flag lives in the main MMKV instance, which cloud
-backup and device transfer carry to a phone the OS grant does not follow. (The lot's funnel and
-Crashlytics items shipped in lot 7.)
+backup and device transfer carry to a phone the OS grant does not follow. The in-context ask
+belongs in an onboarding step built on `OnboardingStepLayout` and listed by `buildSteps()` with the
+grant as its capability, which makes it the first caller of both. (The lot's funnel and Crashlytics
+items shipped in lot 7, its onboarding analytics item in lot 8.)
 
 ### Lot 11 — Plugins and Android build (8 items)
 
@@ -140,7 +142,7 @@ on day one — legal URLs as constants rather than optional env vars, `apps/api`
 `packages/shared` made explicitly removable, and a bilingual EN/FR site skeleton carrying the legal
 pages the APK hardcodes.
 
-### Lot 13 — Documentation and conventions (26 items)
+### Lot 13 — Documentation and conventions (25 items)
 
 Last, deliberately. The CLAUDE.md sections still missing: large screens, the safe-area contract, the
 NativeWind and RN footguns that break silently, Play store policy (urgency, reviews, aggregate
@@ -148,7 +150,8 @@ ratings, declared permissions), the i18n voice charter and plural parity, bundle
 not tree-shake — import `date-fns` per function), and the frozen structure of
 `PROJECT_CONTEXT.md`. The promo-coordination invariants, `ADS.md` and the AdMob-literals rationale
 shipped in lot 5, the rating doctrine in lot 6, the grace-period doctrine, the entitlement-storage
-rules and the social-proof rule in lot 7.
+rules and the social-proof rule in lot 7, the back-key and step-name rules in lot 8 — what is left
+of the navigation item is the stack reset when a flow ends.
 
 ---
 
@@ -193,6 +196,29 @@ excluding more is a decision an app takes for itself, and CLAUDE.md says so.
 `migration.ts` behind for that reason (`pas-de-migration-asyncstorage`), lot 6 the old `@rating_*`
 counters (`rating-no-legacy-migration`), lot 7 the plaintext entitlement keys; each time the doc says
 what an app porting the change onto a released build owes its users instead.
+
+**The onboarding sells the default plan; choosing a plan is the paywall's job.** The audit had two
+items on the premium step: bg-remover's, which lists every plan like its paywall, and deep-focus's,
+one CTA over the offering's default plan with the trial frieze. The step keeps the second and
+shares everything else with the paywall — `usePaywallPlans`, the perks, the trust lines, the legal
+note, the links — so it cannot describe the plan differently.
+
+**`PRO_BENEFITS` names only what the starter gates, which is its ads.** Every other line the two old
+lists sold — reminders, priority support, push notifications, "every premium feature", a widget —
+had nothing behind it, and a benefit written into the template is one every derived app ships on
+day one. An app adds a benefit in the change that adds its gate.
+
+**No example onboarding step ships.** `OnboardingStepLayout` has no caller until an app adds a step
+(lot 10's notification ask is the natural first one): a demo step would be a screen every app
+shows on day one, asking nothing.
+
+**The paywall keeps its illustration.** bg-remover's gradient `PaywallHero` was not ported; the
+starter's hero is the converter's illustration with its currencies removed, drawn for the template.
+Replacing it is a design decision, not a structural one.
+
+**The onboarding does not emit `paywall_shown`.** bg-remover counts its onboarding offer as a paywall
+impression. Here `paywall_count` rides on every `purchase_completed`, and the step and the exit
+sheet already have their impressions (`onboarding_step_viewed`, `onboarding_exit_intent_shown`).
 
 ---
 
@@ -307,7 +333,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§9, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§10, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -417,7 +443,53 @@ entitlement id and product ids among the env variables.
 
 ---
 
-## 9. Resuming in a new session
+## 9. What verification caught on lot 8
+
+Both stages ran in the session, as on lots 6 and 7, against the three apps' sources and expo-blur's
+Android implementation in `node_modules`.
+
+- **The frieze promised a reminder nothing sends (not in the audit).** Its middle row, "Day N —
+  Reminder before your trial ends", was derived from the store's trial length since lots 1–3, which
+  is why the audit item read as half done. Nothing in the app schedules that reminder — nor in
+  deep-focus, the reference, which carries the same row. It is gone; the frieze keeps unlock today
+  and billing on the last day.
+- **The onboarding sold with no price (not in the audit).** The premium step's CTA read "Start my
+  7-day free trial" or "Unlock Pro", the exit sheet's "Yes, start my free trial", and neither
+  surface named the price, the billing period, what the trial turns into, nor linked the terms and
+  privacy policy. deep-focus has the same gap. Every button that buys now sits above the hook's
+  legal note, and CLAUDE.md states it as a rule.
+- **The paywall's own legal note ignored the trial.** For a trial plan it read "$29.99, renews
+  automatically". It now names the trial and the period: "Free for 7 days, then $29.99/year."
+- **Five of the six Pro benefits did not exist.** The audit framed the two lists as a
+  consistency problem; checking each line against the code showed only "no ads" is enforced, and
+  the Android-only line sold a widget the starter does not have. The comparison table's free side
+  promised "Community support".
+- **Seven days were promised in three more places.** The exit sheet (the audit's example), but also
+  the home screen's CTA and its feature list. "Cancel in 1 tap" described no store's cancellation.
+- **expo-blur samples the nearest screen, not the view below it.** Version 15 walks up to the
+  nearest react-native-screens `Screen` and falls back to the activity's content view: a
+  `PremiumGate` inside a native `Modal`, its own window, would blur the screen under the modal.
+  The reference's comment said only that Android needs `experimentalBlurMethod`.
+- **A helper the audit asked to retype had no caller.** `logOnboardingStepSkipped` and its event
+  went instead: the flow has no step to skip, and one that grows a skip action adds the event with
+  the name it already holds.
+- **The ported layout carried two traps.** deep-focus tints the icon with `${iconColor}26`, a hex
+  alpha suffix that breaks on anything but a six-digit hex, and couples the secondary label and
+  handler only at runtime; the tint is an opacity layer and the pair is one `secondary` prop.
+
+Reading the whole branch before the push found the README still describing a three-step flow
+ending on a language picker, and the flow's arrows unmirrored in Arabic — the back chevron pointed
+forward. Both fixed in their own commits; the code-review skill, run after them, found nothing
+further.
+
+Found along the way and left out of this lot: the home screen's feature list still says push
+notifications ship with "FCM setup … and background tap handlers", false since lot 4 (lot 10 or
+13); `PremiumGate` takes a `feature` prop it never reads; and deep-focus keeps the reminder row and
+the priceless onboarding CTAs this lot removed here.
+
+---
+
+## 10. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.

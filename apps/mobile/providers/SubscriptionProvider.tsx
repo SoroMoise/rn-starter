@@ -1,5 +1,9 @@
 import { PaywallModal } from '@/components/paywall/PaywallModal'
-import { ENTITLEMENT_PREMIUM, SUBSCRIPTION_GRACE_PERIOD_MS } from '@/constants/purchases'
+import {
+  ENTITLEMENT_PREMIUM,
+  SUBSCRIPTION_GRACE_PERIOD_MS,
+  type PurchaseOrigin,
+} from '@/constants/purchases'
 import {
   SubscriptionContext,
   type BillingIssue,
@@ -225,7 +229,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   }, [loadOfferings, syncPremiumState])
 
   const purchasePlan = useCallback(
-    async ({ plan, source }: { plan: OfferingPlan; source: string }) => {
+    async ({ plan, source, surface }: { plan: OfferingPlan } & PurchaseOrigin) => {
       const product = plan.pkg.product
       const offeringId = plan.pkg.presentedOfferingContext?.offeringIdentifier ?? NO_OFFERING
 
@@ -233,6 +237,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       analyticsService.track('purchase_started', {
         plan: plan.period,
         source,
+        surface,
         product_id: product.identifier,
         offering_id: offeringId,
       })
@@ -252,6 +257,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           analyticsService.track('purchase_failed', {
             plan: plan.period,
             source,
+            surface,
             error_code: ENTITLEMENT_INACTIVE,
           })
           showToast({ message: t('paywall.errorGeneric'), type: 'error' })
@@ -264,6 +270,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         analyticsService.track('purchase_completed', {
           plan: plan.period,
           source,
+          surface,
           product_id: product.identifier,
           offering_id: offeringId,
           // The store quotes its own currency: logged as USD, a ₹3,499 annual plan
@@ -281,7 +288,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       } catch (e) {
         const reason = purchaseService.reportFailure({ error: e, source: 'purchase' })
         if (reason === 'cancelled') {
-          analyticsService.track('purchase_cancelled', { plan: plan.period, source })
+          analyticsService.track('purchase_cancelled', { plan: plan.period, source, surface })
           return
         }
         // The store's sheet has told the user; the entitlement follows once the store settles it.
@@ -289,6 +296,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           analyticsService.track('purchase_pending', {
             plan: plan.period,
             source,
+            surface,
             product_id: product.identifier,
           })
           return
@@ -296,6 +304,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         analyticsService.track('purchase_failed', {
           plan: plan.period,
           source,
+          surface,
           error_code: String((e as PurchasesError)?.code ?? 'unknown'),
         })
         showToast({ message: t(failureMessageKey(reason)), type: 'error' })
@@ -306,44 +315,49 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     [applyCustomerInfo, showToast, t]
   )
 
-  const restorePurchases = useCallback(async () => {
-    setIsLoadingPurchase(true)
-    analyticsService.track('restore_purchases_initiated')
+  const restorePurchases = useCallback(
+    async ({ source, surface }: PurchaseOrigin) => {
+      setIsLoadingPurchase(true)
+      analyticsService.track('restore_purchases_initiated', { source, surface })
 
-    const wasAlreadyPremium = isPremium
+      const wasAlreadyPremium = isPremium
 
-    try {
-      const customerInfo = await purchaseService.restorePurchases()
-      const { isPremium: nowPremium, plan } = applyCustomerInfo(customerInfo)
+      try {
+        const customerInfo = await purchaseService.restorePurchases()
+        const { isPremium: nowPremium, plan } = applyCustomerInfo(customerInfo)
 
-      // Three outcomes, not a boolean: a restore that found nothing and one that
-      // genuinely brought a subscription back are the same event otherwise, and the
-      // difference is the only thing the funnel is asked about here.
-      const outcome: RestoreOutcome = !nowPremium
-        ? 'nothing_found'
-        : wasAlreadyPremium
-          ? 'already_premium'
-          : 'restored'
-      analyticsService.track('restore_purchases_completed', { outcome })
-      if (outcome === 'restored') {
-        analyticsService.track('subscription_restored', { plan: plan ?? 'other' })
+        // Three outcomes, not a boolean: a restore that found nothing and one that
+        // genuinely brought a subscription back are the same event otherwise, and the
+        // difference is the only thing the funnel is asked about here.
+        const outcome: RestoreOutcome = !nowPremium
+          ? 'nothing_found'
+          : wasAlreadyPremium
+            ? 'already_premium'
+            : 'restored'
+        analyticsService.track('restore_purchases_completed', { outcome, source, surface })
+        if (outcome === 'restored') {
+          analyticsService.track('subscription_restored', { plan: plan ?? 'other' })
+        }
+
+        if (nowPremium) {
+          showToast({ message: t('paywall.restoreSuccess'), type: 'success' })
+        } else {
+          showToast({ message: t('paywall.restoreNotFound'), type: 'info' })
+        }
+      } catch (e) {
+        const reason = purchaseService.reportFailure({ error: e, source: 'restore' })
+        analyticsService.track('restore_purchases_failed', {
+          error_code: String((e as PurchasesError)?.code ?? 'unknown'),
+          source,
+          surface,
+        })
+        showToast({ message: t(failureMessageKey(reason)), type: 'error' })
+      } finally {
+        setIsLoadingPurchase(false)
       }
-
-      if (nowPremium) {
-        showToast({ message: t('paywall.restoreSuccess'), type: 'success' })
-      } else {
-        showToast({ message: t('paywall.restoreNotFound'), type: 'info' })
-      }
-    } catch (e) {
-      const reason = purchaseService.reportFailure({ error: e, source: 'restore' })
-      analyticsService.track('restore_purchases_failed', {
-        error_code: String((e as PurchasesError)?.code ?? 'unknown'),
-      })
-      showToast({ message: t(failureMessageKey(reason)), type: 'error' })
-    } finally {
-      setIsLoadingPurchase(false)
-    }
-  }, [applyCustomerInfo, isPremium, showToast, t])
+    },
+    [applyCustomerInfo, isPremium, showToast, t]
+  )
 
   // The one gate every source passes, so a source that does not exist yet cannot sell to a
   // subscriber or ahead of the onboarding's own pitch — and `paywall_shown` only counts

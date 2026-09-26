@@ -164,7 +164,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
 
   const handleSubscribe = useCallback(async () => {
     if (!selectedPlan) return
-    await purchasePlan({ plan: selectedPlan, source })
+    await purchasePlan({ plan: selectedPlan, source, surface: 'paywall' })
   }, [selectedPlan, purchasePlan, source])
 
   const handlePlanSelect = useCallback((plan: OfferingPlan) => {
@@ -354,7 +354,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           {/* Footer */}
           <View style={styles.footer}>
             <Pressable
-              onPress={restorePurchases}
+              onPress={() => void restorePurchases({ source, surface: 'paywall' })}
               disabled={isLoadingPurchase}
               accessibilityRole="button">
               <ThemedText variant="label" color="muted" style={styles.footerLink}>

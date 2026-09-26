@@ -1,6 +1,7 @@
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ModalBottomSheet } from '@/components/ui/ModalBottomSheet'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { ONBOARDING_EXIT_INTENT_ORIGIN } from '@/constants/purchases'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -8,9 +9,6 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-// Its own entry point in the funnel: a save made here is not a paywall conversion.
-const ONBOARDING_EXIT_INTENT_SOURCE = 'onboarding_exit_intent'
 
 interface ExitIntentSheetProps {
   visible: boolean
@@ -30,7 +28,7 @@ export function ExitIntentSheet({
   const handleStart = useCallback(() => {
     if (!defaultPlan || isLoadingPurchase) return
     triggerLight()
-    void purchasePlan({ plan: defaultPlan, source: ONBOARDING_EXIT_INTENT_SOURCE })
+    void purchasePlan({ plan: defaultPlan, ...ONBOARDING_EXIT_INTENT_ORIGIN })
   }, [defaultPlan, isLoadingPurchase, purchasePlan])
 
   const handleSkip = useCallback(() => {

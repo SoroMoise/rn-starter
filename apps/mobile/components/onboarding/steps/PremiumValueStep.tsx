@@ -1,6 +1,7 @@
 import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { ONBOARDING_PREMIUM_ORIGIN } from '@/constants/purchases'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -10,10 +11,6 @@ import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
-// The onboarding sells Pro without going through openPaywall, so it names its own
-// entry point — otherwise its conversions land unattributed in the funnel.
-const ONBOARDING_PREMIUM_SOURCE = 'onboarding_premium'
 
 interface PremiumValueStepProps {
   onTriggerSkip: () => void
@@ -51,12 +48,12 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const handleStart = useCallback(() => {
     if (!defaultPlan) return
     triggerLight()
-    void purchasePlan({ plan: defaultPlan, source: ONBOARDING_PREMIUM_SOURCE })
+    void purchasePlan({ plan: defaultPlan, ...ONBOARDING_PREMIUM_ORIGIN })
   }, [defaultPlan, purchasePlan])
 
   const handleRestore = useCallback(() => {
     triggerLight()
-    void restorePurchases()
+    void restorePurchases(ONBOARDING_PREMIUM_ORIGIN)
   }, [restorePurchases])
 
   return (

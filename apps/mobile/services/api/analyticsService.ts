@@ -1,3 +1,4 @@
+import type { PurchaseSurface } from '@/constants/purchases'
 import type { RatingMoment } from '@/constants/rating'
 import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
 import type { PlanPeriod } from '@/utils/offerings'
@@ -110,9 +111,10 @@ export type AnalyticsEventMap = {
   rating_declined: { source: 'auto' }
 
   // Purchases.
-  // `source` (which surface opened the sale) and `offering_id` (which RevenueCat
-  // experiment served it) ride on every step: eight surfaces can sell Pro, and one
-  // unattributed conversion count cannot say which of them earns its place.
+  // `source` (what brought the sale up), `surface` (the screen the tap landed on) and
+  // `offering_id` (which RevenueCat experiment served it) ride on every step: several
+  // surfaces can sell Pro, and one unattributed conversion count cannot say which of them
+  // earns its place.
   paywall_shown: {
     source: string
     offering_id: string
@@ -130,15 +132,22 @@ export type AnalyticsEventMap = {
   purchase_started: {
     plan: PlanPeriod
     source: string
+    surface: PurchaseSurface
     product_id: string
     offering_id: string
   }
   // A payment the store has taken but not settled: RevenueCat rejects the purchase with
   // PAYMENT_PENDING_ERROR, and the entitlement follows once the store settles it.
-  purchase_pending: { plan: PlanPeriod; source: string; product_id: string }
+  purchase_pending: {
+    plan: PlanPeriod
+    source: string
+    surface: PurchaseSurface
+    product_id: string
+  }
   purchase_completed: {
     plan: PlanPeriod
     source: string
+    surface: PurchaseSurface
     product_id: string
     offering_id: string
     // Money carries its own currency: logged as USD, a ₹3,499 plan reads as $3,499.
@@ -150,16 +159,23 @@ export type AnalyticsEventMap = {
     total_actions: number
     trial_started: boolean
   }
-  purchase_failed: { plan: PlanPeriod; source: string; error_code: string }
-  purchase_cancelled: { plan: PlanPeriod; source: string }
+  purchase_failed: {
+    plan: PlanPeriod
+    source: string
+    surface: PurchaseSurface
+    error_code: string
+  }
+  purchase_cancelled: { plan: PlanPeriod; source: string; surface: PurchaseSurface }
   // A restore has three outcomes; `restore_purchases_completed` carries which one,
   // and `subscription_restored` fires only when something actually came back.
   restore_purchases_completed: {
     outcome: 'restored' | 'already_premium' | 'nothing_found'
+    source: string
+    surface: PurchaseSurface
   }
   subscription_restored: { plan: PlanPeriod }
-  restore_purchases_initiated: undefined
-  restore_purchases_failed: { error_code: string }
+  restore_purchases_initiated: { source: string; surface: PurchaseSurface }
+  restore_purchases_failed: { error_code: string; source: string; surface: PurchaseSurface }
   subscription_synced: { is_premium: boolean; plan: string }
 }
 

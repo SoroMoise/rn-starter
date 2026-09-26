@@ -6,5 +6,5 @@ import { MMKV } from 'react-native-mmkv'
 const ENCRYPTION_KEY = 'entl-v1-7d41c9a2'
 
 // Entitlement keys only. Never encrypt `mmkv` itself: whatever an install already wrote there
-// would become unreadable.
+// would become unreadable. plugins/withBackupRules.js names this instance's files.
 export const secureMmkv = new MMKV({ id: 'entitlements', encryptionKey: ENCRYPTION_KEY })

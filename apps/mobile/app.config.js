@@ -1,5 +1,6 @@
 const withAndroidConfigChanges = require('./plugins/withAndroidConfigChanges')
 const withAndroidSigning = require('./plugins/withAndroidSigning')
+const withBackupRules = require('./plugins/withBackupRules')
 const withCrashlyticsMapping = require('./plugins/withCrashlyticsMapping')
 const withGradleBuildCache = require('./plugins/withGradleBuildCache')
 const withGradleMemory = require('./plugins/withGradleMemory')
@@ -69,6 +70,7 @@ export default () => {
       plugins: [
         withAndroidConfigChanges,
         withAndroidSigning,
+        withBackupRules,
         withGradleMemory,
         withGradleBuildCache,
         withCrashlyticsMapping,

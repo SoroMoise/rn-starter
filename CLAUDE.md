@@ -155,6 +155,17 @@ Never encrypt the main instance: whatever an install already wrote there would b
 An app porting this onto a build already in users' hands copies the plaintext values across once,
 at import, before any reader — the starter has no installs, so it ships no migration.
 
+**No copy of that instance leaves the device.** `withBackupRules` writes Android's backup rules —
+`dataExtractionRules` for cloud backup and device transfer (Android 12+), `fullBackupContent` for
+Android 11 and below, which `minSdkVersion` 26 still reaches — excluding the instance's two files,
+`mmkv/entitlements` and its `.crc`: a copy that can be restored can be edited into Pro first, and
+the store's next answer re-establishes the tier anyway. The file names follow the instance id, so
+the two move together. Everything else still restores: preferences, the onboarding, the review and
+paywall spacing follow the user to a new phone. An app whose `files/` holds a library that a
+day-stale snapshot would resurrect takes more out of cloud backup, as its own decision. RevenueCat
+keeps its own CustomerInfo cache in the SDK's preferences and `getCustomerInfo` serves it offline —
+this closes the cheap attack on the app's copy, not on the SDK's.
+
 ### API Layer
 
 `apps/mobile/services/api/`:

@@ -114,7 +114,13 @@ const IGNORED_DIRECTORIES = new Set([
 // before it — the code has no semicolons to stop at.
 const ICON_IMPORT =
   /\b(?:import|export)\s+(type\s+)?([^'"`;]*?)\s*from\s*['"]@expo\/vector-icons(?:\/([A-Za-z0-9_]+))?['"]/g
-const ICON_REQUIRE = /\brequire\(\s*['"]@expo\/vector-icons\/([A-Za-z0-9_]+)['"]\s*\)/g
+// A require() or a dynamic import(): Metro bundles the family either way.
+const ICON_CALL = /\b(?:require|import)\(\s*['"]@expo\/vector-icons\/([A-Za-z0-9_]+)['"]\s*\)/g
+
+// A commented-out import or an example in a doc comment draws nothing. `//` after a colon is a
+// URL inside a string, not a comment.
+const stripComments = (source) =>
+  source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1')
 
 function collectSourceFiles(directory, files = []) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -135,8 +141,9 @@ function collectImportedFamilies({ projectRoot, families }) {
   const imported = new Set()
 
   for (const file of collectSourceFiles(projectRoot)) {
-    const contents = fs.readFileSync(file, 'utf8')
-    if (!contents.includes('@expo/vector-icons')) continue
+    const source = fs.readFileSync(file, 'utf8')
+    if (!source.includes('@expo/vector-icons')) continue
+    const contents = stripComments(source)
 
     for (const [, typeOnly, bindings, subpath] of contents.matchAll(ICON_IMPORT)) {
       if (typeOnly) continue
@@ -152,7 +159,7 @@ function collectImportedFamilies({ projectRoot, families }) {
         imported.add(name.split(/\s+as\s+/)[0].trim())
       }
     }
-    for (const [, subpath] of contents.matchAll(ICON_REQUIRE)) {
+    for (const [, subpath] of contents.matchAll(ICON_CALL)) {
       imported.add(subpath)
     }
   }

@@ -185,7 +185,7 @@ All of it serves `apps/api`: `scripts/remove-api.sh` removes the layer with the 
 
 ## Styling
 
-NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animations. `GradientButton` for primary CTAs. Gradient colours are `GRADIENTS` tokens in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`). `ToastProvider` for feedback; mount `ModalToastViewport` inside modals to surface toasts over them.
+NativeWind v4, dark mode via `'class'` strategy. The theme setting is `'auto'` (the default), `'light'` or `'dark'`; `applyColorScheme` hands `'auto'` to NativeWind as `'system'`, and `useThemedColor()` says whether the scheme on screen is dark. Reanimated 4 + Moti for animations. `GradientButton` for primary CTAs. Gradient colours are `GRADIENTS` tokens in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`). `ToastProvider` for feedback; mount `ModalToastViewport` inside modals to surface toasts over them.
 
 Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s content container, and a `ScreenHeading` at `mt-3.5`.
 

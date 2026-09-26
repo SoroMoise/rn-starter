@@ -48,7 +48,9 @@ pnpm build:install    # signed .apk, installed on the connected device
 
 Native `ios/` and `android/` are NOT committed (Continuous Native Generation). Run `pnpm --filter mobile preb` to generate them locally before running on a device.
 
-Local native modules live in `apps/mobile/modules/` and are autolinked through `expo.autolinking.nativeModulesDir` in `apps/mobile/package.json`.
+**That stays a decision, not a default to revisit so a fresh clone builds without a prebuild.** The rule that nothing is hand-edited under `android/` (Build & Release) only holds while every prebuild regenerates the tree. A committed one has to be prebuilt with `--clean` at every change — a config plugin's mod re-run on an existing tree can duplicate what it wrote, or leave a stale copy — its release workflow has to restore it before committing the version back, and seven of its ~50 files carry the app's identity, two of them under a package path, for `setup.sh` to sweep and move. bg-remover commits its `android/` and pays all three.
+
+Local native modules live in `apps/mobile/modules/` and are autolinked through `expo.autolinking.nativeModulesDir` in `apps/mobile/package.json`. Their native sources are committed and their Gradle output is not: `.gitignore` names `modules/*/android/build` and `.cxx` itself, since the `android/` rule does not reach them.
 
 ## Build & Release
 

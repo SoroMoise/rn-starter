@@ -234,6 +234,16 @@ pnpm android   # expo run:android
 pnpm ios       # expo run:ios
 ```
 
+Nothing under `android/` is edited by hand — the next prebuild rewrites it; what the native project
+needs is a config plugin in `apps/mobile/plugins/`. And when a native build breaks, never reach for
+`./gradlew clean`: it wipes the `build/` folders of the React Native modules in `node_modules/`,
+codegen included, which the new architecture's CMake build points at, and the build fails further
+on, somewhere that looks unrelated. Start over with a clean prebuild instead:
+
+```bash
+pnpm --filter mobile preb:android --clean
+```
+
 ---
 
 ## Android release (GitHub Actions)

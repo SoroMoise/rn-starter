@@ -124,7 +124,12 @@ export type AnalyticsEventMap = {
     time_on_paywall_s: number
     selected_plan: PlanPeriod | 'none'
   }
-  paywall_plan_selected: { plan: PlanPeriod; product_id: string }
+  paywall_plan_selected: {
+    plan: PlanPeriod
+    product_id: string
+    source: string
+    surface: PurchaseSurface
+  }
   purchase_started: {
     plan: PlanPeriod
     source: string

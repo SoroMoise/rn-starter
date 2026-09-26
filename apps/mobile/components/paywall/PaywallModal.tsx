@@ -6,17 +6,15 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { LEGAL_URLS } from '@/constants/legal'
 import { GRADIENTS } from '@/constants/uiColors'
+import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
-import i18n from '@/i18n/service'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
 import { openExternalLink } from '@/utils/linking'
-import { findSavingsReference, type OfferingPlan } from '@/utils/offerings'
-import { computePricePerMonth, computeSavingsPercent, formatPrice } from '@/utils/pricing'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { LinearGradient } from 'expo-linear-gradient'
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -32,32 +30,23 @@ type PaywallModalProps = {
 
 const CONTENT_HORIZONTAL_PADDING = 15
 
-// A cycle expressed in whole months reads as "every N months"; anything else
-// (a 10-day plan, a 3-week one) falls back to a generic label.
-const WHOLE_MONTH_TOLERANCE = 0.01
-
-function wholeMonths(plan: OfferingPlan): number | null {
-  const months = plan.monthsPerCycle
-  if (months === null) return null
-  const rounded = Math.round(months)
-  return Math.abs(months - rounded) < WHOLE_MONTH_TOLERANCE ? rounded : null
-}
-
 export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const { t } = useTranslation()
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
-  const { isPremium, isLoadingPurchase, plans, defaultPlan, purchasePlan, restorePurchases } =
-    usePremium()
+  const { isPremium, restorePurchases } = usePremium()
+  const {
+    options,
+    selectedPlan,
+    selectPlan,
+    ctaLabel,
+    legalNote,
+    hasPrices,
+    isLoadingPurchase,
+    purchaseSelected,
+  } = usePaywallPlans({ source, surface: 'paywall' })
 
   const heroImage = isDark ? heroDark : heroLight
-
-  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
-
-  const selectedPlan = useMemo(
-    () => plans.find((plan) => plan.id === selectedPlanId) ?? defaultPlan,
-    [plans, selectedPlanId, defaultPlan]
-  )
 
   const paywallOpenTimeRef = useRef<number>(0)
 
@@ -71,105 +60,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       paywallOpenTimeRef.current = Date.now()
     }
   }, [visible])
-
-  // Keyed on id, not object identity — a foreground refetch rebuilds every plan object.
-  const defaultPlanId = defaultPlan?.id ?? null
-  useEffect(() => {
-    setSelectedPlanId(defaultPlanId)
-  }, [defaultPlanId])
-
-  const savingsReference = useMemo(() => findSavingsReference(plans), [plans])
-
-  const referencePricePerMonth = useMemo(
-    () =>
-      savingsReference
-        ? computePricePerMonth({
-            price: savingsReference.pkg.product.price,
-            monthsPerCycle: savingsReference.monthsPerCycle,
-          })
-        : null,
-    [savingsReference]
-  )
-
-  const describePlan = useCallback(
-    (plan: OfferingPlan): { label: string; billing: string } => {
-      switch (plan.period) {
-        case 'weekly':
-          return { label: t('paywall.planWeekly'), billing: t('paywall.billedWeekly') }
-        case 'monthly':
-          return { label: t('paywall.planMonthly'), billing: t('paywall.billedMonthly') }
-        case 'annual':
-          return { label: t('paywall.planAnnual'), billing: t('paywall.billedAnnually') }
-        case 'lifetime':
-          return { label: t('paywall.planLifetime'), billing: t('paywall.billedOnce') }
-        default: {
-          const months = wholeMonths(plan)
-          if (months !== null && months >= 2) {
-            return {
-              label: t('paywall.planMonths', { months }),
-              billing: t('paywall.billedEveryMonths', { months }),
-            }
-          }
-          return { label: t('paywall.planCustom'), billing: t('paywall.billedRecurring') }
-        }
-      }
-    },
-    [t]
-  )
-
-  const trialBadgeFor = useCallback(
-    (plan: OfferingPlan): string | undefined => {
-      if (!plan.hasTrial) return undefined
-      return plan.trialDays
-        ? t('paywall.trialBadge', { days: plan.trialDays })
-        : t('paywall.trialBadgeNoDays')
-    },
-    [t]
-  )
-
-  const ctaLabel = useMemo(() => {
-    if (!selectedPlan) return ''
-    if (selectedPlan.hasTrial) {
-      return selectedPlan.trialDays
-        ? t('paywall.ctaTrial', { days: selectedPlan.trialDays })
-        : t('paywall.ctaTrialNoDays')
-    }
-    const price = selectedPlan.pkg.product.priceString
-    switch (selectedPlan.period) {
-      case 'weekly':
-        return t('paywall.ctaSubscribeWeekly', { price })
-      case 'monthly':
-        return t('paywall.ctaSubscribeMonthly', { price })
-      case 'annual':
-        return t('paywall.ctaSubscribeAnnual', { price })
-      case 'lifetime':
-        return t('paywall.ctaBuyLifetime', { price })
-      default:
-        return t('paywall.ctaSubscribe', { price })
-    }
-  }, [selectedPlan, t])
-
-  // A one-time purchase is never "renews automatically", and a plan with no price
-  // loaded has nothing truthful to say.
-  const legalNote = useMemo(() => {
-    if (!selectedPlan) return null
-    const price = selectedPlan.pkg.product.priceString
-    if (selectedPlan.period === 'lifetime') return t('paywall.legalNoteOneTime', { price })
-    return t('paywall.legalNoteRecurring', { price })
-  }, [selectedPlan, t])
-
-  const handleSubscribe = useCallback(async () => {
-    if (!selectedPlan) return
-    await purchasePlan({ plan: selectedPlan, source, surface: 'paywall' })
-  }, [selectedPlan, purchasePlan, source])
-
-  const handlePlanSelect = useCallback((plan: OfferingPlan) => {
-    setSelectedPlanId(plan.id)
-    analyticsService.track('paywall_plan_selected', {
-      plan: plan.period,
-      product_id: plan.pkg.product.identifier,
-    })
-  }, [])
 
   const handleClose = () => {
     analyticsService.track('paywall_dismissed', {
@@ -233,7 +123,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           </View>
 
           {/* Plan selector */}
-          {plans.length === 0 ? (
+          {!hasPrices ? (
             // No offer loaded: showing a price that does not exist, behind an active
             // button that silently does nothing, is worse than saying so.
             <View style={styles.offerUnavailable}>
@@ -245,52 +135,24 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           ) : (
             <>
               <View style={styles.plans}>
-                {plans.map((plan) => {
-                  const { label, billing } = describePlan(plan)
-                  const product = plan.pkg.product
-                  const pricePerMonth = computePricePerMonth({
-                    price: product.price,
-                    monthsPerCycle: plan.monthsPerCycle,
-                  })
-                  const savingsPercent =
-                    plan.id === savingsReference?.id
-                      ? null
-                      : computeSavingsPercent({ pricePerMonth, referencePricePerMonth })
-                  const showPerMonth = pricePerMonth !== null && (plan.monthsPerCycle ?? 0) > 1
-
-                  return (
-                    <PaywallPlanCard
-                      key={plan.id}
-                      label={label}
-                      priceString={product.priceString}
-                      periodLabel={
-                        showPerMonth
-                          ? t('paywall.perMonth', {
-                              price: formatPrice({
-                                amount: pricePerMonth,
-                                currencyCode: product.currencyCode,
-                                locale: i18n.language,
-                              }),
-                            })
-                          : billing
-                      }
-                      savingsBadge={
-                        savingsPercent
-                          ? t('paywall.savingsBadge', { percent: savingsPercent })
-                          : undefined
-                      }
-                      trialBadge={trialBadgeFor(plan)}
-                      isSelected={selectedPlan?.id === plan.id}
-                      isDisabled={isLoadingPurchase}
-                      onSelect={() => handlePlanSelect(plan)}
-                    />
-                  )
-                })}
+                {options.map((option) => (
+                  <PaywallPlanCard
+                    key={option.plan.id}
+                    label={option.label}
+                    priceString={option.plan.pkg.product.priceString}
+                    periodLabel={option.caption}
+                    savingsBadge={option.savingsBadge ?? undefined}
+                    trialBadge={option.trialBadge ?? undefined}
+                    isSelected={selectedPlan?.id === option.plan.id}
+                    isDisabled={isLoadingPurchase}
+                    onSelect={() => selectPlan(option.plan)}
+                  />
+                ))}
               </View>
 
               {/* CTA */}
               <GradientButton
-                onPress={handleSubscribe}
+                onPress={() => void purchaseSelected()}
                 colors={GRADIENTS.pro}
                 isLoading={isLoadingPurchase}
                 disabled={!selectedPlan}

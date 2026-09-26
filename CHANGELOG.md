@@ -4,6 +4,16 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+The shipped versions of an app built from this template are not written here by hand.
+`.github/workflows/release-android.yml` derives each one from the Conventional Commits since
+`.last_release_commit` (`.github/scripts/compute-android-version.sh`: `feat` → minor, `type!` or a
+`BREAKING CHANGE` footer → major, anything else → patch) and commits it back as
+`chore(release): vX.Y.Z`, so **the git history is the changelog**. What users read about a release
+is written in the Play Console, beside it: the workflow uploads no release notes.
+
+The entry below is the template itself, kept for provenance — it describes the scaffold, not an
+app shipped from it.
+
 ## [0.1.0] — Initial template
 
 ### Added

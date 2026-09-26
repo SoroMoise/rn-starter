@@ -7,7 +7,9 @@
 #     --name "My App" \
 #     --slug "my-app" \
 #     --bundle "com.acme.myapp" \
-#     --scheme "myapp"                           # non-interactive
+#     --scheme "myapp" \
+#     --website "https://myapp.acme.com" \
+#     --support-email "support@acme.com"         # non-interactive
 #
 # Idempotent: safe to run multiple times.
 
@@ -37,6 +39,8 @@ APP_NAME=""
 APP_SLUG=""
 BUNDLE_ID=""
 SCHEME=""
+WEBSITE_URL=""
+SUPPORT_EMAIL=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -44,6 +48,8 @@ while [[ $# -gt 0 ]]; do
     --slug)   APP_SLUG="$2";   shift 2 ;;
     --bundle) BUNDLE_ID="$2";  shift 2 ;;
     --scheme) SCHEME="$2";     shift 2 ;;
+    --website) WEBSITE_URL="$2"; shift 2 ;;
+    --support-email) SUPPORT_EMAIL="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
@@ -76,10 +82,22 @@ prompt APP_NAME   "App display name (e.g. My App)"       "RN Starter"
 prompt APP_SLUG   "Expo slug (lowercase, hyphens only)"   "rn-starter"
 prompt BUNDLE_ID  "Bundle ID (reverse-DNS)"               "com.yourcompany.rnstarter"
 prompt SCHEME     "URL scheme (lowercase, no hyphens)"    "rnstarter"
+prompt WEBSITE_URL   "Website serving /privacy and /terms"  "https://yourapp.example.com"
+prompt SUPPORT_EMAIL "Support e-mail address"                "support@example.com"
+
+WEBSITE_URL="${WEBSITE_URL%/}"
 
 # Basic validation
 if [[ -z "$APP_NAME" || -z "$APP_SLUG" || -z "$BUNDLE_ID" || -z "$SCHEME" ]]; then
-  echo "Error: all four values are required." >&2
+  echo "Error: name, slug, bundle ID and scheme are all required." >&2
+  exit 1
+fi
+if [[ ! "$WEBSITE_URL" =~ ^https://[^[:space:]]+$ ]]; then
+  echo "Error: the website must be an https:// URL (got '$WEBSITE_URL')." >&2
+  exit 1
+fi
+if [[ ! "$SUPPORT_EMAIL" =~ ^[^[:space:]@:]+@[^[:space:]@]+$ ]]; then
+  echo "Error: the support e-mail must be a bare address, without mailto: (got '$SUPPORT_EMAIL')." >&2
   exit 1
 fi
 
@@ -124,6 +142,8 @@ info "  name     = $APP_NAME"
 info "  slug     = $APP_SLUG"
 info "  bundleId = $BUNDLE_ID"
 info "  scheme   = $SCHEME"
+info "  website  = $WEBSITE_URL"
+info "  support  = $SUPPORT_EMAIL"
 
 # ─── Sweep the template identity out of the rest of the tree ──────────────────
 # app.config.js is only where the identity is DECLARED. It is also written into
@@ -133,14 +153,16 @@ info "  scheme   = $SCHEME"
 # template's. Everything below is driven by the same four answers.
 header "Sweeping the template identity"
 
-node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" <<'NODE_SCRIPT'
+node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" "$WEBSITE_URL" "$SUPPORT_EMAIL" <<'NODE_SCRIPT'
 const fs = require('fs')
 const path = require('path')
-const [, , repoRoot, appName, appSlug, bundleId] = process.argv
+const [, , repoRoot, appName, appSlug, bundleId, websiteUrl, supportEmail] = process.argv
 
 const OLD_NAME = 'RN Starter'
 const OLD_SLUG = 'rn-starter'
 const OLD_BUNDLE = 'com.yourcompany.rnstarter'
+const OLD_WEBSITE = 'https://yourapp.example.com'
+const OLD_SUPPORT_EMAIL = 'support@example.com'
 
 const edits = []
 
@@ -166,6 +188,10 @@ patch('apps/mobile/google-services.json.example', (src) => all(src, OLD_BUNDLE, 
 // under the template's name replaces the first one's.
 patch('apps/api/wrangler.toml', (src) => all(src, OLD_SLUG, appSlug))
 patch('package.json', (src) => all(src, `"name": "${OLD_SLUG}"`, `"name": "${appSlug}"`))
+// Every installed build opens these links, and the release workflow refuses the placeholders.
+patch('apps/mobile/constants/legal.ts', (src) =>
+  all(all(src, OLD_WEBSITE, websiteUrl), OLD_SUPPORT_EMAIL, supportEmail)
+)
 
 const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
 if (fs.existsSync(localesDir)) {
@@ -178,6 +204,11 @@ console.log(edits.length ? edits.map((e) => `  ${e}`).join('\n') : '  nothing le
 NODE_SCRIPT
 
 success "Identity swept."
+
+if [[ "$WEBSITE_URL" == "https://yourapp.example.com" || "$SUPPORT_EMAIL" == "support@example.com" ]]; then
+  warn "The legal links still point at the template's placeholders: set the site and the support"
+  warn "address in apps/mobile/constants/legal.ts before the first release, which refuses them."
+fi
 
 # ─── Start the release history here ───────────────────────────────────────────
 # The release workflow versions the app from the commits since .last_release_commit,

@@ -80,9 +80,8 @@ export default () => {
         ],
       },
       // No `privacy` block: that key was expo.dev's project visibility, never a place for legal
-      // URLs, and SDK 54's config schema no longer has it. The links the app opens are
-      // `extra.legal` below (constants/legal.ts); the ones the stores show are entered in their
-      // consoles.
+      // URLs, and SDK 54's config schema no longer has it. The links the app opens are constants
+      // (constants/legal.ts); the ones the stores show are entered in their consoles.
 
       plugins: [
         withAndroidConfigChanges,
@@ -128,13 +127,6 @@ export default () => {
         rtlRestartBannerEnabled: process.env.RTL_RESTART_BANNER_ENABLED !== 'false',
         backendUrl: process.env.BACKEND_URL,
         backendApiKey: process.env.BACKEND_API_KEY,
-        websiteUrl: process.env.APP_WEBSITE_URL,
-        legal: {
-          privacyPolicyUrl: process.env.LEGAL_PRIVACY_POLICY_URL,
-          termsOfServiceUrl: process.env.LEGAL_TERMS_OF_SERVICE_URL,
-          licensesUrl: process.env.LEGAL_LICENSES_URL,
-          supportEmail: process.env.LEGAL_SUPPORT_EMAIL,
-        },
         purchases: {
           iosApiKey: process.env.REVENUECAT_IOS_API_KEY ?? '',
           androidApiKey: process.env.REVENUECAT_ANDROID_API_KEY ?? '',

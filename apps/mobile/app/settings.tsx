@@ -28,7 +28,7 @@ import { LanguagePicker } from '@components/ui/LanguagePicker'
 import { ScreenHeading } from '@components/ui/ScreenHeading'
 import { SlidingSelector } from '@components/ui/SlidingSelector'
 import { RTL_RESTART_BANNER_ENABLED } from '@constants/config'
-import { getAppWebsiteUrl } from '@constants/legal'
+import { APP_WEBSITE_URL } from '@constants/legal'
 import { useTabBarPadding } from '@hooks/useTabBarPadding'
 import Constants from 'expo-constants'
 import { useEffect, useState } from 'react'
@@ -92,8 +92,6 @@ export default function SettingsScreen() {
     },
   ]
 
-  const appWebsiteUrl = getAppWebsiteUrl()
-
   return (
     <ScreenContainer>
       <ScrollView
@@ -143,11 +141,7 @@ export default function SettingsScreen() {
           <SectionHeader>{t('settings.about')}</SectionHeader>
           <SectionContent overflowHidden={false} className="dark:border-violet-500/30">
             <TouchableOpacity
-              onPress={() => {
-                if (!appWebsiteUrl) return
-                void openExternalLink({ url: appWebsiteUrl })
-              }}
-              disabled={!appWebsiteUrl}
+              onPress={() => void openExternalLink({ url: APP_WEBSITE_URL })}
               activeOpacity={0.6}
               className="items-center py-3">
               <ThemedText variant="body" color="muted" weight="medium">

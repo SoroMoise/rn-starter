@@ -103,7 +103,7 @@ cd rn-starter
 
 ### 2. Run the setup script
 
-The interactive setup script personalizes the template (app name, bundle ID, scheme) and copies the example secret files:
+The interactive setup script personalizes the template (app name, bundle ID, scheme, the website serving the legal pages, the support address) and copies the example secret files:
 
 ```bash
 bash scripts/setup.sh
@@ -207,7 +207,7 @@ The Play Developer API only publishes to an app that already holds a build, so t
 | `ANDROID_KEY_PASSWORD` | the key's password | `KEY_PASSWORD` |
 | `PLAY_SERVICE_ACCOUNT_JSON` | the Play Developer API key | the service account's JSON key |
 
-The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`.
+The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`, or with the template's placeholder site or support address still in `apps/mobile/constants/legal.ts`.
 
 ### When a release fails
 
@@ -246,12 +246,16 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 - **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
 - **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
-- **LEGAL_*** — privacy policy, terms, licenses, support email URLs
 
 AdMob identifiers are not environment variables: the app IDs are literals in
 `apps/mobile/app.config.js` (Google's sample IDs until you replace them) and the ad unit IDs
 in `apps/mobile/constants/admob.ts`. `apps/mobile/ADS.md` is the advertising reference —
 placements, cadence, gates, and what to set before the first release.
+
+Legal links are not environment variables either: `apps/mobile/constants/legal.ts` builds the
+privacy policy and terms URLs from the app's website, beside the support address, and
+`scripts/setup.sh` asks for both. A public page is not a secret, and a build keeps the links it
+shipped with.
 
 Store URLs are not environment variables either: `apps/mobile/constants/rating.ts` derives the
 Play Store ones from the package id, and the App Store one waits for App Store Connect's numeric

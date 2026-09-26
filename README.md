@@ -20,7 +20,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
 - **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (`exampleService` is its app-side call, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
-- **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to
+- **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to, written for the SDKs the starter ships, placeholders marked
 - **Shared types** — `packages/shared` consumed by both mobile and API
 
 ---
@@ -237,8 +237,12 @@ pnpm build:web    # writes apps/web/out/
 
 - `scripts/setup.sh` has written the app's name, domain, package and support address into
   `apps/web/lib/site.ts`. Fill in the publisher and the date the pages take effect there.
-- Write the privacy policy and the terms in `apps/web/content/en/legal.ts` and `fr/legal.ts`. The
-  pages show a template notice for as long as a placeholder remains.
+- Replace every bracketed passage in `apps/web/content/en/legal.ts` and `fr/legal.ts`, and make
+  both documents say what your app does: remove a section it does not need (notifications, for an
+  app that sends none), add one for every SDK, permission or server it adds. The text is written
+  for the SDKs the starter ships — AdMob, Firebase Analytics and Crashlytics, RevenueCat — and
+  follows the categories of Play's data safety form; it is a starting point, not legal advice, so
+  have it reviewed. The pages show a template notice for as long as a placeholder remains.
 - Fill in the home page's copy in `apps/web/content/*/site.ts`.
 
 ### Hosting

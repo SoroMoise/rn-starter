@@ -37,7 +37,7 @@ audit of that gap and the plan to close it.
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
-| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | planned (§3) |
+| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
 | 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
 | 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | — | planned (§3) |
 | 22 | The store listing: the listing's limits, release notes, the licences page | — | planned (§3) |
@@ -47,8 +47,9 @@ audit of that gap and the plan to close it.
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
 says what comes after the audit. Of the 84 "later" items, 37 have shipped (twelve with lots 1–3,
-three of them recorded only when the rest were scheduled), 5 are closed without shipping, and the
-other 42 are scheduled into lots 14 to 22 (§3).
+three of them recorded only when the rest were scheduled), 5 are closed without shipping, and of
+the other 42, 39 are scheduled into lots 14–18 and 20–22 and 3 wait, with lot 19, for the Firebase
+migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -151,9 +152,9 @@ know that browser mode is what the stub removes — harmless while MMKV, Firebas
 keep the app out of Expo Go.
 
 The 84 "later" items were judged useful but never blocking. Until 2026-09-26 none was scheduled;
-the 42 still open are now planned work, lots 14 to 22, each carrying its lot in `plannedLot` and a
-note saying what verification found left of it (§3). The audit's judgement stays as it was: their
-`decision` is still `later`.
+the 42 still open are now planned work, lots 14 to 22 (lot 19's three deferred to the Firebase
+migration), each carrying its lot in `plannedLot` and a note saying what verification found left
+of it (§3). The audit's judgement stays as it was: their `decision` is still `later`.
 
 ---
 
@@ -191,8 +192,9 @@ always `git rev-list --count origin/main..HEAD`.
 
 ## 3. After the audit
 
-Every kept item has shipped. What is left is the "later" items, scheduled below into lots 14 to 22,
-and one translation session, which runs between two of them.
+Every kept item has shipped. What is left is the "later" items, scheduled below into lots 14 to 18
+and 20 to 22 — lot 19 waits for the Firebase migration — and one translation session, which runs
+between two of them.
 
 ### The "later" items, scheduled
 
@@ -224,7 +226,7 @@ and the notes below are where that verification starts, not its result.
 | 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
 | 17 | Colour tokens and the onboarding | `brand-color-tokens`, `gradients-tokens`, `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
-| 19 | The Worker's recurring patterns | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
+| 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
 | 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
 | 21 | The offer's record and its prices | `doc-monetization-template`, `doc-living-documentation`, `play-price-sync` | none |
 | 22 | The store listing | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` | one row, if the app links the licences |
@@ -301,11 +303,11 @@ components that owe CLAUDE.md's one-pixel echo guard (Styling). Of `claude-rende
 rules, the memo one shipped with lot 13 (Code Style) and the banner's unmount on blur covers part of
 the fifth; the windowing preset is the fourth rule's constant.
 
-**Lot 19 — The Worker's recurring patterns.** The Worker has held a KV binding since lot 12
-(`ENTITLEMENT_CACHE`) but no cache helper, exports `fetch` only, and carries an `FCMError.errorCode`
-that nothing interprets. A cron declared active would bill an empty job from the first deploy, so it
-ships commented out. `remove-api.sh` takes all of it with `apps/api`, so the script's list does not
-move; `pnpm --filter api build` (`wrangler deploy --dry-run`) is the check beside typecheck and lint.
+**Lot 19 — The Worker's recurring patterns, deferred to the Firebase migration.** The user deferred
+it on 2026-09-26: the Worker is leaving, and a scheduled function, dead-token cleanup and a cache
+will be rebuilt natively on Firebase rather than written for a backend on its way out. Its three
+items keep `plannedLot: 19` with `status: deferred`, and the migration session picks them up — the
+KV cache and the entitlement check it serves, the cron, FCM's dead tokens.
 
 **Lot 20 — Day one and the build.** The Firebase example still carries plausible values and no
 instructions; `setup.sh` rewrites its `package_name`, and the new shape must stay sweepable.

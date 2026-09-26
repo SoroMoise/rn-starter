@@ -8,10 +8,16 @@ function isAbortError(error: unknown): boolean {
   return error instanceof Error && error.name === 'AbortError'
 }
 
-function abortableDelay(ms: number, signal?: AbortSignal): Promise<void> {
+function abortError(): Error {
+  const err = new Error('AbortError')
+  err.name = 'AbortError'
+  return err
+}
+
+function abortableDelay({ ms, signal }: { ms: number; signal?: AbortSignal }): Promise<void> {
   return new Promise((resolve, reject) => {
     if (signal?.aborted) {
-      reject(new Error('AbortError'))
+      reject(abortError())
       return
     }
     const timer = setTimeout(resolve, ms)
@@ -19,33 +25,33 @@ function abortableDelay(ms: number, signal?: AbortSignal): Promise<void> {
       'abort',
       () => {
         clearTimeout(timer)
-        const err = new Error('AbortError')
-        err.name = 'AbortError'
-        reject(err)
+        reject(abortError())
       },
       { once: true }
     )
   })
 }
 
-interface RetryOptions {
+interface RetryOptions<T> {
+  request: () => Promise<T>
   maxRetries: number
   retryDelay: number
   signal?: AbortSignal
 }
 
-export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions): Promise<T> {
+export async function withRetry<T>({
+  request,
+  maxRetries,
+  retryDelay,
+  signal,
+}: RetryOptions<T>): Promise<T> {
   let lastError: ApiError | null = null
 
-  for (let attempt = 1; attempt <= options.maxRetries; attempt++) {
-    if (options.signal?.aborted) {
-      const err = new Error('AbortError')
-      err.name = 'AbortError'
-      throw err
-    }
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    if (signal?.aborted) throw abortError()
 
     try {
-      return await fn()
+      return await request()
     } catch (error) {
       // Abort errors must propagate immediately without retrying
       if (isAbortError(error)) throw error
@@ -54,9 +60,8 @@ export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions):
 
       if (isNonRetryableStatus(lastError.statusCode)) break
 
-      if (attempt < options.maxRetries) {
-        const delay = Math.min(options.retryDelay * attempt, 10_000)
-        await abortableDelay(delay, options.signal)
+      if (attempt < maxRetries) {
+        await abortableDelay({ ms: Math.min(retryDelay * attempt, 10_000), signal })
       }
     }
   }

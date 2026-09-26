@@ -214,6 +214,8 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `consentService` — Google's UMP consent gate, and the only caller of `mobileAds().initialize()`
 - `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
+- `backendClient` — the one axios instance for `apps/api` (base URL, timeout, `x-api-key`)
+- `exampleService` — `fetchExample({ signal })` calls `GET /example` through `withRetry`: the pattern a backend call copies
 
 `apps/mobile/services/notifications/` — reusable notification system: permission handling +
 foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`,
@@ -260,8 +262,10 @@ the failed request, never off this flag (Monetization).
 
 `QueryProvider` is here because `apps/api` is. **An app with no backend should remove both in
 the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages, `axios`,
-`utils/retry.ts`, `utils/apiErrors.ts`, and `hooks/useNetworkStatus.ts` with
-`@react-native-community/netinfo`, whose one consumer is the query client. deep-focus is the sibling that did exactly this when
+`utils/retry.ts`, `utils/apiErrors.ts`, `services/api/backendClient.ts` and `exampleService.ts`,
+and `hooks/useNetworkStatus.ts` with `@react-native-community/netinfo`, whose one consumer is the
+query client. `withRetry` is for a call made outside a query; a `queryFn` calls `backendClient`
+directly, or each of the client's attempts would retry again. deep-focus is the sibling that did exactly this when
 its Worker went — the data-fetching layer has no reason to outlive the API it serves.
 
 ### Monetization
@@ -375,7 +379,7 @@ No `@providers/*` alias — import as `@/providers/*`. No `@contexts/*` alias �
 
 Hono app at `apps/api/src/index.ts`. Routes:
 - `GET /health` — health check (unauthenticated)
-- `GET /example` — example auth-protected route
+- `GET /example` — example auth-protected route, called from the app by `exampleService`
 
 Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-api-key` header).
 

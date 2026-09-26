@@ -77,6 +77,8 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | `ratingService.ts` | `requestNativeReview()` (auto flows only; a failure is traced, never answered with the listing) / `openStoreListing({ reason })` (taps only) / `isNativeReviewAvailable()` |
 | `reviewPolicy.ts` | `evaluateReviewRequest` — pure decision on a rating ask, same shape as `contextualPaywall/policy.ts`: store card available → legacy opt-out → streak cap → cooldown → install age → session count → action count → strong moment → ad quiet window → the session's interruption. Every refusal carries its reason |
 | `contextualPaywall/` | `index.ts` (service: `evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation) |
+| `backendClient.ts` | The one axios instance for `apps/api`: `BACKEND_CONFIG` base URL, timeout, `x-api-key` header |
+| `exampleService.ts` | `fetchExample({ signal })` — `GET /example` through `withRetry`, the pattern a backend call copies; a query's `queryFn` calls `backendClient` directly instead |
 
 ### `services/notifications/`
 

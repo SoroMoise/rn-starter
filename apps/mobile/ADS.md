@@ -240,6 +240,11 @@ Deliberate and load-bearing — don't undo them without a reason written down he
   `showInterstitialAd()` lowers it, or no automatic promo would run again that session.
 - **No rewarded autoplay.** It is an AdMob policy breach and reads as a bait ad.
 - **Never chain an interstitial onto a declined rewarded video.** The user answered.
+- **A banner fits the column it sits in.** An anchored adaptive banner is as wide as the device
+  unless given a `width`. On a tablet or an open foldable, `ScreenContainer` caps its content at a
+  600 dp column, and a device-wide ad hangs past its container — where Android delivers no touch,
+  a partly dead ad. `AdBanner` passes the column's width, `min(MAX_CONTENT_WIDTH, window − side
+  insets)`, which on a phone is the device's own.
 - **A banner never sits flush against a tappable control.** A finger that misses the control and
   lands on the ad is a mis-tap, which AdMob counts as an invalid click — the screen reserves
   `AD_BANNER_RESERVED_HEIGHT` below its last row.

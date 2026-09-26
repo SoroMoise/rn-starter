@@ -255,13 +255,15 @@ each cancel, then both schedule. Without the grant it schedules nothing and says
 or a time out of range — checked before anything is cancelled, since expo rejects one trigger at a
 time and would leave the group half scheduled — resolves `'failed'` with a non-fatal, because its
 callers are effects that never wait for it. It never asks itself, because it runs wherever the
-list changes, the app's exit included; the app syncs again when the grant comes back, which
-`useNotificationPermission` sees at the next foreground. The title
-and body are the caller's, frozen at scheduling, so a language change syncs again too. A reminder
-fires within Android's inexact window: the manifest holds no exact-alarm permission, and Play
-grants `USE_EXACT_ALARM` only to alarm, timer and calendar apps. expo-notifications re-arms the
-triggers after a reboot or an update through `RECEIVE_BOOT_COMPLETED`, from its own manifest — a
-blocked permission list must never name it, nor `POST_NOTIFICATIONS`.
+list changes, the app's exit included. A sync without the grant leaves the group empty, so the
+effect that syncs depends on the grant as well as on the list —
+`useNotificationPermission().permission?.isGranted` — or a grant given back in the system settings
+leaves the reminders gone until the list next changes. The title and body are the caller's, frozen
+at scheduling, so a language change syncs again too. A reminder fires within Android's inexact
+window: the manifest holds no exact-alarm permission, and Play grants `USE_EXACT_ALARM` only to
+alarm, timer and calendar apps. expo-notifications re-arms the triggers after a reboot through
+`RECEIVE_BOOT_COMPLETED`, from its own manifest — a blocked permission list must never name it, nor
+`POST_NOTIFICATIONS`.
 
 **A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
 applies only a new name and description to a channel that exists — importance can only be lowered,

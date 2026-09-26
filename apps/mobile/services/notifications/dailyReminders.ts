@@ -101,8 +101,9 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
 // later list removed. Each one waits for the last, so the latest call is the one that holds.
 let queue: Promise<unknown> = Promise.resolve()
 
-// Never asks for the permission: it runs wherever the list changes, the app's exit included. Never
-// rejects either — its callers are effects that do not wait for it.
+// Never asks for the permission: it runs wherever the list changes, the app's exit included. Without
+// it the group is left empty, so the calling effect depends on the grant too. Never rejects either —
+// its callers are effects that do not wait for it.
 export function syncDailyReminders(params: SyncParams): Promise<DailyReminderSyncOutcome> {
   const run = queue
     .then(() => sync(params))

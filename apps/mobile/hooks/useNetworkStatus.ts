@@ -1,4 +1,3 @@
-import { analyticsService } from '@/services/api/analyticsService'
 import NetInfo from '@react-native-community/netinfo'
 import { useEffect, useState } from 'react'
 
@@ -21,7 +20,6 @@ NetInfo.fetch().then((state) => {
 NetInfo.addEventListener((state) => {
   const connected = state.isConnected ?? false
   if (connected === _isOnline) return
-  if (!connected) analyticsService.track('offline_banner_shown')
   notify(connected)
 })
 

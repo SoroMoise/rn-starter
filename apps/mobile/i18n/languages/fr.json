@@ -187,7 +187,13 @@
     "pricesRetry": "Réessayer",
     "benefit": {
       "noAds": "Aucune publicité, jamais"
-    }
+    },
+    "priceWeekly": "{{price}}/semaine",
+    "priceMonthly": "{{price}}/mois",
+    "priceAnnual": "{{price}}/an",
+    "priceEveryMonths": "{{price}} tous les {{months}} mois",
+    "legalNoteTrial": "Gratuit pendant {{days}} jours, puis {{price}}. Renouvellement automatique jusqu'à résiliation.",
+    "legalNoteTrialNoDays": "Essai gratuit, puis {{price}}. Renouvellement automatique jusqu'à résiliation."
   },
   "premiumGate": {
     "unlock": "Débloquer",

@@ -6,6 +6,8 @@ import { isAxiosError } from 'axios'
 // unprocessable). Retrying will never succeed and wastes quota / risks triggering rate-limit bans.
 const NON_RETRYABLE_STATUS_CODES = new Set([400, 401, 403, 404, 422])
 
+// Maps an error `code` the backend returns to the i18n key shown for it; unmapped codes fall back
+// to the server's message. Empty until the API defines codes of its own.
 const API_ERROR_I18N_KEYS: Record<string, string> = {}
 
 export function handleAxiosError(error: unknown): ApiError {
@@ -37,10 +39,12 @@ export function handleAxiosError(error: unknown): ApiError {
   }
 }
 
-export function isNonRetryableError(error: unknown): boolean {
-  if (!isAxiosError(error)) return false
-  const status = error.response?.status
+export function isNonRetryableStatus(status: number | undefined): boolean {
   return status !== undefined && NON_RETRYABLE_STATUS_CODES.has(status)
+}
+
+export function isNonRetryableError(error: unknown): boolean {
+  return isAxiosError(error) && isNonRetryableStatus(error.response?.status)
 }
 
 export function toApiError(error: unknown): ApiError {

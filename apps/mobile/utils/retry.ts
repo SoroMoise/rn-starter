@@ -1,11 +1,7 @@
 import i18n from '@/i18n/service'
 import type { ApiError } from '@/types'
 import { isAxiosError } from 'axios'
-import { handleAxiosError } from './apiErrors'
-
-// These errors indicate a client-side problem (bad request, unauthorized, forbidden, not found,
-// unprocessable). Retrying will never succeed and wastes quota / risks triggering rate-limit bans.
-const NON_RETRYABLE_STATUS_CODES = new Set([400, 401, 403, 404, 422])
+import { handleAxiosError, isNonRetryableStatus } from './apiErrors'
 
 function isAbortError(error: unknown): boolean {
   if (isAxiosError(error) && error.code === 'ERR_CANCELED') return true
@@ -56,9 +52,7 @@ export async function withRetry<T>(fn: () => Promise<T>, options: RetryOptions):
 
       lastError = handleAxiosError(error)
 
-      if (lastError.statusCode && NON_RETRYABLE_STATUS_CODES.has(lastError.statusCode)) {
-        break
-      }
+      if (isNonRetryableStatus(lastError.statusCode)) break
 
       if (attempt < options.maxRetries) {
         const delay = Math.min(options.retryDelay * attempt, 10_000)

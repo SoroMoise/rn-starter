@@ -21,7 +21,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
 - **Cloudflare Workers API** — Hono, API-key auth, rate limiter, a server-side RevenueCat entitlement check cached in KV, FCM push service, `/health` + `/example` + `/example/premium` (`exampleService` holds their app-side calls, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
 - **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to, written for the SDKs the starter ships, placeholders marked
-- **Shared types** — `packages/shared` consumed by both mobile and API
+- **Shared types** — `packages/shared`, the API's response types
 
 ---
 
@@ -58,11 +58,12 @@ rn-starter/
 ├── apps/
 │   ├── mobile/          # Expo SDK 54 / React Native app (iOS + Android)
 │   ├── web/             # Next.js static site — home, privacy policy, terms (EN + FR)
-│   └── api/             # Cloudflare Workers API (Hono)
+│   └── api/             # Cloudflare Workers API (Hono) — optional
 ├── packages/
-│   └── shared/          # Shared TypeScript types (HealthResponse, ApiErrorResponse)
+│   └── shared/          # The API's TypeScript types (HealthResponse, ApiErrorResponse)
 ├── scripts/
 │   ├── setup.sh         # Interactive setup script — personalizes the template
+│   ├── remove-api.sh    # Takes out apps/api, packages/shared and the app's network layer
 │   └── generate-brand-assets.py  # Draws the icon, splash, notification icon and favicon
 └── turbo.json
 ```
@@ -148,6 +149,21 @@ cp apps/mobile/google-services.json.example apps/mobile/google-services.json
 pnpm dev:mobile     # Expo dev server
 pnpm dev:api        # Cloudflare Worker local dev
 ```
+
+### No backend?
+
+`apps/api` is there for the app that needs a server of its own — the entitlement checked server-side,
+push sent by FCM. Most apps need neither, and a Worker nobody deploys still costs an install, a
+workspace package, a CI workflow and two `.env` variables that look wired. Take it out, with the
+network layer the app keeps only to talk to it, before writing any code:
+
+```bash
+bash scripts/remove-api.sh
+```
+
+It lists what goes and asks first, refuses a working tree with uncommitted changes (git is the only
+way back), and updates the lockfile. What it does not touch is the prose: the sections of
+`CLAUDE.md`, `apps/mobile/PROJECT_CONTEXT.md` and this README that describe the backend.
 
 ---
 

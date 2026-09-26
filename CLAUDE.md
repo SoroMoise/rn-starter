@@ -9,7 +9,9 @@ Monorepo boilerplate for a premium React Native / Expo app:
 - **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable local notification system (the grant, the Android channel, a daily reminder scheduler — ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + an auth-protected `/example` route and its premium-only `/example/premium`, API-key auth middleware, rate limiter, a server-side RevenueCat entitlement check, FCM push service.
 - **`apps/web`** — Next.js 16 static site, English at the root and French under `/fr`: a home page, the privacy policy and the terms — the pages the app's legal links open.
-- **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
+- **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`), read by the Worker only.
+
+`apps/api` and `packages/shared` are optional: an app with no backend runs `bash scripts/remove-api.sh`, which takes them out with the network layer the app keeps only for them (Data Fetching).
 
 Workspace tooling: pnpm workspaces + Turborepo. App identity placeholders: name `RN Starter`, slug `rn-starter`, bundle ID `com.yourcompany.rnstarter`, scheme `rnstarter`.
 
@@ -91,7 +93,7 @@ The README's *Android release* section is the human half of this one — the tri
 
 Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_KEYSTORE_BASE64` / `ANDROID_KEYSTORE_PASSWORD` / `ANDROID_KEY_ALIAS` / `ANDROID_KEY_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`. The AAB is kept as a build artifact **only** when no publish attempt landed; `purge-artifacts.yml` clears the backlog on demand, since Actions storage is billed on a private repo and nothing expires it before its 90 days.
 
-`.github/workflows/ci-api.yml` lints, typechecks, dry-run builds and deploys the Worker, on the same label pattern (`release-api`) — it needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. Delete it along with `apps/api` if the app has no backend.
+`.github/workflows/ci-api.yml` lints, typechecks, dry-run builds and deploys the Worker, on the same label pattern (`release-api`) — it needs `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`. `scripts/remove-api.sh` deletes it with `apps/api` for an app with no backend (Data Fetching).
 
 
 ## Architecture (mobile)
@@ -330,16 +332,20 @@ succeed (`isNonRetryableError`: 400, 401, 403, 404, 422 — one list, in `utils/
 `withRetry` reads too). Connectivity decides nothing else: whether the store answered is read off
 the failed request, never off this flag (Monetization).
 
-`QueryProvider` is here because `apps/api` is. **An app with no backend should remove both in
-the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages, `axios`,
-`utils/retry.ts`, `utils/apiErrors.ts`, `services/api/backendClient.ts` and `exampleService.ts`,
-and `hooks/useNetworkStatus.ts` with `@react-native-community/netinfo`, whose one consumer is the
-query client. `withRetry` is for a call made outside a query; a `queryFn` calls
-`getBackendClient()` directly, or each of the client's attempts would retry again. It gives up
-with an `ApiRequestError` (`utils/apiErrors.ts`): the message is ready to show, and `statusCode`
-and `code` say why it stopped — a caller branches on those, never on the message, which is
-translated. deep-focus is the sibling that did exactly this when
-its Worker went — the data-fetching layer has no reason to outlive the API it serves.
+`QueryProvider` is here because `apps/api` is. **An app with no backend removes both in the
+same pass, with `bash scripts/remove-api.sh`**: `apps/api`, `packages/shared` and `ci-api.yml`,
+the root scripts and turbo task that drive the Worker, `providers/QueryProvider.tsx`, the three
+`@tanstack/*` packages, `axios`, `utils/retry.ts`, `utils/apiErrors.ts` and the `error.*` keys only
+they read, `services/api/backendClient.ts` and `exampleService.ts`, and `hooks/useNetworkStatus.ts`
+with `@react-native-community/netinfo`, whose one consumer is the query client. It refuses a dirty
+working tree — git is the only way back — and leaves the docs to whoever runs it. **Anything added
+only for the backend joins that script's list in the same change**, the way an identity joins
+`setup.sh`'s: left out, it is the Worker's dead weight in every app that has none. `withRetry` is
+for a call made outside a query; a `queryFn` calls `getBackendClient()` directly, or each of the
+client's attempts would retry again. It gives up with an `ApiRequestError` (`utils/apiErrors.ts`):
+the message is ready to show, and `statusCode` and `code` say why it stopped — a caller branches on
+those, never on the message, which is translated. deep-focus is the sibling that did exactly this
+when its Worker went — the data-fetching layer has no reason to outlive the API it serves.
 
 ### Monetization
 

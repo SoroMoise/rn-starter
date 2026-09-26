@@ -247,7 +247,9 @@ else
   warn "apps/mobile/.env already exists — skipped."
 fi
 
-if [[ ! -f "$API_VARS" ]]; then
+if [[ ! -f "$API_VARS_EXAMPLE" ]]; then
+  info "apps/api is gone — no .dev.vars to create."
+elif [[ ! -f "$API_VARS" ]]; then
   cp "$API_VARS_EXAMPLE" "$API_VARS"
   success "Created apps/api/.dev.vars from .dev.vars.example — fill in your real values."
 else
@@ -259,7 +261,7 @@ header "Next steps"
 echo ""
 echo "  1. pnpm install"
 echo ""
-echo "  2. Edit apps/mobile/.env with your RevenueCat, Backend, and other keys."
+echo "  2. Edit apps/mobile/.env with your RevenueCat and other keys."
 echo "     See apps/mobile/.env.example for all variables and comments."
 echo "     AdMob ids are not env vars: app ids in apps/mobile/app.config.js,"
 echo "     unit ids in apps/mobile/constants/admob.ts — see apps/mobile/ADS.md."
@@ -268,14 +270,22 @@ echo "  3. Add Firebase config files:"
 echo "     - apps/mobile/google-services.json  (Android — use google-services.json.example as template)"
 echo "     - apps/mobile/GoogleService-Info.plist  (iOS — download from Firebase Console)"
 echo ""
-echo "  4. Edit apps/api/.dev.vars with your API_KEY and Firebase credentials."
+if [[ -d "$REPO_ROOT/apps/api" ]]; then
+  echo "  4. Edit apps/api/.dev.vars with your API_KEY, Firebase and RevenueCat credentials."
+  echo "     An app with no backend removes it, and the network layer that serves it:"
+  echo "     bash scripts/remove-api.sh"
+else
+  echo "  4. No backend: apps/api has been removed."
+fi
 echo ""
 echo "  5. Generate native projects:"
 echo "     pnpm --filter mobile preb"
 echo ""
 echo "  6. Start dev servers:"
 echo "     pnpm dev:mobile"
-echo "     pnpm dev:api"
+if [[ -d "$REPO_ROOT/apps/api" ]]; then
+  echo "     pnpm dev:api"
+fi
 echo "     pnpm dev:web"
 echo ""
 echo "  Before the site goes live: fill in the publisher and the date in"

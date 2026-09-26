@@ -127,9 +127,10 @@ info "  scheme   = $SCHEME"
 
 # ─── Sweep the template identity out of the rest of the tree ──────────────────
 # app.config.js is only where the identity is DECLARED. It is also written into
-# code and into all twenty translation files, and a new app that skips them ships
-# "RN Starter" strings in twenty languages and an MMKV store named after the
-# template. Everything below is driven by the same four answers.
+# code, into all twenty translation files, the Firebase config example and the
+# Worker's name, and a new app that skips them ships "RN Starter" strings in twenty
+# languages, an MMKV store named after the template and a Worker that replaces the
+# template's. Everything below is driven by the same four answers.
 header "Sweeping the template identity"
 
 node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" <<'NODE_SCRIPT'
@@ -158,6 +159,13 @@ const all = (src, from, to) => src.split(from).join(to)
 patch('apps/mobile/constants/rating.ts', (src) => all(src, OLD_BUNDLE, bundleId))
 patch('apps/mobile/services/storage/mmkv.ts', (src) => all(src, OLD_SLUG, appSlug))
 patch('apps/mobile/package.json', (src) => all(src, OLD_BUNDLE, bundleId))
+// Copied as a placeholder, the example must name the app's package: the Google Services
+// Gradle plugin fails the build when no client in the file matches it.
+patch('apps/mobile/google-services.json.example', (src) => all(src, OLD_BUNDLE, bundleId))
+// A Worker is addressed by its name on the Cloudflare account, so a second app deployed
+// under the template's name replaces the first one's.
+patch('apps/api/wrangler.toml', (src) => all(src, OLD_SLUG, appSlug))
+patch('package.json', (src) => all(src, `"name": "${OLD_SLUG}"`, `"name": "${appSlug}"`))
 
 const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
 if (fs.existsSync(localesDir)) {
@@ -170,6 +178,23 @@ console.log(edits.length ? edits.map((e) => `  ${e}`).join('\n') : '  nothing le
 NODE_SCRIPT
 
 success "Identity swept."
+
+# ─── Start the release history here ───────────────────────────────────────────
+# The release workflow versions the app from the commits since .last_release_commit,
+# and the template's marker points into the template's own history: left there, the
+# first release is judged on the template's commits, or on the last commit alone once
+# that history is gone. Moved only while nothing has been released, so running this
+# script again never rewinds a real release.
+header "Release marker"
+
+if ! git -C "$REPO_ROOT" rev-parse --verify -q HEAD > /dev/null 2>&1; then
+  warn "No commit yet — after the first one, run: git rev-parse HEAD > .last_release_commit"
+elif [[ -n "$(git -C "$REPO_ROOT" log -1 --format=%H --grep='^chore(release): v')" ]]; then
+  warn ".last_release_commit left as it is — this repository has already released."
+else
+  git -C "$REPO_ROOT" rev-parse HEAD > "$REPO_ROOT/.last_release_commit"
+  success ".last_release_commit now starts at $(git -C "$REPO_ROOT" rev-parse --short HEAD)."
+fi
 
 # ─── Copy example files if absent ─────────────────────────────────────────────
 header "Copying example secret files (if absent)"
@@ -210,5 +235,10 @@ echo ""
 echo "  6. Start dev servers:"
 echo "     pnpm dev:mobile"
 echo "     pnpm dev:api"
+echo ""
+echo "  7. Before the first release: generate the upload keystore, fill in"
+echo "     apps/mobile/keystore.properties (from keystore.properties.example),"
+echo "     upload the first build by hand and set the repository secrets."
+echo "     See README.md, Android release."
 echo ""
 success "Setup complete. Happy building!"

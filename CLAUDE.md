@@ -12,7 +12,7 @@ Monorepo boilerplate for a premium React Native / Expo app:
 
 Workspace tooling: pnpm workspaces + Turborepo. App identity placeholders: name `RN Starter`, slug `rn-starter`, bundle ID `com.yourcompany.rnstarter`, scheme `rnstarter`.
 
-**`scripts/setup.sh` is what removes them, and it must stay exhaustive.** `app.config.js` only *declares* the identity; it is also written into `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json` and all twenty translation files. A sweep that stops at the config ships an app calling itself "RN Starter" in twenty languages, with a store URL pointing at the template's package id. Anything new that hardcodes the name, the slug or the bundle id belongs in the sweep in the same change.
+**`scripts/setup.sh` is what removes them, and it must stay exhaustive.** `app.config.js` only *declares* the identity; it is also written into `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, all twenty translation files, `google-services.json.example`, the Worker's name in `apps/api/wrangler.toml` and the root `package.json`. A sweep that stops at the config ships an app calling itself "RN Starter" in twenty languages, with a store URL pointing at the template's package id, and deploys a Worker that replaces the template's on the same Cloudflare account. The script also starts `.last_release_commit` at the current commit while nothing has been released, so the first release is not judged on the template's history. Anything new that hardcodes the name, the slug or the bundle id belongs in the sweep in the same change.
 
 ## Living Documentation
 

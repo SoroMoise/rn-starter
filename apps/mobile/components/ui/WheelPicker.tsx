@@ -1,4 +1,4 @@
-import { useModalSheetPanGesture } from '@/components/ui/ModalBottomSheet'
+import { useModalSheetPanGesture } from '@/components/ui/modalSheet/contexts'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { triggerSelection } from '@/utils/haptics'
 import { useEffect, useMemo, useRef } from 'react'
@@ -19,7 +19,7 @@ import Animated, {
 } from 'react-native-reanimated'
 
 export const WHEEL_ITEM_HEIGHT = 44
-export const WHEEL_VISIBLE_ITEMS = 7
+const WHEEL_VISIBLE_ITEMS = 7
 // A short screen gets five rows rather than a sheet taller than itself.
 const COMPACT_WHEEL_VISIBLE_ITEMS = 5
 const COMPACT_SCREEN_HEIGHT = 700
@@ -44,7 +44,7 @@ interface Props<T extends string | number> {
   unitWidth?: number
   // What the wheel looks like, centred inside a column that is deliberately much wider than it.
   contentWidth?: number
-  // Omit to let the column stretch across its row — the widest target the layout can give it.
+  // Omit to let the column share its row, or fill a column's width — the widest target it can get.
   width?: number
   maxWidth?: number
 }
@@ -116,7 +116,11 @@ export function WheelPicker<T extends string | number>({
 
   return (
     <View
-      style={[{ height: totalHeight }, width != null ? { width } : { flex: 1, maxWidth }]}
+      style={[
+        // `flex: 1` is a zero basis on a column's main axis too: min and max hold the height there.
+        { height: totalHeight, minHeight: totalHeight, maxHeight: totalHeight },
+        width != null ? { width } : { flex: 1, maxWidth },
+      ]}
       className="overflow-hidden">
       <GestureDetector gesture={scrollGesture}>
         <AnimatedScrollView

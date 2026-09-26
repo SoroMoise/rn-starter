@@ -6,7 +6,7 @@ This file provides guidance to Claude Code when working with this repository.
 
 Monorepo boilerplate for a premium React Native / Expo app:
 
-- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable notification system (permissions + Android channels, ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
+- **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable local notification system (the grant, the Android channel, a daily reminder scheduler — ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
 - **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -135,7 +135,7 @@ Zustand v5 stores in `apps/mobile/stores/`. All persisted stores use `persist` +
 - `secure.ts` — the encrypted instance for entitlement keys, and nothing else
 - `adapter.ts` — sync `StateStorage` for Zustand persist
 - `keys.ts` — all key constants (`KEYS`)
-- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`, `userSettings`
+- `domains/` — typed non-Zustand accessors: `adFree`, `ads`, `engagement`, `review`, `subscription`
 
 Notable domains:
 - `engagementStorage` — session count, install date, paywall counter, and the **generic action counter**
@@ -153,8 +153,9 @@ at boot; reintroducing an async store would put the gate back for every screen. 
 reading a persisted store from outside Zustand: `persist` wraps what it writes in its own
 `{ state, version }` envelope, so a hand-written value stored under that key has no `state` field,
 rehydration silently falls back to the store's defaults on the next launch, and nothing reports it.
-`domains/userSettings.ts` is the example that does it right. (`@tanstack/query-async-storage-persister`
-is only named after it — it is handed the MMKV adapter here.)
+`getActiveLanguageFromStorage` (`i18n/service.ts`) is the example that does it right.
+(`@tanstack/query-async-storage-persister` is only named after it — it is handed the MMKV adapter
+here.)
 
 **What a store's `merge` decides stays in memory until something writes it.** `persist` writes on
 `setState` only: hydration hands the persisted state to `merge` and sets the result without writing
@@ -192,8 +193,9 @@ at import, before any reader — the starter has no installs, so it ships no mig
 Android 11 and below, which `minSdkVersion` 26 still reaches — excluding the instance's two files,
 `mmkv/entitlements` and its `.crc`: a copy that can be restored can be edited into Pro first, and
 the store's next answer re-establishes the tier anyway. The file names follow the instance id, so
-the two move together. Everything else still restores: preferences, the onboarding, the review and
-paywall spacing follow the user to a new phone. An app whose `files/` holds a library that a
+the two move together. The rules also keep expo-modules-core's record of the permissions it asked
+for on the device (Notifications, below). Everything else still restores: preferences, the
+onboarding, the review and paywall spacing follow the user to a new phone. An app whose `files/` holds a library that a
 day-stale snapshot would resurrect takes more out of cloud backup, as its own decision. RevenueCat
 keeps its own CustomerInfo cache in the SDK's preferences and `getCustomerInfo` serves it offline —
 this closes the cheap attack on the app's copy, not on the SDK's.
@@ -217,9 +219,62 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `backendClient` — `getBackendClient()`, the one axios instance for `apps/api` (base URL, timeout, `x-api-key`); it throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY`, rather than let a relative URL fail as an outage
 - `exampleService` — `fetchExample({ signal })`, the app-side call to `GET /example` through `withRetry`: the pattern a backend call copies. Nothing calls it yet
 
-`apps/mobile/services/notifications/` — reusable notification system: permission handling +
-foreground presentation (`notificationService`), Android channels (`ensureNotificationChannels`,
-`NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled notifications for your own features.
+`apps/mobile/services/notifications/` — reusable notification system: the grant
+(`notificationService.readPermission()` / `requestPermission()`, and `useNotificationPermission()`,
+which reads it again at every foreground), foreground presentation, the Android channel
+(`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) and daily reminders
+(`syncDailyReminders`). The starter itself asks for nothing and schedules nothing: all of it is there
+for the app's own notifications, and the first feature that sends one is its first caller.
+
+**The permission is asked by the feature that needs it, where the user sees what it buys.**
+`POST_NOTIFICATIONS` stays declared for the apps built on the starter: on Android 13+ a notification
+from an app that never asked is dropped with no error anywhere, and the fix is only ever the ask.
+Ask from the screen that sells it — the toggle, the time being set — never at launch, and never from
+a scheduling path, which runs as the app is left; the onboarding carries no such step until the app
+has something to send. A toggle that defaults to on cannot be what asks: nobody flips it, so a fresh
+install never sees the dialog and the feature stays silent for good. A refusal writes the intention
+back to off, rather than leaving one that cannot happen. Past a permanent denial the request shows
+nothing and resolves at once with `canAskAgain: false`; the honest route is then
+`Linking.openSettings()`.
+
+**Whether to ask is the OS's answer, never a flag the app kept.** The main MMKV instance rides cloud
+backup and device transfer, so a stored "already asked" reaches a phone where nothing was asked, and
+an ask guarded by it never happens there. `readPermission()` reads the grant itself. Android's
+answer leans on one such record all the same: expo-modules-core writes each runtime permission it
+asks for into `shared_prefs/expo.modules.permissions.asked.xml`, and a permission it holds there
+but not granted reads as `denied`, with `canAskAgain` taken from the system's rationale flag —
+false where nothing was ever asked. Restored onto a new phone, it would send the user to the system
+settings instead of the dialog, for every runtime permission, so `withBackupRules` keeps it on the
+device.
+
+**The scheduler never asks, and never fails quietly.** `syncDailyReminders({ group, reminders,
+content })` cancels every reminder of its group, then schedules one daily trigger per entry; an
+empty list clears the group. Calls are queued, so the latest one holds — two overlapping syncs would
+each cancel, then both schedule. Without the grant it schedules nothing and says so: it resolves
+`'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; a native failure,
+or a time out of range — checked before anything is cancelled, since expo rejects one trigger at a
+time and would leave the group half scheduled — resolves `'failed'` with a non-fatal, because its
+callers are effects that never wait for it. It never asks itself, because it runs wherever the
+list changes, the app's exit included. A sync without the grant leaves the group empty, so the
+effect that syncs depends on the grant as well as on the list —
+`useNotificationPermission().permission?.isGranted` — or a grant given back in the system settings
+leaves the reminders gone until the list next changes. The title and body are the caller's, frozen
+at scheduling, so a language change syncs again too. A reminder fires within Android's inexact
+window: the manifest holds no exact-alarm permission, and Play grants `USE_EXACT_ALARM` only to
+alarm, timer and calendar apps. expo-notifications re-arms the triggers after a reboot through
+`RECEIVE_BOOT_COMPLETED`, from its own manifest — a blocked permission list must never name it, nor
+`POST_NOTIFICATIONS`.
+
+**A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
+applies only a new name and description to a channel that exists — importance can only be lowered,
+and only while the user has not touched the channel — and a channel deleted then re-created under
+the same id comes back with the settings it had, so neither an edit nor a delete-and-recreate
+changes how it sounds. The user sets that per channel, in the system settings. A channel that must
+sound differently takes a new id: `defaultChannel` in `app.config.js` follows it, the old one is
+deleted, and whatever was scheduled on it is scheduled again — a trigger names its channel when it
+is scheduled, and one whose channel is gone lands in expo-notifications' fallback channel,
+"Miscellaneous". The foreground handler always asks for the sound too: on Android,
+`shouldPlaySound: false` also drops the heads-up banner.
 
 **Remote push is not wired on the device, and `@react-native-firebase/messaging` is not installed.**
 `apps/api` still ships an FCM sender, so the server half is there; the client half is a deliberate

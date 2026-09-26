@@ -84,8 +84,11 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 
 | File | Description |
 |---|---|
-| `setup.ts` | `notificationService` — permission request/primer, foreground presentation handler |
-| `channels.ts` | Android notification channel setup (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) |
+| `setup.ts` | `notificationService` — `readPermission()` / `requestPermission()` (`{ isGranted, canAskAgain }`, read off the OS, never a stored flag; the request only from the screen that shows what it is for), foreground presentation handler |
+| `dailyReminders.ts` | `syncDailyReminders({ group, reminders, content })` — cancels the group, then one daily trigger per `{ id, hour, minute }`; queued, so the latest call holds. Never asks: without the grant it resolves `'permission_missing'`, warns in development and leaves a Crashlytics breadcrumb; it never rejects — a native failure, or a time out of range (checked before the group is touched), is `'failed'` and a non-fatal. A sync without the grant leaves the group empty, so the effect that syncs also depends on `useNotificationPermission().permission?.isGranted` |
+| `channels.ts` | The Android channel (`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`) — its sound, vibration and importance are frozen at creation, so a change takes a new id; the app has no sound or vibration setting of its own |
+
+`useNotificationPermission()` (`hooks/`) holds the grant for a screen and reads it again at every foreground; `request()` asks and returns what the OS answered. The starter asks for nothing and schedules nothing itself: both are there for the app's own notifications.
 
 ### `services/promo/`
 
@@ -97,7 +100,7 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | File/Dir | Description |
 |---|---|
 | `mmkv.ts` | Main MMKV instance |
-| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one. `plugins/withBackupRules.js` keeps its files out of cloud backup and device transfer |
+| `secure.ts` | Encrypted MMKV instance holding the entitlement keys and nothing else — never encrypt the main one. `plugins/withBackupRules.js` keeps its files out of cloud backup and device transfer, with expo-modules-core's record of the permissions asked on the device |
 | `adapter.ts` | Sync `StateStorage` adapter for Zustand `persist` |
 | `keys.ts` | All MMKV key constants (`KEYS`) |
 | `domains/adFree.ts` | Ad-free window expiry (encrypted instance) — a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
@@ -105,7 +108,6 @@ Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per ses
 | `domains/engagement.ts` | Session count, install date, paywall counter, **generic action counter** (`getActionCount` / `incrementAction`) — never reset |
 | `domains/review.ts` | Review requests: count in the current streak and when the last one was made — `recordRequest` records an attempt, never a conclusion; `isOptedOut()` reads the two legacy opt-out flags nothing writes any more |
 | `domains/subscription.ts` | Subscription expiry + lifetime flag (encrypted instance); `derive(now, gracePeriodMs)` = offline allowance only |
-| `domains/userSettings.ts` | Typed reader for user settings outside Zustand (used by notification handler) |
 
 ---
 

@@ -3,21 +3,31 @@ const fs = require('fs')
 const path = require('path')
 
 // The encrypted entitlement store (services/storage/secure.ts). MMKV writes `<id>` and `<id>.crc`
-// under files/mmkv/, so both are named — rename them with the instance id.
+// under files/mmkv/, so both are named — rename them with the instance id. A copy that leaves the
+// device can be edited into Pro and restored.
 const ENTITLEMENT_STORE = ['mmkv/entitlements', 'mmkv/entitlements.crc']
 
-const excludeAll = ({ paths, indent }) =>
-  paths.map((p) => `${indent}<exclude domain="file" path="${p}" />`).join('\n')
+// expo-modules-core's record of the runtime permissions it has asked for on this device — the only
+// thing that tells one never asked from one denied. Restored onto a phone where nothing was asked,
+// it reports `denied` with `canAskAgain: false`, and the app sends the user to the system settings
+// instead of showing the dialog.
+const ASKED_PERMISSIONS = 'expo.modules.permissions.asked.xml'
 
-// Out of every copy that leaves the device: a copy can be edited into Pro and restored. The rest
-// still rides along — preferences, the onboarding, the review and paywall spacing follow the user.
+const excludeAll = ({ indent }) =>
+  [
+    ...ENTITLEMENT_STORE.map((p) => `${indent}<exclude domain="file" path="${p}" />`),
+    `${indent}<exclude domain="sharedpref" path="${ASKED_PERMISSIONS}" />`,
+  ].join('\n')
+
+// Out of every copy that leaves the device. The rest still rides along — preferences, the
+// onboarding, the review and paywall spacing follow the user.
 const DATA_EXTRACTION_RULES = `<?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
   <cloud-backup>
-${excludeAll({ paths: ENTITLEMENT_STORE, indent: '    ' })}
+${excludeAll({ indent: '    ' })}
   </cloud-backup>
   <device-transfer>
-${excludeAll({ paths: ENTITLEMENT_STORE, indent: '    ' })}
+${excludeAll({ indent: '    ' })}
   </device-transfer>
 </data-extraction-rules>
 `
@@ -26,7 +36,7 @@ ${excludeAll({ paths: ENTITLEMENT_STORE, indent: '    ' })}
 // between cloud backup and device transfer.
 const FULL_BACKUP_CONTENT = `<?xml version="1.0" encoding="utf-8"?>
 <full-backup-content>
-${excludeAll({ paths: ENTITLEMENT_STORE, indent: '  ' })}
+${excludeAll({ indent: '  ' })}
 </full-backup-content>
 `
 

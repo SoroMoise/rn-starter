@@ -28,7 +28,4 @@ export const KEYS = {
   // Zustand-persisted stores
   USER_SETTINGS: 'user_settings',
   ONBOARDING_SEEN: 'onboarding_seen',
-
-  // Notifications
-  NOTIFICATION_PERMISSION_REQUESTED: '@notification_permission_requested',
 } as const

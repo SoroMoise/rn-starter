@@ -14,8 +14,6 @@ export const BACKEND_CONFIG = {
 export const DEFAULT_SETTINGS = {
   theme: 'auto' as const,
   language: getDeviceLanguage(),
-  notificationSound: true,
-  notificationVibration: true,
 }
 
 export const UI_CONFIG = {

@@ -1,4 +1,4 @@
-import NetInfo from '@react-native-community/netinfo'
+import NetInfo, { type NetInfoState } from '@react-native-community/netinfo'
 import { useEffect, useState } from 'react'
 
 // Single module-level NetInfo subscription shared across the entire app.
@@ -12,13 +12,17 @@ function notify(online: boolean) {
   _subscribers.forEach((fn) => fn(online))
 }
 
+// `isConnected` is null while NetInfo cannot tell. Read as online: the request itself answers, where
+// reading it as offline would pause every query on a connection that works.
+const isConnected = (state: NetInfoState) => state.isConnected !== false
+
 NetInfo.fetch().then((state) => {
-  const connected = state.isConnected ?? true
+  const connected = isConnected(state)
   if (connected !== _isOnline) notify(connected)
 })
 
 NetInfo.addEventListener((state) => {
-  const connected = state.isConnected ?? false
+  const connected = isConnected(state)
   if (connected === _isOnline) return
   notify(connected)
 })

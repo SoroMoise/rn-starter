@@ -13,6 +13,9 @@ export function useKeyboardHeight({ enabled }: { enabled: boolean }): number {
       return
     }
 
+    // A keyboard already up when the dialog opens sends no new show event.
+    setHeight(Keyboard.isVisible() ? (Keyboard.metrics()?.height ?? 0) : 0)
+
     const isIOS = Platform.OS === 'ios'
 
     const shown = Keyboard.addListener(isIOS ? 'keyboardWillShow' : 'keyboardDidShow', (event) =>

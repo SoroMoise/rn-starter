@@ -37,7 +37,7 @@
       },
       "paywall": {
         "label": "Paywall & subscriptions",
-        "desc": "RevenueCat integration with a 7-day free trial and premium gating."
+        "desc": "RevenueCat integration: a paywall rendered from the store's own offer, and premium gating."
       },
       "ads": {
         "label": "Ads (AdMob)",
@@ -49,8 +49,7 @@
       }
     },
     "cta": {
-      "label": "Try Premium",
-      "sub": "7-day free trial · Cancel anytime"
+      "label": "Try Premium"
     },
     "demoAction": {
       "label": "Perform a sample action",

@@ -37,7 +37,7 @@
       },
       "paywall": {
         "label": "Paywall & abonnements",
-        "desc": "Intégration RevenueCat avec essai gratuit de 7 jours et accès premium."
+        "desc": "Intégration RevenueCat : un paywall construit à partir de l'offre du store, et l'accès premium."
       },
       "ads": {
         "label": "Pubs (AdMob)",
@@ -49,8 +49,7 @@
       }
     },
     "cta": {
-      "label": "Essayer Premium",
-      "sub": "Essai gratuit de 7 jours · Résiliable à tout moment"
+      "label": "Essayer Premium"
     },
     "demoAction": {
       "label": "Effectuer une action d'exemple",

@@ -29,7 +29,12 @@ const FEATURE_ITEMS: FeatureItem[] = [
 
 export default function HomeScreen() {
   const { t } = useTranslation()
-  const { isPremium, openPaywall } = usePremium()
+  const { isPremium, openPaywall, defaultPlan } = usePremium()
+  const trialLabel = defaultPlan?.hasTrial
+    ? defaultPlan.trialDays
+      ? t('paywall.trialBadge', { days: defaultPlan.trialDays })
+      : t('paywall.trialBadgeNoDays')
+    : null
   const { isAdFreeActive } = useAdFree()
   const tabBarPadding = useTabBarPadding(24)
 
@@ -105,9 +110,11 @@ export default function HomeScreen() {
                   </ThemedText>
                   <Ionicons name="arrow-forward" size={20} color="#ffffff" />
                 </GradientButton>
-                <ThemedText variant="caption" color="muted" align="center" className="mt-2">
-                  {t('home.cta.sub')}
-                </ThemedText>
+                {trialLabel ? (
+                  <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+                    {trialLabel}
+                  </ThemedText>
+                ) : null}
               </>
             )}
 

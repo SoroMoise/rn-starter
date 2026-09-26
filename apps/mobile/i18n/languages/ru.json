@@ -106,9 +106,6 @@
     "welcomePro": "Добро пожаловать в Pro!",
     "errorGeneric": "Что-то пошло не так. Пожалуйста, попробуйте снова.",
     "billedAnnually": "ежегодное списание",
-    "compareHeaderFeature": "Функция",
-    "compareHeaderFree": "Бесплатно",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/мес",
     "reassurance": "Без обязательств · Отмена в любое время"
   },

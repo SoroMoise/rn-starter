@@ -106,9 +106,6 @@
     "welcomePro": "歡迎加入 Pro！",
     "errorGeneric": "出了點問題。請重試。",
     "billedAnnually": "每年計費",
-    "compareHeaderFeature": "功能",
-    "compareHeaderFree": "免費版",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/月",
     "reassurance": "無需承諾 · 隨時可取消"
   },

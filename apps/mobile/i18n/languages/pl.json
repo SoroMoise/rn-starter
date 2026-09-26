@@ -106,9 +106,6 @@
     "welcomePro": "Witamy w Pro!",
     "errorGeneric": "Coś poszło nie tak. Spróbuj ponownie.",
     "billedAnnually": "rozliczane rocznie",
-    "compareHeaderFeature": "Funkcja",
-    "compareHeaderFree": "Bezpłatny",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mies.",
     "reassurance": "Bez zobowiązań · Anuluj w każdej chwili"
   },

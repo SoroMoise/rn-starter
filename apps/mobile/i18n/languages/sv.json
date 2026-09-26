@@ -106,9 +106,6 @@
     "welcomePro": "Välkommen till Pro!",
     "errorGeneric": "Något gick fel. Försök igen.",
     "billedAnnually": "debiteras årsvis",
-    "compareHeaderFeature": "Funktion",
-    "compareHeaderFree": "Gratis",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mån",
     "reassurance": "Inget åtagande · Avsluta när som helst"
   },

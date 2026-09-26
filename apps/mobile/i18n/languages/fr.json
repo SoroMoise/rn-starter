@@ -104,11 +104,6 @@
     },
     "premium": {
       "headline": "Allez plus loin avec Pro",
-      "benefit": {
-        "noAds": "Aucune publicité, jamais",
-        "notifications": "Notifications push programmées",
-        "premium": "Toutes les fonctionnalités premium"
-      },
       "timelineHeader": "Comment fonctionne l'essai",
       "ctaSkip": "Continuer gratuitement",
       "restore": "Restaurer mes achats",
@@ -153,7 +148,6 @@
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Débloquez toutes les fonctionnalités",
-    "featureNoAds": "Aucune publicité, jamais",
     "planMonthly": "Mensuel",
     "planAnnual": "Annuel",
     "savingsBadge": "-{{percent}}%",
@@ -169,16 +163,8 @@
     "errorStoreUnavailable": "Les achats ne sont pas disponibles sur cet appareil pour le moment.",
     "errorAlreadyOwned": "Vous possédez déjà Pro avec ce compte. Touchez « Restaurer mes achats » pour le récupérer.",
     "billedAnnually": "facturé annuellement",
-    "compareHeaderFeature": "Fonctionnalité",
-    "compareHeaderFree": "Gratuit",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/mois",
     "reassurance": "Sans engagement · Annulable à tout moment",
-    "featureCore": "Toutes les fonctions de base",
-    "featureLimitedSupport": "Support communautaire",
-    "featureReminders": "Rappels programmés illimités",
-    "featureAll": "Toutes les fonctions premium",
-    "featurePrioritySupport": "Support prioritaire",
     "planWeekly": "Hebdomadaire",
     "planLifetime": "À vie",
     "planMonths": "{{months}} mois",
@@ -198,7 +184,10 @@
     "ctaSubscribeMonthly": "S'abonner — {{price}}/mois",
     "ctaSubscribeAnnual": "S'abonner — {{price}}/an",
     "pricesUnavailable": "Prix indisponibles.",
-    "pricesRetry": "Réessayer"
+    "pricesRetry": "Réessayer",
+    "benefit": {
+      "noAds": "Aucune publicité, jamais"
+    }
   },
   "premiumGate": {
     "unlock": "Débloquer",

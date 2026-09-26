@@ -106,9 +106,6 @@
     "welcomePro": "Pro में आपका स्वागत है!",
     "errorGeneric": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
     "billedAnnually": "वार्षिक बिल",
-    "compareHeaderFeature": "सुविधा",
-    "compareHeaderFree": "फ्री",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/माह",
     "reassurance": "कोई प्रतिबद्धता नहीं · कभी भी रद्द करें"
   },

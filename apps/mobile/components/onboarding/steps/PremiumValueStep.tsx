@@ -1,3 +1,4 @@
+import { PaywallPerks } from '@/components/paywall/PaywallPerks'
 import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -10,15 +11,12 @@ import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Platform, Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
+import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface PremiumValueStepProps {
   onTriggerSkip: () => void
 }
-
-const BASE_BENEFITS = ['noAds', 'notifications', 'premium'] as const
-const ANDROID_BENEFITS = [...BASE_BENEFITS, 'widget'] as const
 
 export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const { t } = useTranslation()
@@ -26,8 +24,6 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const insets = useSafeAreaInsets()
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
   const { defaultPlan, purchasePlan, restorePurchases, isLoadingPurchase } = usePremium()
-
-  const benefits = Platform.OS === 'android' ? ANDROID_BENEFITS : BASE_BENEFITS
 
   // The frieze describes the trial the store actually reported; with no trial
   // behind it there is nothing truthful to draw, so the block is not rendered.
@@ -80,15 +76,8 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           {t('onboarding.premium.headline')}
         </ThemedText>
 
-        <View className="mt-6 gap-3">
-          {benefits.map((key) => (
-            <View key={key} className="flex-row items-center gap-3">
-              <Ionicons name="checkmark-circle" size={22} color="#34d399" />
-              <ThemedText variant="body" weight="medium">
-                {t(`onboarding.premium.benefit.${key}`)}
-              </ThemedText>
-            </View>
-          ))}
+        <View className="mt-6">
+          <PaywallPerks />
         </View>
 
         {timeline.length > 0 && (

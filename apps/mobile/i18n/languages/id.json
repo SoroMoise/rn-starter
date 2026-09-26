@@ -106,9 +106,6 @@
     "welcomePro": "Selamat datang di Pro!",
     "errorGeneric": "Ada yang salah. Silakan coba lagi.",
     "billedAnnually": "ditagih setiap tahun",
-    "compareHeaderFeature": "Fitur",
-    "compareHeaderFree": "Gratis",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/bln",
     "reassurance": "Tanpa komitmen · Batalkan kapan saja"
   },

@@ -106,9 +106,6 @@
     "welcomePro": "Welkom bij Pro!",
     "errorGeneric": "Er ging iets mis. Probeer het opnieuw.",
     "billedAnnually": "jaarlijks gefactureerd",
-    "compareHeaderFeature": "Functie",
-    "compareHeaderFree": "Gratis",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/maand",
     "reassurance": "Geen verplichtingen · Altijd opzegbaar"
   },

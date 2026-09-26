@@ -1,5 +1,7 @@
 // apps/mobile/constants/purchases.ts
+import type Ionicons from '@expo/vector-icons/Ionicons'
 import Constants from 'expo-constants'
+import type { ComponentProps } from 'react'
 import { Platform } from 'react-native'
 
 const purchasesConfig = Constants.expoConfig?.extra?.purchases ?? {}
@@ -28,17 +30,20 @@ export const ONBOARDING_EXIT_INTENT_ORIGIN: PurchaseOrigin = {
   surface: 'onboarding_exit_intent',
 }
 
-export const FREE_FEATURES = [
-  { key: 'core', i18nKey: 'paywall.featureCore' },
-  { key: 'limitedSupport', i18nKey: 'paywall.featureLimitedSupport' },
-] as const
+export type ProBenefit = {
+  key: string
+  i18nKey: string
+  icon: ComponentProps<typeof Ionicons>['name']
+  // Not `count`: i18next reserves that key for plural resolution.
+  params?: Record<string, number>
+}
 
-export const PREMIUM_FEATURES = [
-  { key: 'noAds', i18nKey: 'paywall.featureNoAds', icon: 'ban-outline' },
-  { key: 'reminders', i18nKey: 'paywall.featureReminders', icon: 'notifications-outline' },
-  { key: 'allFeatures', i18nKey: 'paywall.featureAll', icon: 'sparkles-outline' },
-  { key: 'prioritySupport', i18nKey: 'paywall.featurePrioritySupport', icon: 'headset-outline' },
-] as const
+// The single list behind every Pro pitch. Each entry names a limit the free tier actually
+// enforces, and one that depends on the build is keyed off what delivers it (a native module
+// present), never off `Platform.OS`. The starter gates its ads and nothing else.
+export const PRO_BENEFITS: readonly ProBenefit[] = [
+  { key: 'noAds', i18nKey: 'paywall.benefit.noAds', icon: 'ban-outline' },
+]
 
 const gracePeriodConfig = Constants.expoConfig?.extra?.purchases as
   | { gracePeriodDays?: number }

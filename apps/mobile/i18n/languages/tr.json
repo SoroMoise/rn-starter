@@ -106,9 +106,6 @@
     "welcomePro": "Pro'ya hoş geldiniz!",
     "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
     "billedAnnually": "yıllık faturalandırılır",
-    "compareHeaderFeature": "Özellik",
-    "compareHeaderFree": "Ücretsiz",
-    "compareHeaderPro": "Pro",
     "perMonth": "≈ {{price}}/ay",
     "reassurance": "Taahhüt yok · İstediğiniz zaman iptal edin"
   },

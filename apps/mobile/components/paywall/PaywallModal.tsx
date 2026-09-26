@@ -1,10 +1,10 @@
+import { PaywallPerks } from '@/components/paywall/PaywallPerks'
 import { PaywallPlanCard } from '@/components/paywall/PaywallPlanCard'
 import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { LEGAL_URLS } from '@/constants/legal'
-import { FREE_FEATURES, PREMIUM_FEATURES } from '@/constants/purchases'
 import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
@@ -42,11 +42,6 @@ function wholeMonths(plan: OfferingPlan): number | null {
   const rounded = Math.round(months)
   return Math.abs(months - rounded) < WHOLE_MONTH_TOLERANCE ? rounded : null
 }
-
-const COMPARISON_ROWS = [
-  ...FREE_FEATURES.map((feature) => ({ ...feature, freeIncluded: true })),
-  ...PREMIUM_FEATURES.map((feature) => ({ ...feature, freeIncluded: false })),
-]
 
 export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const { t } = useTranslation()
@@ -233,42 +228,8 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             </LinearGradient>
           </View>
 
-          {/* Free vs Pro comparison */}
-          <View style={[styles.compareCard, isDark && styles.compareCardDark]}>
-            <View style={[styles.compareRow, styles.compareHead]}>
-              <ThemedText variant="caption" color="muted" style={styles.compareFeatureCol}>
-                {t('paywall.compareHeaderFeature')}
-              </ThemedText>
-              <ThemedText variant="caption" color="muted" style={styles.compareHeadCol}>
-                {t('paywall.compareHeaderFree')}
-              </ThemedText>
-              <ThemedText variant="caption" color="muted" style={styles.compareHeadCol}>
-                {t('paywall.compareHeaderPro')}
-              </ThemedText>
-            </View>
-            {COMPARISON_ROWS.map((feature, index) => (
-              <View
-                key={feature.key}
-                style={[
-                  styles.compareRow,
-                  index < COMPARISON_ROWS.length - 1 && styles.featureRowBorder,
-                  index < COMPARISON_ROWS.length - 1 && isDark && styles.featureRowBorderDark,
-                ]}>
-                <ThemedText variant="label" weight="medium" style={styles.compareFeatureCol}>
-                  {t(feature.i18nKey)}
-                </ThemedText>
-                <View style={styles.compareCol}>
-                  {feature.freeIncluded ? (
-                    <Ionicons name="checkmark" size={18} color="#10b981" />
-                  ) : (
-                    <Ionicons name="close" size={16} color={isDark ? '#4b5563' : '#cbd5e1'} />
-                  )}
-                </View>
-                <View style={styles.compareCol}>
-                  <Ionicons name="checkmark" size={18} color="#10b981" />
-                </View>
-              </View>
-            ))}
+          <View style={styles.perks}>
+            <PaywallPerks />
           </View>
 
           {/* Plan selector */}
@@ -454,41 +415,8 @@ const styles = StyleSheet.create({
   heroOverlayTextMuted: {
     color: 'rgba(255,255,255,0.75)',
   },
-  featureRowBorder: {
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: '#DBDBDB',
-  },
-  featureRowBorderDark: {
-    borderBottomColor: '#374151',
-  },
-  compareCard: {
-    backgroundColor: Colors.light.card,
-    borderRadius: 16,
+  perks: {
     marginVertical: 16,
-    overflow: 'hidden',
-  },
-  compareCardDark: {
-    backgroundColor: Colors.dark.card,
-  },
-  compareRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 11,
-  },
-  compareHead: {
-    backgroundColor: 'rgba(139,92,246,0.06)',
-  },
-  compareFeatureCol: {
-    flex: 1,
-  },
-  compareCol: {
-    width: 52,
-    alignItems: 'center',
-  },
-  compareHeadCol: {
-    width: 52,
-    textAlign: 'center',
   },
   offerUnavailable: {
     paddingVertical: 24,

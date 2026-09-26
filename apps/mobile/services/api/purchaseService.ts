@@ -50,6 +50,10 @@ export const purchaseService = {
     return Purchases.getCustomerInfo()
   },
 
+  async getAppUserId(): Promise<string> {
+    return Purchases.getAppUserID()
+  },
+
   // The store page for the subscription actually held; null when there is nothing to manage.
   managementUrl({ customerInfo }: { customerInfo: CustomerInfo }): string | null {
     return customerInfo.managementURL

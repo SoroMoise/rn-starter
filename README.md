@@ -19,7 +19,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 - **Custom tab bar** — blur effect, haptics, premium-aware
 - **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
 - **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
-- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, FCM push service, `/health` + `/example` (`exampleService` is its app-side call, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
+- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, a server-side RevenueCat entitlement check cached in KV, FCM push service, `/health` + `/example` + `/example/premium` (`exampleService` holds their app-side calls, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
 - **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to, written for the SDKs the starter ships, placeholders marked
 - **Shared types** — `packages/shared` consumed by both mobile and API
 
@@ -325,7 +325,13 @@ wrangler secret put API_KEY
 wrangler secret put FIREBASE_PROJECT_ID
 wrangler secret put FIREBASE_CLIENT_EMAIL
 wrangler secret put FIREBASE_PRIVATE_KEY
+wrangler secret put REVENUECAT_SECRET_API_KEY
 ```
+
+`REVENUECAT_PROJECT_ID` is not a secret: it sits in `[vars]` in `apps/api/wrangler.toml`. Until it and
+`REVENUECAT_SECRET_API_KEY` are both set, the Worker's entitlement check lets every caller through
+and says so in its logs. The KV namespace that caches its answers is created by the first
+`pnpm deploy:api`.
 
 ### Firebase config files
 

@@ -7,7 +7,7 @@ This file provides guidance to Claude Code when working with this repository.
 Monorepo boilerplate for a premium React Native / Expo app:
 
 - **`apps/mobile`** — Expo SDK 54 / React Native 0.81.5 / React 19. AdMob (banner / interstitial / rewarded), RevenueCat premium subscription, contextual paywall (generic action-counter driven), Firebase Analytics + Crashlytics, a reusable local notification system (the grant, the Android channel, a daily reminder scheduler — ready to wire up), app-store rating prompt, 20 languages, light/dark theme + RTL, onboarding flow (welcome → premium).
-- **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + one auth-protected `/example` route, API-key auth middleware, rate limiter, FCM push service.
+- **`apps/api`** — Cloudflare Worker (Hono): generic `/health` endpoint + an auth-protected `/example` route and its premium-only `/example/premium`, API-key auth middleware, rate limiter, a server-side RevenueCat entitlement check, FCM push service.
 - **`apps/web`** — Next.js 16 static site, English at the root and French under `/fr`: a home page, the privacy policy and the terms — the pages the app's legal links open.
 - **`packages/shared`** — shared TypeScript types (`HealthResponse`, `ApiErrorResponse`).
 
@@ -232,7 +232,7 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `adEnvironment` — blocks every ad request on a Firebase Test Lab device (backed by `modules/app-environment`)
 - `contextualPaywall/` — session-scoped paywall evaluation policy
 - `backendClient` — `getBackendClient()`, the one axios instance for `apps/api` (base URL, timeout, `x-api-key`); it throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY`, rather than let a relative URL fail as an outage
-- `exampleService` — `fetchExample({ signal })`, the app-side call to `GET /example` through `withRetry`: the pattern a backend call copies. Nothing calls it yet
+- `exampleService` — `fetchExample({ signal })` and `fetchPremiumExample({ signal })`, the app-side calls to `GET /example` and `GET /example/premium` through `withRetry`: the pattern a backend call copies, the second with the RevenueCat app user id the Worker checks. Nothing calls them yet
 
 `apps/mobile/services/notifications/` — reusable notification system: the grant
 (`notificationService.readPermission()` / `requestPermission()`, and `useNotificationPermission()`,
@@ -456,11 +456,20 @@ No `@providers/*` alias — import as `@/providers/*`. No `@contexts/*` alias �
 
 Hono app at `apps/api/src/index.ts`. Routes:
 - `GET /health` — health check (unauthenticated)
-- `GET /example` — example auth-protected route; `exampleService` is its app-side call
+- `GET /example` — example auth-protected route; `exampleService.fetchExample` is its app-side call
+- `GET /example/premium` — the same, for subscribers only: `entitlementContext`, then `403 premium_required` for a free caller; `exampleService.fetchPremiumExample` is its app-side call
 
 Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-api-key` header).
 
-`Env` type in `apps/api/src/types.ts`: `API_KEY`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PROJECT_ID`, `API_RATE_LIMITER` (Cloudflare binding).
+**The server decides who is premium; the app is never taken at its word.** `entitlementContext` (`middleware/premium.ts`) reads the RevenueCat app user id from `x-rc-customer-id`, resolves the tier once through `isPremiumCustomer` (`services/revenueCatService.ts`, RevenueCat's REST API v2) and hands `isPremium` to the route, which decides what a free caller gets — a refusal, or an allowance of its own. Four behaviours come with it, each paid for by all-currency-converter's alerts:
+- **The id's format is checked, not its owner.** `CUSTOMER_ID_RE` rejects junk and keeps the cache keys well formed; the API key ships in the APK, so anyone can send any id, and what protects a subscriber is that an anonymous id cannot be guessed.
+- **Unknown is not "no".** A RevenueCat that does not answer throws `EntitlementUnavailableError`, and the route answers `503 entitlement_check_unavailable`: nothing is refused for good, nothing undone.
+- **Inert until configured.** Without `REVENUECAT_SECRET_API_KEY` and `REVENUECAT_PROJECT_ID`, every caller is premium and the isolate logs it once, so a Worker deployed before RevenueCat is set up refuses no subscriber. The app's `FORCE_PRO` never reaches it.
+- **Answers are cached in `ENTITLEMENT_CACHE` (KV)**, a yes for up to 6 h and never past the entitlement's own expiry, a no for 60 s — which is also how long a purchase can take to reach a premium route. The binding has no id in `wrangler.toml`: the first deploy creates the namespace, and later deploys keep it.
+
+**One entitlement, or a filter.** v2 names an entitlement by its internal id, never by the lookup key the app reads (`ENTITLEMENT_PREMIUM`), so any active entitlement counts as premium, lifetime and promotional grants included. An app that sells a second entitlement filters `entitlement_id` on the premium one's in `resolvePremium`, or the check says yes for the wrong purchase. The grace period after a failed payment is the store's (Monetization): the entitlement stays active through it, and the server adds no window of its own.
+
+`Env` type in `apps/api/src/types.ts`: `API_KEY`, `FIREBASE_PRIVATE_KEY`, `FIREBASE_CLIENT_EMAIL`, `FIREBASE_PROJECT_ID`, `REVENUECAT_SECRET_API_KEY` (secret), `REVENUECAT_PROJECT_ID` (`[vars]`), `API_RATE_LIMITER` (Cloudflare binding), `ENTITLEMENT_CACHE` (KV).
 
 ## Architecture (web)
 

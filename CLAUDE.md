@@ -312,6 +312,8 @@ Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Config `i18n/service.ts`, translations in `i18n/languages/`. Lazy-loaded per language. RTL (`ar`) triggers `I18nManager.forceRTL` + restart.
 
+**RTL mirrors the layout, never a transform.** In Arabic React Native reverses a row and, by default, reads `left`/`right` as `start`/`end`, but a `translateX` still moves right. Something that slides along a row keeps its position logical — placed from the start edge — and flips only its travel by `I18nManager.isRTL` (`SlidingSelector`'s indicator); a directional glyph is flipped by hand (`DirectionalIcon`). Anchoring it with a physical `left: 0` and reversing the index instead only holds while the left/right swap is off, which it is not.
+
 **`common.*` is the shared UI vocabulary**, and the one namespace allowed to hold a key with no
 current reader: *Cancel*, *Save*, *Retry* and their neighbours are already translated into all twenty
 languages, so keeping them costs nothing and deleting them would bill the next app a translation

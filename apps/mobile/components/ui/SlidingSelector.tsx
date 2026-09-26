@@ -1,7 +1,7 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
 import type { ComponentProps } from 'react'
 import { useCallback, useEffect, useRef } from 'react'
-import { TouchableOpacity, View } from 'react-native'
+import { I18nManager, TouchableOpacity, View } from 'react-native'
 
 import { ThemedText } from '@/components/ui/ThemedText'
 import { useThemedColor } from '@/hooks/useThemedColor'
@@ -26,6 +26,10 @@ type SlidingSelectorProps<T extends string | number> = {
 const SNAP_SPRING = { damping: 50, stiffness: 250 }
 const PULL_SPRING = { damping: 15, stiffness: 150 }
 const STRETCH_RATIO = 7
+
+// The indicator is placed from the row's start edge, but a transform is never mirrored in RTL:
+// positions are kept logical and only the travel is flipped, leftwards in Arabic.
+const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 
 const STYLES = {
   blue: {
@@ -73,7 +77,10 @@ export function SlidingSelector<T extends string | number>({
   const itemWidthRef = useRef(0)
 
   const indicatorStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: indicatorX.value }, { scale: indicatorScale.value }],
+    transform: [
+      { translateX: INLINE_DIRECTION * indicatorX.value },
+      { scale: indicatorScale.value },
+    ],
     width: indicatorWidth.value,
     opacity: layoutReady.value,
   }))
@@ -168,7 +175,7 @@ export function SlidingSelector<T extends string | number>({
         style={{ position: 'relative' }}>
         <Animated.View
           className={`absolute bottom-0 top-0 ${s.indicator}`}
-          style={indicatorStyle}
+          style={[{ start: 0 }, indicatorStyle]}
         />
         {options.map((option, index) => {
           const isSelected = option.value === value

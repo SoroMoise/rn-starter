@@ -159,7 +159,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 ## i18n
 
-20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`).
+20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`). RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
 
 **Translation policy:** EN + FR are the source of truth. Other languages are updated in dedicated sessions, never mixed with feature work.
 

@@ -179,6 +179,8 @@ NativeWind v4, dark mode via `'class'` strategy. Reanimated 4 + Moti for animati
 
 `ModalBottomSheet` assembles `useSheetSnap` (springs, snap points, the dismiss pan) and `components/ui/modalSheet/` (`contexts.ts`, and `scrollables.tsx` — `ModalBottomSheetFlatList` / `ModalBottomSheetScrollView`, re-exported from `ModalBottomSheet`, with `useModalSheetPanGesture()` for a scrollable that must block the sheet's pan). Content that drags inside a sheet raises its `dragLock` while it holds the finger; a pan it held never dismisses the sheet.
 
+`ModalDialog` — the centred sibling of `ModalBottomSheet` (title, subtitle, body, a `footer` outside the body); it pads itself by `useKeyboardHeight()`, since the keyboard no longer resizes a modal window on Android.
+
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
 ---

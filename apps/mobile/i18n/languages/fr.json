@@ -23,7 +23,7 @@
   "home": {
     "hero": {
       "title": "Starter Premium",
-      "subtitle": "Publiez une app React Native soignée et monétisée — thème, i18n, paywall, pubs et notifications déjà configurés."
+      "subtitle": "Publiez une app React Native soignée et monétisée — thème, i18n, paywall et pubs déjà configurés."
     },
     "features": {
       "title": "Ce qui est inclus",
@@ -44,8 +44,8 @@
         "desc": "Bannières, interstitiels et pubs récompensées — désactivées pour les abonnés."
       },
       "notifications": {
-        "label": "Notifications push",
-        "desc": "Configuration FCM avec bannières en avant-plan et gestion des taps en arrière-plan."
+        "label": "Notifications",
+        "desc": "Demande de permission, bannières au premier plan et canaux Android, prêts pour les notifications de votre app."
       }
     },
     "cta": {

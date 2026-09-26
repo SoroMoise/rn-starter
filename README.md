@@ -1,6 +1,6 @@
 # RN Starter
 
-A premium React Native / Expo monorepo boilerplate with production-grade monetization, i18n, theming, push notifications, and a Cloudflare Workers API — ready to customize into your next app.
+A premium React Native / Expo monorepo boilerplate with production-grade monetization, i18n, theming, a notification system ready to wire up, and a Cloudflare Workers API — ready to customize into your next app.
 
 ---
 

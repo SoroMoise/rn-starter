@@ -287,6 +287,8 @@ its Worker went — the data-fetching layer has no reason to outlive the API it 
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti.
 
+Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. The onboarding and the selling surfaces read them; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
+
 Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit above the app window, so to surface a toast over one, mount `ModalToastViewport active={visible}` inside the modal.
 
 ### Internationalization

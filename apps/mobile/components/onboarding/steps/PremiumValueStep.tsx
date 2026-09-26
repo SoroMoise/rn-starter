@@ -2,6 +2,7 @@ import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_PREMIUM_ORIGIN } from '@/constants/purchases'
+import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -59,7 +60,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
       <LinearGradient
-        colors={isDark ? ['#0f0c29', '#302b63', '#24243e'] : ['#f8faff', '#eef2ff', '#f5f3ff']}
+        colors={isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         className="absolute inset-0"
@@ -117,7 +118,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           onPress={handleStart}
           isLoading={isLoadingPurchase}
           disabled={!defaultPlan}
-          colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+          colors={GRADIENTS.cta}
           style={{ height: 58, borderRadius: 16, marginTop: 20 }}
           gradientStyle={{ height: '100%' }}
           accessibilityLabel={

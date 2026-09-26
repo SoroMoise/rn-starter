@@ -2,6 +2,7 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ModalBottomSheet } from '@/components/ui/ModalBottomSheet'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_EXIT_INTENT_ORIGIN } from '@/constants/purchases'
+import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -58,7 +59,7 @@ export function ExitIntentSheet({
           onPress={handleStart}
           isLoading={isLoadingPurchase}
           disabled={!defaultPlan}
-          colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+          colors={GRADIENTS.cta}
           style={{ height: 56, borderRadius: 14, marginTop: 24 }}
           gradientStyle={{ height: '100%' }}
           accessibilityLabel={t('onboarding.exitIntent.ctaStart')}>

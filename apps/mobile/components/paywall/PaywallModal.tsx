@@ -5,6 +5,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { LEGAL_URLS } from '@/constants/legal'
 import { FREE_FEATURES, PREMIUM_FEATURES } from '@/constants/purchases'
+import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import i18n from '@/i18n/service'
@@ -329,7 +330,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
               {/* CTA */}
               <GradientButton
                 onPress={handleSubscribe}
-                colors={['#7c3aed', '#6d28d9']}
+                colors={GRADIENTS.pro}
                 isLoading={isLoadingPurchase}
                 disabled={!selectedPlan}
                 style={styles.ctaContainer}

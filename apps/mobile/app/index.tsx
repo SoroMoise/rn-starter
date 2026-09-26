@@ -2,6 +2,7 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
 import { usePremium } from '@/hooks/usePremium'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
@@ -95,7 +96,7 @@ export default function HomeScreen() {
               <>
                 <GradientButton
                   onPress={() => void openPaywall({ source: 'home_cta' })}
-                  colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+                  colors={GRADIENTS.cta}
                   style={{ height: 58, borderRadius: 16 }}
                   gradientStyle={{ height: '100%', gap: 10 }}
                   accessibilityLabel={t('home.cta.label')}>

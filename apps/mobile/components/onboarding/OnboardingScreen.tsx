@@ -8,6 +8,7 @@ import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { LanguagePicker } from '@/components/ui/LanguagePicker'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
 import { useOnboardingStore } from '@/stores/onboardingStore'
@@ -204,7 +205,11 @@ export function OnboardingScreen() {
   const activeLanguage = getLanguageByCode(currentLanguage)
 
   return (
-    <View className={`flex-1 ${isDark ? 'bg-[#0f0c29]' : 'bg-[#f8faff]'}`}>
+    <View
+      className="flex-1"
+      style={{
+        backgroundColor: (isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight)[0],
+      }}>
       <AppSystemBars
         statusStyle={isDark ? 'light' : 'dark'}
         navigationStyle={isDark ? 'dark' : 'light'}
@@ -246,7 +251,7 @@ export function OnboardingScreen() {
         <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
           <GradientButton
             onPress={goNext}
-            colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+            colors={GRADIENTS.cta}
             style={{ height: 58, borderRadius: 16 }}
             gradientStyle={{ height: '100%', gap: 12 }}
             pressScale={0}

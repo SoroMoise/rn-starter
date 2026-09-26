@@ -5,6 +5,7 @@ import { Modal, Pressable, View } from 'react-native'
 
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 
 type Props = {
   visible: boolean
@@ -33,7 +34,7 @@ export function ProWelcomeModal({ visible, onSkip, onContinue }: Props) {
 
           <GradientButton
             onPress={onSkip}
-            colors={['#3b82f6', '#6366f1', '#8b5cf6']}
+            colors={GRADIENTS.cta}
             style={{ height: 56, borderRadius: 14 }}
             gradientStyle={{ height: '100%' }}
             accessibilityLabel={t('onboarding.proWelcome.ctaSkip')}>

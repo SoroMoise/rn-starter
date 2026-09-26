@@ -383,4 +383,5 @@ Middleware on `/example/*`: `rateLimiter` (30 req/IP/60s) then `apiKeyAuth` (`x-
 - Functional components with hooks.
 - **Functions with 2+ parameters use a single object parameter** — `fetchData({ id, signal })`, not `fetchData(id, signal)`.
 - **Atomic Zustand selectors** — `useStore((s) => s.field)`, never object selectors.
+- **`date-fns` is imported per function** — `import { format } from 'date-fns/format'`, never from the package index. Metro does not tree-shake: the index puts all ~200 functions (~250 KB minified) in the bundle, which is part of the Play download. A type-only import (`import type { Locale } from 'date-fns'`) costs nothing.
 - Environment variables: `apps/mobile/.env` (see `.env.example`), `apps/api/.dev.vars` (see `.dev.vars.example`).

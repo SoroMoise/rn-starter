@@ -106,12 +106,8 @@
       "headline": "Go further with Pro",
       "timelineHeader": "How your trial works",
       "ctaSkip": "Continue for free",
-      "restore": "Restore purchases",
       "dayUnlock": "Day 0 — Pro unlocked instantly",
-      "dayReminder": "Day {{day}} — Reminder before your trial ends",
-      "dayBilling": "Day {{day}} — Billing starts, cancel anytime",
-      "ctaStartTrial": "Start my {{days}}-day free trial",
-      "ctaStartNoTrial": "Unlock Pro"
+      "dayBilling": "Day {{day}} — Billing starts, cancel anytime"
     },
     "exitIntent": {
       "title": "Hold on — try Pro free",

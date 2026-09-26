@@ -106,12 +106,8 @@
       "headline": "Allez plus loin avec Pro",
       "timelineHeader": "Comment fonctionne l'essai",
       "ctaSkip": "Continuer gratuitement",
-      "restore": "Restaurer mes achats",
       "dayUnlock": "Jour 0 — Pro débloqué immédiatement",
-      "dayReminder": "Jour {{day}} — Rappel avant la fin de l’essai",
-      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment",
-      "ctaStartTrial": "Démarrer mon essai gratuit de {{days}} jours",
-      "ctaStartNoTrial": "Débloquer Pro"
+      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment"
     },
     "exitIntent": {
       "title": "Un instant — essaie Pro gratuitement",

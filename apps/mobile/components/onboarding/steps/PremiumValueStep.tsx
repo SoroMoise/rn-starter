@@ -1,9 +1,13 @@
+import { PaywallLegalLinks } from '@/components/paywall/PaywallLegalLinks'
 import { PaywallPerks } from '@/components/paywall/PaywallPerks'
+import { PaywallTrustRow } from '@/components/paywall/PaywallTrustRow'
 import { PriceRetryNotice } from '@/components/paywall/PriceRetryNotice'
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_PREMIUM_ORIGIN } from '@/constants/purchases'
 import { GRADIENTS } from '@/constants/uiColors'
+import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -23,35 +27,27 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
-  const { defaultPlan, purchasePlan, restorePurchases, isLoadingPurchase } = usePremium()
+  const { isLoadingPrices } = usePremium()
+  const { selectedPlan, ctaLabel, legalNote, isLoadingPurchase, purchaseSelected } =
+    usePaywallPlans(ONBOARDING_PREMIUM_ORIGIN)
 
-  // The frieze describes the trial the store actually reported; with no trial
-  // behind it there is nothing truthful to draw, so the block is not rendered.
-  const trialDays = defaultPlan?.hasTrial ? (defaultPlan.trialDays ?? null) : null
+  // The frieze describes the trial the store actually reported, and only what happens on its
+  // own: nothing in the app sends a reminder before the trial ends, so no row promises one.
+  const trialDays = selectedPlan?.hasTrial ? (selectedPlan.trialDays ?? null) : null
   const timeline =
     trialDays === null
       ? []
       : [
           { dot: '#3b82f6', icon: 'lock-open' as const, key: 'dayUnlock', day: 0 },
-          {
-            dot: '#f59e0b',
-            icon: 'notifications' as const,
-            key: 'dayReminder',
-            day: Math.max(1, trialDays - 2),
-          },
           { dot: '#6b7280', icon: 'card' as const, key: 'dayBilling', day: trialDays },
         ]
 
   const handleStart = useCallback(() => {
-    if (!defaultPlan) return
     triggerLight()
-    void purchasePlan({ plan: defaultPlan, ...ONBOARDING_PREMIUM_ORIGIN })
-  }, [defaultPlan, purchasePlan])
+    void purchaseSelected()
+  }, [purchaseSelected])
 
-  const handleRestore = useCallback(() => {
-    triggerLight()
-    void restorePurchases(ONBOARDING_PREMIUM_ORIGIN)
-  }, [restorePurchases])
+  const offerPanelClass = `mt-6 rounded-2xl p-4 ${isDark ? 'bg-white/5' : 'bg-indigo-500/[0.06]'}`
 
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
@@ -81,8 +77,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         </View>
 
         {timeline.length > 0 && (
-          <View
-            className={`mt-6 rounded-2xl p-4 ${isDark ? 'bg-white/5' : 'bg-indigo-500/[0.06]'}`}>
+          <View className={offerPanelClass}>
             <ThemedText variant="caption" color="muted" className="mb-3 uppercase">
               {t('onboarding.premium.timelineHeader')}
             </ThemedText>
@@ -103,50 +98,58 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           </View>
         )}
 
-        <GradientButton
-          onPress={handleStart}
-          isLoading={isLoadingPurchase}
-          disabled={!defaultPlan}
-          colors={GRADIENTS.cta}
-          style={{ height: 58, borderRadius: 16, marginTop: 20 }}
-          gradientStyle={{ height: '100%' }}
-          accessibilityLabel={
-            trialDays !== null
-              ? t('onboarding.premium.ctaStartTrial', { days: trialDays })
-              : t('onboarding.premium.ctaStartNoTrial')
-          }>
-          <ThemedText variant="buttonLarge" color="inverse">
-            {trialDays !== null
-              ? t('onboarding.premium.ctaStartTrial', { days: trialDays })
-              : t('onboarding.premium.ctaStartNoTrial')}
-          </ThemedText>
-          <Ionicons name="arrow-forward" size={20} color="#ffffff" />
-        </GradientButton>
+        {selectedPlan ? (
+          <>
+            <GradientButton
+              onPress={handleStart}
+              isLoading={isLoadingPurchase}
+              colors={GRADIENTS.cta}
+              style={{ height: 58, borderRadius: 16, marginTop: 20 }}
+              gradientStyle={{ height: '100%', gap: 8 }}
+              accessibilityLabel={ctaLabel}>
+              <ThemedText variant="buttonLarge" color="inverse">
+                {ctaLabel}
+              </ThemedText>
+              <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
+            </GradientButton>
 
-        <PriceRetryNotice />
+            <View className="mt-4">
+              <PaywallTrustRow plan={selectedPlan} />
+            </View>
 
-        <View className="mt-3 flex-row flex-wrap items-center justify-center">
-          <Pressable
-            onPress={onTriggerSkip}
-            disabled={isLoadingPurchase}
-            className="py-2"
-            accessibilityRole="button">
-            <ThemedText variant="body" weight="semibold" color="dimmed" className="underline">
-              {t('onboarding.premium.ctaSkip')}
+            {legalNote ? (
+              <ThemedText variant="caption" color="muted" align="center" className="mt-3">
+                {legalNote}
+              </ThemedText>
+            ) : null}
+          </>
+        ) : isLoadingPrices ? (
+          <View className="mt-6">
+            <PriceRetryNotice />
+          </View>
+        ) : (
+          // With no plan loaded there is no price to state, so no button to press either: a
+          // disabled CTA reads as broken, a sentence with a retry reads as a network problem.
+          <View className={offerPanelClass}>
+            <ThemedText variant="body" color="muted" align="center" className="mb-2">
+              {t('paywall.offerUnavailable')}
             </ThemedText>
-          </Pressable>
-          <ThemedText variant="body" color="subtle" weight="bold" className="px-2.5">
-            ·
+            <PriceRetryNotice />
+          </View>
+        )}
+
+        <Pressable
+          onPress={onTriggerSkip}
+          disabled={isLoadingPurchase}
+          className="mt-4 items-center py-2"
+          accessibilityRole="button">
+          <ThemedText variant="body" weight="semibold" color="dimmed" className="underline">
+            {t('onboarding.premium.ctaSkip')}
           </ThemedText>
-          <Pressable
-            onPress={handleRestore}
-            disabled={isLoadingPurchase}
-            className="py-2"
-            accessibilityRole="button">
-            <ThemedText variant="body" color="dimmed">
-              {t('onboarding.premium.restore')}
-            </ThemedText>
-          </Pressable>
+        </Pressable>
+
+        <View className="mt-2">
+          <PaywallLegalLinks origin={ONBOARDING_PREMIUM_ORIGIN} />
         </View>
       </ScrollView>
     </View>

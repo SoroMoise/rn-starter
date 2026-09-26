@@ -250,9 +250,18 @@ persister and the app version as cache buster. **Nothing is persisted until you 
 start — add the key prefixes your app wants back. It shipped whitelisting one key belonging to
 another app, which reads as configured and persists nothing.
 
+**Connectivity feeds the query client.** React Native has no browser `online` event, so the client
+read the app as always online: retries burned through while the device was offline, and
+`refetchOnReconnect` never fired. `QueryProvider` hands `onlineManager` the one NetInfo subscription
+`useNetworkStatus` holds. A query retries three times at most, and never a status that cannot
+succeed (`isNonRetryableError`: 400, 401, 403, 404, 422 — one list, in `utils/apiErrors.ts`, that
+`withRetry` reads too). Connectivity decides nothing else: whether the store answered is read off
+the failed request, never off this flag (Monetization).
+
 `QueryProvider` is here because `apps/api` is. **An app with no backend should remove both in
 the same pass**: `providers/QueryProvider.tsx`, the three `@tanstack/*` packages, `axios`,
-`utils/retry.ts` and `utils/apiErrors.ts`. deep-focus is the sibling that did exactly this when
+`utils/retry.ts`, `utils/apiErrors.ts`, and `hooks/useNetworkStatus.ts` with
+`@react-native-community/netinfo`, whose one consumer is the query client. deep-focus is the sibling that did exactly this when
 its Worker went — the data-fetching layer has no reason to outlive the API it serves.
 
 ### Monetization

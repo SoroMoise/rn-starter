@@ -1,12 +1,22 @@
-import { QueryClient } from '@tanstack/react-query'
+import { onlineManager, QueryClient } from '@tanstack/react-query'
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import Constants from 'expo-constants'
 import React from 'react'
+import { getIsOnline, subscribeToNetworkStatus } from '@/hooks/useNetworkStatus'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { mmkv } from '@/services/storage/mmkv'
+import { isNonRetryableError } from '@/utils/apiErrors'
 
 const APP_VERSION = Constants.expoConfig?.version ?? 'dev'
+const QUERY_RETRIES = 3
+
+// React Native has no browser `online` event, so without a source the app always reads as online:
+// retries burn through while the device is offline, and `refetchOnReconnect` never fires.
+onlineManager.setEventListener((setOnline) => {
+  setOnline(getIsOnline())
+  return subscribeToNetworkStatus(setOnline)
+})
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,7 +25,7 @@ export const queryClient = new QueryClient({
       gcTime: 24 * 60 * 60 * 1000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: true,
-      retry: 3,
+      retry: (failureCount, error) => failureCount < QUERY_RETRIES && !isNonRetryableError(error),
       retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 10_000),
       networkMode: 'offlineFirst',
     },

@@ -1,5 +1,3 @@
-import { KEYS } from '@/services/storage/keys'
-import { mmkv } from '@/services/storage/mmkv'
 import * as Notifications from 'expo-notifications'
 
 // Notifications delivered while the app is in the foreground are presented as
@@ -15,16 +13,31 @@ Notifications.setNotificationHandler({
   }),
 })
 
+export interface NotificationPermission {
+  isGranted: boolean
+  // False once the OS shows no dialog any more: the request then resolves at once, and the system
+  // settings are the only way left to grant it.
+  canAskAgain: boolean
+}
+
+const toPermission = ({
+  status,
+  canAskAgain,
+}: Notifications.NotificationPermissionsStatus): NotificationPermission => ({
+  isGranted: status === 'granted',
+  canAskAgain,
+})
+
 export const notificationService = {
-  async requestPermission(): Promise<boolean> {
-    const { status } = await Notifications.requestPermissionsAsync()
-    mmkv.set(KEYS.NOTIFICATION_PERMISSION_REQUESTED, true)
-    return status === 'granted'
+  async readPermission(): Promise<NotificationPermission> {
+    return toPermission(await Notifications.getPermissionsAsync())
   },
 
-  async shouldShowPermissionPrimer(): Promise<boolean> {
-    const { status } = await Notifications.getPermissionsAsync()
-    const wasRequested = mmkv.getBoolean(KEYS.NOTIFICATION_PERMISSION_REQUESTED) ?? false
-    return status !== 'granted' && !wasRequested
+  // Only from the screen that shows what the permission is for — never at launch, and never from a
+  // scheduling path, which runs as the app is left.
+  async requestPermission(): Promise<NotificationPermission> {
+    const current = await notificationService.readPermission()
+    if (current.isGranted) return current
+    return toPermission(await Notifications.requestPermissionsAsync())
   },
 }

@@ -218,9 +218,27 @@ this closes the cheap attack on the app's copy, not on the SDK's.
 - `backendClient` — `getBackendClient()`, the one axios instance for `apps/api` (base URL, timeout, `x-api-key`); it throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY`, rather than let a relative URL fail as an outage
 - `exampleService` — `fetchExample({ signal })`, the app-side call to `GET /example` through `withRetry`: the pattern a backend call copies. Nothing calls it yet
 
-`apps/mobile/services/notifications/` — reusable notification system: permission handling +
-foreground presentation (`notificationService`), the Android channel (`ensureNotificationChannels`,
-`NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled notifications for your own features.
+`apps/mobile/services/notifications/` — reusable notification system: the grant
+(`notificationService.readPermission()` / `requestPermission()`, and `useNotificationPermission()`,
+which reads it again at every foreground), foreground presentation, the Android channel
+(`ensureNotificationChannels`, `NOTIFICATION_CHANNEL_ID`). Ready to wire up local scheduled
+notifications for your own features. The starter itself asks for nothing: the permission is there
+for the app's own notifications, and the first feature that sends one is its first caller.
+
+**The permission is asked by the feature that needs it, where the user sees what it buys.**
+`POST_NOTIFICATIONS` stays declared for the apps built on the starter: on Android 13+ a notification
+from an app that never asked is dropped with no error anywhere, and the fix is only ever the ask.
+Ask from the screen that sells it — the toggle, the time being set — never at launch, and never from
+a scheduling path, which runs as the app is left; the onboarding carries no such step until the app
+has something to send. A toggle that defaults to on cannot be what asks: nobody flips it, so a fresh
+install never sees the dialog and the feature stays silent for good. A refusal writes the intention
+back to off, rather than leaving one that cannot happen. Past a permanent denial the request shows
+nothing and resolves at once with `canAskAgain: false`; the honest route is then
+`Linking.openSettings()`.
+
+**Whether to ask is the OS's answer, never a flag the app kept.** The main MMKV instance rides cloud
+backup and device transfer, so a stored "already asked" reaches a phone where nothing was asked, and
+an ask guarded by it never happens there. `readPermission()` reads the grant itself.
 
 **A channel's sound is frozen when it is created, and the app offers no toggle for it.** Android
 applies only a new name and description to a channel that exists — importance can only be lowered,

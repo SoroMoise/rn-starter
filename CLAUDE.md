@@ -95,6 +95,8 @@ Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` be
 
 **Whatever owns the screen without being a route takes the back key itself.** At the root of the tab stack, a key left to the navigator exits the app — for the onboarding, which `AppContent` renders in place of the tabs, that throws the whole flow away with nothing persisted to come back to. `OnboardingScreen` listens to `BackHandler` and steps back, like its on-screen back button, from every step but the first, which lets the default through because nothing is behind it. Its sheets and modals are native `Modal`s and answer the key first.
 
+**A route that answers the back key itself uses `useHardwareBack(onBack)`** — an editor whose back commits its edit, a flow that steps back before it leaves. The listener lives in a `useFocusEffect`, so only the focused route hears the press and two stacked screens never both answer it. The hook needs a navigator above it: a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
+
 **The onboarding ends on the entitlement, never on a purchase call.** A `purchasePlan()` promise resolves before React commits the new tier, so a ref read in its `.then` still holds the old one — the user paid and stayed on the pitch — and a restore goes through no such callback at all. An effect in `OnboardingScreen`, keyed on `isPremium` once the subscription is initialized, completes the flow on the premium step, whatever made the user Pro there (the pitch, the exit sheet, a restore), and shows `ProWelcomeModal` once on an earlier step.
 
 ### Provider Tree

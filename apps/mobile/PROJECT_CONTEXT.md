@@ -141,6 +141,8 @@ Expo Router file-based. Two tabs rendered by `TabLayout`:
 
 `AppContent` gates the tabs behind onboarding: shows `OnboardingScreen` until `onboardingStore.isCompleted` is true.
 
+`useHardwareBack(onBack)` takes the Android back key for the focused route only (`useFocusEffect`); a surface that is not a route, like the onboarding, listens to `BackHandler` itself.
+
 ---
 
 ## Onboarding

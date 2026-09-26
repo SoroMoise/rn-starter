@@ -888,7 +888,9 @@ before it was pushed.
   bundle section overstated what the locales weigh; one commit message dated the rating comment's
   removal to lot 6, another miscounted the violations it fixed.
 
-Not run: the code-review skill, before the push. The review of the pull request is where it runs.
+The code-review skill then ran on the pushed branch, at medium, and found no bug. Its one factual
+claim — that the 18 other language files still carry `settings.premiumDescription` — was wrong: none
+ever did.
 
 ---
 

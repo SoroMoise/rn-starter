@@ -31,14 +31,16 @@ export default () => {
       },
 
       orientation: 'portrait',
+      // The icon, the splash image and the adaptive foreground are drawn by
+      // scripts/generate-brand-assets.py, and the two background colours below match its BACKGROUND.
       icon: './assets/images/icon.png',
 
       // userInterfaceStyle: 'automatic', For IOS
 
       splash: {
-        image: './assets/images/icon.png',
+        image: './assets/images/splash-icon.png',
         resizeMode: 'contain',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#6366f1',
       },
       assetBundlePatterns: ['assets/images/*'],
       ios: {
@@ -59,8 +61,8 @@ export default () => {
         package: 'com.yourcompany.rnstarter',
         googleServicesFile: './google-services.json',
         adaptiveIcon: {
-          foregroundImage: './assets/images/icon.png',
-          backgroundColor: '#ffffff',
+          foregroundImage: './assets/images/adaptive-icon.png',
+          backgroundColor: '#6366f1',
         },
         permissions: ['android.permission.POST_NOTIFICATIONS'],
         // Every permission in the release manifest is listed on the store page and read by Play's

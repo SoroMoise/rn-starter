@@ -1,5 +1,5 @@
 import { AdBanner } from '@/components/ads/AdBanner'
-import { RewardedAdButton } from '@/components/ads/RewardedAdButton'
+import { AdFreeSection } from '@/components/settings/AdFreeSection'
 import { BillingIssueBanner } from '@/components/settings/BillingIssueBanner'
 import { DisplaySection } from '@/components/settings/DisplaySection'
 import { LegalSupportSection } from '@/components/settings/LegalSupportSection'
@@ -9,14 +9,11 @@ import { Section, SectionContent, SectionHeader } from '@/components/settings/Se
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
 import {
-  ADMOB_REWARDED_ID,
   ADMOB_SETTINGS_BANNER_ID,
   AD_BANNER_RESERVED_HEIGHT,
   AD_BANNER_SETTINGS_ENABLED,
-  AD_REWARDED_ENABLED,
 } from '@/constants/admob'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
-import { usePremium } from '@/hooks/usePremium'
 import { loadLanguage } from '@/i18n/service'
 import { useToast } from '@/providers/ToastProvider'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -42,7 +39,6 @@ export default function SettingsScreen() {
   const updateSetting = useSettingsStore((s) => s.updateSetting)
   const setLanguage = useSettingsStore((s) => s.setLanguage)
   const { showToast } = useToast()
-  const { isPremium } = usePremium()
 
   const isBannerVisible = useAdPlacementActive({
     unitId: ADMOB_SETTINGS_BANNER_ID,
@@ -120,20 +116,7 @@ export default function SettingsScreen() {
 
         <DisplaySection onOpenLanguagePicker={() => setShowLanguagePicker(true)} />
 
-        {AD_REWARDED_ENABLED && ADMOB_REWARDED_ID !== null && !isPremium && (
-          <Section>
-            <SectionHeader>{t('settings.ads')}</SectionHeader>
-            <SectionContent className="p-4">
-              <ThemedText variant="body" weight="medium" className="mb-1">
-                {t('settings.removeAds')}
-              </ThemedText>
-              <ThemedText variant="label" color="muted" weight="normal" className="mb-4">
-                {t('settings.removeAdsDescription')}
-              </ThemedText>
-              <RewardedAdButton />
-            </SectionContent>
-          </Section>
-        )}
+        <AdFreeSection />
 
         <LegalSupportSection />
 

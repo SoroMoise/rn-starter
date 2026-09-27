@@ -32,10 +32,12 @@ preloaded ad per unit and addresses it by placement. A second one takes a new me
 
 Every unit ships as `UNIT_PENDING` (`null`). `pickUnitId` resolves a pending unit — and an empty
 id, or a `XXXX` placeholder pasted from a template — to `null`, and every surface reads `null` as
-"request nothing": the banner does not render, the services do not initialise, and the Settings
-"Remove ads" section disappears rather than offering a video that can never load. In `__DEV__` all
-placements resolve to Google's `TestIds` regardless, so layouts and flows are testable without a
-real unit.
+"request nothing": the banner does not render and the services do not initialise. The Settings
+"Remove ads" section appears only where a video can be served — kill switch, configured unit, the
+store's answer and the tier, consent, environment — rather than offering one that can never load;
+the ad-free window does not hide it, since the section answers that itself with the time left
+(§3). In `__DEV__` all placements resolve to Google's `TestIds` regardless, so layouts and flows
+are testable without a real unit.
 
 ### Before the first release
 
@@ -114,6 +116,11 @@ Rules that follow, and that the code enforces:
 A rewarded video is an **offer, never an autoplay**: the user starts it from Settings → Ads, and
 the button names the reward before anything plays (`settings.watchAdButton`).
 
+- The section appears only where a video can be served: `AdFreeSection` renders from
+  `useCanServeAd` — kill switch, configured unit, the store's answer and the tier, consent,
+  environment. Anywhere else its button could only say that no ad is available, and before the
+  store has answered a subscriber would see the offer flash. The ad-free window is the one gate it
+  leaves out: the section answers it itself, the button showing the time left.
 - Reward: `AD_REWARDED_FREE_DURATION_MINUTES` (60) of no ads, added to whatever is left of an open
   window and capped at `AD_REWARDED_FREE_MAX_MINUTES` (a day) — `AdFreeProvider.activateAdFreeReward`.
   While a window is open the button shows the time left instead of another offer.
@@ -144,7 +151,9 @@ the button names the reward before anything plays (`settings.watchAdButton`).
 `useAdPlacementActive` (`hooks/useAdPlacementActive.ts`) is the single React-side answer to the
 first six for a banner. `AdBanner` renders from it and its screen reserves `AD_BANNER_RESERVED_HEIGHT`
 from the same call, so the room kept free below the last row always matches the banner actually
-drawn.
+drawn. It is `useCanServeAd` (`hooks/useCanServeAd.ts`) plus the ad-free window: the rewarded
+section renders from `useCanServeAd` alone, since it stays up through the window to show the time
+left.
 
 ---
 
@@ -209,9 +218,11 @@ reset at every launch.
 | `services/api/fullScreenAd.ts` | `presentFullScreenAd` — settles a full-screen ad once it is gone |
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
 | `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |
-| `hooks/useAdPlacementActive.ts` | may this placement run right now |
+| `hooks/useAdPlacementActive.ts` | may this placement run right now — `useCanServeAd` plus the ad-free window |
+| `hooks/useCanServeAd.ts` | can an ad be served here at all — every gate but the ad-free window |
 | `components/ads/AdBanner.tsx` | the banner, pinned above the tab bar |
 | `components/ads/RewardedAdButton.tsx` | the Settings rewarded entry point |
+| `components/settings/AdFreeSection.tsx` | the Settings "Remove ads" section, rendered only where a video can be served |
 | `providers/AdFreeProvider.tsx` | the ad-free window: grant, accumulate, expire |
 
 ---

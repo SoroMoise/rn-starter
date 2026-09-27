@@ -126,7 +126,8 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useActionRating` | `recordAction({ allowPromos })` — where an app wires its value moments: counts the action, offers it to the contextual paywall, then the interstitial, and otherwise arms the rating ask |
 | `useRatingPrompt` | `maybeAskForRating({ moment })` — gathers the state, runs `evaluateReviewRequest`, and asks for Play's card or traces the refusal |
 | `useCappedByTier` | `useCappedByTier({ items, freeLimit })` → `items`, `allItems`, `limit`, `isCapped`, `canAdd`: a free-tier limit applied on read (no caller yet) |
-| `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — whether a placement runs: kill switch, configured unit, tier, ad-free window, consent, environment |
+| `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — whether a placement runs: `useCanServeAd` plus the ad-free window |
+| `useCanServeAd` | `useCanServeAd({ unitId, enabled })` — whether an ad can be served at all: kill switch, configured unit, the store's answer and the tier, consent, environment; what `AdFreeSection` renders from |
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
 | `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
 | `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
@@ -146,7 +147,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 
 ### AdMob
 
-`ADS.md` is the reference — placements, units, cadence, gates and invariants. Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer.
+`ADS.md` is the reference — placements, units, cadence, gates and invariants. Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer. It is `useCanServeAd` plus the ad-free window; Settings' rewarded section (`AdFreeSection`) renders from `useCanServeAd` alone, and shows the time left while a window is open.
 
 ### RevenueCat
 

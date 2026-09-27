@@ -1,5 +1,6 @@
 import { ADMOB_REWARDED_ID } from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
+import { reportAdFailure } from '@/services/api/adFailures'
 import { consentService } from '@/services/api/consentService'
 import { presentFullScreenAd } from '@/services/api/fullScreenAd'
 import { AdEventType, RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads'
@@ -45,7 +46,8 @@ class RewardedAdServiceClass {
         slot.isLoaded = false
         this.load(slot)
       }),
-      ad.addAdEventListener(AdEventType.ERROR, () => {
+      ad.addAdEventListener(AdEventType.ERROR, (error) => {
+        reportAdFailure({ error, source: 'rewarded_load' })
         slot.isLoaded = false
         slot.isLoading = false
       }),
@@ -64,7 +66,7 @@ class RewardedAdServiceClass {
       slot.isLoading = true
       slot.ad.load()
     } catch (error) {
-      console.warn('[RewardedAdService] Failed to preload:', error)
+      reportAdFailure({ error, source: 'rewarded_preload' })
       slot.isLoading = false
     }
   }
@@ -109,7 +111,11 @@ class RewardedAdServiceClass {
 
     // The reward listener outlives a deadline the video missed: one that opens late and is
     // watched in full still earns its window.
-    const outcome = await presentFullScreenAd({ ad: slot.ad, onEnd: removeEarnedListener })
+    const outcome = await presentFullScreenAd({
+      ad: slot.ad,
+      source: 'rewarded_show',
+      onEnd: removeEarnedListener,
+    })
     if (outcome !== 'closed') this.replaceSlot({ placement, slot })
     if (hasRewarded) return 'earned'
     return outcome === 'closed' ? 'dismissed' : 'failed'

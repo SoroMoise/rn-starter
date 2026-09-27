@@ -1,3 +1,4 @@
+import { reportAdFailure } from '@/services/api/adFailures'
 import { AdEventType } from 'react-native-google-mobile-ads'
 
 // Android never reports a presentation that failed: this version of the library leaves
@@ -19,9 +20,11 @@ export type PresentationOutcome = PresentationEnding | 'never_opened'
 // really ends, so what a shown ad owes (a reward, a spent slot) is paid late rather than never.
 export function presentFullScreenAd({
   ad,
+  source,
   onEnd,
 }: {
   ad: FullScreenAd
+  source: string
   onEnd?: (ending: PresentationEnding) => void
 }): Promise<PresentationOutcome> {
   return new Promise((resolve) => {
@@ -38,21 +41,28 @@ export function presentFullScreenAd({
       resolve(ending)
     }
 
-    const presentationTimeout = setTimeout(() => resolve('never_opened'), PRESENTATION_TIMEOUT_MS)
+    const presentationTimeout = setTimeout(() => {
+      reportAdFailure({
+        error: new Error(`never_opened: no OPENED event within ${PRESENTATION_TIMEOUT_MS} ms`),
+        source,
+      })
+      resolve('never_opened')
+    }, PRESENTATION_TIMEOUT_MS)
     const removeOpenedListener = ad.addAdEventListener(AdEventType.OPENED, () =>
       clearTimeout(presentationTimeout)
     )
     const removeClosedListener = ad.addAdEventListener(AdEventType.CLOSED, () => end('closed'))
     const removeErrorListener = ad.addAdEventListener(AdEventType.ERROR, () => end('failed'))
 
-    try {
-      ad.show().catch((error: unknown) => {
-        console.warn('[fullScreenAd] Failed to show:', error)
-        end('failed')
-      })
-    } catch (error) {
-      console.warn('[fullScreenAd] Failed to show:', error)
+    const failToShow = (error: unknown) => {
+      reportAdFailure({ error, source })
       end('failed')
+    }
+
+    try {
+      ad.show().catch(failToShow)
+    } catch (error) {
+      failToShow(error)
     }
   })
 }

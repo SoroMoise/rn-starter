@@ -2,6 +2,7 @@ import { UI_CONFIG } from '@/constants/config'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { useStageActive } from '@/hooks/useStageActive'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
+import { reportAdFailure } from '@/services/api/adFailures'
 import React from 'react'
 import { StyleSheet, View, useWindowDimensions } from 'react-native'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
@@ -35,6 +36,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
         unitId={adBannerId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         width={bannerWidth}
+        onAdFailedToLoad={(error) => reportAdFailure({ error, source: 'banner_load' })}
       />
     </View>
   )

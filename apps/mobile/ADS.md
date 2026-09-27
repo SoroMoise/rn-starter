@@ -216,6 +216,7 @@ reset at every launch.
 | `services/api/adService.ts` | interstitial: preload, cadence, show; `setPremium` |
 | `services/api/rewardedAdService.ts` | rewarded: one preloaded ad per unit, addressed by placement; `show` resolves `earned` / `dismissed` / `failed` |
 | `services/api/fullScreenAd.ts` | `presentFullScreenAd` — settles a full-screen ad once it is gone |
+| `services/api/adFailures.ts` | `reportAdFailure` — a failed load or show, sorted by its code: the two services' loads, `presentFullScreenAd`'s show and its deadline, `AdBanner`'s load |
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
 | `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |
 | `hooks/useAdPlacementActive.ts` | may this placement run right now — `useCanServeAd` plus the ad-free window |
@@ -268,6 +269,14 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 - **Call `recordAction` where the screen has settled.** An interstitial presented while a
   transition is still sliding in under the finger that triggered it collects the tail of that
   gesture as a click.
+- **A failure is sorted by its code, and only the unexpected is a non-fatal** — the purchase rule,
+  applied to ads. Every failed load or show goes through `reportAdFailure({ error, source })`: no
+  fill, a network, server or timeout failure, an internal error, an OS too old and nothing to
+  present into (`null-activity`, `nil-vc`) are conditions, a Crashlytics breadcrumb each; anything
+  else — a wrong unit id, a missing app id, an ad the library does not hold, a presentation that
+  never opened — is a non-fatal. Most failed loads are no-fills: recorded as crashes they would
+  bury the wrong unit id that serves nothing without an error anywhere, and a `console.warn`
+  reaches no release. Sort on the code, never on the message.
 
 ---
 

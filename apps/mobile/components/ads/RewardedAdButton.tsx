@@ -35,11 +35,11 @@ export function RewardedAdButton() {
 
   useEffect(() => {
     if (isAdFreeActive) return
-    void RewardedAdService.preloadRewardedAd()
+    RewardedAdService.preload({ placement: 'settings' })
   }, [isAdFreeActive])
 
   const handleWatchAd = async () => {
-    if (!RewardedAdService.isRewardedAdReady()) {
+    if (!RewardedAdService.isReady({ placement: 'settings' })) {
       Alert.alert(
         t('settings.adNotAvailableTitle'),
         t('settings.adNotAvailableMessage'),
@@ -52,8 +52,9 @@ export function RewardedAdButton() {
     setIsLoading(true)
 
     try {
-      const outcome = await RewardedAdService.showRewardedAd(async () => {
-        await activateAdFreeReward()
+      const outcome = await RewardedAdService.show({
+        placement: 'settings',
+        onRewarded: () => void activateAdFreeReward(),
       })
 
       analyticsService.track('rewarded_ad_result', {

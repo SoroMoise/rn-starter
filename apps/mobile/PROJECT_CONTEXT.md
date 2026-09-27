@@ -69,7 +69,7 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | Service | Description |
 |---|---|
 | `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) drops a preloaded ad, and its pending retries, the moment Pro is bought. `showInterstitialAd()` resolves `true` only once the ad has closed, and only then spends the cadence and the session's interruption |
-| `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion; `showRewardedAd` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
+| `rewardedAdService.ts` | AdMob rewarded — one preloaded ad per unit, addressed by `RewardedPlacement` and created lazily (`preload` / `isReady` / `show({ placement, onRewarded })`); grants the ad-free window on completion; `show` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
 | `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`); `onEnd` runs whenever the presentation really ends, so an ad that opens late still pays its slot or its reward |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `paywallAnalytics.ts` | `trackShown` / `trackDismissed` compose `paywall_shown` (with the default plan's price and currency) and `paywall_dismissed`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |

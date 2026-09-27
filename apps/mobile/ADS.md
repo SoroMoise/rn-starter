@@ -21,7 +21,12 @@ one unit are a single revenue line nobody can split afterwards.
 | 1 | Home | `app/index.tsx` | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | declared, not mounted |
 | 2 | Settings | `app/settings.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_SETTINGS_BANNER_ID` | pending | mounted |
 | 3 | Any value moment | `useActionRating().recordAction()` | Interstitial | `ADMOB_INTERSTITIAL_ID` | pending | wired to the Home demo action |
-| 4 | Settings → Ads | `RewardedAdButton` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
+| 4 | Settings → Ads | `RewardedAdButton`, placement `settings` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
+
+A rewarded surface is a `RewardedPlacement` with its own unit: `rewardedAdService` keeps one
+preloaded ad per unit and addresses it by placement. A second one takes a new member of
+`RewardedPlacement`, its own `ADMOB_*_REWARDED_ID` in `constants/admob.ts`, one entry in
+`UNIT_BY_PLACEMENT` and a row in the inventory above — never an existing unit.
 
 ### Units
 
@@ -114,9 +119,10 @@ the button names the reward before anything plays (`settings.watchAdButton`).
   While a window is open the button shows the time left instead of another offer.
 - The window suppresses every ad surface: banners through `useAdPlacementActive`, the interstitial
   through `recordAction`. It buys no ads and nothing else — it opens no premium feature.
-- `showRewardedAd` resolves `earned`, `dismissed` or `failed`. Only `dismissed` — a video closed
-  before its reward — is followed by the contextual paywall (`rewarded_ad_dismissed`, 800 ms
-  later). A video watched in full is never followed by a sale, and a failure is not a refusal.
+- `RewardedAdService.show({ placement, onRewarded })` resolves `earned`, `dismissed` or `failed`.
+  Only `dismissed` — a video closed before its reward — is followed by the contextual paywall
+  (`rewarded_ad_dismissed`, 800 ms later). A video watched in full is never followed by a sale, and
+  a failure is not a refusal.
 - Readiness is checked before the video starts: nothing loaded ⇒ "Ad not available", not an offer
   that cannot be honoured. A video that failed to open shows the error alert; if it opens after
   all and is watched in full, the window is still granted.
@@ -199,7 +205,7 @@ reset at every launch.
 | `services/api/adEnvironment.ts` | no request from a Firebase Test Lab device |
 | `modules/app-environment/` | the native side of it — reads the `firebase.test.lab` system setting |
 | `services/api/adService.ts` | interstitial: preload, cadence, show; `setPremium` |
-| `services/api/rewardedAdService.ts` | rewarded: preload, show, `earned` / `dismissed` / `failed` |
+| `services/api/rewardedAdService.ts` | rewarded: one preloaded ad per unit, addressed by placement; `show` resolves `earned` / `dismissed` / `failed` |
 | `services/api/fullScreenAd.ts` | `presentFullScreenAd` — settles a full-screen ad once it is gone |
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
 | `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |

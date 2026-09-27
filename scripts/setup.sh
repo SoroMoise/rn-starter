@@ -161,6 +161,14 @@ patch('apps/mobile/constants/config.ts', (src) =>
 patch('apps/mobile/constants/rating.ts', (src) => all(src, OLD_BUNDLE, bundleId))
 patch('apps/mobile/services/storage/mmkv.ts', (src) => all(src, OLD_SLUG, appSlug))
 patch('apps/mobile/package.json', (src) => all(src, OLD_BUNDLE, bundleId))
+patch('apps/mobile/google-services.json.example', (src) => all(src, OLD_BUNDLE, bundleId))
+patch('package.json', (src) => all(src, `"name": "${OLD_SLUG}"`, `"name": "${appSlug}"`))
+// Two apps deploying under the same Worker name overwrite each other on one Cloudflare account.
+patch('apps/api/wrangler.toml', (src) => all(src, `name = "${OLD_SLUG}-api"`, `name = "${appSlug}-api"`))
+// .env.example is swept before .env is copied from it; an existing .env is swept too,
+// so a re-run does not leave STORE_URL_ANDROID pointing at the template's listing.
+patch('apps/mobile/.env.example', (src) => all(src, OLD_BUNDLE, bundleId))
+patch('apps/mobile/.env', (src) => all(src, OLD_BUNDLE, bundleId))
 
 const localesDir = path.join(repoRoot, 'apps/mobile/i18n/languages')
 if (fs.existsSync(localesDir)) {

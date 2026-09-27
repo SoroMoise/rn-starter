@@ -18,19 +18,26 @@ one unit are a single revenue line nobody can split afterwards.
 
 | # | Placement | Surface | Format | Constant | Unit | Status |
 |---|-----------|---------|--------|----------|------|--------|
-| 1 | Home | `app/index.tsx` | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | declared, not mounted |
+| 1 | Home | `app/index.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | mounted |
 | 2 | Settings | `app/settings.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_SETTINGS_BANNER_ID` | pending | mounted |
 | 3 | Any value moment | `useActionRating().recordAction()` | Interstitial | `ADMOB_INTERSTITIAL_ID` | pending | wired to the Home demo action |
-| 4 | Settings → Ads | `RewardedAdButton` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
+| 4 | Settings → Ads | `RewardedAdButton`, placement `settings` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
+
+A rewarded surface is a `RewardedPlacement` with its own unit: `rewardedAdService` keeps one
+preloaded ad per unit and addresses it by placement. A second one takes a new member of
+`RewardedPlacement`, its own `ADMOB_*_REWARDED_ID` in `constants/admob.ts`, one entry in
+`UNIT_BY_PLACEMENT` and a row in the inventory above — never an existing unit.
 
 ### Units
 
 Every unit ships as `UNIT_PENDING` (`null`). `pickUnitId` resolves a pending unit — and an empty
 id, or a `XXXX` placeholder pasted from a template — to `null`, and every surface reads `null` as
-"request nothing": the banner does not render, the services do not initialise, and the Settings
-"Remove ads" section disappears rather than offering a video that can never load. In `__DEV__` all
-placements resolve to Google's `TestIds` regardless, so layouts and flows are testable without a
-real unit.
+"request nothing": the banner does not render and the services do not initialise. The Settings
+"Remove ads" section appears only where a video can be served — kill switch, configured unit, the
+store's answer and the tier, consent, environment — rather than offering one that can never load;
+the ad-free window does not hide it, since the section answers that itself with the time left
+(§3). In `__DEV__` all placements resolve to Google's `TestIds` regardless, so layouts and flows
+are testable without a real unit.
 
 ### Before the first release
 
@@ -109,14 +116,20 @@ Rules that follow, and that the code enforces:
 A rewarded video is an **offer, never an autoplay**: the user starts it from Settings → Ads, and
 the button names the reward before anything plays (`settings.watchAdButton`).
 
+- The section appears only where a video can be served: `AdFreeSection` renders from
+  `useCanServeAd` — kill switch, configured unit, the store's answer and the tier, consent,
+  environment. Anywhere else its button could only say that no ad is available, and before the
+  store has answered a subscriber would see the offer flash. The ad-free window is the one gate it
+  leaves out: the section answers it itself, the button showing the time left.
 - Reward: `AD_REWARDED_FREE_DURATION_MINUTES` (60) of no ads, added to whatever is left of an open
   window and capped at `AD_REWARDED_FREE_MAX_MINUTES` (a day) — `AdFreeProvider.activateAdFreeReward`.
   While a window is open the button shows the time left instead of another offer.
 - The window suppresses every ad surface: banners through `useAdPlacementActive`, the interstitial
   through `recordAction`. It buys no ads and nothing else — it opens no premium feature.
-- `showRewardedAd` resolves `earned`, `dismissed` or `failed`. Only `dismissed` — a video closed
-  before its reward — is followed by the contextual paywall (`rewarded_ad_dismissed`, 800 ms
-  later). A video watched in full is never followed by a sale, and a failure is not a refusal.
+- `RewardedAdService.show({ placement, onRewarded })` resolves `earned`, `dismissed` or `failed`.
+  Only `dismissed` — a video closed before its reward — is followed by the contextual paywall
+  (`rewarded_ad_dismissed`, 800 ms later). A video watched in full is never followed by a sale, and
+  a failure is not a refusal.
 - Readiness is checked before the video starts: nothing loaded ⇒ "Ad not available", not an offer
   that cannot be honoured. A video that failed to open shows the error alert; if it opens after
   all and is watched in full, the window is still granted.
@@ -138,7 +151,9 @@ the button names the reward before anything plays (`settings.watchAdButton`).
 `useAdPlacementActive` (`hooks/useAdPlacementActive.ts`) is the single React-side answer to the
 first six for a banner. `AdBanner` renders from it and its screen reserves `AD_BANNER_RESERVED_HEIGHT`
 from the same call, so the room kept free below the last row always matches the banner actually
-drawn.
+drawn. It is `useCanServeAd` (`hooks/useCanServeAd.ts`) plus the ad-free window: the rewarded
+section renders from `useCanServeAd` alone, since it stays up through the window to show the time
+left.
 
 ---
 
@@ -199,13 +214,16 @@ reset at every launch.
 | `services/api/adEnvironment.ts` | no request from a Firebase Test Lab device |
 | `modules/app-environment/` | the native side of it — reads the `firebase.test.lab` system setting |
 | `services/api/adService.ts` | interstitial: preload, cadence, show; `setPremium` |
-| `services/api/rewardedAdService.ts` | rewarded: preload, show, `earned` / `dismissed` / `failed` |
+| `services/api/rewardedAdService.ts` | rewarded: one preloaded ad per unit, addressed by placement; `show` resolves `earned` / `dismissed` / `failed` |
 | `services/api/fullScreenAd.ts` | `presentFullScreenAd` — settles a full-screen ad once it is gone |
+| `services/api/adFailures.ts` | `reportAdFailure` — a failed load or show, sorted by its code: the two services' loads, `presentFullScreenAd`'s show and its deadline, `AdBanner`'s load |
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
 | `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |
-| `hooks/useAdPlacementActive.ts` | may this placement run right now |
+| `hooks/useAdPlacementActive.ts` | may this placement run right now — `useCanServeAd` plus the ad-free window |
+| `hooks/useCanServeAd.ts` | can an ad be served here at all — every gate but the ad-free window |
 | `components/ads/AdBanner.tsx` | the banner, pinned above the tab bar |
 | `components/ads/RewardedAdButton.tsx` | the Settings rewarded entry point |
+| `components/settings/AdFreeSection.tsx` | the Settings "Remove ads" section, rendered only where a video can be served |
 | `providers/AdFreeProvider.tsx` | the ad-free window: grant, accumulate, expire |
 
 ---
@@ -251,6 +269,14 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 - **Call `recordAction` where the screen has settled.** An interstitial presented while a
   transition is still sliding in under the finger that triggered it collects the tail of that
   gesture as a click.
+- **A failure is sorted by its code, and only the unexpected is a non-fatal** — the purchase rule,
+  applied to ads. Every failed load or show goes through `reportAdFailure({ error, source })`: no
+  fill, a network, server or timeout failure, an internal error, an OS too old and nothing to
+  present into (`null-activity`, `nil-vc`) are conditions, a Crashlytics breadcrumb each; anything
+  else — a wrong unit id, a missing app id, an ad the library does not hold, a presentation that
+  never opened — is a non-fatal. Most failed loads are no-fills: recorded as crashes they would
+  bury the wrong unit id that serves nothing without an error anywhere, and a `console.warn`
+  reaches no release. Sort on the code, never on the message.
 
 ---
 
@@ -260,8 +286,8 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 with no AdMob account involved and no risk to the publisher account:
 
 1. Finish the onboarding on a fresh install — the consent form appears first where the law
-   requires one. Settings shows a **test banner** above the tab bar, and its last row still
-   scrolls clear of it.
+   requires one. Home and Settings each show a **test banner** above the tab bar, and the last row
+   of each still scrolls clear of it.
 2. Tap **Perform a sample action** on Home four times → a **test interstitial** on the fourth. Keep
    tapping: nothing else interrupts for the rest of the session, neither another ad nor the
    paywall nor the rating prompt.
@@ -270,5 +296,5 @@ with no AdMob account involved and no risk to the publisher account:
    the time left; no paywall follows. Once the window has run out, start another video and close it
    early → the contextual paywall may follow 0.8 s later (from the second session, past ten
    actions, with an offer loaded) — never after a video watched in full.
-5. Subscribe (sandbox) mid-session → the banner goes, the interstitial never shows again, and
+5. Subscribe (sandbox) mid-session → both banners go, the interstitial never shows again, and
    Home's premium CTA disappears.

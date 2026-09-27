@@ -2,6 +2,7 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { AD_REWARDED_FREE_DURATION_MINUTES } from '@/constants/admob'
 import { useAdFreeRemainingMinutes } from '@/hooks/useAdFreeRemainingMinutes'
+import { useAdsConsent } from '@/hooks/useAdsConsent'
 import { useContextualPaywall } from '@/hooks/useContextualPaywall'
 import { useAdFree } from '@/providers/AdFreeProvider'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -17,6 +18,7 @@ import { Alert, StyleSheet, View } from 'react-native'
 export function RewardedAdButton() {
   const { isAdFreeActive, activateAdFreeReward } = useAdFree()
   const adFreeRemainingMinutes = useAdFreeRemainingMinutes()
+  const { canRequestAds } = useAdsConsent()
   const { maybeTrigger } = useContextualPaywall()
   const { t, i18n } = useTranslation()
   const [isLoading, setIsLoading] = useState(false)
@@ -34,12 +36,12 @@ export function RewardedAdButton() {
   const remainingLabel = formatMinutesAsDuration(adFreeRemainingMinutes, language)
 
   useEffect(() => {
-    if (isAdFreeActive) return
-    void RewardedAdService.preloadRewardedAd()
-  }, [isAdFreeActive])
+    if (isAdFreeActive || !canRequestAds) return
+    RewardedAdService.preload({ placement: 'settings' })
+  }, [isAdFreeActive, canRequestAds])
 
   const handleWatchAd = async () => {
-    if (!RewardedAdService.isRewardedAdReady()) {
+    if (!RewardedAdService.isReady({ placement: 'settings' })) {
       Alert.alert(
         t('settings.adNotAvailableTitle'),
         t('settings.adNotAvailableMessage'),
@@ -52,8 +54,9 @@ export function RewardedAdButton() {
     setIsLoading(true)
 
     try {
-      const outcome = await RewardedAdService.showRewardedAd(async () => {
-        await activateAdFreeReward()
+      const outcome = await RewardedAdService.show({
+        placement: 'settings',
+        onRewarded: () => void activateAdFreeReward(),
       })
 
       analyticsService.track('rewarded_ad_result', {

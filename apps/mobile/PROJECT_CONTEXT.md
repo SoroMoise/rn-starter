@@ -69,8 +69,9 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 | Service | Description |
 |---|---|
 | `adService.ts` | AdMob interstitial — lazy-init, disabled when premium/ad-free; `setPremium` (written only by `SubscriptionProvider`) drops a preloaded ad, and its pending retries, the moment Pro is bought. `showInterstitialAd()` resolves `true` only once the ad has closed, and only then spends the cadence and the session's interruption |
-| `rewardedAdService.ts` | AdMob rewarded — lazy-init, grants ad-free window on completion; `showRewardedAd` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
+| `rewardedAdService.ts` | AdMob rewarded — one preloaded ad per unit, addressed by `RewardedPlacement` and created lazily (`preload` / `isReady` / `show({ placement, onRewarded })`); grants the ad-free window on completion; `show` resolves `earned` / `dismissed` / `failed`, and only a dismissal is followed by the contextual paywall |
 | `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad once it is gone (`CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`); `onEnd` runs whenever the presentation really ends, so an ad that opens late still pays its slot or its reward |
+| `adFailures.ts` | `reportAdFailure({ error, source })` — sorts an ad failure by the library's code, stripped of its `googleMobileAds/` and Android-banner `error-code-` prefixes: a condition (no fill, network, server, timeout, internal error, OS too old, `null-activity` / `nil-vc`) is a Crashlytics breadcrumb plus a warning in development, anything else — a presentation that never opened included — a non-fatal. Called by both ad services, `presentFullScreenAd` and `AdBanner` |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `paywallAnalytics.ts` | `trackShown` / `trackDismissed` compose `paywall_shown` (with the default plan's price and currency) and `paywall_dismissed`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
@@ -126,7 +127,8 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useActionRating` | `recordAction({ allowPromos })` — where an app wires its value moments: counts the action, offers it to the contextual paywall, then the interstitial, and otherwise arms the rating ask |
 | `useRatingPrompt` | `maybeAskForRating({ moment })` — gathers the state, runs `evaluateReviewRequest`, and asks for Play's card or traces the refusal |
 | `useCappedByTier` | `useCappedByTier({ items, freeLimit })` → `items`, `allItems`, `limit`, `isCapped`, `canAdd`: a free-tier limit applied on read (no caller yet) |
-| `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — whether a placement runs: kill switch, configured unit, tier, ad-free window, consent, environment |
+| `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — whether a placement runs: `useCanServeAd` plus the ad-free window |
+| `useCanServeAd` | `useCanServeAd({ unitId, enabled })` — whether an ad can be served at all: kill switch, configured unit, the store's answer and the tier, consent, environment; what `AdFreeSection` renders from |
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
 | `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
 | `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
@@ -146,7 +148,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 
 ### AdMob
 
-`ADS.md` is the reference — placements, units, cadence, gates and invariants. Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer.
+`ADS.md` is the reference — placements, units, cadence, gates and invariants. Banner ads per screen (`AdBanner`), interstitial via `adService`, rewarded via `rewardedAdService`. All ad surfaces check premium status and ad-free window before showing. Unit ids and kill switches are literals in `constants/admob.ts` and the app ids in `app.config.js` — never `.env`. An unconfigured unit (`UNIT_PENDING`) resolves to `null` and its surface requests nothing; `__DEV__` always gets Google's `TestIds`. `useAdPlacementActive({ unitId, enabled })` is the single predicate behind a placement: `AdBanner` renders from it, and its screen reserves `AD_BANNER_RESERVED_HEIGHT` from the same answer. It is `useCanServeAd` plus the ad-free window; Settings' rewarded section (`AdFreeSection`) renders from `useCanServeAd` alone, and shows the time left while a window is open.
 
 ### RevenueCat
 

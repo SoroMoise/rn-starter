@@ -1,5 +1,6 @@
 import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
+import { reportAdFailure } from '@/services/api/adFailures'
 import { consentService } from '@/services/api/consentService'
 import { engagementService } from '@/services/api/engagementService'
 import { presentFullScreenAd, type PresentationOutcome } from '@/services/api/fullScreenAd'
@@ -62,7 +63,8 @@ class AdServiceClass {
         this.isAdLoaded = false
         this.preloadInterstitialAd()
       }),
-      ad.addAdEventListener(AdEventType.ERROR, () => {
+      ad.addAdEventListener(AdEventType.ERROR, (error) => {
+        reportAdFailure({ error, source: 'interstitial_load' })
         this.isAdLoaded = false
         this.isAdLoading = false
         if (this.retryCount < MAX_LOAD_RETRIES) {
@@ -102,7 +104,7 @@ class AdServiceClass {
       this.isAdLoading = true
       this.interstitialAd.load()
     } catch (error) {
-      console.warn('[AdService] Failed to preload interstitial:', error)
+      reportAdFailure({ error, source: 'interstitial_preload' })
       this.isAdLoading = false
     }
   }
@@ -160,6 +162,7 @@ class AdServiceClass {
     try {
       outcome = await presentFullScreenAd({
         ad,
+        source: 'interstitial_show',
         onEnd: (ending) => {
           if (ending === 'closed') this.spendSlot()
         },

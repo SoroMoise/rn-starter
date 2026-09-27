@@ -32,12 +32,12 @@ audit of that gap and the plan to close it.
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
-| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | — | planned (§3) |
+| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **in review** |
 | 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | — | planned (§3) |
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
-| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | planned (§3) |
+| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
 | 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
 | 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | — | planned (§3) |
 | 22 | The store listing: the listing's limits, release notes, the licences page | — | planned (§3) |
@@ -46,9 +46,10 @@ audit of that gap and the plan to close it.
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 37 have shipped (twelve with lots 1–3,
-three of them recorded only when the rest were scheduled), 5 are closed without shipping, and the
-other 42 are scheduled into lots 14 to 22 (§3).
+says what comes after the audit. Of the 84 "later" items, 41 have shipped (twelve with lots 1–3,
+three of them recorded only when the rest were scheduled, and four with lot 14), 5 are closed
+without shipping, and of the other 38, 35 are scheduled into lots 15–18 and 20–22 and 3 wait, with
+lot 19, for the Firebase migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -151,8 +152,9 @@ know that browser mode is what the stub removes — harmless while MMKV, Firebas
 keep the app out of Expo Go.
 
 The 84 "later" items were judged useful but never blocking. Until 2026-09-26 none was scheduled;
-the 42 still open are now planned work, lots 14 to 22, each carrying its lot in `plannedLot` and a
-note saying what verification found left of it (§3). The audit's judgement stays as it was: their
+the 42 then open became planned work, lots 14 to 22 (lot 19's three deferred to the Firebase
+migration), each carrying its lot in `plannedLot` and a note saying what verification found left
+of it (§3) — or, once shipped, how it shipped. The audit's judgement stays as it was: their
 `decision` is still `later`.
 
 ---
@@ -191,8 +193,9 @@ always `git rev-list --count origin/main..HEAD`.
 
 ## 3. After the audit
 
-Every kept item has shipped. What is left is the "later" items, scheduled below into lots 14 to 22,
-and one translation session, which runs between two of them.
+Every kept item has shipped. What is left is the "later" items, scheduled below into lots 15 to 18
+and 20 to 22 — lot 14 has shipped (§1), lot 19 waits for the Firebase migration — and one
+translation session, which runs between two of them.
 
 ### The "later" items, scheduled
 
@@ -214,17 +217,17 @@ was checked against the code before it was given a lot, and eight left the list 
 The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
 that covers them. The order puts first what a user or the AdMob account meets, then what a derived
 app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
-earlier one. Each lot still runs as §2 and §15 say — verify, then refute, before anything ships —
+earlier one. Each lot still runs as §2 and §16 say — verify, then refute, before anything ships —
 and the notes below are where that verification starts, not its result.
 
 | Lot | Subject | Items | i18n |
 |---|---|---|---|
-| 14 | Ads: nothing offered that cannot be served | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
+| 14 | Ads: nothing offered that cannot be served — shipped (§1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
 | 15 | Session signals: friction, connectivity, settle | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
 | 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
 | 17 | Colour tokens and the onboarding | `brand-color-tokens`, `gradients-tokens`, `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
-| 19 | The Worker's recurring patterns | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
+| 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
 | 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
 | 21 | The offer's record and its prices | `doc-monetization-template`, `doc-living-documentation`, `play-price-sync` | none |
 | 22 | The store listing | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` | one row, if the app links the licences |
@@ -238,17 +241,6 @@ ships when it carries a trap its first caller would otherwise meet, and CLAUDE.m
 integration point; a rule that needs no code is written down instead; and nothing ships that a user
 of a derived app would see on day one. An item that fails the line is closed with its rule written
 down, not shipped anyway.
-
-**Lot 14 — Ads: nothing offered that cannot be served.** Settings shows the rewarded section
-whenever the unit is configured and the user is free: with consent refused, on a Test Lab device or
-before the store has answered, its button can only say that no ad is available. The service holds
-one unit (`ADMOB_REWARDED_ID`), so a second rewarded surface would share it, which `ADS.md` forbids.
-The home screen mounts no banner, though `ADMOB_INDEX_BANNER_ID` and `AD_BANNER_INDEX_ENABLED`
-exist and lot 5 shipped the two prerequisites the item named (`useAdPlacementActive`,
-`AD_BANNER_RESERVED_HEIGHT`). `adService`, `rewardedAdService` and `fullScreenAd` still
-`console.warn`, where `consentService` already reports; a failed load is mostly no-fill, a condition,
-so it leaves a breadcrumb and only the unexpected is a non-fatal — the purchase rule, applied to ads.
-`ADS.md` changes in the same commits.
 
 **Lot 15 — Session signals: friction, connectivity, settle.** Nothing marks a session in which
 something failed; `sessionSignals` is bg-remover's thirty-line answer, with one consumer in the
@@ -301,11 +293,11 @@ components that owe CLAUDE.md's one-pixel echo guard (Styling). Of `claude-rende
 rules, the memo one shipped with lot 13 (Code Style) and the banner's unmount on blur covers part of
 the fifth; the windowing preset is the fourth rule's constant.
 
-**Lot 19 — The Worker's recurring patterns.** The Worker has held a KV binding since lot 12
-(`ENTITLEMENT_CACHE`) but no cache helper, exports `fetch` only, and carries an `FCMError.errorCode`
-that nothing interprets. A cron declared active would bill an empty job from the first deploy, so it
-ships commented out. `remove-api.sh` takes all of it with `apps/api`, so the script's list does not
-move; `pnpm --filter api build` (`wrangler deploy --dry-run`) is the check beside typecheck and lint.
+**Lot 19 — The Worker's recurring patterns, deferred to the Firebase migration.** The user deferred
+it on 2026-09-26: the Worker is leaving, and a scheduled function, dead-token cleanup and a cache
+will be rebuilt natively on Firebase rather than written for a backend on its way out. Its three
+items keep `plannedLot: 19` with `status: deferred`, and the migration session picks them up — the
+KV cache and the entitlement check it serves, the cron, FCM's dead tokens.
 
 **Lot 20 — Day one and the build.** The Firebase example still carries plausible values and no
 instructions; `setup.sh` rewrites its `package_name`, and the new shape must stay sweepable.
@@ -577,7 +569,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§15, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§16, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -1040,7 +1032,48 @@ ever did.
 
 ---
 
-## 15. Resuming in a new session
+## 15. What verification caught on lot 14
+
+The first lot run from the plan for lots 14 to 22: the facts gathered and the plan written in the
+session, one adversarial refute of the plan against the code and the native sources of
+react-native-google-mobile-ads 15.8.3 (Android and iOS), an implementation agent, then a review of
+the whole diff before the push.
+
+- **The rename would have left CLAUDE.md naming a method that no longer exists.** The plan listed
+  the API Layer line; Monetization's contextual-paywall bullet named `showRewardedAd` too. Every old
+  method name was grepped across the repository before the commit.
+- **iOS has its own benign failures.** Android's `null-activity` — nothing to present into — was a
+  condition in the plan; iOS says the same as `nil-vc`, from the show path rather than the file the
+  plan cited. `nil-vc` joined the conditions; iOS's `not-ready` stays a non-fatal, since the service
+  checks `isLoaded` before it shows.
+- **A condition would have been silent in development.** `crashlyticsService.log` echoes nothing on
+  its normal path, so dropping the `console.warn`s left a no-fill with no local trace at all.
+  `reportAdFailure` warns in `__DEV__` for a condition; a non-fatal already warns through
+  `recordError`.
+- **A port of bg-remover's rewarded service would hang on Android.** Its `show()` settles on its own
+  events, and Android never reports a failed presentation. Each slot keeps `presentFullScreenAd` and
+  its deadline.
+- **The offer waits for the store, not for the cache.** `isPremium` is seeded from the cached
+  entitlement before the store answers, so `useCanServeAd` also waits on `isInitialized`: a
+  subscriber whose cache is stale never sees the offer flash.
+- **Lot 19's audit note described a cron that does not exist.** `api-cron-scheduled` said the cron
+  "stays commented in wrangler.toml"; the file declares none, commented or not. Corrected with the
+  deferral.
+- **The review found nothing to fix.** It re-read the library's sources for each error shape
+  `readCode` normalises — a banner's `googleMobileAds/error-code-no-fill`, a rejected `show()`'s bare
+  code — and the keys of the slot map. Two limits stay, written down rather than fixed: iOS reports a
+  failed presentation on the load channel, so it is filed under `interstitial_load` or
+  `rewarded_load` (worth a line in `ADS.md` when iOS ships); and Android maps only four banner codes,
+  so any other reaches JS as `unknown` and becomes a non-fatal — a mediation no-fill would, and the
+  starter has no mediation.
+
+Not checked on a device: the machine that ran the lot has the Android SDK but no emulator image, so
+the home banner, the Settings section's gates and the breadcrumbs are verified by reading and by the
+type checker only.
+
+---
+
+## 16. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -1049,7 +1082,7 @@ ever did.
    files:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['plannedLot']==14 and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['plannedLot']==15 and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

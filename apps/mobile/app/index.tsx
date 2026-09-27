@@ -1,10 +1,17 @@
+import { AdBanner } from '@/components/ads/AdBanner'
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
+import {
+  ADMOB_INDEX_BANNER_ID,
+  AD_BANNER_INDEX_ENABLED,
+  AD_BANNER_RESERVED_HEIGHT,
+} from '@/constants/admob'
 import { GRADIENTS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
+import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { usePremium } from '@/hooks/usePremium'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
 import { useAdFree } from '@/providers/AdFreeProvider'
@@ -37,7 +44,11 @@ export default function HomeScreen() {
       : t('paywall.trialBadgeNoDays')
     : null
   const { isAdFreeActive } = useAdFree()
-  const tabBarPadding = useTabBarPadding(24)
+  const isBannerVisible = useAdPlacementActive({
+    unitId: ADMOB_INDEX_BANNER_ID,
+    enabled: AD_BANNER_INDEX_ENABLED,
+  })
+  const tabBarPadding = useTabBarPadding((isBannerVisible ? AD_BANNER_RESERVED_HEIGHT : 0) + 24)
 
   const { recordAction } = useActionRating({
     isAdFreeActive,
@@ -134,6 +145,12 @@ export default function HomeScreen() {
           </View>
         </MotiView>
       </ScrollView>
+
+      <AdBanner
+        adBannerId={ADMOB_INDEX_BANNER_ID}
+        screenName="index"
+        enabled={AD_BANNER_INDEX_ENABLED}
+      />
     </ScreenContainer>
   )
 }

@@ -18,7 +18,7 @@ one unit are a single revenue line nobody can split afterwards.
 
 | # | Placement | Surface | Format | Constant | Unit | Status |
 |---|-----------|---------|--------|----------|------|--------|
-| 1 | Home | `app/index.tsx` | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | declared, not mounted |
+| 1 | Home | `app/index.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | mounted |
 | 2 | Settings | `app/settings.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_SETTINGS_BANNER_ID` | pending | mounted |
 | 3 | Any value moment | `useActionRating().recordAction()` | Interstitial | `ADMOB_INTERSTITIAL_ID` | pending | wired to the Home demo action |
 | 4 | Settings → Ads | `RewardedAdButton`, placement `settings` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
@@ -277,8 +277,8 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 with no AdMob account involved and no risk to the publisher account:
 
 1. Finish the onboarding on a fresh install — the consent form appears first where the law
-   requires one. Settings shows a **test banner** above the tab bar, and its last row still
-   scrolls clear of it.
+   requires one. Home and Settings each show a **test banner** above the tab bar, and the last row
+   of each still scrolls clear of it.
 2. Tap **Perform a sample action** on Home four times → a **test interstitial** on the fourth. Keep
    tapping: nothing else interrupts for the rest of the session, neither another ad nor the
    paywall nor the rating prompt.
@@ -287,5 +287,5 @@ with no AdMob account involved and no risk to the publisher account:
    the time left; no paywall follows. Once the window has run out, start another video and close it
    early → the contextual paywall may follow 0.8 s later (from the second session, past ten
    actions, with an offer loaded) — never after a video watched in full.
-5. Subscribe (sandbox) mid-session → the banner goes, the interstitial never shows again, and
+5. Subscribe (sandbox) mid-session → both banners go, the interstitial never shows again, and
    Home's premium CTA disappears.

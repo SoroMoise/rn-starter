@@ -1,6 +1,7 @@
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
+import { sessionSignals } from '@/services/promo/sessionSignals'
 import {
   evaluateContextualPaywall,
   type ContextualPaywallDecision,
@@ -28,6 +29,7 @@ export const contextualPaywallService = {
       contextualShownCount: engagementStorage.getContextualShownCount(),
       lastContextualPaywallAt: engagementStorage.getLastContextualPaywallAt(),
       shownThisSession: promoCoordinator.autoPromoShown(),
+      hadFriction: sessionSignals.hadFriction(),
       now,
     })
   },

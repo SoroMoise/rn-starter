@@ -32,8 +32,8 @@ audit of that gap and the plan to close it.
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
-| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **in review** |
-| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | — | planned (§3) |
+| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
+| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **in review** |
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
@@ -46,10 +46,10 @@ audit of that gap and the plan to close it.
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 41 have shipped (twelve with lots 1–3,
-three of them recorded only when the rest were scheduled, and four with lot 14), 5 are closed
-without shipping, and of the other 38, 35 are scheduled into lots 15–18 and 20–22 and 3 wait, with
-lot 19, for the Firebase migration (§3).
+says what comes after the audit. Of the 84 "later" items, 46 have shipped (twelve with lots 1–3,
+three of them recorded only when the rest were scheduled, four with lot 14 and five with lot 15), 5
+are closed without shipping, and of the other 33, 30 are scheduled into lots 16–18 and 20–22 and 3
+wait, with lot 19, for the Firebase migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -193,8 +193,8 @@ always `git rev-list --count origin/main..HEAD`.
 
 ## 3. After the audit
 
-Every kept item has shipped. What is left is the "later" items, scheduled below into lots 15 to 18
-and 20 to 22 — lot 14 has shipped (§1), lot 19 waits for the Firebase migration — and one
+Every kept item has shipped. What is left is the "later" items, scheduled below into lots 16 to 18
+and 20 to 22 — lots 14 and 15 have shipped (§1), lot 19 waits for the Firebase migration — and one
 translation session, which runs between two of them.
 
 ### The "later" items, scheduled
@@ -217,13 +217,13 @@ was checked against the code before it was given a lot, and eight left the list 
 The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
 that covers them. The order puts first what a user or the AdMob account meets, then what a derived
 app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
-earlier one. Each lot still runs as §2 and §16 say — verify, then refute, before anything ships —
+earlier one. Each lot still runs as §2 and §17 say — verify, then refute, before anything ships —
 and the notes below are where that verification starts, not its result.
 
 | Lot | Subject | Items | i18n |
 |---|---|---|---|
 | 14 | Ads: nothing offered that cannot be served — shipped (§1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
-| 15 | Session signals: friction, connectivity, settle | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
+| 15 | Session signals: friction, connectivity, settle — shipped (§1, §16) | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
 | 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
 | 17 | Colour tokens and the onboarding | `brand-color-tokens`, `gradients-tokens`, `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
@@ -241,18 +241,6 @@ ships when it carries a trap its first caller would otherwise meet, and CLAUDE.m
 integration point; a rule that needs no code is written down instead; and nothing ships that a user
 of a derived app would see on day one. An item that fails the line is closed with its rule written
 down, not shipped anyway.
-
-**Lot 15 — Session signals: friction, connectivity, settle.** Nothing marks a session in which
-something failed; `sessionSignals` is bg-remover's thirty-line answer, with one consumer in the
-contextual paywall and one in the review policy. The settle before Play's card shipped on the call
-side with lot 6 (`RATING_ASK_SETTLE_MS`, in `RatingAskHost`); what is left is a settle inside
-`requestNativeReview`, for a moment an app raises itself. The offline guard and the banner hang on
-one decision, taken first: `useNetworkStatus` and NetInfo exist only for `apps/api`, leave with
-`remove-api.sh`, and CLAUDE.md says connectivity feeds the query client and decides nothing else.
-Either NetInfo becomes the app's own — out of the script's list, and Data Fetching rewritten — or
-the guard does without it and the banner joins the script's list. An ask made offline spends an
-attempt and 42 days, which is the case for the guard. `offline_banner_shown` left with lot 9
-(ade8480), since nothing showed.
 
 **Lot 16 — Accessibility.** `ModalBottomSheet`'s close button has been labelled since the off-audit
 fixes and `RatingModal` left with lot 4; `SlidingSelector`, `LanguagePicker`, `SettingsLinkRow` and
@@ -341,8 +329,11 @@ deleted as dead; the other wanted them kept and wired. They are kept. They are n
 vestiges — they are generic infrastructure for a backend this repo ships, wired in lot 9:
 `onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
 React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
-`@react-native-community/netinfo` stays for the same reason; an app without a backend removes all
-of it together, with `scripts/remove-api.sh` (below, and CLAUDE.md, Data Fetching).
+An app without a backend removes all of it together, with `scripts/remove-api.sh` (below, and
+CLAUDE.md, Data Fetching) — all but connectivity: since 2026-09-26, the user's decision,
+`@react-native-community/netinfo` and `useNetworkStatus` are the app's own, for lot 15's offline
+guard on the rating ask and its offline banner as much as for the query client, and they stay when
+the script takes the rest.
 
 **`withRetry` is for calls made outside a query.** A `queryFn` calls the client directly: the
 query client retries on its own, and a `withRetry` inside it would multiply the attempts.
@@ -437,7 +428,7 @@ serving a free caller too. It says so in the logs, once per isolate, where the r
 **Removing the backend is a script of its own, and it takes the app's network layer with it.** Not a
 `setup.sh` flag: a deletion only git can undo is its own decision, taken on a clean tree. And since
 lot 9 wired `QueryProvider`, `withRetry` and NetInfo to `apps/api`, removing the Worker alone would
-leave five packages and a provider serving nothing.
+leave four packages and a provider serving nothing (five until NetInfo became the app's own, above).
 
 **The onboarding does not emit `paywall_shown`.** bg-remover counts its onboarding offer as a paywall
 impression. Here `paywall_count` rides on every `purchase_completed`, and the step and the exit
@@ -569,7 +560,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§16, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§17, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -1073,7 +1064,46 @@ type checker only.
 
 ---
 
-## 16. Resuming in a new session
+## 16. What verification caught on lot 15
+
+Run as lot 14 was: one adversarial refute of the plan against the code, expo-store-review's and
+expo-modules-core's native sources and bg-remover's `sessionSignals`, an implementation agent, then
+a review of the whole diff before the push.
+
+- **A widened settle would have reached a native crash.** expo-store-review opens Play's card on
+  `appContext.throwingActivity`, from Play Core's completion callback; with no activity in the
+  foreground it throws `MissingActivity` where no JS `catch` reaches. Seven hundred milliseconds is
+  time enough to leave the app, so after the settle `requestNativeReview` asks for nothing unless the
+  app is active, and traces `review_flow_failed` with `app_backgrounded`.
+- **A price that did not load is not friction.** The refute proposed marking `offerings_load`
+  failures; declined. A boot or foreground failure may never be seen, `PriceRetryNotice` already
+  stands in on every selling surface, the contextual paywall refuses without a plan, and Play's card
+  does not depend on RevenueCat. Only a purchase or a restore that failed in front of the user is
+  marked.
+- **The decision had to change everywhere it was written.** The plan rewrote CLAUDE.md and
+  `PROJECT_CONTEXT.md`; §4's NetInfo sentence still called connectivity the backend's. It changed
+  in the same commit, with §4's "five packages" the backend's removal leaves, now four.
+- **VoiceOver would have heard nothing.** `accessibilityLiveRegion` is Android only; the banner
+  announces itself through `AccessibilityInfo.announceForAccessibility` on iOS.
+- **`UI_COLORS` claimed to follow `tailwind.config.js` whole.** Only its brand entries do, the rest
+  copy Tailwind's own palette; the banner's two flat entries joined the second kind, and CLAUDE.md
+  says so.
+- **The README gave two Expo versions the app does not run** (not in the audit): expo-store-review
+  as `^55.0.13`, the SDK 55 line, and expo-notifications as "latest", where the app pins the exact
+  version its patch is tied to. Both rows read `package.json` now.
+- **The review found nothing to fix.** It re-read the three places a friction is marked, the order
+  of the refusals — none of `friction`, `offline` or `promo_collision` disarms the ask for good —
+  and the docs at each intermediate commit, which name each reader of connectivity only once it
+  exists.
+
+Two questions only a device answers. TalkBack may not announce a live region that mounts already
+filled, which is how the banner appears; if it stays silent, the banner keeps a mounted wrapper and
+changes its content instead. And the banner's icon is not yet hidden from screen readers — lot 16's
+pass over the UI library takes it.
+
+---
+
+## 17. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -1082,7 +1112,7 @@ type checker only.
    files:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['plannedLot']==15 and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['plannedLot']==16 and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

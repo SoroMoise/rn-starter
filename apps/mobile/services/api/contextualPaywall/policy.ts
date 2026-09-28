@@ -10,6 +10,7 @@ export type ContextualPaywallState = {
   contextualShownCount: number
   lastContextualPaywallAt: number
   shownThisSession: boolean
+  hadFriction: boolean
   now: number
 }
 
@@ -39,6 +40,7 @@ export function evaluateContextualPaywall(
   // at three sessions against ten actions the session criterion always fired first — the
   // action count never actually gated anything.
   if (state.totalActions < c.minActions) return { show: false, reason: 'below_threshold' }
+  if (state.hadFriction) return { show: false, reason: 'friction' }
 
   return { show: true }
 }

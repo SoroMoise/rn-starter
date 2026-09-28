@@ -1,9 +1,11 @@
 import type { RatingMoment } from '@/constants/rating'
+import { getIsOnline } from '@/hooks/useNetworkStatus'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { isNativeReviewAvailable, requestNativeReview } from '@/services/api/ratingService'
 import { evaluateReviewRequest, type ReviewRequestDecision } from '@/services/api/reviewPolicy'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
+import { sessionSignals } from '@/services/promo/sessionSignals'
 import { adsStorage } from '@/services/storage/domains/ads'
 import { engagementStorage } from '@/services/storage/domains/engagement'
 import { reviewStorage } from '@/services/storage/domains/review'
@@ -35,6 +37,8 @@ export function useRatingPrompt() {
           totalActions,
           lastAdShownAt: adsStorage.getAdLastShown(),
           canPresentAutoPromo: promoCoordinator.canPresentAutoPromo(),
+          hadFriction: sessionSignals.hadFriction(),
+          isOnline: getIsOnline(),
           now,
         })
 
@@ -46,7 +50,13 @@ export function useRatingPrompt() {
         }
 
         if (!decision.show) {
-          analyticsService.track('rating_ask_suppressed', { ...context, reason: decision.reason })
+          const frictionReason =
+            decision.reason === 'friction' ? sessionSignals.frictionReason() : null
+          analyticsService.track('rating_ask_suppressed', {
+            ...context,
+            reason: decision.reason,
+            ...(frictionReason && { friction_reason: frictionReason }),
+          })
           return decision
         }
 

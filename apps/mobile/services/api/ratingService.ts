@@ -2,13 +2,15 @@ import { APP_STORE_URL, PLAY_STORE_MARKET_URL, PLAY_STORE_WEB_URL } from '@/cons
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import * as StoreReview from 'expo-store-review'
-import { Linking, Platform } from 'react-native'
+import { AppState, Linking, Platform } from 'react-native'
 
 // A flow that returns faster than this never rendered anything: Play's per-user
 // quota swallowed it. The API deliberately reports neither whether the dialog
 // appeared nor whether a review was left, so duration is the only observable
 // proxy. It feeds dashboards only — never branch on it.
 const REVIEW_FLOW_DISPLAY_FLOOR_MS = 300
+
+const REVIEW_FLOW_SETTLE_MS = 700
 
 function storeCandidates(): (string | undefined)[] {
   if (Platform.OS === 'ios') return [APP_STORE_URL]
@@ -35,6 +37,15 @@ export async function isNativeReviewAvailable(): Promise<boolean> {
  * the app's own flow, and nobody asked to leave the app.
  */
 export async function requestNativeReview(): Promise<void> {
+  await new Promise((resolve) => setTimeout(resolve, REVIEW_FLOW_SETTLE_MS))
+  // expo-store-review launches the flow on `appContext.throwingActivity` inside Play Core's
+  // completion callback: with no activity current, `MissingActivity` is thrown there, where no JS
+  // catch reaches, and the settle widens that window.
+  if (AppState.currentState !== 'active') {
+    analyticsService.track('review_flow_failed', { error_code: 'app_backgrounded' })
+    return
+  }
+
   try {
     const startedAt = Date.now()
     await StoreReview.requestReview()

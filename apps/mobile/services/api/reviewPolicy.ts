@@ -13,6 +13,8 @@ export type ReviewRequestState = {
   totalActions: number
   lastAdShownAt: number
   canPresentAutoPromo: boolean
+  hadFriction: boolean
+  isOnline: boolean
   now: number
 }
 
@@ -27,15 +29,23 @@ export type ReviewSuppressionReason =
   | 'weak_moment'
   | 'ad_collision'
   | 'promo_collision'
+  | 'friction'
+  | 'offline'
 
 export type ReviewRequestDecision =
   | { show: true; requestIndex: number }
   | { show: false; reason: ReviewSuppressionReason }
 
-// A collision ends with its session; every other refusal holds past it, and the next action arms a
-// fresh ask anyway.
+// A collision or a friction ends with its session, if not sooner, and a lost connection may be back
+// by the next return; every other refusal holds past the session, and the next action arms a fresh
+// ask anyway.
 export function refusalOutlivesSession(reason: ReviewSuppressionReason): boolean {
-  return reason !== 'ad_collision' && reason !== 'promo_collision'
+  return (
+    reason !== 'ad_collision' &&
+    reason !== 'promo_collision' &&
+    reason !== 'friction' &&
+    reason !== 'offline'
+  )
 }
 
 export function evaluateReviewRequest(state: ReviewRequestState): ReviewRequestDecision {
@@ -63,6 +73,8 @@ export function evaluateReviewRequest(state: ReviewRequestState): ReviewRequestD
     return { show: false, reason: 'ad_collision' }
   }
   if (!state.canPresentAutoPromo) return { show: false, reason: 'promo_collision' }
+  if (state.hadFriction) return { show: false, reason: 'friction' }
+  if (!state.isOnline) return { show: false, reason: 'offline' }
 
   return { show: true, requestIndex: requestsInStreak + 1 }
 }

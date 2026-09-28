@@ -99,6 +99,8 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 `promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall, the AdMob interstitial and Google's consent form (`PromoSurface`).
 Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget, and so does the consent form while it is up. Reset at boot via `contextualPaywallService.resetSession()`.
 
+`sessionSignals.ts` — the failure the user just met: `markFriction(reason)`, `hadFriction()`, `frictionReason()`. One `FrictionReason` at a time, live for ten minutes and not overwritten meanwhile, in the process only. `SubscriptionProvider` marks `purchase_failed` and `restore_failed`; the contextual paywall and the rating ask refuse while one is live.
+
 ### `services/storage/`
 
 | File/Dir | Description |
@@ -132,7 +134,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
 | `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
 | `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
-| `useNetworkStatus` | `{ isOnline }` off NetInfo; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager` |
+| `useNetworkStatus` | `{ isOnline }` off the app's one NetInfo subscription, unknown read as online; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager`, and `getIsOnline` the rating ask; `OfflineBanner` reads the hook |
 | `useHardwareBack` | `useHardwareBack(onBack)` — the Android back key, for the focused route only |
 | `useStageActive` | True while the screen is focused and the app in the foreground — what `AdBanner` mounts on |
 | `useSheetSnap` | `ModalBottomSheet`'s springs, snap points and dismiss pan |
@@ -159,6 +161,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 `contextualPaywallService.evaluate(...)` uses:
 - `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
 - `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
+- `sessionSignals.hadFriction()` — refused as `friction` while a failed purchase or restore is live
 
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
@@ -166,7 +169,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 
 ### App Rating
 
-`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state when it is asked — `reviewStorage`, the install date, the session and action counters, the last ad, `promoCoordinator`; never the session's boot snapshot, which a warm return can outlive by days — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. The arming lasts until the ask launches or a refusal outlives the session; a collision keeps it for a later one. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent — and never on a device with no store card, where nothing is spent. When the card cannot come, the user stays where they are: the listing opens only on a tap.
+`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state when it is asked — `reviewStorage`, the install date, the session and action counters, the last ad, `promoCoordinator`, `sessionSignals`, the connection (`getIsOnline()`); never the session's boot snapshot, which a warm return can outlive by days — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. The arming lasts until the ask launches or a refusal outlives the session; a collision, a friction or a lost connection keeps it for a later one. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent, nor within ten minutes of a failed purchase or restore (`friction`, its `friction_reason` on `rating_ask_suppressed`), nor offline (`offline`, NetInfo's unknown state counting as online) — and never on a device with no store card, where nothing is spent. `requestNativeReview()` settles 700 ms before asking, for a moment an app raises itself, and asks nothing once the app has left the foreground (`review_flow_failed`, `app_backgrounded`). When the card cannot come, the user stays where they are: the listing opens only on a tap.
 
 ---
 
@@ -212,7 +215,7 @@ EN and FR are the source of truth; the translation policy, the voice charter and
 
 TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final. `withRetry`, for calls made outside a query, gives up with an `ApiRequestError` carrying `statusCode` and `code` beside its message.
 
-All of it serves `apps/api`: `scripts/remove-api.sh` removes the layer with the Worker, for an app with no backend (CLAUDE.md, Data Fetching).
+All of it serves `apps/api` but `hooks/useNetworkStatus.ts`, which the app keeps for itself: `scripts/remove-api.sh` removes the rest with the Worker, for an app with no backend (CLAUDE.md, Data Fetching).
 
 ---
 
@@ -236,6 +239,8 @@ Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s cont
 
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
+`OfflineBanner` — no props: reads `useNetworkStatus()` and renders nothing online, else an orange plate with `cloud-offline` and `common.offline`, a polite live region on Android and announced on iOS. Mounted nowhere yet.
+
 ---
 
 ## Known gaps
@@ -247,7 +252,7 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **Remote push is not wired on the device.** `apps/api` ships the FCM sender; `@react-native-firebase/messaging` is not installed, since a handler nothing registers would look like working push.
 - **`aps-environment` is declared though nothing is pushed.** `expo-notifications` writes the entitlement whatever the config says; the declaration only states it.
 - **`AppRatingModal` compiles and is mounted nowhere.** Play forbids pre-filtering the review; `SENTIMENT_GATE_ENABLED` is read by nothing, so bringing it back means wiring it.
-- **Nothing is capped, persisted or called yet.** `useCappedByTier` and `useDebounce` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
+- **Nothing is capped, persisted or called yet.** `useCappedByTier`, `useDebounce` and `OfflineBanner` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
 - **The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set**, and says so in its logs.
 - **The onboarding is not capped on large screens**, unlike every tab: a design pass, not a structural one.
 - **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing that path from the app changes the paths contract.

@@ -43,8 +43,8 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 | @react-native-firebase | ^24.0.0 | Analytics, Crashlytics |
 | react-native-google-mobile-ads | ^15.5.0 | AdMob |
 | react-native-purchases | ^10.0.1 | RevenueCat IAP |
-| expo-notifications | latest | Local notifications |
-| expo-store-review | ^55.0.13 | In-app rating |
+| expo-notifications | ~0.32.17 | Local notifications |
+| expo-store-review | ~9.0.8 | In-app rating |
 | Hono | ^4 | API framework (Cloudflare Workers) |
 | TypeScript | 5.x | Strict typing throughout |
 | pnpm workspaces + Turborepo | — | Monorepo tooling |

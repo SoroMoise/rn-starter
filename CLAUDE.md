@@ -343,13 +343,16 @@ another app, which reads as configured and persists nothing.
 subscription — `getIsOnline()` and `subscribeToNetworkStatus()` outside React — and reads NetInfo's
 unknown state (`isConnected: null`, at launch among others) as online, so nothing reads as offline
 on a connection that works. `QueryProvider` feeds the query client's `onlineManager` from it, the
-rating ask reads it (App Rating), and it stays when `remove-api.sh` takes the backend out. React
-Native has no browser `online` event, so the client read the app as always online: retries burned
-through while the device was offline, and `refetchOnReconnect` never fired. A query retries three
-times at most, and never a status that cannot succeed (`isNonRetryableError`: 400, 401, 403, 404,
-422 — one list, in `utils/apiErrors.ts`, that `withRetry` reads too). Connectivity never decides the
-entitlement: whether the store answered is read off the failed request, never off this flag
-(Monetization).
+rating ask (App Rating) and `OfflineBanner` read it, and it stays when `remove-api.sh` takes the
+backend out. React Native has no browser `online` event, so the client read the app as always
+online: retries burned through while the device was offline, and `refetchOnReconnect` never fired. A
+query retries three times at most, and never a status that cannot succeed (`isNonRetryableError`:
+400, 401, 403, 404, 422 — one list, in `utils/apiErrors.ts`, that `withRetry` reads too).
+Connectivity never decides the entitlement: whether the store answered is read off the failed
+request, never off this flag (Monetization). A screen whose content comes from the network mounts
+`<OfflineBanner />` at its top — never a NetInfo read of its own, which would flash a banner at
+launch on the unknown state; the starter has no such screen, its paywall carrying its own retry
+notice, and mounts it nowhere.
 
 `QueryProvider` is here because `apps/api` is. **An app with no backend removes both in the
 same pass, with `bash scripts/remove-api.sh`**: `apps/api`, `packages/shared` and `ci-api.yml`,
@@ -437,7 +440,7 @@ when its Worker went — the data-fetching layer has no reason to outlive the AP
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti (what Moti costs: Bundle size).
 
-**The theme setting stores an intention, never a scheme.** The selector is Light / Dark / System and `DEFAULT_SETTINGS.theme` is `'auto'`: a fresh install follows the phone before it follows a preference nobody expressed. Three vocabularies sit in three neighbouring files — `'auto'` stored by `settingsStore`, `'system'` for NativeWind (`applyColorScheme` maps one to the other), `light` / `dark` resolved — so whatever needs the scheme on screen reads `useThemedColor()`, never `settings.theme`: `settings.theme === 'dark'` is false on a dark phone left on System, with no error. `UI_COLORS` (`constants/uiColors.ts`) holds the raw values for the props a class cannot reach (an icon's `color`), and follows `tailwind.config.js` by hand.
+**The theme setting stores an intention, never a scheme.** The selector is Light / Dark / System and `DEFAULT_SETTINGS.theme` is `'auto'`: a fresh install follows the phone before it follows a preference nobody expressed. Three vocabularies sit in three neighbouring files — `'auto'` stored by `settingsStore`, `'system'` for NativeWind (`applyColorScheme` maps one to the other), `light` / `dark` resolved — so whatever needs the scheme on screen reads `useThemedColor()`, never `settings.theme`: `settings.theme === 'dark'` is false on a dark phone left on System, with no error. `UI_COLORS` (`constants/uiColors.ts`) holds the raw values for the props a class cannot reach (an icon's `color`); its brand entries follow `tailwind.config.js` by hand, the others Tailwind's own palette.
 
 **Every tab shares one gutter and one heading line.** A tab's `ScrollView` is `flex-1` with `paddingHorizontal: 20` on its content container — never a margin on the scroll view, which narrows its scroll track and touch area, and never a margin per block — and its `ScreenHeading` starts at `mt-3.5`, so nothing shifts sideways or vertically when the user switches tabs.
 

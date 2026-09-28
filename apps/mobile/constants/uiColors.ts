@@ -1,10 +1,12 @@
-// Raw values for props that cannot consume Tailwind classes (icon `color`).
-// Keep in sync with tailwind.config.js theme.extend.colors.
+// Raw values for props that cannot consume Tailwind classes (icon `color`). The brand entries follow
+// tailwind.config.js theme.extend.colors by hand; the others copy Tailwind's own palette.
 export const UI_COLORS = {
   brand: '#8b5cf6',
   brandBlue: '#3b82f6',
   brandGreen: '#10b981',
   chevron: '#9ca3af',
+  offline: '#9a3412',
+  offlineDark: '#fdba74',
 } as const
 
 // Named by role, never by hue: a rebrand edits the values here and every name stays true. The

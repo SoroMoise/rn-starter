@@ -134,7 +134,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
 | `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
 | `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
-| `useNetworkStatus` | `{ isOnline }` off the app's one NetInfo subscription, unknown read as online; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager`, and `getIsOnline` the rating ask |
+| `useNetworkStatus` | `{ isOnline }` off the app's one NetInfo subscription, unknown read as online; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager`, and `getIsOnline` the rating ask; `OfflineBanner` reads the hook |
 | `useHardwareBack` | `useHardwareBack(onBack)` — the Android back key, for the focused route only |
 | `useStageActive` | True while the screen is focused and the app in the foreground — what `AdBanner` mounts on |
 | `useSheetSnap` | `ModalBottomSheet`'s springs, snap points and dismiss pan |
@@ -239,6 +239,8 @@ Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s cont
 
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
+`OfflineBanner` — no props: reads `useNetworkStatus()` and renders nothing online, else an orange plate with `cloud-offline` and `common.offline`, a polite live region on Android and announced on iOS. Mounted nowhere yet.
+
 ---
 
 ## Known gaps
@@ -250,7 +252,7 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **Remote push is not wired on the device.** `apps/api` ships the FCM sender; `@react-native-firebase/messaging` is not installed, since a handler nothing registers would look like working push.
 - **`aps-environment` is declared though nothing is pushed.** `expo-notifications` writes the entitlement whatever the config says; the declaration only states it.
 - **`AppRatingModal` compiles and is mounted nowhere.** Play forbids pre-filtering the review; `SENTIMENT_GATE_ENABLED` is read by nothing, so bringing it back means wiring it.
-- **Nothing is capped, persisted or called yet.** `useCappedByTier` and `useDebounce` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
+- **Nothing is capped, persisted or called yet.** `useCappedByTier`, `useDebounce` and `OfflineBanner` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
 - **The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set**, and says so in its logs.
 - **The onboarding is not capped on large screens**, unlike every tab: a design pass, not a structural one.
 - **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing that path from the app changes the paths contract.

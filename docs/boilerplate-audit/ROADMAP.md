@@ -341,8 +341,11 @@ deleted as dead; the other wanted them kept and wired. They are kept. They are n
 vestiges — they are generic infrastructure for a backend this repo ships, wired in lot 9:
 `onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
 React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
-`@react-native-community/netinfo` stays for the same reason; an app without a backend removes all
-of it together, with `scripts/remove-api.sh` (below, and CLAUDE.md, Data Fetching).
+An app without a backend removes all of it together, with `scripts/remove-api.sh` (below, and
+CLAUDE.md, Data Fetching) — all but connectivity: since 2026-09-26, the user's decision,
+`@react-native-community/netinfo` and `useNetworkStatus` are the app's own, for lot 15's offline
+guard on the rating ask and its offline banner as much as for the query client, and they stay when
+the script takes the rest.
 
 **`withRetry` is for calls made outside a query.** A `queryFn` calls the client directly: the
 query client retries on its own, and a `withRetry` inside it would multiply the attempts.
@@ -437,7 +440,7 @@ serving a free caller too. It says so in the logs, once per isolate, where the r
 **Removing the backend is a script of its own, and it takes the app's network layer with it.** Not a
 `setup.sh` flag: a deletion only git can undo is its own decision, taken on a clean tree. And since
 lot 9 wired `QueryProvider`, `withRetry` and NetInfo to `apps/api`, removing the Worker alone would
-leave five packages and a provider serving nothing.
+leave four packages and a provider serving nothing (five until NetInfo became the app's own, above).
 
 **The onboarding does not emit `paywall_shown`.** bg-remover counts its onboarding offer as a paywall
 impression. Here `paywall_count` rides on every `purchase_completed`, and the step and the exit

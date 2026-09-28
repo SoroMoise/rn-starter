@@ -337,20 +337,23 @@ persister and the app version as cache buster. **Nothing is persisted until you 
 start — add the key prefixes your app wants back. It shipped whitelisting one key belonging to
 another app, which reads as configured and persists nothing.
 
-**Connectivity feeds the query client.** React Native has no browser `online` event, so the client
-read the app as always online: retries burned through while the device was offline, and
-`refetchOnReconnect` never fired. `QueryProvider` hands `onlineManager` the one NetInfo subscription
-`useNetworkStatus` holds. A query retries three times at most, and never a status that cannot
-succeed (`isNonRetryableError`: 400, 401, 403, 404, 422 — one list, in `utils/apiErrors.ts`, that
-`withRetry` reads too). Connectivity decides nothing else: whether the store answered is read off
-the failed request, never off this flag (Monetization).
+**Connectivity is the app's own, whatever the backend.** `useNetworkStatus` holds the one NetInfo
+subscription — `getIsOnline()` and `subscribeToNetworkStatus()` outside React — and reads NetInfo's
+unknown state (`isConnected: null`, at launch among others) as online, so nothing reads as offline
+on a connection that works. `QueryProvider` feeds the query client's `onlineManager` from it, and it
+stays when `remove-api.sh` takes the backend out. React Native has no browser `online` event, so
+the client read the app as always online: retries burned through while the device was offline, and
+`refetchOnReconnect` never fired. A query retries three times at most, and never a status that
+cannot succeed (`isNonRetryableError`: 400, 401, 403, 404, 422 — one list, in `utils/apiErrors.ts`,
+that `withRetry` reads too). Connectivity never decides the entitlement: whether the store answered
+is read off the failed request, never off this flag (Monetization).
 
 `QueryProvider` is here because `apps/api` is. **An app with no backend removes both in the
 same pass, with `bash scripts/remove-api.sh`**: `apps/api`, `packages/shared` and `ci-api.yml`,
 the root scripts and turbo task that drive the Worker, `providers/QueryProvider.tsx`, the three
 `@tanstack/*` packages, `axios`, `utils/retry.ts`, `utils/apiErrors.ts` and the `error.*` keys only
-they read, `services/api/backendClient.ts` and `exampleService.ts`, and `hooks/useNetworkStatus.ts`
-with `@react-native-community/netinfo`, whose one consumer is the query client. It refuses a dirty
+they read, `services/api/backendClient.ts` and `exampleService.ts`. `hooks/useNetworkStatus.ts` and
+`@react-native-community/netinfo` stay: connectivity is the app's own. The script refuses a dirty
 working tree — git is the only way back — and leaves the docs to whoever runs it. **Anything added
 only for the backend joins that script's list in the same change**, the way an identity joins
 `setup.sh`'s: left out, it is the Worker's dead weight in every app that has none. `withRetry` is

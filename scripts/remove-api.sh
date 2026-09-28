@@ -49,7 +49,6 @@ REMOVED_PATHS=(
   packages/shared
   .github/workflows/ci-api.yml
   apps/mobile/providers/QueryProvider.tsx
-  apps/mobile/hooks/useNetworkStatus.ts
   apps/mobile/utils/retry.ts
   apps/mobile/utils/apiErrors.ts
   apps/mobile/services/api/backendClient.ts
@@ -65,7 +64,7 @@ cat <<'LIST'
   package.json              the dev:api and deploy:api scripts
   turbo.json                the deploy task
   pnpm-workspace.yaml       packages/*
-  apps/mobile/package.json  axios, @tanstack/* (3) and @react-native-community/netinfo
+  apps/mobile/package.json  axios and @tanstack/* (3)
   apps/mobile/app/_layout.tsx, constants/config.ts, app.config.js, .env.example,
   types/index.ts, services/api/purchaseService.ts
   apps/mobile/i18n/languages/*.json   the error.* keys, read only by the removed files
@@ -126,7 +125,6 @@ editJson('apps/mobile/package.json', (json) => {
     '@tanstack/react-query',
     '@tanstack/react-query-persist-client',
     '@tanstack/query-async-storage-persister',
-    '@react-native-community/netinfo',
   ]) {
     delete json.dependencies[dep]
   }

@@ -132,7 +132,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`), subscribed to `consentService` |
 | `useAdFreeRemainingMinutes` | Minutes left in the rewarded ad-free window, ticking |
 | `useNotificationPermission` | `{ permission, request }` — the grant read off the OS, again at every foreground |
-| `useNetworkStatus` | `{ isOnline }` off NetInfo; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager` |
+| `useNetworkStatus` | `{ isOnline }` off the app's one NetInfo subscription, unknown read as online; its `getIsOnline` / `subscribeToNetworkStatus` feed the query client's `onlineManager` |
 | `useHardwareBack` | `useHardwareBack(onBack)` — the Android back key, for the focused route only |
 | `useStageActive` | True while the screen is focused and the app in the foreground — what `AdBanner` mounts on |
 | `useSheetSnap` | `ModalBottomSheet`'s springs, snap points and dismiss pan |
@@ -212,7 +212,7 @@ EN and FR are the source of truth; the translation policy, the voice charter and
 
 TanStack Query v5 for server state. `QueryProvider` uses `PersistQueryClientProvider` + MMKV persister. Cache buster = app version. `onlineManager` reads the NetInfo subscription in `hooks/useNetworkStatus.ts`, so retries pause offline and `refetchOnReconnect` fires; a query retries three times at most and never a status `isNonRetryableError` (`utils/apiErrors.ts`) calls final. `withRetry`, for calls made outside a query, gives up with an `ApiRequestError` carrying `statusCode` and `code` beside its message.
 
-All of it serves `apps/api`: `scripts/remove-api.sh` removes the layer with the Worker, for an app with no backend (CLAUDE.md, Data Fetching).
+All of it serves `apps/api` but `hooks/useNetworkStatus.ts`, which the app keeps for itself: `scripts/remove-api.sh` removes the rest with the Worker, for an app with no backend (CLAUDE.md, Data Fetching).
 
 ---
 

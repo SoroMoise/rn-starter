@@ -99,6 +99,8 @@ A `merge` result is not written back until the next `setState` (only a `migrate`
 `promoCoordinator.ts` — single in-memory authority over interruptive surfaces: the paywall, the AdMob interstitial and Google's consent form (`PromoSurface`).
 Enforces no stacking (`isSurfaceVisible`) and one automatic interruption per session, all types included (`canPresentAutoPromo` / `markAutoPromoShown`). A paywall the user opens registers its visibility but spends no budget, and so does the consent form while it is up. Reset at boot via `contextualPaywallService.resetSession()`.
 
+`sessionSignals.ts` — the failure the user just met: `markFriction(reason)`, `hadFriction()`, `frictionReason()`. One `FrictionReason` at a time, live for ten minutes and not overwritten meanwhile, in the process only. `SubscriptionProvider` marks `purchase_failed` and `restore_failed`; the contextual paywall and the rating ask refuse while one is live.
+
 ### `services/storage/`
 
 | File/Dir | Description |
@@ -159,6 +161,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 `contextualPaywallService.evaluate(...)` uses:
 - `engagementStorage.getSessionCount()` — only to hold the paywall back during the first session
 - `engagementStorage.getActionCount()` — the threshold (`minActions`); the trigger (`after_n_actions` / `power_action` / `rewarded_ad_dismissed`) only names the source
+- `sessionSignals.hadFriction()` — refused as `friction` while a failed purchase or restore is live
 
 `useContextualPaywall().maybeTrigger` refuses before recording an impression while no plan has loaded (`defaultPlan === null`), and records one only once `openPaywall` resolves `true`: the impressions are capped for life and each one arms a cooldown.
 
@@ -166,7 +169,7 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 
 ### App Rating
 
-`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state when it is asked — `reviewStorage`, the install date, the session and action counters, the last ad, `promoCoordinator`; never the session's boot snapshot, which a warm return can outlive by days — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. The arming lasts until the ask launches or a refusal outlives the session; a collision keeps it for a later one. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent — and never on a device with no store card, where nothing is spent. When the card cannot come, the user stays where they are: the listing opens only on a tap.
+`useRatingPrompt().maybeAskForRating({ moment })` is the single entry point. It gathers the state when it is asked — `reviewStorage`, the install date, the session and action counters, the last ad, `promoCoordinator`, `sessionSignals`; never the session's boot snapshot, which a warm return can outlive by days — and `evaluateReviewRequest` decides: Play's card is requested (`rating_ask_shown`) or the refusal is tracked with its reason (`rating_ask_suppressed`). A `RatingMoment` names where the ask came from, and an app adds its own to `constants/rating.ts`, listing in `STRONG_RATING_MOMENTS` those allowed to open the card. `recordAction()` never asks: it arms `action_completed` (`reviewStorage.setArmed`, persisted), and `RatingAskHost` raises it at a launch or on a return after five minutes away — Android reports an ad, the billing sheet or Play's own card over the app as a background too — 1.2 s after the screen is back. The arming lasts until the ask launches or a refusal outlives the session; a collision or a friction keeps it for a later one. The thresholds are `REVIEW_REQUEST_CONFIG`: at most three requests in a streak, 42 then 126 days apart, a streak ending after 180 days without one; not until two days after install, the second session and seven actions; not within two minutes of an interstitial, nor in a session whose interruption is spent, nor within ten minutes of a failed purchase or restore (`friction`, its `friction_reason` on `rating_ask_suppressed`) — and never on a device with no store card, where nothing is spent. When the card cannot come, the user stays where they are: the listing opens only on a tap.
 
 ---
 

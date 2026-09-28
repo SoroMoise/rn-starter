@@ -16,6 +16,7 @@ import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { paywallAnalytics } from '@/services/api/paywallAnalytics'
 import { purchaseService, type PurchaseFailure } from '@/services/api/purchaseService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
+import { sessionSignals } from '@/services/promo/sessionSignals'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import {
@@ -293,6 +294,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
             surface,
             error_code: ENTITLEMENT_INACTIVE,
           })
+          sessionSignals.markFriction('purchase_failed')
           showToast({ message: t('paywall.errorGeneric'), type: 'error' })
           return
         }
@@ -335,6 +337,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           surface,
           error_code: String((e as PurchasesError)?.code ?? 'unknown'),
         })
+        sessionSignals.markFriction('purchase_failed')
         showToast({ message: t(failureMessageKey(reason)), type: 'error' })
       } finally {
         setIsLoadingPurchase(false)
@@ -379,6 +382,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           source,
           surface,
         })
+        sessionSignals.markFriction('restore_failed')
         showToast({ message: t(failureMessageKey(reason)), type: 'error' })
       } finally {
         setIsLoadingPurchase(false)

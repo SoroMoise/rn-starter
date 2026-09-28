@@ -1,6 +1,7 @@
 import type { PurchaseSurface } from '@/constants/purchases'
 import type { RatingMoment } from '@/constants/rating'
 import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
+import type { FrictionReason } from '@/services/promo/sessionSignals'
 import type { OnboardingStepKind } from '@/types'
 import type { PlanPeriod } from '@/utils/offerings'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
@@ -87,6 +88,7 @@ export type AnalyticsEventMap = {
   rating_ask_suppressed: {
     moment: RatingMoment
     reason: ReviewSuppressionReason
+    friction_reason?: FrictionReason
     action_count: number
     session_count: number
     days_since_install: number

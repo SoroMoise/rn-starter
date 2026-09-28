@@ -1,4 +1,5 @@
 import type { RatingMoment } from '@/constants/rating'
+import { getIsOnline } from '@/hooks/useNetworkStatus'
 import { analyticsService } from '@/services/api/analyticsService'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { isNativeReviewAvailable, requestNativeReview } from '@/services/api/ratingService'
@@ -37,6 +38,7 @@ export function useRatingPrompt() {
           lastAdShownAt: adsStorage.getAdLastShown(),
           canPresentAutoPromo: promoCoordinator.canPresentAutoPromo(),
           hadFriction: sessionSignals.hadFriction(),
+          isOnline: getIsOnline(),
           now,
         })
 

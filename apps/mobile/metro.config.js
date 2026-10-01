@@ -20,4 +20,6 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
   return context.resolveRequest(context, moduleName, platform)
 }
 
-module.exports = withNativeWind(config, { input: './global.css' })
+// NativeWind counts 14 dp to the rem unless told otherwise: every Tailwind class would render at
+// 7/8 of the size a browser, or a design drawn in CSS px, gives it.
+module.exports = withNativeWind(config, { input: './global.css', inlineRem: 16 })

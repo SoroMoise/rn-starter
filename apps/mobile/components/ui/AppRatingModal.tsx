@@ -1,5 +1,6 @@
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { GRADIENTS } from '@/constants/uiColors'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -62,7 +63,7 @@ export function AppRatingModal({ visible, onRate, onLater, onDecline }: AppRatin
           <GradientButton
             onPress={handleSubmit}
             disabled={isDisabled}
-            colors={['#6366F1', '#8B5CF6']}
+            colors={GRADIENTS.cta}
             style={{ borderRadius: 12 }}
             gradientStyle={{ paddingVertical: 14 }}>
             <ThemedText variant="button" color="inverse">

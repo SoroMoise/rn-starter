@@ -1,4 +1,5 @@
 import { ThemedText } from '@components/ui/ThemedText'
+import { UI_COLORS } from '@constants/uiColors'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { usePremium } from '@hooks/usePremium'
 import { useThemedColor } from '@hooks/useThemedColor'
@@ -42,7 +43,7 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
         accessibilityLabel={t('premiumGate.unlock')}>
         <View style={styles.lockContent}>
           <View style={[styles.lockCircle, isDark && styles.lockCircleDark]}>
-            <Ionicons name="lock-closed" size={22} color="#8b5cf6" />
+            <Ionicons name="lock-closed" size={22} color={UI_COLORS.pro[500]} />
           </View>
           <View style={styles.badge}>
             <ThemedText style={styles.badgeText} color="inherit">
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    backgroundColor: '#ede9fe',
+    backgroundColor: UI_COLORS.pro[100],
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(139, 92, 246, 0.15)',
   },
   badge: {
-    backgroundColor: '#8b5cf6',
+    backgroundColor: UI_COLORS.pro[500],
     paddingHorizontal: 10,
     paddingVertical: 3,
     borderRadius: 99,
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   unlockLabel: {
-    color: '#8b5cf6',
+    color: UI_COLORS.pro[500],
     fontSize: 13,
   },
 })

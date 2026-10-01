@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { RTL_RESTART_BANNER_ENABLED } from '@/constants/config'
+import { UI_COLORS } from '@/constants/uiColors'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
@@ -45,9 +46,9 @@ export function RTLRestartBanner() {
   const restartScale = useSharedValue(1)
   const dismissScale = useSharedValue(1)
 
-  const primary = isDark ? '#25A4FF' : '#2f95dc'
-  const primaryMuted = isDark ? 'rgba(37,164,255,0.15)' : 'rgba(47,149,220,0.1)'
-  const primaryBorder = isDark ? 'rgba(37,164,255,0.3)' : 'rgba(47,149,220,0.2)'
+  const primary = isDark ? UI_COLORS.accent[400] : UI_COLORS.accent[500]
+  const primaryMuted = `${primary}${isDark ? '26' : '1a'}`
+  const primaryBorder = `${primary}${isDark ? '4d' : '33'}`
   const glassBorder = isDark ? 'rgba(180, 180, 180, 0.4)' : 'rgba(184, 179, 179, 0.4)'
   const glassBg = isDark ? 'rgba(10,18,35,0.65)' : 'rgba(240,247,255,0.55)'
   const trackBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'

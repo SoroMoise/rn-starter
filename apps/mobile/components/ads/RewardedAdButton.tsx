@@ -1,6 +1,7 @@
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { AD_REWARDED_FREE_DURATION_MINUTES } from '@/constants/admob'
+import { GRADIENTS } from '@/constants/uiColors'
 import { useAdFreeRemainingMinutes } from '@/hooks/useAdFreeRemainingMinutes'
 import { useAdsConsent } from '@/hooks/useAdsConsent'
 import { useContextualPaywall } from '@/hooks/useContextualPaywall'
@@ -96,7 +97,7 @@ export function RewardedAdButton() {
     return (
       <View style={styles.button}>
         <LinearGradient
-          colors={['#10b981', '#059669']}
+          colors={GRADIENTS.success}
           style={styles.buttonGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}>
@@ -113,7 +114,7 @@ export function RewardedAdButton() {
     <GradientButton
       onPress={handleWatchAd}
       isLoading={isLoading}
-      colors={['#2f95dc', '#25A4FF']}
+      colors={GRADIENTS.rewarded}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.button}

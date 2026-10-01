@@ -2,7 +2,6 @@ import { useThemeColor } from '@/components/Themed'
 import { RatingAskHost } from '@/components/layout/RatingAskHost'
 import { TelemetryEffects } from '@/components/layout/TelemetryEffects'
 import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
-import { PremiumTabBar } from '@/components/ui/PremiumTabBar'
 import { RTLRestartBanner } from '@/components/ui/RTLRestartBanner'
 import { usePremium } from '@/hooks/usePremium'
 import '@/i18n/service'
@@ -21,26 +20,27 @@ import { ensureNotificationChannels } from '@/services/notifications'
 import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Constants from 'expo-constants'
-import { Tabs } from 'expo-router'
+import { Stack } from 'expo-router'
 import { useEffect, useState } from 'react'
 import { Platform } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import '../global.css'
 
-function TabLayout() {
+export const unstable_settings = {
+  initialRouteName: '(tabs)',
+}
+
+function RootStack() {
   const colors = useThemeColor()
 
   return (
-    <Tabs
-      tabBar={(props) => <PremiumTabBar {...props} />}
+    <Stack
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: colors.screenBackground },
-      }}>
-      <Tabs.Screen name="index" />
-      <Tabs.Screen name="settings" options={{ lazy: true }} />
-    </Tabs>
+        contentStyle: { backgroundColor: colors.screenBackground },
+      }}
+    />
   )
 }
 
@@ -102,7 +102,7 @@ function AppContent() {
 
   return (
     <>
-      <TabLayout />
+      <RootStack />
       {isSessionStarted && <RatingAskHost />}
     </>
   )

@@ -33,9 +33,10 @@ audit of that gap and the plan to close it.
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
 | 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
-| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **in review** |
+| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
+| — | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
-| 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
+| 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | 1 | colour tokens **in review**, the onboarding planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
 | 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
 | 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
@@ -46,10 +47,10 @@ audit of that gap and the plan to close it.
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 46 have shipped (twelve with lots 1–3,
-three of them recorded only when the rest were scheduled, four with lot 14 and five with lot 15), 5
-are closed without shipping, and of the other 33, 30 are scheduled into lots 16–18 and 20–22 and 3
-wait, with lot 19, for the Firebase migration (§3).
+says what comes after the audit. Of the 84 "later" items, 48 have shipped (twelve with lots 1–3,
+three of them recorded only when the rest were scheduled, four with lot 14, five with lot 15 and two
+with lot 17's colour tokens), 5 are closed without shipping, and of the other 31, 28 are scheduled
+into lots 16–18 and 20–22 and 3 wait, with lot 19, for the Firebase migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -217,7 +218,7 @@ was checked against the code before it was given a lot, and eight left the list 
 The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
 that covers them. The order puts first what a user or the AdMob account meets, then what a derived
 app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
-earlier one. Each lot still runs as §2 and §17 say — verify, then refute, before anything ships —
+earlier one. Each lot still runs as §2 and §18 say — verify, then refute, before anything ships —
 and the notes below are where that verification starts, not its result.
 
 | Lot | Subject | Items | i18n |
@@ -225,7 +226,7 @@ and the notes below are where that verification starts, not its result.
 | 14 | Ads: nothing offered that cannot be served — shipped (§1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
 | 15 | Session signals: friction, connectivity, settle — shipped (§1, §16) | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
 | 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
-| 17 | Colour tokens and the onboarding | `brand-color-tokens`, `gradients-tokens`, `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
+| 17 | Colour tokens and the onboarding — the colour tokens shipped (§1, §17) | `brand-color-tokens` and `gradients-tokens` (shipped), `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
 | 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
 | 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
@@ -260,17 +261,14 @@ The starter has no installs, so nothing is lost by waiting, and every key is tra
 22's licences row, if the app links the page, is the only key foreseen after it, and waits for the
 next session.
 
-**Lot 17 — Colour tokens and the onboarding.** `UI_COLORS` exists and none of the surfaces that
-should read it does: `#8b5cf6` and `#10b981` are literal in `PremiumGate`, `PaywallPlanCard`,
-`PremiumBanner`, `ProWelcomeModal`, `PremiumValueStep`, `ExitIntentSheet`, the home screen, `Toast`
-and `SlidingSelector`, and `RewardedAdButton` and `AppRatingModal` still write their gradients by
-hand. `InitialLoadingScreen`, the fallback the lazy import was to use, left with lot 4, so the lot
-writes a light one; with Moti still reached from the home screen (§4), the gain is counted with
-`analyze` in modules evaluated at launch, not in bytes. Only the welcome step keeps its CTA as an
-overlay (`insets.bottom + 16`, 58 high): the lot settles whether that CTA moves into the step, as
-`OnboardingStepLayout`'s steps carry theirs — and the reserve hook has no reader — or the hook
-ships for the overlay, checked at the largest font scale either way. `FeatureStep` comes after the
-tokens its kicker colours need.
+**Lot 17 — Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
+the brand colours are `palette`'s three roles and every gradient is a token. `InitialLoadingScreen`,
+the fallback the lazy import was to use, left with lot 4, so the lot writes a light one; with Moti
+still reached from the home screen (§4), the gain is counted with `analyze` in modules evaluated at
+launch, not in bytes. Only the welcome step keeps its CTA as an overlay (`insets.bottom + 16`, 58
+high): the lot settles whether that CTA moves into the step, as `OnboardingStepLayout`'s steps carry
+theirs — and the reserve hook has no reader — or the hook ships for the overlay, checked at the
+largest font scale either way. `FeatureStep`'s kicker colours read the role scales.
 
 **Lot 18 — Primitives for a first caller, and the render path.** All but one are shapes the starter
 would ship without a caller — lot 10 left the channel table "later" for exactly that reason — so
@@ -560,7 +558,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§17, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§18, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -1103,7 +1101,45 @@ pass over the UI library takes it.
 
 ---
 
-## 17. Resuming in a new session
+## 17. What verification caught on lot 17's colour tokens, and two off-audit fixes
+
+Run from app-factory, whose review of an app's design against the starter found what the
+template made every app redo: hues no token reached, a stack the navigation rules assumed and did
+not ship, and a rem that shrank every mockup. The plan was checked against the code and the
+packages themselves, not by the two-stage workflow (§2); each commit passed `pnpm typecheck` and
+`pnpm lint`, and an Android `expo export` of the branch confirmed what Metro and NativeWind make of
+it.
+
+- **Two blues stood for one role.** The tab bar's tint, the rewarded button and the RTL banner used
+  the Expo template's `#2f95dc` / `#25A4FF`; every other accent was Tailwind's `#3b82f6`. They are
+  one role now, `accent`, at `#3b82f6` / `#60a5fa` in dark: the only change of hue a user of the
+  starter sees, with the indigo tints (the welcome plate, the offer panel, the home screen's
+  sparkles) that join it.
+- **Violet meant two things.** `UI_COLORS.brand` drew both Pro and the language row's icon; an app
+  whose Pro is gold would have turned its language icon gold. Pro is a role of its own, and the
+  language row takes `SettingsRow`'s accent defaults like any other row — it was their only caller.
+- **A class that drew nothing.** The About section's `dark:border-violet-500/30` set a border colour
+  on a view with no border width; it went rather than being renamed.
+- **The palette stays CommonJS.** `tailwind.config.js` `require`s it, and Expo's TypeScript base
+  (`allowJs`, `esModuleInterop`) types `palette.accent[500]` from the JS object, so one file feeds the
+  classes and the raw values with nothing kept in step by hand. The export holds the module once,
+  and compiles `bg-accent-500` to `#3b82f6`.
+- **NativeWind's default rem is 14, by its own source** (`withNativeWind`'s `inlineRem = 14`), and
+  the starter never set it: with 16 the export compiles `text-base` to 16/24 and `p-4` to 16. Sizes in
+  a `StyleSheet` — `WHEEL_ITEM_HEIGHT` 44, the tab bar's label, the buttons' 58 — do not move, and
+  each holds what grows inside it (a wheel row's `heading` is 18/28).
+- **Moving the tabs into a group moved nothing else.** URLs stay `/` and `/settings`, no route was
+  typed (`typedRoutes` is off), `remove-api.sh`'s edit of the root layout matches lines the change did
+  not touch, and `ADS.md` and the context file follow the two files.
+
+Two questions only a device answers. Whether every screen built from classes reads well an eighth
+larger — the onboarding, the paywall's perks and the settings rows at the largest font scale. And
+whether the tab bar's blur costs the same inside the stack's `(tabs)` screen as it did over the
+whole content view.
+
+---
+
+## 18. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.

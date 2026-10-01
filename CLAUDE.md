@@ -105,11 +105,13 @@ Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_K
 
 ### Navigation
 
-Expo Router file-based routing in `apps/mobile/app/`:
-- `index` — Home screen (premium feature showcase + paywall CTA)
-- `settings` — Settings screen (theme, language, premium, ads, legal)
+Expo Router file-based routing in `apps/mobile/app/`: a root `Stack`, whose first screen is the `(tabs)` group:
+- `(tabs)/index` — Home screen (premium feature showcase + paywall CTA)
+- `(tabs)/settings` — Settings screen (theme, language, premium, ads, legal)
 
 Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` before tabs are shown. The welcome step exposes a top-left language selector that opens the shared `LanguagePicker` bottom sheet. Custom `PremiumTabBar` with blur and haptics.
+
+**A screen that covers the tabs is a stack route beside `(tabs)`, never a tab.** A flow, an editor or a player opened from a tab is a file in `app/` next to the group (`app/editor.tsx`, `app/result/[id].tsx`): the root `Stack` pushes it over the tabs, with no tab bar, and `resetToHome()` dismisses back to them. A file inside `(tabs)` becomes a tab scene instead, under the tab bar, with no stack to dismiss — and `router.push` to a tab switches tabs rather than stacking. `unstable_settings.initialRouteName` keeps `(tabs)` under a stack route the app opens on, from a deep link or a notification, so back lands on the tabs instead of leaving the app.
 
 **The onboarding moves by step name, never by index.** `buildSteps()` in `OnboardingScreen` lists the `OnboardingStepKind`s in order, and a step that depends on the device — a permission, a platform, a feature flag — joins the list there from what that capability reports. That answer can arrive after the first frame, and an index then points at a different step: the list grows under the user and the flow jumps. `goToStep(kind)` and `goNext()` resolve neighbours by name, the progress bar reads `steps.length`, and the name travels with every onboarding event (`logOnboardingStepViewed`, `logOnboardingBackPressed`, `onboarding_pro_detected`) — a table resolving names from an index would file two steps under one name in the funnel, with no error anywhere.
 
@@ -137,7 +139,7 @@ SafeAreaProvider
             > ToastProvider
               > SubscriptionProvider
                 > AdFreeProvider
-                  > AppContent         <- onboarding gate, then TabLayout + RatingAskHost once the session started
+                  > AppContent         <- onboarding gate, then the root Stack + RatingAskHost once the session started
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -428,7 +430,7 @@ when its Worker went — the data-fetching layer has no reason to outlive the AP
 
 ### Safe area
 
-**One surface owns the bottom inset, and it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`: a fixed `pb-8` reads fine under gesture navigation and buries the last row under a three-button bar.
+**One surface owns the bottom inset, and on a tab it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. A stack route over the tabs has no tab bar, and `ScreenContainer` still leaves its bottom edge alone: its bottom controls add `insets.bottom` themselves, never `useTabBarPadding()`, which would float them a tab bar's height over nothing. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`: a fixed `pb-8` reads fine under gesture navigation and buries the last row under a three-button bar.
 
 ### Large screens
 
@@ -440,7 +442,11 @@ when its Worker went — the data-fetching layer has no reason to outlive the AP
 
 NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animations: Reanimated 4 + Moti (what Moti costs: Bundle size).
 
-**The theme setting stores an intention, never a scheme.** The selector is Light / Dark / System and `DEFAULT_SETTINGS.theme` is `'auto'`: a fresh install follows the phone before it follows a preference nobody expressed. Three vocabularies sit in three neighbouring files — `'auto'` stored by `settingsStore`, `'system'` for NativeWind (`applyColorScheme` maps one to the other), `light` / `dark` resolved — so whatever needs the scheme on screen reads `useThemedColor()`, never `settings.theme`: `settings.theme === 'dark'` is false on a dark phone left on System, with no error. `UI_COLORS` (`constants/uiColors.ts`) holds the raw values for the props a class cannot reach (an icon's `color`); its brand entries follow `tailwind.config.js` by hand, the others Tailwind's own palette.
+**A rem is 16 dp, as in a browser.** `metro.config.js` passes `inlineRem: 16` to `withNativeWind`. NativeWind's default is 14, React Native's default font size, and at 14 every Tailwind class renders at 7/8 of the size it has on the web and in a design drawn in CSS px: `text-base` was 14 dp where the design said 16, `p-4` 14 where it said 16, and the app came out an eighth smaller than its mockups with no error anywhere. Sizes written as numbers in a `StyleSheet` are dp already and do not move. Don't drop the option to "use the default".
+
+**The theme setting stores an intention, never a scheme.** The selector is Light / Dark / System and `DEFAULT_SETTINGS.theme` is `'auto'`: a fresh install follows the phone before it follows a preference nobody expressed. Three vocabularies sit in three neighbouring files — `'auto'` stored by `settingsStore`, `'system'` for NativeWind (`applyColorScheme` maps one to the other), `light` / `dark` resolved — so whatever needs the scheme on screen reads `useThemedColor()`, never `settings.theme`: `settings.theme === 'dark'` is false on a dark phone left on System, with no error.
+
+**Brand colours are roles, never hues.** `constants/palette.js` holds three scales, 50 to 950 like Tailwind's own: `accent` (links, switches, selection, the tab bar's tint), `pro` (what sells Pro or marks it) and `success`. `tailwind.config.js` reads it, so `bg-accent-500` and `dark:text-pro-300` are classes; `UI_COLORS` (`constants/uiColors.ts`) hands the same scales to the props a class cannot reach (`UI_COLORS.accent[500]` for an icon's `color`), and `Colors.ts` takes its tint from them. A rebrand swaps the scales — any Tailwind palette fits — and every surface follows; a hue written into a component (`bg-blue-500`, `'#8b5cf6'`) is the one place it misses, which is why the starter carries none. The file stays CommonJS because the Tailwind config `require`s it. Status colours keep Tailwind's names — amber for a warning or a billing issue, red for an error, orange offline — since they mean the same in every app, and so do the gold stars of the rating card and the Pro banner.
 
 **Every tab shares one gutter and one heading line.** A tab's `ScrollView` is `flex-1` with `paddingHorizontal: 20` on its content container — never a margin on the scroll view, which narrows its scroll track and touch area, and never a margin per block — and its `ScreenHeading` starts at `mt-3.5`, so nothing shifts sideways or vertically when the user switches tabs.
 
@@ -451,9 +457,9 @@ NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animation
 **Three more traps fail without an error.**
 - **A state variant — `active:`, `hover:`, `focus:` — goes on the `Pressable` itself, never on a `View` inside it.** NativeWind turns a `View` that carries one into a `Pressable` of its own, which wins React Native's responder negotiation: the real button's `onPress` never fires.
 - **A horizontal `ScrollView` inside a column takes `flexGrow: 0`.** React Native gives every `ScrollView` `flexGrow: 1`, so a horizontal one stretches down and eats the column's remaining height.
-- **A `BlurView` passes `experimentalBlurMethod="dimezisBlurView"`, and pays for it.** Without it Android draws no blur at all. With it, whenever what lies under the view redraws, expo-blur captures its nearest react-native-screens `Screen` — or the activity's whole content view, where there is none — and blurs it again; the library flags the method as a source of performance and graphical issues. `PremiumTabBar`, on screen at all times and outside every screen, pays that on purpose. If it ever shows in a trace, dropping the prop there is the first thing to try: Android falls back to a translucent panel, and iOS keeps its native blur either way.
+- **A `BlurView` passes `experimentalBlurMethod="dimezisBlurView"`, and pays for it.** Without it Android draws no blur at all. With it, whenever what lies under the view redraws, expo-blur captures its nearest react-native-screens `Screen` — or the activity's whole content view, where there is none — and blurs it again; the library flags the method as a source of performance and graphical issues. `PremiumTabBar`, on screen at all times, pays that on purpose: its nearest `Screen` is the root stack's `(tabs)`, which spans the window. If it ever shows in a trace, dropping the prop there is the first thing to try: Android falls back to a translucent panel, and iOS keeps its native blur either way.
 
-Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. The onboarding and the selling surfaces read them; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
+Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `rewarded`, `success`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. A gradient drawn from one role (`pro`, `rewarded`, `success`) takes its stops from `palette` and follows a rebrand; `cta` and the onboarding backgrounds are drawn by hand, and a rebrand redraws them. Every gradient in the app reads them — the onboarding, the selling surfaces, the rewarded button and the rating card; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
 
 Toasts go through `ToastProvider` (`showToast` / `hideToast`). Native modals sit above the app window, so to surface a toast over one, mount `ModalToastViewport active={visible}` inside the modal.
 

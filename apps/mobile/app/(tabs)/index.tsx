@@ -9,7 +9,7 @@ import {
   AD_BANNER_INDEX_ENABLED,
   AD_BANNER_RESERVED_HEIGHT,
 } from '@/constants/admob'
-import { GRADIENTS } from '@/constants/uiColors'
+import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { usePremium } from '@/hooks/usePremium'
@@ -87,8 +87,8 @@ export default function HomeScreen() {
                     ? ' border-b border-gray-100 dark:border-gray-700'
                     : ''
                 }`}>
-                <View className="h-9 w-9 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900/30">
-                  <Ionicons name={feat.icon} size={18} color="#3b82f6" />
+                <View className="h-9 w-9 items-center justify-center rounded-xl bg-accent-50 dark:bg-accent-900/30">
+                  <Ionicons name={feat.icon} size={18} color={UI_COLORS.accent[500]} />
                 </View>
                 <View className="flex-1">
                   <ThemedText variant="label" weight="semibold">
@@ -134,7 +134,7 @@ export default function HomeScreen() {
               accessibilityRole="button"
               accessibilityLabel={t('home.demoAction.label')}
               className="mt-4 flex-row items-center justify-center gap-2 rounded-2xl border border-gray-200 py-3.5 active:opacity-70 dark:border-gray-700">
-              <Ionicons name="sparkles-outline" size={18} color="#6366f1" />
+              <Ionicons name="sparkles-outline" size={18} color={UI_COLORS.accent[500]} />
               <ThemedText variant="label" weight="semibold">
                 {t('home.demoAction.label')}
               </ThemedText>

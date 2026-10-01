@@ -18,8 +18,8 @@ one unit are a single revenue line nobody can split afterwards.
 
 | # | Placement | Surface | Format | Constant | Unit | Status |
 |---|-----------|---------|--------|----------|------|--------|
-| 1 | Home | `app/index.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | mounted |
-| 2 | Settings | `app/settings.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_SETTINGS_BANNER_ID` | pending | mounted |
+| 1 | Home | `app/(tabs)/index.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_INDEX_BANNER_ID` | pending | mounted |
+| 2 | Settings | `app/(tabs)/settings.tsx`, pinned above the tab bar | Banner (anchored adaptive) | `ADMOB_SETTINGS_BANNER_ID` | pending | mounted |
 | 3 | Any value moment | `useActionRating().recordAction()` | Interstitial | `ADMOB_INTERSTITIAL_ID` | pending | wired to the Home demo action |
 | 4 | Settings → Ads | `RewardedAdButton`, placement `settings` | Rewarded | `ADMOB_REWARDED_ID` | pending | mounted |
 

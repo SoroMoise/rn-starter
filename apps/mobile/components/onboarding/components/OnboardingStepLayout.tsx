@@ -24,7 +24,7 @@ type OnboardingStepLayoutProps = {
 
 export function OnboardingStepLayout({
   icon,
-  iconColor = UI_COLORS.brandBlue,
+  iconColor = UI_COLORS.accent[500],
   title,
   subtitle,
   children,

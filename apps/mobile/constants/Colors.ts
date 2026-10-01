@@ -1,5 +1,7 @@
-const tintColorLight = '#2f95dc'
-const tintColorDark = '#25A4FF'
+import palette from './palette'
+
+const tintColorLight = palette.accent[500]
+const tintColorDark = palette.accent[400]
 
 export const SCREEN_BACKGROUND = {
   light: '#f9fafb',
@@ -19,7 +21,7 @@ export default {
     card: '#f2f2f2',
     border: '#e5e5e5',
     primary: tintColorLight,
-    primaryMuted: '#2f95dc20',
+    primaryMuted: `${tintColorLight}20`,
     textMuted: '#6b7280',
     tabBarBackground: '#ffffffee',
     tabBarBorder: '#e2e8f0',
@@ -36,7 +38,7 @@ export default {
     card: '#1f2937',
     border: '#333',
     primary: tintColorDark,
-    primaryMuted: '#25A4FF18',
+    primaryMuted: `${tintColorDark}18`,
     textMuted: '#9ca3af',
     tabBarBackground: '#0a0a0aee',
     tabBarBorder: '#1e293b',

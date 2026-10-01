@@ -6,7 +6,7 @@ import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_PREMIUM_ORIGIN } from '@/constants/purchases'
-import { GRADIENTS } from '@/constants/uiColors'
+import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
 import { triggerLight } from '@/utils/haptics'
@@ -38,7 +38,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
     trialDays === null
       ? []
       : [
-          { dot: '#3b82f6', icon: 'lock-open' as const, key: 'dayUnlock', day: 0 },
+          { dot: UI_COLORS.accent[500], icon: 'lock-open' as const, key: 'dayUnlock', day: 0 },
           { dot: '#6b7280', icon: 'card' as const, key: 'dayBilling', day: trialDays },
         ]
 
@@ -47,7 +47,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
     void purchaseSelected()
   }, [purchaseSelected])
 
-  const offerPanelClass = `mt-6 rounded-2xl p-4 ${isDark ? 'bg-white/5' : 'bg-indigo-500/[0.06]'}`
+  const offerPanelClass = `mt-6 rounded-2xl p-4 ${isDark ? 'bg-white/5' : 'bg-accent-500/[0.06]'}`
 
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
@@ -64,8 +64,8 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           paddingHorizontal: 24,
         }}
         showsVerticalScrollIndicator={false}>
-        <View className="mb-5 h-16 w-16 items-center justify-center self-center rounded-3xl bg-violet-500/20">
-          <Ionicons name="star" size={32} color="#8b5cf6" />
+        <View className="mb-5 h-16 w-16 items-center justify-center self-center rounded-3xl bg-pro-500/20">
+          <Ionicons name="star" size={32} color={UI_COLORS.pro[500]} />
         </View>
 
         <ThemedText variant="display" align="center" className="text-3xl">

@@ -159,7 +159,7 @@ export function WheelPicker<T extends string | number>({
         <View style={{ width: contentWidth, height: WHEEL_ITEM_HEIGHT, flexDirection: 'row' }}>
           <View
             style={{ width: contentWidth - unitInset, height: WHEEL_ITEM_HEIGHT }}
-            className="border-y border-brand-blue/40 bg-brand-blue/5 dark:border-brand-blue/30 dark:bg-brand-blue/10"
+            className="border-y border-accent-500/40 bg-accent-500/5 dark:border-accent-500/30 dark:bg-accent-500/10"
           />
           {unit ? (
             <View

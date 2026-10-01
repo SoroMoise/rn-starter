@@ -2,6 +2,7 @@ import { Divider, Section, SectionContent } from '@/components/settings/Settings
 import { SettingsLinkRow } from '@/components/ui/SettingsLinkRow'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { PRO_BENEFITS } from '@/constants/purchases'
+import { UI_COLORS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
@@ -35,8 +36,8 @@ export function PremiumBanner() {
       <Section>
         <SectionContent>
           <View className="flex-row items-center px-4 py-3.5">
-            <View className="mr-3 h-9 w-9 items-center justify-center rounded-xl bg-violet-100 dark:bg-violet-500/20">
-              <Ionicons name="star" size={18} color="#8b5cf6" />
+            <View className="mr-3 h-9 w-9 items-center justify-center rounded-xl bg-pro-100 dark:bg-pro-500/20">
+              <Ionicons name="star" size={18} color={UI_COLORS.pro[500]} />
             </View>
             <View className="flex-1">
               <ThemedText variant="body" weight="medium">
@@ -48,7 +49,7 @@ export function PremiumBanner() {
                 </ThemedText>
               )}
             </View>
-            <Ionicons name="checkmark-circle" size={20} color="#10b981" />
+            <Ionicons name="checkmark-circle" size={20} color={UI_COLORS.success[500]} />
           </View>
 
           {managementUrl !== null && (
@@ -76,7 +77,7 @@ export function PremiumBanner() {
       <TouchableOpacity
         onPress={() => void openPaywall({ source: 'settings' })}
         activeOpacity={0.85}
-        className="overflow-hidden rounded-2xl bg-violet-600 dark:bg-violet-700">
+        className="overflow-hidden rounded-2xl bg-pro-600 dark:bg-pro-700">
         <View className="p-4">
           <View className="mb-2 flex-row items-center gap-2">
             <Ionicons name="star" size={16} color="#fbbf24" />
@@ -84,11 +85,11 @@ export function PremiumBanner() {
               {t('paywall.title')}
             </ThemedText>
           </View>
-          <ThemedText color="inherit" className="mb-3 text-sm text-violet-200">
+          <ThemedText color="inherit" className="mb-3 text-sm text-pro-200">
             {PRO_BENEFITS.map((benefit) => t(benefit.i18nKey, benefit.params)).join(' · ')}
           </ThemedText>
           <View className="self-start rounded-full bg-white px-4 py-1.5">
-            <ThemedText color="inherit" weight="bold" className="text-sm text-violet-700">
+            <ThemedText color="inherit" weight="bold" className="text-sm text-pro-700">
               {t('settings.goPremium')}
             </ThemedText>
           </View>

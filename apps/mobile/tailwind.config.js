@@ -1,3 +1,5 @@
+const palette = require('./constants/palette')
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: 'class',
@@ -6,11 +8,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          DEFAULT: '#8b5cf6',
-          blue: '#3b82f6',
-          green: '#10b981',
-        },
+        accent: palette.accent,
+        pro: palette.pro,
+        success: palette.success,
       },
     },
   },

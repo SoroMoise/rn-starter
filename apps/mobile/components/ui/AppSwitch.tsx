@@ -28,7 +28,7 @@ export function AppSwitch({ value }: { value: boolean }) {
 
   return (
     <View
-      className={value ? 'bg-brand-blue' : 'bg-gray-300 dark:bg-gray-600'}
+      className={value ? 'bg-accent-500' : 'bg-gray-300 dark:bg-gray-600'}
       style={{
         width: TRACK_WIDTH,
         height: TRACK_HEIGHT,

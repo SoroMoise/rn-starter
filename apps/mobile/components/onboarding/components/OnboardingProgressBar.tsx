@@ -19,7 +19,7 @@ export function OnboardingProgressBar({ totalSteps, currentStep }: OnboardingPro
           }`}>
           <Animated.View
             className={`h-full rounded-full ${
-              index <= currentStep ? 'bg-blue-400' : 'bg-transparent'
+              index <= currentStep ? 'bg-accent-400' : 'bg-transparent'
             }`}
             style={{ width: index <= currentStep ? '100%' : '0%' }}
           />

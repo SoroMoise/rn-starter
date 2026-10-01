@@ -1,4 +1,5 @@
 import { ThemedText } from '@/components/ui/ThemedText'
+import { UI_COLORS } from '@/constants/uiColors'
 import { triggerError, triggerSuccess, triggerWarning } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
@@ -139,15 +140,15 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
   const getIconConfig = (): { name: IoniconsName; color: string } => {
     switch (type) {
       case 'success':
-        return { name: 'checkmark-circle', color: '#10b981' }
+        return { name: 'checkmark-circle', color: UI_COLORS.success[500] }
       case 'error':
         return { name: 'close-circle', color: '#ef4444' }
       case 'warning':
         return { name: 'warning', color: '#f59e0b' }
       case 'info':
-        return { name: 'information-circle', color: '#3b82f6' }
+        return { name: 'information-circle', color: UI_COLORS.accent[500] }
       default:
-        return { name: 'checkmark-circle', color: '#10b981' }
+        return { name: 'checkmark-circle', color: UI_COLORS.success[500] }
     }
   }
 

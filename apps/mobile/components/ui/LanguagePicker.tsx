@@ -95,7 +95,7 @@ export function LanguagePicker({
             onPress={() => handleItemPress(item.code)}
             className={`mb-2 flex-row items-center justify-between rounded-2xl px-3 py-2 shadow-sm ${
               isSelected
-                ? 'bg-blue-50 shadow-blue-100 dark:bg-blue-900/30 dark:shadow-none'
+                ? 'bg-accent-50 shadow-accent-100 dark:bg-accent-900/30 dark:shadow-none'
                 : 'bg-white shadow-gray-200 dark:bg-gray-800 dark:shadow-none'
             }`}
             style={({ pressed }) => ({
@@ -123,7 +123,7 @@ export function LanguagePicker({
             </View>
 
             {isSelected && (
-              <View className="h-8 w-8 items-center justify-center rounded-full bg-blue-500">
+              <View className="h-8 w-8 items-center justify-center rounded-full bg-accent-500">
                 <ThemedText variant="heading" color="inverse">
                   ✓
                 </ThemedText>
@@ -152,7 +152,7 @@ export function LanguagePicker({
           <Animated.View
             className={`flex-row items-center rounded-2xl px-4 py-2 ${
               isSearchFocused
-                ? 'border-2 border-blue-500 bg-white shadow-md shadow-blue-200 dark:bg-gray-800 dark:shadow-blue-900/50'
+                ? 'border-2 border-accent-500 bg-white shadow-md shadow-accent-200 dark:bg-gray-800 dark:shadow-accent-900/50'
                 : 'border-2 border-transparent bg-white shadow-sm shadow-gray-200 dark:bg-gray-800 dark:shadow-gray-900'
             }`}
             style={{

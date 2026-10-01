@@ -2,7 +2,7 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ModalBottomSheet } from '@/components/ui/ModalBottomSheet'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ONBOARDING_EXIT_INTENT_ORIGIN } from '@/constants/purchases'
-import { GRADIENTS } from '@/constants/uiColors'
+import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -72,8 +72,8 @@ export function ExitIntentSheet({
       showCloseButton={false}
       compact>
       <View style={{ paddingHorizontal: 24, paddingTop: 12, paddingBottom: insets.bottom + 40 }}>
-        <View className="mb-4 h-14 w-14 items-center justify-center self-center rounded-full bg-violet-500/20">
-          <Ionicons name="time-outline" size={28} color="#8b5cf6" />
+        <View className="mb-4 h-14 w-14 items-center justify-center self-center rounded-full bg-pro-500/20">
+          <Ionicons name="time-outline" size={28} color={UI_COLORS.pro[500]} />
         </View>
         <ThemedText variant="display" align="center" className="text-2xl">
           {copy.title}

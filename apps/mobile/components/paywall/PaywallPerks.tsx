@@ -19,7 +19,7 @@ export function PaywallPerks() {
           style={
             index < PRO_BENEFITS.length - 1 && [styles.rowBorder, isDark && styles.rowBorderDark]
           }>
-          <Ionicons name={benefit.icon} size={20} color={UI_COLORS.brand} />
+          <Ionicons name={benefit.icon} size={20} color={UI_COLORS.pro[500]} />
           <ThemedText variant="body" weight="medium" className="flex-1">
             {t(benefit.i18nKey, benefit.params)}
           </ThemedText>

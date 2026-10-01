@@ -110,7 +110,7 @@ export default function SettingsScreen() {
             options={themeOptions}
             value={theme}
             onChange={handleThemeChange}
-            variant="blue"
+            variant="accent"
           />
         </Section>
 
@@ -122,7 +122,7 @@ export default function SettingsScreen() {
 
         <Section className="mb-0">
           <SectionHeader>{t('settings.about')}</SectionHeader>
-          <SectionContent overflowHidden={false} className="dark:border-violet-500/30">
+          <SectionContent overflowHidden={false}>
             <TouchableOpacity
               onPress={() => void openExternalLink({ url: APP_WEBSITE_URL })}
               activeOpacity={0.6}

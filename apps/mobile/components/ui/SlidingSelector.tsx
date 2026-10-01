@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from 'react'
 import { I18nManager, TouchableOpacity, View } from 'react-native'
 
 import { ThemedText } from '@/components/ui/ThemedText'
+import { UI_COLORS } from '@/constants/uiColors'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
@@ -20,7 +21,7 @@ type SlidingSelectorProps<T extends string | number> = {
   options: SlidingOption<T>[]
   value: T
   onChange: (value: T) => void
-  variant: 'blue' | 'white'
+  variant: 'accent' | 'white'
 }
 
 const SNAP_SPRING = { damping: 50, stiffness: 250 }
@@ -32,9 +33,9 @@ const STRETCH_RATIO = 7
 const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 
 const STYLES = {
-  blue: {
+  accent: {
     container: 'flex-row rounded-2xl bg-white p-1.5 dark:bg-gray-800',
-    indicator: 'rounded-xl bg-blue-500 dark:bg-blue-600',
+    indicator: 'rounded-xl bg-accent-500 dark:bg-accent-600',
     itemPadding: 'py-3',
     activeText: 'text-white',
     inactiveText: 'text-gray-500 dark:text-gray-400',
@@ -45,9 +46,9 @@ const STYLES = {
     container: 'flex-row rounded-xl bg-gray-100 p-1 dark:bg-gray-900',
     indicator: 'rounded-lg bg-white dark:bg-gray-700',
     itemPadding: 'py-2',
-    activeText: 'text-blue-500 dark:text-blue-400',
+    activeText: 'text-accent-500 dark:text-accent-400',
     inactiveText: 'text-gray-400 dark:text-gray-500',
-    activeIconColor: '#3b82f6',
+    activeIconColor: UI_COLORS.accent[500],
     inactiveIconColor: { dark: '#9ca3af', light: '#9ca3af' },
   },
 } as const

@@ -5,7 +5,7 @@ import { Modal, Pressable, View } from 'react-native'
 
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { GRADIENTS } from '@/constants/uiColors'
+import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 
 type Props = {
   visible: boolean
@@ -21,8 +21,8 @@ export function ProWelcomeModal({ visible, onSkip, onContinue }: Props) {
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onContinue}>
       <View className="flex-1 items-center justify-center bg-black/60 px-6">
         <View className={`w-full max-w-md rounded-3xl p-6 ${isDark ? 'bg-[#1a1a2e]' : 'bg-white'}`}>
-          <View className="mb-4 h-14 w-14 items-center justify-center rounded-2xl bg-violet-500/20">
-            <Ionicons name="star" size={28} color="#8b5cf6" />
+          <View className="mb-4 h-14 w-14 items-center justify-center rounded-2xl bg-pro-500/20">
+            <Ionicons name="star" size={28} color={UI_COLORS.pro[500]} />
           </View>
 
           <ThemedText variant="title" weight="bold" className="mb-2">

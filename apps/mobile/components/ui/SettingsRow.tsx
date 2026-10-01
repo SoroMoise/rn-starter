@@ -25,8 +25,8 @@ type SettingsRowProps = {
 export function SettingsRow({
   icon,
   title,
-  iconBgClassName = 'bg-blue-50 dark:bg-blue-500/20',
-  iconColor = UI_COLORS.brandBlue,
+  iconBgClassName = 'bg-accent-50 dark:bg-accent-500/20',
+  iconColor = UI_COLORS.accent[500],
   description,
   value,
   pro = false,

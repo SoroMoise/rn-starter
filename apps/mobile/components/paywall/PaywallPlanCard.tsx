@@ -1,5 +1,6 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
+import { UI_COLORS } from '@/constants/uiColors'
 import { useThemedColor } from '@/hooks/useThemedColor'
 import React from 'react'
 import { Pressable, StyleSheet, View } from 'react-native'
@@ -118,12 +119,12 @@ const styles = StyleSheet.create({
     borderColor: '#374151',
   },
   cardSelected: {
-    borderColor: '#8b5cf6',
-    backgroundColor: '#f5f3ff',
+    borderColor: UI_COLORS.pro[500],
+    backgroundColor: UI_COLORS.pro[50],
   },
   cardSelectedDark: {
-    backgroundColor: 'rgba(139, 92, 246, 0.08)',
-    borderColor: '#8b5cf6',
+    backgroundColor: `${UI_COLORS.pro[500]}14`,
+    borderColor: UI_COLORS.pro[500],
   },
   badges: {
     position: 'absolute',
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   savingsBadge: {
-    backgroundColor: '#8b5cf6',
+    backgroundColor: UI_COLORS.pro[500],
     paddingHorizontal: 10,
     paddingVertical: 1,
     borderRadius: 99,
@@ -144,16 +145,16 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   trialBadge: {
-    backgroundColor: '#d1fae5',
+    backgroundColor: UI_COLORS.success[100],
     paddingHorizontal: 10,
     paddingVertical: 1,
     borderRadius: 99,
   },
   trialBadgeDark: {
-    backgroundColor: '#10B981',
+    backgroundColor: UI_COLORS.success[500],
   },
   trialText: {
-    color: '#059669',
+    color: UI_COLORS.success[600],
     fontSize: 11,
     fontWeight: '600',
   },
@@ -178,12 +179,12 @@ const styles = StyleSheet.create({
     borderColor: '#4b5563',
   },
   radioSelected: {
-    borderColor: '#8b5cf6',
+    borderColor: UI_COLORS.pro[500],
   },
   radioDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
-    backgroundColor: '#8b5cf6',
+    backgroundColor: UI_COLORS.pro[500],
   },
 })

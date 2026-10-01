@@ -105,11 +105,13 @@ Required repository secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_K
 
 ### Navigation
 
-Expo Router file-based routing in `apps/mobile/app/`:
-- `index` — Home screen (premium feature showcase + paywall CTA)
-- `settings` — Settings screen (theme, language, premium, ads, legal)
+Expo Router file-based routing in `apps/mobile/app/`: a root `Stack`, whose first screen is the `(tabs)` group:
+- `(tabs)/index` — Home screen (premium feature showcase + paywall CTA)
+- `(tabs)/settings` — Settings screen (theme, language, premium, ads, legal)
 
 Onboarding flow (2 steps: welcome → premium value) is gated in `AppContent` before tabs are shown. The welcome step exposes a top-left language selector that opens the shared `LanguagePicker` bottom sheet. Custom `PremiumTabBar` with blur and haptics.
+
+**A screen that covers the tabs is a stack route beside `(tabs)`, never a tab.** A flow, an editor or a player opened from a tab is a file in `app/` next to the group (`app/editor.tsx`, `app/result/[id].tsx`): the root `Stack` pushes it over the tabs, with no tab bar, and `resetToHome()` dismisses back to them. A file inside `(tabs)` becomes a tab scene instead, under the tab bar, with no stack to dismiss — and `router.push` to a tab switches tabs rather than stacking. `unstable_settings.initialRouteName` keeps `(tabs)` under a stack route the app opens on, from a deep link or a notification, so back lands on the tabs instead of leaving the app.
 
 **The onboarding moves by step name, never by index.** `buildSteps()` in `OnboardingScreen` lists the `OnboardingStepKind`s in order, and a step that depends on the device — a permission, a platform, a feature flag — joins the list there from what that capability reports. That answer can arrive after the first frame, and an index then points at a different step: the list grows under the user and the flow jumps. `goToStep(kind)` and `goNext()` resolve neighbours by name, the progress bar reads `steps.length`, and the name travels with every onboarding event (`logOnboardingStepViewed`, `logOnboardingBackPressed`, `onboarding_pro_detected`) — a table resolving names from an index would file two steps under one name in the funnel, with no error anywhere.
 
@@ -137,7 +139,7 @@ SafeAreaProvider
             > ToastProvider
               > SubscriptionProvider
                 > AdFreeProvider
-                  > AppContent         <- onboarding gate, then TabLayout + RatingAskHost once the session started
+                  > AppContent         <- onboarding gate, then the root Stack + RatingAskHost once the session started
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -428,7 +430,7 @@ when its Worker went — the data-fetching layer has no reason to outlive the AP
 
 ### Safe area
 
-**One surface owns the bottom inset, and it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`: a fixed `pb-8` reads fine under gesture navigation and buries the last row under a three-button bar.
+**One surface owns the bottom inset, and on a tab it is the tab bar.** `PremiumTabBar` is absolute and pads itself by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top', 'left', 'right']}` — padding the scene too counted the inset twice and pushed the ad banner and anything else anchored to the bottom a whole navigation bar clear of the bar. Because the tab bar is absolute, the scene spans the full window and `useSafeAreaInsets()` inside a screen returns the real window insets: anything anchored to the bottom measures from the window and adds the inset itself, through `useTabBarPadding()`. A stack route over the tabs has no tab bar, and `ScreenContainer` still leaves its bottom edge alone: its bottom controls add `insets.bottom` themselves, never `useTabBarPadding()`, which would float them a tab bar's height over nothing. Sheets follow the same rule from the other side — they are their own window and add no bottom padding of their own; the content they are given owns `insets.bottom`: a fixed `pb-8` reads fine under gesture navigation and buries the last row under a three-button bar.
 
 ### Large screens
 
@@ -453,7 +455,7 @@ NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Animation
 **Three more traps fail without an error.**
 - **A state variant — `active:`, `hover:`, `focus:` — goes on the `Pressable` itself, never on a `View` inside it.** NativeWind turns a `View` that carries one into a `Pressable` of its own, which wins React Native's responder negotiation: the real button's `onPress` never fires.
 - **A horizontal `ScrollView` inside a column takes `flexGrow: 0`.** React Native gives every `ScrollView` `flexGrow: 1`, so a horizontal one stretches down and eats the column's remaining height.
-- **A `BlurView` passes `experimentalBlurMethod="dimezisBlurView"`, and pays for it.** Without it Android draws no blur at all. With it, whenever what lies under the view redraws, expo-blur captures its nearest react-native-screens `Screen` — or the activity's whole content view, where there is none — and blurs it again; the library flags the method as a source of performance and graphical issues. `PremiumTabBar`, on screen at all times and outside every screen, pays that on purpose. If it ever shows in a trace, dropping the prop there is the first thing to try: Android falls back to a translucent panel, and iOS keeps its native blur either way.
+- **A `BlurView` passes `experimentalBlurMethod="dimezisBlurView"`, and pays for it.** Without it Android draws no blur at all. With it, whenever what lies under the view redraws, expo-blur captures its nearest react-native-screens `Screen` — or the activity's whole content view, where there is none — and blurs it again; the library flags the method as a source of performance and graphical issues. `PremiumTabBar`, on screen at all times, pays that on purpose: its nearest `Screen` is the root stack's `(tabs)`, which spans the window. If it ever shows in a trace, dropping the prop there is the first thing to try: Android falls back to a translucent panel, and iOS keeps its native blur either way.
 
 Gradients are tokens: `GRADIENTS` in `constants/uiColors.ts`, named by role (`cta`, `pro`, `rewarded`, `success`, `onboardingStepLight` / `onboardingStepDark`) so a rebrand edits values and never names. A gradient drawn from one role (`pro`, `rewarded`, `success`) takes its stops from `palette` and follows a rebrand; `cta` and the onboarding backgrounds are drawn by hand, and a rebrand redraws them. Every gradient in the app reads them — the onboarding, the selling surfaces, the rewarded button and the rating card; `satisfies Record<string, readonly [string, string, ...string[]]>` is what expo-linear-gradient requires, and turns a one-colour token into a build error.
 

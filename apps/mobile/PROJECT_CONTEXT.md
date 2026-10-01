@@ -30,7 +30,7 @@ SafeAreaProvider
             > ToastProvider    <- toast stack (ModalToastViewport for modals)
               > SubscriptionProvider   <- RevenueCat, offline allowance, billing issue, PaywallModal
                 > AdFreeProvider       <- ad-free session window tracking
-                  > AppContent         <- onboarding gate, then TabLayout (+ RatingAskHost once the session started)
+                  > AppContent         <- onboarding gate, then the root Stack (+ RatingAskHost once the session started)
       RTLRestartBanner         <- outside provider tree
 ```
 
@@ -42,8 +42,8 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 
 | Route | File | Description |
 |---|---|---|
-| `/(tabs)/index` | `app/index.tsx` | Home — premium feature showcase, paywall CTA |
-| `/(tabs)/settings` | `app/settings.tsx` | Settings — theme, language, premium, ads, legal |
+| `/(tabs)/index` | `app/(tabs)/index.tsx` | Home — premium feature showcase, paywall CTA |
+| `/(tabs)/settings` | `app/(tabs)/settings.tsx` | Settings — theme, language, premium, ads, legal |
 | Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2-step flow: welcome → premium value (welcome has a top-left language selector) |
 | Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet, assembled from the `components/paywall/` blocks (`PaywallHero`, `PaywallPerks`, `PaywallPlanCard`, `PaywallTrustRow`, `PaywallLegalLinks`, `PriceRetryNotice`) over `usePaywallPlans` |
 
@@ -175,9 +175,11 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 
 ## Navigation
 
-Expo Router file-based. Two tabs rendered by `TabLayout`:
+Expo Router file-based. The root layout renders a `Stack` (`RootStack` in `app/_layout.tsx`) whose first screen is the `(tabs)` group, and `unstable_settings.initialRouteName` keeps it there under any stack route the app opens on. The group's layout (`app/(tabs)/_layout.tsx`) renders two tabs:
 1. `index` — Home screen
 2. `settings` — Settings screen (lazy)
+
+A screen that covers the tabs is a file in `app/` beside the group, pushed over them by the stack with no tab bar; the starter ships none.
 
 `PremiumTabBar` renders tab icons with blur background and haptic feedback.
 

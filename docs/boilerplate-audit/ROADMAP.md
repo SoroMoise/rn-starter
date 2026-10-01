@@ -33,7 +33,7 @@ audit of that gap and the plan to close it.
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
 | 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
-| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **in review** |
+| 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | — | planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |

@@ -148,7 +148,9 @@
     "title": "Changement du sens de lecture",
     "message": "Redémarrage dans {{count}} s pour l'appliquer.",
     "restartNow": "Redémarrer",
-    "restartManually": "Plus tard"
+    "restartManually": "Plus tard",
+    "messageManual": "Redémarrez l'app pour l'appliquer.",
+    "announcement": "Changement du sens de lecture. Redémarrez l'app pour l'appliquer."
   },
   "paywall": {
     "title": "RN Starter Pro",

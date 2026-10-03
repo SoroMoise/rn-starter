@@ -1,7 +1,9 @@
-import { TAB_BAR_HEIGHT } from '@/components/ui/PremiumTabBar'
+import { tabBarHeight } from '@/components/ui/PremiumTabBar'
+import { useWindowDimensions } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function useTabBarPadding(extra = 0) {
   const insets = useSafeAreaInsets()
-  return TAB_BAR_HEIGHT + insets.bottom + extra
+  const { fontScale } = useWindowDimensions()
+  return tabBarHeight(fontScale) + insets.bottom + extra
 }

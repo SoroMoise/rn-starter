@@ -148,7 +148,9 @@
     "title": "Switching reading direction",
     "message": "Restarting in {{count}}s to apply it.",
     "restartNow": "Restart now",
-    "restartManually": "Restart manually"
+    "restartManually": "Restart manually",
+    "messageManual": "Restart the app to apply it.",
+    "announcement": "Switching reading direction. Restart the app to apply it."
   },
   "paywall": {
     "title": "RN Starter Pro",

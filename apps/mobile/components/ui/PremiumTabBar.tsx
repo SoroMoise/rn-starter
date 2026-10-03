@@ -96,7 +96,7 @@ function TabItem({
         />
       )}
 
-      <Ionicons name={iconName} size={22} color={iconColor} />
+      <Ionicons name={iconName} size={22} color={iconColor} importantForAccessibility="no" />
 
       <ThemedText
         color="inherit"
@@ -128,7 +128,9 @@ function TabBarContent({
   return (
     <>
       <View style={[styles.accentLine, { backgroundColor: '#ffffff08' }]} />
-      <View style={[styles.tabsRow, { paddingBottom: Math.max(bottomInset, 8) }]}>
+      <View
+        accessibilityRole="tablist"
+        style={[styles.tabsRow, { paddingBottom: Math.max(bottomInset, 8) }]}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index
 
@@ -195,7 +197,11 @@ export function PremiumTabBar({ state, navigation }: BottomTabBarProps) {
   )
 }
 
-export const TAB_BAR_HEIGHT = 64
+const TAB_BAR_HEIGHT = 64
+const TAB_LABEL_LINE_HEIGHT = 17
+
+export const tabBarHeight = (fontScale: number) =>
+  TAB_BAR_HEIGHT + Math.max(0, fontScale - 1) * TAB_LABEL_LINE_HEIGHT
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -235,6 +241,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 12,
+    lineHeight: TAB_LABEL_LINE_HEIGHT,
     letterSpacing: 0.2,
   },
 })

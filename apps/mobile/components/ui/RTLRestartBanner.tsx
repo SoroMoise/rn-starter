@@ -1,13 +1,15 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import { RTL_RESTART_BANNER_ENABLED } from '@/constants/config'
 import { UI_COLORS } from '@/constants/uiColors'
+import { useScreenReaderEnabled } from '@/hooks/useScreenReaderEnabled'
+import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { BlurView } from 'expo-blur'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { AccessibilityInfo, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native'
 import Animated, {
   cancelAnimation,
   Easing,
@@ -20,9 +22,11 @@ import Animated, {
 } from 'react-native-reanimated'
 import RNRestart from 'react-native-restart'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { TAB_BAR_HEIGHT } from './PremiumTabBar'
+import { tabBarHeight } from './PremiumTabBar'
 
 const COUNTDOWN_SECONDS = 15
+const TAB_BAR_CLEARANCE = 50
+const ONBOARDING_CLEARANCE = 16
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -32,7 +36,12 @@ export function RTLRestartBanner() {
   const rtlRestartNeeded = useSettingsStore((s) => s.rtlRestartNeeded)
   const rtlRestartTrigger = useSettingsStore((s) => s.rtlRestartTrigger)
   const clearRTLRestartNeeded = useSettingsStore((s) => s.clearRTLRestartNeeded)
+  const isOnboardingCompleted = useOnboardingStore((s) => s.isCompleted)
   const insets = useSafeAreaInsets()
+  const { fontScale } = useWindowDimensions()
+  const isManual = useScreenReaderEnabled()
+  const tRef = useRef(t)
+  tRef.current = t
 
   const [count, setCount] = useState(COUNTDOWN_SECONDS)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -79,12 +88,15 @@ export function RTLRestartBanner() {
 
   useEffect(() => {
     if (!rtlRestartNeeded || !RTL_RESTART_BANNER_ENABLED) return
-
-    setCount(COUNTDOWN_SECONDS)
-
     translateY.value = withSpring(0, { damping: 22, stiffness: 200, mass: 0.9 })
     opacity.value = withTiming(1, { duration: 250 })
+    AccessibilityInfo.announceForAccessibility(tRef.current('rtlRestart.announcement'))
+  }, [rtlRestartNeeded, rtlRestartTrigger, opacity, translateY])
 
+  useEffect(() => {
+    if (!rtlRestartNeeded || !RTL_RESTART_BANNER_ENABLED || isManual) return
+
+    setCount(COUNTDOWN_SECONDS)
     cancelAnimation(progressBarWidth)
     animStartTime.current = Date.now()
 
@@ -111,14 +123,7 @@ export function RTLRestartBanner() {
       if (intervalRef.current) clearInterval(intervalRef.current)
       cancelAnimation(progressBarWidth)
     }
-  }, [
-    rtlRestartNeeded,
-    rtlRestartTrigger,
-    opacity,
-    progressBarWidth,
-    startProgressAnim,
-    translateY,
-  ])
+  }, [rtlRestartNeeded, rtlRestartTrigger, isManual, progressBarWidth, startProgressAnim])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -147,9 +152,12 @@ export function RTLRestartBanner() {
 
   if (!rtlRestartNeeded || !RTL_RESTART_BANNER_ENABLED) return null
 
+  const bottom = isOnboardingCompleted
+    ? insets.bottom + tabBarHeight(fontScale) + TAB_BAR_CLEARANCE
+    : insets.bottom + ONBOARDING_CLEARANCE
+
   return (
-    <Animated.View
-      style={[styles.wrapper, { bottom: insets.bottom + TAB_BAR_HEIGHT + 50 }, animatedStyle]}>
+    <Animated.View style={[styles.wrapper, { bottom }, animatedStyle]}>
       {/* Shadow layer — separate from clip layer so shadow bleeds out */}
       <View
         style={[styles.shadowLayer, { shadowColor: primary, shadowOpacity: isDark ? 0.45 : 0.22 }]}>
@@ -169,36 +177,45 @@ export function RTLRestartBanner() {
                     styles.iconBubble,
                     { backgroundColor: primaryMuted, borderColor: primaryBorder },
                   ]}>
-                  <Ionicons name="refresh-circle" size={18} color={primary} />
+                  <Ionicons
+                    name="refresh-circle"
+                    size={18}
+                    color={primary}
+                    importantForAccessibility="no"
+                  />
                 </View>
 
-                <ThemedText variant="subheading" style={styles.title}>
+                <ThemedText variant="subheading" accessibilityRole="header" style={styles.title}>
                   {t('rtlRestart.title')}
                 </ThemedText>
               </View>
 
               <ThemedText variant="label" color="muted" style={styles.message}>
-                {t('rtlRestart.message', { count })}
+                {isManual ? t('rtlRestart.messageManual') : t('rtlRestart.message', { count })}
               </ThemedText>
 
-              <View
-                onLayout={(e) => {
-                  const width = e.nativeEvent.layout.width
-                  barContainerWidth.current = width
-                  if (pendingProgressAnim.current) {
-                    pendingProgressAnim.current = false
-                    startProgressAnim(width, animStartTime.current)
-                  }
-                }}
-                style={[styles.progressTrack, { backgroundColor: trackBg }]}>
-                <Animated.View
-                  style={[styles.progressFill, { backgroundColor: primary }, progressBarStyle]}
-                />
-              </View>
+              {isManual ? null : (
+                <View
+                  importantForAccessibility="no-hide-descendants"
+                  onLayout={(e) => {
+                    const width = e.nativeEvent.layout.width
+                    barContainerWidth.current = width
+                    if (pendingProgressAnim.current) {
+                      pendingProgressAnim.current = false
+                      startProgressAnim(width, animStartTime.current)
+                    }
+                  }}
+                  style={[styles.progressTrack, { backgroundColor: trackBg }]}>
+                  <Animated.View
+                    style={[styles.progressFill, { backgroundColor: primary }, progressBarStyle]}
+                  />
+                </View>
+              )}
 
               <View style={styles.buttonsRow}>
                 <AnimatedPressable
                   onPress={restartApp}
+                  accessibilityRole="button"
                   onPressIn={() => pressIn(restartScale)}
                   onPressOut={() => pressOut(restartScale)}
                   style={[
@@ -218,6 +235,7 @@ export function RTLRestartBanner() {
 
                 <AnimatedPressable
                   onPress={dismiss}
+                  accessibilityRole="button"
                   onPressIn={() => pressIn(dismissScale)}
                   onPressOut={() => pressOut(dismissScale)}
                   style={[

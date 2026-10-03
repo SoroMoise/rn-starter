@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Laden...",
+    "loading": "Laden…",
     "error": "Fout",
-    "retry": "Opnieuw Proberen",
+    "retry": "Opnieuw proberen",
     "cancel": "Annuleren",
     "ok": "OK",
     "save": "Opslaan",
@@ -14,10 +14,48 @@
     "search": "Zoeken",
     "noResults": "Geen resultaten gevonden",
     "offline": "Offline",
-    "back": "Terug"
+    "back": "Terug",
+    "clear": "Wissen"
   },
   "tabs": {
+    "home": "Start",
     "settings": "Instellingen"
+  },
+  "home": {
+    "hero": {
+      "title": "Premium starter",
+      "subtitle": "Breng een afgewerkte, gemonetiseerde React Native-app uit – thema, i18n, paywall en advertenties zijn al ingericht."
+    },
+    "features": {
+      "title": "Wat er in deze starter zit",
+      "theme": {
+        "label": "Themasysteem",
+        "desc": "Lichte en donkere modus met NativeWind-tokens en design-system-componenten."
+      },
+      "i18n": {
+        "label": "Internationalisering",
+        "desc": "20 talen, RTL-ondersteuning en vertaalbestanden die pas worden geladen als ze nodig zijn."
+      },
+      "paywall": {
+        "label": "Paywall & abonnementen",
+        "desc": "RevenueCat-integratie: een paywall opgebouwd uit het aanbod van de store, plus premium-toegang."
+      },
+      "ads": {
+        "label": "Advertenties (AdMob)",
+        "desc": "Banners, interstitials en advertenties met beloning – uitgeschakeld voor premium-gebruikers."
+      },
+      "notifications": {
+        "label": "Meldingen",
+        "desc": "Een toestemmingsverzoek op het scherm dat het nodig heeft, banners op de voorgrond, het Android-kanaal en dagelijkse herinneringen – klaar voor de meldingen die jouw app verstuurt."
+      }
+    },
+    "cta": {
+      "label": "Pro proberen"
+    },
+    "demoAction": {
+      "label": "Een voorbeeldactie uitvoeren",
+      "sub": "Elke actie verhoogt de engagementteller die de contextuele paywall en de beoordelingsvraag aanstuurt."
+    }
   },
   "settings": {
     "title": "Instellingen",
@@ -28,92 +66,158 @@
     "themeAuto": "Systeem",
     "display": "Weergave",
     "language": "Taal",
-    "selectLanguage": "Selecteer Taal",
-    "searchLanguage": "Zoek talen...",
+    "selectLanguage": "Taal selecteren",
+    "searchLanguage": "Talen zoeken…",
     "ads": "Advertenties",
-    "removeAds": "Verwijder Advertenties",
-    "removeAdsDescription": "Geniet van een advertentievrije ervaring",
-    "watchAdButton": "Bekijk advertentie voor {{duration}} advertentievrij",
-    "adFreeActive": "Advertentievrij actief ({{duration}} resterend)",
+    "goPremium": "Upgraden naar Pro",
+    "premiumActive": "Je bent Pro-lid",
+    "premiumActiveUntil": "Actief tot {{date}}",
+    "premiumLifetime": "Levenslange toegang",
+    "manageSubscription": "Abonnement beheren",
+    "removeAds": "Advertenties verwijderen",
+    "removeAdsDescription": "Bekijk één advertentie en krijg rust van alle andere",
+    "watchAdButton": "Bekijk een advertentie en krijg {{duration}} zonder advertenties",
+    "adFreeActive": "Zonder advertenties actief (nog {{duration}})",
     "adNotAvailableTitle": "Advertentie niet beschikbaar",
-    "adNotAvailableMessage": "Momenteel geen advertentie beschikbaar. Probeer het later opnieuw.",
-    "adRewardTitle": "Beloning Ontgrendeld!",
-    "adRewardMessage": "Je hebt {{duration}} advertentievrije ervaring. Geniet ervan!",
+    "adNotAvailableMessage": "Er staat nu geen advertentie klaar. Probeer het over een paar minuten opnieuw.",
+    "adRewardTitle": "Beloning ontgrendeld!",
+    "adRewardMessage": "{{duration}} zonder één advertentie, vanaf nu. Geniet ervan!",
     "adErrorTitle": "Fout",
-    "adErrorMessage": "Kan advertentie niet laden. Probeer het later opnieuw.",
+    "adErrorMessage": "De advertentie kon niet worden geladen. Probeer het over een paar minuten opnieuw.",
     "about": "Over",
     "version": "Versie",
-    "legalAndSupport": "Juridisch & Ondersteuning",
+    "legalAndSupport": "Juridisch en support",
     "privacyPolicy": "Privacybeleid",
-    "termsOfService": "Servicevoorwaarden",
-    "support": "Ondersteuning",
-    "rateApp": "Beoordeel deze app",
-    "languageChanged": "Taal succesvol bijgewerkt",
-    "goPremium": "Upgraden naar Pro",
-    "premiumActive": "Je bent een Pro-lid",
-    "premiumActiveUntil": "Actief tot {{date}}",
-    "premiumLifetime": "Levenslange toegang"
+    "termsOfService": "Gebruiksvoorwaarden",
+    "support": "Support",
+    "rateApp": "Deze app beoordelen",
+    "languageChanged": "Taal bijgewerkt",
+    "adPrivacy": "Privacy van advertenties"
   },
   "onboarding": {
     "previous": "Terug",
     "welcome": {
-      "cta": "Beginnen",
+      "subtitle": "Alles wat je nodig hebt, mooi gebouwd en klaar om uit te brengen.",
+      "cta": "Aan de slag",
       "reassurance": "Gratis · Geen account nodig"
     },
+    "premium": {
+      "headline": "Kom verder met Pro",
+      "timelineHeader": "Zo werkt je proefperiode",
+      "ctaSkip": "Gratis verdergaan",
+      "dayUnlock": "Dag 0 – Pro meteen ontgrendeld",
+      "dayBilling": "Dag {{day}} – De betaling start, op elk moment opzegbaar"
+    },
     "exitIntent": {
-      "title": "Wacht even — probeer Pro gratis",
-      "ctaStart": "Ja, start mijn gratis proef",
-      "ctaSkip": "Nee, bedankt, gratis verdergaan"
+      "title": "Wacht even – probeer Pro gratis",
+      "ctaStart": "Ja, start mijn gratis proefperiode",
+      "ctaSkip": "Nee bedankt, gratis verdergaan",
+      "body": "{{days}} dagen gratis, vandaag betaal je niets.\nZeg op vóór het einde van de proefperiode en er wordt niets afgeschreven.",
+      "bodyNoDays": "Gratis uitproberen, vandaag betaal je niets.\nZeg op vóór het einde van de proefperiode en er wordt niets afgeschreven.",
+      "titleNoTrial": "Wacht even – ontgrendel Pro",
+      "bodyNoTrial": "Alles wat Pro ontgrendelt, vanaf nu.\nGeen verplichtingen – op elk moment opzegbaar.",
+      "ctaStartNoTrial": "Ja, Pro ontgrendelen – {{price}}",
+      "titleOneTime": "Wacht even – ontgrendel Pro voorgoed",
+      "bodyOneTime": "Eén betaling, voor altijd van jou.\nGeen abonnement.",
+      "ctaOneTime": "Ja, voorgoed ontgrendelen – {{price}}"
     },
     "proWelcome": {
-      "body": "We hebben je Pro-abonnement gevonden — het is al actief op dit apparaat.",
-      "ctaContinue": "Blijf ontdekken",
-      "ctaSkip": "Intro overslaan",
-      "title": "Welkom terug!"
+      "title": "Welkom terug!",
+      "body": "We hebben je Pro-abonnement gevonden – het is al actief op dit apparaat.",
+      "ctaSkip": "Introductie overslaan",
+      "ctaContinue": "Verder verkennen"
+    },
+    "a11y": {
+      "step": "Stap {{current}} van {{total}}"
     }
   },
   "error": {
-    "networkError": "Netwerkfout. Controleer je verbinding.",
-    "serverError": "Serverfout. Probeer het later opnieuw.",
-    "unknownError": "Er is een onbekende fout opgetreden"
+    "networkError": "Geen verbinding mogelijk. Controleer je netwerk en probeer het opnieuw.",
+    "apiError": "De gegevens konden niet worden geladen. Probeer het opnieuw.",
+    "serverError": "Er ging iets mis aan onze kant. Probeer het zo nog eens.",
+    "unknownError": "Er ging iets mis"
   },
   "appRating": {
-    "message": "Een 5-sterrenbeoordeling helpt ons de app gratis en steeds beter te houden.",
+    "title": "Bevalt RN Starter?",
+    "message": "Een beoordeling van 5 sterren helpt ons de app gratis te houden en steeds te verbeteren.",
     "rateButton": "Nu beoordelen",
     "laterButton": "Later",
-    "declineButton": "Nee bedankt"
+    "declineButton": "Nee, bedankt"
   },
   "rtlRestart": {
-    "title": "Layout-update vereist",
-    "message": "Opnieuw opstarten in {{count}}s om de nieuwe indeling toe te passen.",
+    "title": "Leesrichting wijzigen",
+    "message": "Opnieuw opstarten over {{count}} s om dit toe te passen.",
     "restartNow": "Nu opnieuw opstarten",
-    "restartManually": "Handmatig opnieuw opstarten"
+    "restartManually": "Handmatig opnieuw opstarten",
+    "messageManual": "Start de app opnieuw op om dit toe te passen.",
+    "announcement": "Leesrichting wordt gewijzigd. Start de app opnieuw op om dit toe te passen."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "Ontgrendel alle functies",
     "planMonthly": "Maandelijks",
     "planAnnual": "Jaarlijks",
     "savingsBadge": "-{{percent}}%",
     "trialBadge": "{{days}} dagen gratis",
-    "ctaTrial": "Start {{days}} dagen gratis proefperiode",
-    "ctaSubscribeMonthly": "Abonneren — {{price}}/maand",
-    "ctaSubscribeAnnual": "Abonneren — {{price}}/jaar",
+    "ctaTrial": "Start gratis proefperiode van {{days}} dagen",
     "billedMonthly": "maandelijks gefactureerd",
     "restore": "Aankopen herstellen",
     "restoreSuccess": "Abonnement hersteld!",
     "restoreNotFound": "Geen actief abonnement gevonden",
     "welcomePro": "Welkom bij Pro!",
     "errorGeneric": "Er ging iets mis. Probeer het opnieuw.",
+    "errorNetwork": "Geen verbinding. Controleer je netwerk en probeer het opnieuw.",
+    "errorStoreUnavailable": "Aankopen zijn op dit apparaat nu niet beschikbaar.",
+    "errorAlreadyOwned": "Je hebt Pro al met dit account. Tik op “Aankopen herstellen” om het terug te krijgen.",
     "billedAnnually": "jaarlijks gefactureerd",
-    "perMonth": "≈ {{price}}/maand"
+    "perMonth": "≈ {{price}}/maand",
+    "planWeekly": "Wekelijks",
+    "planLifetime": "Levenslang",
+    "planMonths": "{{months}} maanden",
+    "planCustom": "Abonnement",
+    "billedWeekly": "wekelijks gefactureerd",
+    "billedOnce": "eenmalige betaling",
+    "billedEveryMonths": "elke {{months}} maanden gefactureerd",
+    "billedRecurring": "terugkerend",
+    "trialBadgeNoDays": "Gratis proefperiode",
+    "ctaTrialNoDays": "Start gratis proefperiode",
+    "ctaSubscribeWeekly": "Abonneren – {{price}}/week",
+    "ctaBuyLifetime": "Ontgrendelen voor {{price}}",
+    "ctaSubscribe": "Abonneren – {{price}}",
+    "legalNoteRecurring": "{{price}}, wordt automatisch verlengd. Op elk moment opzegbaar.",
+    "legalNoteOneTime": "{{price}}, eenmalige betaling. Voor altijd van jou.",
+    "offerUnavailable": "De abonnementen zijn nu niet beschikbaar. Controleer je verbinding en probeer het opnieuw.",
+    "ctaSubscribeMonthly": "Abonneren – {{price}}/maand",
+    "ctaSubscribeAnnual": "Abonneren – {{price}}/jaar",
+    "pricesUnavailable": "Prijzen niet beschikbaar.",
+    "pricesRetry": "Opnieuw proberen",
+    "benefit": {
+      "noAds": "Nooit meer advertenties"
+    },
+    "priceWeekly": "{{price}}/week",
+    "priceMonthly": "{{price}}/maand",
+    "priceAnnual": "{{price}}/jaar",
+    "priceEveryMonths": "{{price}} per {{months}} maanden",
+    "legalNoteTrial": "{{days}} dagen gratis, daarna {{price}}. Wordt automatisch verlengd tot je opzegt.",
+    "legalNoteTrialNoDays": "Gratis proefperiode, daarna {{price}}. Wordt automatisch verlengd tot je opzegt.",
+    "trustStore": "Betaling beveiligd door {{store}}",
+    "trustTrial": "Niets te betalen tijdens de gratis proefperiode",
+    "trustCancel": "Op elk moment opzegbaar, geen verplichtingen",
+    "trustOneTime": "Eén betaling, geen abonnement"
   },
   "premiumGate": {
     "unlock": "Ontgrendelen",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Abonnement is mogelijk verlopen",
-    "graceBannerMessage": "Maak verbinding met internet vóór {{date}} om je abonnement te verifiëren.",
-    "graceBannerCta": "Abonnement verifiëren"
+    "graceBannerTitle": "Je abonnement is mogelijk verlopen",
+    "graceBannerMessage": "Maak vóór {{date}} verbinding met internet om je abonnement te controleren.",
+    "graceBannerCta": "Abonnement controleren",
+    "billingIssueTitle": "Betalingsprobleem",
+    "billingIssueMessage": "Je abonnement kon niet worden verlengd. Werk je betaalmethode bij vóór {{date}} om Pro te behouden."
+  },
+  "notifications": {
+    "channelName": "Herinneringen",
+    "channelDescription": "Geplande lokale herinneringen"
   }
 }

@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Carregando...",
+    "loading": "Carregando…",
     "error": "Erro",
-    "retry": "Tentar Novamente",
+    "retry": "Tentar de novo",
     "cancel": "Cancelar",
     "ok": "OK",
     "save": "Salvar",
@@ -14,10 +14,48 @@
     "search": "Pesquisar",
     "noResults": "Nenhum resultado encontrado",
     "offline": "Offline",
-    "back": "Voltar"
+    "back": "Voltar",
+    "clear": "Apagar"
   },
   "tabs": {
+    "home": "Início",
     "settings": "Configurações"
+  },
+  "home": {
+    "hero": {
+      "title": "Starter premium",
+      "subtitle": "Publique um app React Native caprichado e monetizado: tema, i18n, paywall e anúncios já configurados."
+    },
+    "features": {
+      "title": "O que vem neste starter",
+      "theme": {
+        "label": "Sistema de temas",
+        "desc": "Modo claro e escuro com tokens do NativeWind e componentes de design system."
+      },
+      "i18n": {
+        "label": "Internacionalização",
+        "desc": "20 idiomas, suporte a RTL e arquivos de tradução carregados sob demanda."
+      },
+      "paywall": {
+        "label": "Paywall e assinaturas",
+        "desc": "Integração com o RevenueCat: um paywall montado a partir da oferta da loja, e o acesso premium."
+      },
+      "ads": {
+        "label": "Anúncios (AdMob)",
+        "desc": "Banners, intersticiais e anúncios premiados, desativados para usuários premium."
+      },
+      "notifications": {
+        "label": "Notificações",
+        "desc": "Um pedido de permissão na tela que precisa dela, banners em primeiro plano, o canal do Android e lembretes diários: prontos para as notificações que o seu app envia."
+      }
+    },
+    "cta": {
+      "label": "Experimentar o Pro"
+    },
+    "demoAction": {
+      "label": "Executar uma ação de exemplo",
+      "sub": "Cada ação incrementa o contador de engajamento que aciona o paywall contextual e o pedido de avaliação."
+    }
   },
   "settings": {
     "title": "Configurações",
@@ -28,92 +66,158 @@
     "themeAuto": "Sistema",
     "display": "Exibição",
     "language": "Idioma",
-    "selectLanguage": "Selecionar Idioma",
-    "searchLanguage": "Pesquisar idiomas...",
+    "selectLanguage": "Selecionar idioma",
+    "searchLanguage": "Pesquisar idiomas…",
     "ads": "Anúncios",
-    "removeAds": "Remover Anúncios",
-    "removeAdsDescription": "Aproveite uma experiência sem anúncios",
-    "watchAdButton": "Assistir anúncio para {{duration}} sem anúncios",
-    "adFreeActive": "Sem anúncios ativo ({{duration}} restantes)",
-    "adNotAvailableTitle": "Anúncio não disponível",
-    "adNotAvailableMessage": "Nenhum anúncio disponível no momento. Por favor, tente novamente mais tarde.",
-    "adRewardTitle": "Recompensa Desbloqueada!",
-    "adRewardMessage": "Você tem {{duration}} de experiência sem anúncios. Aproveite!",
-    "adErrorTitle": "Erro",
-    "adErrorMessage": "Falha ao carregar o anúncio. Por favor, tente novamente mais tarde.",
-    "about": "Sobre",
-    "version": "Versão",
-    "legalAndSupport": "Legal e Suporte",
-    "privacyPolicy": "Política de Privacidade",
-    "termsOfService": "Termos de Serviço",
-    "support": "Suporte",
-    "rateApp": "Avaliar este app",
-    "languageChanged": "Idioma atualizado com sucesso",
-    "goPremium": "Fazer upgrade para Pro",
+    "goPremium": "Fazer upgrade para o Pro",
     "premiumActive": "Você é membro Pro",
     "premiumActiveUntil": "Ativo até {{date}}",
-    "premiumLifetime": "Acesso vitalício"
+    "premiumLifetime": "Acesso vitalício",
+    "manageSubscription": "Gerenciar assinatura",
+    "removeAds": "Remover anúncios",
+    "removeAdsDescription": "Assista a um anúncio e ganhe uma pausa dos outros",
+    "watchAdButton": "Assistir a um anúncio e ficar {{duration}} sem anúncios",
+    "adFreeActive": "Sem anúncios ativo ({{duration}} restantes)",
+    "adNotAvailableTitle": "Anúncio indisponível",
+    "adNotAvailableMessage": "Não há nenhum anúncio pronto no momento. Tente de novo em alguns minutos.",
+    "adRewardTitle": "Recompensa desbloqueada!",
+    "adRewardMessage": "{{duration}} sem um único anúncio, a partir de agora. Aproveite!",
+    "adErrorTitle": "Erro",
+    "adErrorMessage": "Não foi possível carregar o anúncio. Tente de novo em alguns minutos.",
+    "about": "Sobre",
+    "version": "Versão",
+    "legalAndSupport": "Legal e suporte",
+    "privacyPolicy": "Política de privacidade",
+    "termsOfService": "Termos de serviço",
+    "support": "Suporte",
+    "rateApp": "Avaliar este app",
+    "languageChanged": "Idioma atualizado",
+    "adPrivacy": "Privacidade dos anúncios"
   },
   "onboarding": {
     "previous": "Voltar",
     "welcome": {
+      "subtitle": "Tudo o que você precisa, bem construído e pronto para publicar.",
       "cta": "Começar",
       "reassurance": "Grátis · Sem conta"
     },
+    "premium": {
+      "headline": "Vá mais longe com o Pro",
+      "timelineHeader": "Como funciona o teste",
+      "ctaSkip": "Continuar grátis",
+      "dayUnlock": "Dia 0 — Pro desbloqueado na hora",
+      "dayBilling": "Dia {{day}} — A cobrança começa, cancele quando quiser"
+    },
     "exitIntent": {
-      "title": "Espera — experimente Pro grátis",
+      "title": "Só um instante — experimente o Pro grátis",
       "ctaStart": "Sim, começar meu teste grátis",
-      "ctaSkip": "Não, obrigado, seguir grátis"
+      "ctaSkip": "Não, obrigado, continuar grátis",
+      "body": "{{days}} dias grátis, nada a pagar hoje.\nCancele antes do fim do teste e nada será cobrado.",
+      "bodyNoDays": "Teste grátis, nada a pagar hoje.\nCancele antes do fim do teste e nada será cobrado.",
+      "titleNoTrial": "Só um instante — desbloqueie o Pro",
+      "bodyNoTrial": "Tudo o que o Pro desbloqueia, a partir de agora.\nSem compromisso: cancele quando quiser.",
+      "ctaStartNoTrial": "Sim, desbloquear o Pro — {{price}}",
+      "titleOneTime": "Só um instante — desbloqueie o Pro para sempre",
+      "bodyOneTime": "Um único pagamento, seu para sempre.\nSem assinatura.",
+      "ctaOneTime": "Sim, desbloquear para sempre — {{price}}"
     },
     "proWelcome": {
+      "title": "Que bom ter você de volta!",
       "body": "Encontramos sua assinatura Pro — ela já está ativa neste dispositivo.",
-      "ctaContinue": "Continuar explorando",
-      "ctaSkip": "Pular introdução",
-      "title": "Bem-vindo de volta!"
+      "ctaSkip": "Pular a introdução",
+      "ctaContinue": "Continuar explorando"
+    },
+    "a11y": {
+      "step": "Etapa {{current}} de {{total}}"
     }
   },
   "error": {
-    "networkError": "Erro de rede. Por favor, verifique sua conexão.",
-    "serverError": "Erro do servidor. Por favor, tente novamente mais tarde.",
-    "unknownError": "Ocorreu um erro desconhecido"
+    "networkError": "Não foi possível conectar. Verifique sua conexão e tente de novo.",
+    "apiError": "Não foi possível carregar os dados. Tente de novo.",
+    "serverError": "Algo deu errado do nosso lado. Tente de novo daqui a pouco.",
+    "unknownError": "Algo deu errado"
   },
   "appRating": {
-    "message": "Uma avaliação de 5 estrelas nos ajuda a manter o app gratuito e sempre melhorando.",
+    "title": "Gostando do RN Starter?",
+    "message": "Uma avaliação de 5 estrelas nos ajuda a manter o app grátis e sempre melhorando.",
     "rateButton": "Avaliar agora",
-    "laterButton": "Depois",
+    "laterButton": "Mais tarde",
     "declineButton": "Não, obrigado"
   },
   "rtlRestart": {
-    "title": "Atualização de layout necessária",
-    "message": "Reiniciando em {{count}}s para aplicar o novo layout.",
+    "title": "Mudando o sentido de leitura",
+    "message": "Reiniciando em {{count}} s para aplicar.",
     "restartNow": "Reiniciar agora",
-    "restartManually": "Reiniciar manualmente"
+    "restartManually": "Reiniciar manualmente",
+    "messageManual": "Reinicie o app para aplicar.",
+    "announcement": "Mudando o sentido de leitura. Reinicie o app para aplicar."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "Desbloqueie todos os recursos",
     "planMonthly": "Mensal",
     "planAnnual": "Anual",
     "savingsBadge": "-{{percent}}%",
     "trialBadge": "{{days}} dias grátis",
-    "ctaTrial": "Iniciar teste gratuito de {{days}} dias",
-    "ctaSubscribeMonthly": "Assinar — {{price}}/mês",
-    "ctaSubscribeAnnual": "Assinar — {{price}}/ano",
-    "billedMonthly": "cobrado mensalmente",
+    "ctaTrial": "Começar teste grátis de {{days}} dias",
+    "billedMonthly": "cobrado todo mês",
     "restore": "Restaurar compras",
     "restoreSuccess": "Assinatura restaurada!",
     "restoreNotFound": "Nenhuma assinatura ativa encontrada",
     "welcomePro": "Bem-vindo ao Pro!",
-    "errorGeneric": "Algo deu errado. Por favor, tente novamente.",
-    "billedAnnually": "cobrado anualmente",
-    "perMonth": "≈ {{price}}/mês"
+    "errorGeneric": "Algo deu errado. Tente de novo.",
+    "errorNetwork": "Sem conexão. Verifique sua rede e tente de novo.",
+    "errorStoreUnavailable": "As compras não estão disponíveis neste dispositivo no momento.",
+    "errorAlreadyOwned": "Você já tem o Pro com esta conta. Toque em “Restaurar compras” para recuperá-lo.",
+    "billedAnnually": "cobrado todo ano",
+    "perMonth": "≈ {{price}}/mês",
+    "planWeekly": "Semanal",
+    "planLifetime": "Vitalício",
+    "planMonths": "{{months}} meses",
+    "planCustom": "Plano",
+    "billedWeekly": "cobrado toda semana",
+    "billedOnce": "pagamento único",
+    "billedEveryMonths": "cobrado a cada {{months}} meses",
+    "billedRecurring": "recorrente",
+    "trialBadgeNoDays": "Teste grátis",
+    "ctaTrialNoDays": "Começar teste grátis",
+    "ctaSubscribeWeekly": "Assinar — {{price}}/semana",
+    "ctaBuyLifetime": "Desbloquear por {{price}}",
+    "ctaSubscribe": "Assinar — {{price}}",
+    "legalNoteRecurring": "{{price}}, renova automaticamente. Cancele quando quiser.",
+    "legalNoteOneTime": "{{price}}, pagamento único. Seu para sempre.",
+    "offerUnavailable": "Os planos não estão disponíveis no momento. Verifique sua conexão e tente de novo.",
+    "ctaSubscribeMonthly": "Assinar — {{price}}/mês",
+    "ctaSubscribeAnnual": "Assinar — {{price}}/ano",
+    "pricesUnavailable": "Preços indisponíveis.",
+    "pricesRetry": "Tentar de novo",
+    "benefit": {
+      "noAds": "Sem anúncios, nunca"
+    },
+    "priceWeekly": "{{price}}/semana",
+    "priceMonthly": "{{price}}/mês",
+    "priceAnnual": "{{price}}/ano",
+    "priceEveryMonths": "{{price}} a cada {{months}} meses",
+    "legalNoteTrial": "Grátis por {{days}} dias, depois {{price}}. Renova automaticamente até você cancelar.",
+    "legalNoteTrialNoDays": "Teste grátis, depois {{price}}. Renova automaticamente até você cancelar.",
+    "trustStore": "Pagamento protegido por {{store}}",
+    "trustTrial": "Nada a pagar durante o teste grátis",
+    "trustCancel": "Cancele quando quiser, sem compromisso",
+    "trustOneTime": "Um único pagamento, sem assinatura"
   },
   "premiumGate": {
     "unlock": "Desbloquear",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "A assinatura pode ter expirado",
+    "graceBannerTitle": "Sua assinatura pode ter expirado",
     "graceBannerMessage": "Conecte-se à internet antes de {{date}} para verificar sua assinatura.",
-    "graceBannerCta": "Verificar assinatura"
+    "graceBannerCta": "Verificar assinatura",
+    "billingIssueTitle": "Problema no pagamento",
+    "billingIssueMessage": "Não foi possível renovar sua assinatura. Atualize a forma de pagamento antes de {{date}} para manter o Pro."
+  },
+  "notifications": {
+    "channelName": "Lembretes",
+    "channelDescription": "Lembretes locais programados"
   }
 }

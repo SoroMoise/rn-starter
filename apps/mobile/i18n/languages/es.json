@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Cargando...",
+    "loading": "Cargando…",
     "error": "Error",
     "retry": "Reintentar",
     "cancel": "Cancelar",
@@ -14,10 +14,48 @@
     "search": "Buscar",
     "noResults": "No se encontraron resultados",
     "offline": "Sin conexión",
-    "back": "Volver"
+    "back": "Volver",
+    "clear": "Borrar"
   },
   "tabs": {
+    "home": "Inicio",
     "settings": "Ajustes"
+  },
+  "home": {
+    "hero": {
+      "title": "Starter premium",
+      "subtitle": "Publica una app React Native pulida y monetizada: tema, i18n, paywall y anuncios ya configurados."
+    },
+    "features": {
+      "title": "Qué incluye este starter",
+      "theme": {
+        "label": "Sistema de temas",
+        "desc": "Modo claro y oscuro con tokens de NativeWind y componentes de design system."
+      },
+      "i18n": {
+        "label": "Internacionalización",
+        "desc": "20 idiomas, soporte RTL y archivos de traducción cargados bajo demanda."
+      },
+      "paywall": {
+        "label": "Paywall y suscripciones",
+        "desc": "Integración con RevenueCat: un paywall construido a partir de la oferta de la tienda, y el acceso premium."
+      },
+      "ads": {
+        "label": "Anuncios (AdMob)",
+        "desc": "Banners, intersticiales y anuncios con recompensa, desactivados para los usuarios premium."
+      },
+      "notifications": {
+        "label": "Notificaciones",
+        "desc": "Una solicitud de permiso en la pantalla que la necesita, banners en primer plano, el canal de Android y recordatorios diarios: listos para las notificaciones que envíe tu app."
+      }
+    },
+    "cta": {
+      "label": "Probar Pro"
+    },
+    "demoAction": {
+      "label": "Realizar una acción de ejemplo",
+      "sub": "Cada acción incrementa el contador de engagement que activa el paywall contextual y la petición de valoración."
+    }
   },
   "settings": {
     "title": "Ajustes",
@@ -26,94 +64,160 @@
     "themeLight": "Claro",
     "themeDark": "Oscuro",
     "themeAuto": "Sistema",
-    "display": "Visualización",
+    "display": "Pantalla",
     "language": "Idioma",
-    "selectLanguage": "Seleccionar Idioma",
-    "searchLanguage": "Buscar idiomas...",
+    "selectLanguage": "Seleccionar idioma",
+    "searchLanguage": "Buscar idiomas…",
     "ads": "Anuncios",
-    "removeAds": "Eliminar Anuncios",
-    "removeAdsDescription": "Disfruta de una experiencia sin anuncios",
-    "watchAdButton": "Ver anuncio para {{duration}} sin anuncios",
-    "adFreeActive": "Sin anuncios activo ({{duration}} restantes)",
+    "goPremium": "Pasar a Pro",
+    "premiumActive": "Eres miembro Pro",
+    "premiumActiveUntil": "Activo hasta el {{date}}",
+    "premiumLifetime": "Acceso de por vida",
+    "manageSubscription": "Gestionar suscripción",
+    "removeAds": "Quitar anuncios",
+    "removeAdsDescription": "Mira un anuncio y descansa de los demás",
+    "watchAdButton": "Ver un anuncio y tener {{duration}} sin anuncios",
+    "adFreeActive": "Sin anuncios activo (quedan {{duration}})",
     "adNotAvailableTitle": "Anuncio no disponible",
-    "adNotAvailableMessage": "No hay anuncios disponibles ahora. Por favor, inténtalo más tarde.",
-    "adRewardTitle": "¡Recompensa Desbloqueada!",
-    "adRewardMessage": "Tienes {{duration}} de experiencia sin anuncios. ¡Disfrútala!",
+    "adNotAvailableMessage": "Ahora mismo no hay ningún anuncio listo. Inténtalo de nuevo en unos minutos.",
+    "adRewardTitle": "¡Recompensa desbloqueada!",
+    "adRewardMessage": "{{duration}} sin un solo anuncio, desde ahora. ¡Disfruta!",
     "adErrorTitle": "Error",
-    "adErrorMessage": "Error al cargar el anuncio. Por favor, inténtalo más tarde.",
+    "adErrorMessage": "No se pudo cargar el anuncio. Inténtalo de nuevo en unos minutos.",
     "about": "Acerca de",
     "version": "Versión",
-    "legalAndSupport": "Legal y Soporte",
-    "privacyPolicy": "Política de Privacidad",
-    "termsOfService": "Términos de Servicio",
+    "legalAndSupport": "Legal y soporte",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
     "support": "Soporte",
-    "rateApp": "Calificar esta app",
-    "languageChanged": "Idioma actualizado correctamente",
-    "goPremium": "Actualizar a Pro",
-    "premiumActive": "Eres miembro Pro",
-    "premiumActiveUntil": "Activo hasta {{date}}",
-    "premiumLifetime": "Acceso de por vida"
+    "rateApp": "Valorar esta app",
+    "languageChanged": "Idioma actualizado",
+    "adPrivacy": "Privacidad de los anuncios"
   },
   "onboarding": {
     "previous": "Atrás",
     "welcome": {
+      "subtitle": "Todo lo que necesitas, bien construido y listo para publicar.",
       "cta": "Empezar",
       "reassurance": "Gratis · Sin cuenta"
     },
+    "premium": {
+      "headline": "Llega más lejos con Pro",
+      "timelineHeader": "Cómo funciona tu prueba",
+      "ctaSkip": "Seguir gratis",
+      "dayUnlock": "Día 0 — Pro desbloqueado al instante",
+      "dayBilling": "Día {{day}} — Empieza el cobro, cancela cuando quieras"
+    },
     "exitIntent": {
-      "title": "Espera, prueba Pro gratis",
+      "title": "Espera — prueba Pro gratis",
       "ctaStart": "Sí, empezar mi prueba gratis",
-      "ctaSkip": "No, gracias, seguir gratis"
+      "ctaSkip": "No, gracias, seguir gratis",
+      "body": "{{days}} días gratis, nada que pagar hoy.\nCancela antes de que termine la prueba y no se te cobrará nada.",
+      "bodyNoDays": "Prueba gratis, nada que pagar hoy.\nCancela antes de que termine la prueba y no se te cobrará nada.",
+      "titleNoTrial": "Espera — desbloquea Pro",
+      "bodyNoTrial": "Todo lo que Pro desbloquea, desde ahora.\nSin compromiso: cancela cuando quieras.",
+      "ctaStartNoTrial": "Sí, desbloquear Pro — {{price}}",
+      "titleOneTime": "Espera — desbloquea Pro para siempre",
+      "bodyOneTime": "Un solo pago, tuyo para siempre.\nSin suscripción.",
+      "ctaOneTime": "Sí, desbloquear para siempre — {{price}}"
     },
     "proWelcome": {
-      "body": "Encontramos tu suscripción Pro — ya está activa en este dispositivo.",
-      "ctaContinue": "Seguir explorando",
-      "ctaSkip": "Saltar intro",
-      "title": "¡Bienvenido de nuevo!"
+      "title": "¡Te damos la bienvenida de nuevo!",
+      "body": "Hemos encontrado tu suscripción Pro: ya está activa en este dispositivo.",
+      "ctaSkip": "Saltar la introducción",
+      "ctaContinue": "Seguir explorando"
+    },
+    "a11y": {
+      "step": "Paso {{current}} de {{total}}"
     }
   },
   "error": {
-    "networkError": "Error de red. Por favor verifica tu conexión.",
-    "serverError": "Error del servidor. Por favor, inténtalo más tarde.",
-    "unknownError": "Ocurrió un error desconocido"
+    "networkError": "No se pudo conectar. Revisa tu conexión e inténtalo de nuevo.",
+    "apiError": "No se pudieron cargar los datos. Inténtalo de nuevo.",
+    "serverError": "Algo salió mal de nuestro lado. Inténtalo de nuevo en un momento.",
+    "unknownError": "Algo salió mal"
   },
   "appRating": {
-    "message": "Una valoración de 5 estrellas nos ayuda a mantener la app gratuita y en constante mejora.",
+    "title": "¿Te gusta RN Starter?",
+    "message": "Una valoración de 5 estrellas nos ayuda a mantener la app gratis y a seguir mejorándola.",
     "rateButton": "Valorar ahora",
     "laterButton": "Más tarde",
-    "declineButton": "No gracias"
+    "declineButton": "No, gracias"
   },
   "rtlRestart": {
-    "title": "Actualización de diseño requerida",
-    "message": "Reiniciando en {{count}}s para aplicar el nuevo diseño.",
+    "title": "Cambio del sentido de lectura",
+    "message": "Reiniciando en {{count}} s para aplicarlo.",
     "restartNow": "Reiniciar ahora",
-    "restartManually": "Reiniciar manualmente"
+    "restartManually": "Reiniciar manualmente",
+    "messageManual": "Reinicia la app para aplicarlo.",
+    "announcement": "Cambiando el sentido de lectura. Reinicia la app para aplicarlo."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "Desbloquea todas las funciones",
     "planMonthly": "Mensual",
     "planAnnual": "Anual",
     "savingsBadge": "-{{percent}}%",
     "trialBadge": "{{days}} días gratis",
-    "ctaTrial": "Comenzar prueba gratuita de {{days}} días",
-    "ctaSubscribeMonthly": "Suscribirse — {{price}}/mes",
-    "ctaSubscribeAnnual": "Suscribirse — {{price}}/año",
-    "billedMonthly": "facturado mensualmente",
+    "ctaTrial": "Empezar prueba gratuita de {{days}} días",
+    "billedMonthly": "facturado cada mes",
     "restore": "Restaurar compras",
     "restoreSuccess": "¡Suscripción restaurada!",
     "restoreNotFound": "No se encontró ninguna suscripción activa",
-    "welcomePro": "¡Bienvenido a Pro!",
-    "errorGeneric": "Algo salió mal. Por favor, inténtalo de nuevo.",
-    "billedAnnually": "facturado anualmente",
-    "perMonth": "≈ {{price}}/mes"
+    "welcomePro": "¡Te damos la bienvenida a Pro!",
+    "errorGeneric": "Algo salió mal. Inténtalo de nuevo.",
+    "errorNetwork": "Sin conexión. Revisa tu red e inténtalo de nuevo.",
+    "errorStoreUnavailable": "Las compras no están disponibles en este dispositivo ahora mismo.",
+    "errorAlreadyOwned": "Ya tienes Pro con esta cuenta. Toca «Restaurar compras» para recuperarlo.",
+    "billedAnnually": "facturado cada año",
+    "perMonth": "≈ {{price}}/mes",
+    "planWeekly": "Semanal",
+    "planLifetime": "De por vida",
+    "planMonths": "{{months}} meses",
+    "planCustom": "Plan",
+    "billedWeekly": "facturado cada semana",
+    "billedOnce": "pago único",
+    "billedEveryMonths": "facturado cada {{months}} meses",
+    "billedRecurring": "recurrente",
+    "trialBadgeNoDays": "Prueba gratis",
+    "ctaTrialNoDays": "Empezar prueba gratuita",
+    "ctaSubscribeWeekly": "Suscribirse — {{price}}/semana",
+    "ctaBuyLifetime": "Desbloquear por {{price}}",
+    "ctaSubscribe": "Suscribirse — {{price}}",
+    "legalNoteRecurring": "{{price}}, se renueva automáticamente. Cancela cuando quieras.",
+    "legalNoteOneTime": "{{price}}, pago único. Tuyo para siempre.",
+    "offerUnavailable": "Los planes no están disponibles ahora mismo. Revisa tu conexión e inténtalo de nuevo.",
+    "ctaSubscribeMonthly": "Suscribirse — {{price}}/mes",
+    "ctaSubscribeAnnual": "Suscribirse — {{price}}/año",
+    "pricesUnavailable": "Precios no disponibles.",
+    "pricesRetry": "Reintentar",
+    "benefit": {
+      "noAds": "Sin anuncios, nunca"
+    },
+    "priceWeekly": "{{price}}/semana",
+    "priceMonthly": "{{price}}/mes",
+    "priceAnnual": "{{price}}/año",
+    "priceEveryMonths": "{{price}} cada {{months}} meses",
+    "legalNoteTrial": "Gratis durante {{days}} días, luego {{price}}. Se renueva automáticamente hasta que canceles.",
+    "legalNoteTrialNoDays": "Prueba gratuita, luego {{price}}. Se renueva automáticamente hasta que canceles.",
+    "trustStore": "Pago protegido por {{store}}",
+    "trustTrial": "Nada que pagar durante la prueba gratuita",
+    "trustCancel": "Cancela cuando quieras, sin compromiso",
+    "trustOneTime": "Un solo pago, sin suscripción"
   },
   "premiumGate": {
     "unlock": "Desbloquear",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Es posible que tu suscripción haya vencido",
+    "graceBannerTitle": "Puede que tu suscripción haya caducado",
     "graceBannerMessage": "Conéctate a internet antes del {{date}} para verificar tu suscripción.",
-    "graceBannerCta": "Verificar suscripción"
+    "graceBannerCta": "Verificar suscripción",
+    "billingIssueTitle": "Problema con el pago",
+    "billingIssueMessage": "No se pudo renovar tu suscripción. Actualiza tu método de pago antes del {{date}} para conservar Pro."
+  },
+  "notifications": {
+    "channelName": "Recordatorios",
+    "channelDescription": "Recordatorios locales programados"
   }
 }

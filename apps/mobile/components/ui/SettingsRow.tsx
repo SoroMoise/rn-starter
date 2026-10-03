@@ -20,6 +20,7 @@ type SettingsRowProps = {
   chevron?: boolean
   accessory?: ReactNode
   onPress?: () => void
+  disabled?: boolean
 }
 
 export function SettingsRow({
@@ -34,19 +35,14 @@ export function SettingsRow({
   chevron = toggle === undefined,
   accessory,
   onPress,
+  disabled = false,
 }: SettingsRowProps) {
   const isSwitch = toggle !== undefined
 
-  return (
-    <TouchableOpacity
-      onPress={onPress}
-      disabled={!onPress}
-      activeOpacity={0.6}
-      accessibilityRole={isSwitch ? 'switch' : 'button'}
-      accessibilityState={{ checked: toggle, disabled: !onPress }}
-      className="flex-row items-center gap-3 px-4 py-3.5">
+  const content = (
+    <>
       <View className={`h-9 w-9 items-center justify-center rounded-xl ${iconBgClassName}`}>
-        <Ionicons name={icon} size={18} color={iconColor} />
+        <Ionicons name={icon} size={18} color={iconColor} importantForAccessibility="no" />
       </View>
 
       <View className="flex-1">
@@ -62,7 +58,7 @@ export function SettingsRow({
 
       {pro ? <ProBadge /> : null}
       {value ? (
-        <ThemedText variant="label" color="muted" weight="normal">
+        <ThemedText variant="label" color="muted" weight="normal" className="shrink">
           {value}
         </ThemedText>
       ) : null}
@@ -71,6 +67,28 @@ export function SettingsRow({
       {chevron ? (
         <DirectionalIcon name="chevron-forward" size={16} color={UI_COLORS.chevron} />
       ) : null}
+    </>
+  )
+
+  if (!onPress && !isSwitch) {
+    return (
+      <View accessible className={ROW_CLASS_NAME}>
+        {content}
+      </View>
+    )
+  }
+
+  return (
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled || !onPress}
+      activeOpacity={0.6}
+      accessibilityRole={isSwitch ? 'switch' : 'button'}
+      accessibilityState={{ checked: toggle, disabled: disabled || !onPress }}
+      className={ROW_CLASS_NAME}>
+      {content}
     </TouchableOpacity>
   )
 }
+
+const ROW_CLASS_NAME = 'flex-row items-center gap-3 px-4 py-3.5'

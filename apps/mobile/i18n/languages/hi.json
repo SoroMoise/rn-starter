@@ -1,119 +1,223 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "लोड हो रहा है...",
-    "error": "त्रुटि",
-    "retry": "पुनः प्रयास करें",
+    "loading": "लोड हो रहा है…",
+    "error": "गड़बड़ी",
+    "retry": "फिर से कोशिश करें",
     "cancel": "रद्द करें",
     "ok": "ठीक है",
-    "save": "सहेजें",
-    "delete": "हटाएं",
-    "edit": "संपादित करें",
-    "done": "पूर्ण",
+    "save": "सेव करें",
+    "delete": "हटाएँ",
+    "edit": "बदलें",
+    "done": "हो गया",
     "close": "बंद करें",
     "search": "खोजें",
-    "noResults": "कोई परिणाम नहीं मिला",
+    "noResults": "कोई नतीजा नहीं मिला",
     "offline": "ऑफ़लाइन",
-    "back": "वापस"
+    "back": "वापस",
+    "clear": "मिटाएँ"
   },
   "tabs": {
-    "settings": "सेटिंग्स"
+    "home": "होम",
+    "settings": "सेटिंग"
+  },
+  "home": {
+    "hero": {
+      "title": "प्रीमियम स्टार्टर",
+      "subtitle": "शानदार, कमाई के लिए तैयार React Native ऐप शिप करें — थीम, i18n, paywall और विज्ञापन पहले से जुड़े हुए।"
+    },
+    "features": {
+      "title": "इस स्टार्टर में क्या-क्या मिलता है",
+      "theme": {
+        "label": "थीम सिस्टम",
+        "desc": "NativeWind टोकन और डिज़ाइन-सिस्टम कॉम्पोनेंट के साथ लाइट और डार्क मोड।"
+      },
+      "i18n": {
+        "label": "इंटरनेशनलाइज़ेशन",
+        "desc": "20 भाषाएँ, RTL सपोर्ट और ज़रूरत पड़ने पर लोड होने वाली अनुवाद फ़ाइलें।"
+      },
+      "paywall": {
+        "label": "Paywall और सदस्यताएँ",
+        "desc": "RevenueCat इंटीग्रेशन: स्टोर के अपने ऑफ़र से बना paywall, और प्रीमियम सुविधाओं की गेटिंग।"
+      },
+      "ads": {
+        "label": "विज्ञापन (AdMob)",
+        "desc": "बैनर, इंटरस्टिशियल और रिवॉर्डेड विज्ञापन — सदस्यों के लिए बंद।"
+      },
+      "notifications": {
+        "label": "नोटिफ़िकेशन",
+        "desc": "जिस स्क्रीन को ज़रूरत हो वहीं अनुमति का अनुरोध, फ़ोरग्राउंड बैनर, Android चैनल और रोज़ाना रिमाइंडर — आपके ऐप के नोटिफ़िकेशन के लिए तैयार।"
+      }
+    },
+    "cta": {
+      "label": "Pro आज़माएँ"
+    },
+    "demoAction": {
+      "label": "एक नमूना ऐक्शन करें",
+      "sub": "हर ऐक्शन उस एंगेजमेंट काउंटर को बढ़ाता है जो कॉन्टेक्स्चुअल paywall और रेटिंग प्रॉम्प्ट चलाता है।"
+    }
   },
   "settings": {
-    "title": "सेटिंग्स",
-    "subtitle": "रूप-रंग और वरीयताएँ अनुकूलित करें",
+    "title": "सेटिंग",
+    "subtitle": "रूप-रंग और पसंद अपने हिसाब से सेट करें",
     "appearance": "रूप-रंग",
     "themeLight": "लाइट",
     "themeDark": "डार्क",
-    "themeAuto": "सिस्टम",
-    "display": "प्रदर्शन",
+    "themeAuto": "सिस्टम के अनुसार",
+    "display": "डिस्प्ले",
     "language": "भाषा",
     "selectLanguage": "भाषा चुनें",
-    "searchLanguage": "भाषाएं खोजें...",
+    "searchLanguage": "भाषा खोजें…",
     "ads": "विज्ञापन",
-    "removeAds": "विज्ञापन हटाएं",
-    "removeAdsDescription": "विज्ञापन-मुक्त अनुभव का आनंद लें",
-    "watchAdButton": "{{duration}} विज्ञापन-मुक्त के लिए विज्ञापन देखें",
-    "adFreeActive": "विज्ञापन-मुक्त सक्रिय ({{duration}} शेष)",
-    "adNotAvailableTitle": "विज्ञापन उपलब्ध नहीं",
-    "adNotAvailableMessage": "अभी कोई विज्ञापन उपलब्ध नहीं है। कृपया बाद में पुनः प्रयास करें।",
-    "adRewardTitle": "पुरस्कार अनलॉक किया गया!",
-    "adRewardMessage": "आपको {{duration}} का विज्ञापन-मुक्त अनुभव मिला है। आनंद लें!",
-    "adErrorTitle": "त्रुटि",
-    "adErrorMessage": "विज्ञापन लोड नहीं हो सका। कृपया बाद में पुनः प्रयास करें।",
-    "about": "के बारे में",
-    "version": "संस्करण",
-    "legalAndSupport": "कानूनी और सहायता",
-    "privacyPolicy": "गोपनीयता नीति",
-    "termsOfService": "सेवा की शर्तें",
-    "support": "सहायता",
-    "rateApp": "इस ऐप को रेट करें",
-    "languageChanged": "भाषा सफलतापूर्वक अपडेट हुई",
     "goPremium": "Pro में अपग्रेड करें",
     "premiumActive": "आप Pro सदस्य हैं",
-    "premiumActiveUntil": "{{date}} तक सक्रिय",
-    "premiumLifetime": "आजीवन पहुँच"
+    "premiumActiveUntil": "{{date}} तक चालू",
+    "premiumLifetime": "आजीवन ऐक्सेस",
+    "manageSubscription": "सदस्यता मैनेज करें",
+    "removeAds": "विज्ञापन हटाएँ",
+    "removeAdsDescription": "एक विज्ञापन देखें, बाकी से कुछ देर छुट्टी पाएँ",
+    "watchAdButton": "एक विज्ञापन देखें, {{duration}} तक कोई विज्ञापन नहीं",
+    "adFreeActive": "विज्ञापन-मुक्त चालू ({{duration}} बाकी)",
+    "adNotAvailableTitle": "विज्ञापन उपलब्ध नहीं",
+    "adNotAvailableMessage": "अभी कोई विज्ञापन तैयार नहीं है। कुछ मिनट बाद फिर से कोशिश करें।",
+    "adRewardTitle": "इनाम मिल गया!",
+    "adRewardMessage": "अभी से {{duration}} तक एक भी विज्ञापन नहीं। आनंद लें!",
+    "adErrorTitle": "गड़बड़ी",
+    "adErrorMessage": "विज्ञापन लोड नहीं हो सका। कुछ मिनट बाद फिर से कोशिश करें।",
+    "about": "ऐप के बारे में",
+    "version": "वर्शन",
+    "legalAndSupport": "कानूनी जानकारी और सहायता",
+    "privacyPolicy": "निजता नीति",
+    "termsOfService": "सेवा की शर्तें",
+    "support": "सहायता",
+    "rateApp": "इस ऐप को रेटिंग दें",
+    "languageChanged": "भाषा बदल दी गई",
+    "adPrivacy": "विज्ञापन से जुड़ी निजता सेटिंग"
   },
   "onboarding": {
     "previous": "वापस",
     "welcome": {
+      "subtitle": "जो कुछ चाहिए, सब बेहतरीन तरीके से बना और लॉन्च के लिए तैयार।",
       "cta": "शुरू करें",
       "reassurance": "मुफ़्त · खाता ज़रूरी नहीं"
     },
+    "premium": {
+      "headline": "Pro के साथ और आगे बढ़ें",
+      "timelineHeader": "आपका ट्रायल कैसे काम करता है",
+      "ctaSkip": "मुफ़्त में जारी रखें",
+      "dayUnlock": "दिन 0 — Pro तुरंत अनलॉक",
+      "dayBilling": "दिन {{day}} — बिलिंग शुरू, कभी भी रद्द करें"
+    },
     "exitIntent": {
-      "title": "रुकें — Pro मुफ़्त आज़माएँ",
+      "title": "रुकिए — Pro मुफ़्त में आज़माएँ",
       "ctaStart": "हाँ, मेरा मुफ़्त ट्रायल शुरू करें",
-      "ctaSkip": "नहीं, मुफ़्त वर्ज़न जारी रखें"
+      "ctaSkip": "नहीं धन्यवाद, मुफ़्त में जारी रखें",
+      "body": "{{days}} दिन मुफ़्त, आज कुछ नहीं देना।\nट्रायल खत्म होने से पहले रद्द करें, तो कोई पैसा नहीं कटेगा।",
+      "bodyNoDays": "मुफ़्त में आज़माएँ, आज कुछ नहीं देना।\nट्रायल खत्म होने से पहले रद्द करें, तो कोई पैसा नहीं कटेगा।",
+      "titleNoTrial": "रुकिए — Pro अनलॉक करें",
+      "bodyNoTrial": "Pro की हर सुविधा, अभी से।\nकोई बंधन नहीं — कभी भी रद्द करें।",
+      "ctaStartNoTrial": "हाँ, Pro अनलॉक करें — {{price}}",
+      "titleOneTime": "रुकिए — Pro हमेशा के लिए अनलॉक करें",
+      "bodyOneTime": "एक बार का भुगतान, हमेशा के लिए आपका।\nकोई सदस्यता नहीं।",
+      "ctaOneTime": "हाँ, हमेशा के लिए अनलॉक करें — {{price}}"
     },
     "proWelcome": {
-      "body": "हमें आपकी Pro सदस्यता मिल गई — यह इस डिवाइस पर पहले से सक्रिय है।",
-      "ctaContinue": "एक्सप्लोर करते रहें",
+      "title": "फिर से स्वागत है!",
+      "body": "हमें आपकी Pro सदस्यता मिल गई — यह इस डिवाइस पर पहले से चालू है।",
       "ctaSkip": "परिचय छोड़ें",
-      "title": "वापसी पर स्वागत है!"
+      "ctaContinue": "आगे देखें"
+    },
+    "a11y": {
+      "step": "{{total}} में से चरण {{current}}"
     }
   },
   "error": {
-    "networkError": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
-    "serverError": "सर्वर त्रुटि। कृपया बाद में पुनः प्रयास करें।",
-    "unknownError": "एक अज्ञात त्रुटि हुई"
+    "networkError": "कनेक्ट नहीं हो सका। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+    "apiError": "डेटा लोड नहीं हो सका। फिर से कोशिश करें।",
+    "serverError": "हमारी तरफ़ कुछ गड़बड़ हुई। थोड़ी देर में फिर से कोशिश करें।",
+    "unknownError": "कुछ गड़बड़ हो गई"
   },
   "appRating": {
-    "message": "5 स्टार रेटिंग हमें ऐप को मुफ्त और हमेशा बेहतर बनाए रखने में मदद करती है।",
-    "rateButton": "अभी रेट करें",
+    "title": "क्या आपको RN Starter पसंद आ रहा है?",
+    "message": "5 स्टार की रेटिंग से हमें ऐप को मुफ़्त रखने और लगातार बेहतर बनाने में मदद मिलती है।",
+    "rateButton": "अभी रेटिंग दें",
     "laterButton": "बाद में",
-    "declineButton": "नहीं धन्यवाद"
+    "declineButton": "नहीं, धन्यवाद"
   },
   "rtlRestart": {
-    "title": "लेआउट अपडेट आवश्यक है",
-    "message": "नया लेआउट लागू करने के लिए {{count}}s में पुनः आरंभ हो रहा है।",
-    "restartNow": "अभी पुनः आरंभ करें",
-    "restartManually": "मैन्युअल रूप से पुनः आरंभ करें"
+    "title": "पढ़ने की दिशा बदल रही है",
+    "message": "इसे लागू करने के लिए ऐप {{count}} सेकंड में फिर से शुरू होगा।",
+    "restartNow": "अभी रीस्टार्ट करें",
+    "restartManually": "बाद में",
+    "messageManual": "इसे लागू करने के लिए ऐप रीस्टार्ट करें।",
+    "announcement": "पढ़ने की दिशा बदल रही है। इसे लागू करने के लिए ऐप रीस्टार्ट करें।"
   },
   "paywall": {
-    "subtitle": "सभी सुविधाएं अनलॉक करें",
+    "title": "RN Starter Pro",
+    "subtitle": "सभी सुविधाएँ अनलॉक करें",
     "planMonthly": "मासिक",
     "planAnnual": "वार्षिक",
     "savingsBadge": "-{{percent}}%",
-    "trialBadge": "{{days}} दिन मुफ्त ट्रायल",
-    "ctaTrial": "{{days}} दिन का मुफ्त ट्रायल शुरू करें",
-    "ctaSubscribeMonthly": "सब्सक्राइब करें — {{price}}/माह",
-    "ctaSubscribeAnnual": "सब्सक्राइब करें — {{price}}/साल",
-    "billedMonthly": "मासिक बिल",
-    "restore": "खरीदारी पुनर्स्थापित करें",
-    "restoreSuccess": "सब्सक्रिप्शन बहाल हो गई!",
-    "restoreNotFound": "कोई सक्रिय सब्सक्रिप्शन नहीं मिली",
+    "trialBadge": "{{days}} दिन का मुफ़्त ट्रायल",
+    "ctaTrial": "{{days}} दिन का मुफ़्त ट्रायल शुरू करें",
+    "billedMonthly": "हर महीने बिल",
+    "restore": "खरीदारी वापस पाएँ",
+    "restoreSuccess": "सदस्यता वापस मिल गई!",
+    "restoreNotFound": "कोई चालू सदस्यता नहीं मिली",
     "welcomePro": "Pro में आपका स्वागत है!",
-    "errorGeneric": "कुछ गलत हो गया। कृपया पुनः प्रयास करें।",
-    "billedAnnually": "वार्षिक बिल",
-    "perMonth": "≈ {{price}}/माह"
+    "errorGeneric": "कुछ गड़बड़ हो गई। फिर से कोशिश करें।",
+    "errorNetwork": "इंटरनेट कनेक्शन नहीं है। अपना नेटवर्क जाँचें और फिर से कोशिश करें।",
+    "errorStoreUnavailable": "इस डिवाइस पर अभी खरीदारी उपलब्ध नहीं है।",
+    "errorAlreadyOwned": "इस खाते पर आपके पास पहले से Pro है। उसे वापस पाने के लिए “खरीदारी वापस पाएँ” पर टैप करें।",
+    "billedAnnually": "हर साल बिल",
+    "perMonth": "≈ {{price}}/महीना",
+    "planWeekly": "साप्ताहिक",
+    "planLifetime": "आजीवन",
+    "planMonths": "{{months}} महीने",
+    "planCustom": "प्लान",
+    "billedWeekly": "हर हफ़्ते बिल",
+    "billedOnce": "एक बार का भुगतान",
+    "billedEveryMonths": "हर {{months}} महीने में बिल",
+    "billedRecurring": "बार-बार होने वाला भुगतान",
+    "trialBadgeNoDays": "मुफ़्त ट्रायल",
+    "ctaTrialNoDays": "मुफ़्त ट्रायल शुरू करें",
+    "ctaSubscribeWeekly": "सदस्यता लें — {{price}}/हफ़्ता",
+    "ctaBuyLifetime": "{{price}} में अनलॉक करें",
+    "ctaSubscribe": "सदस्यता लें — {{price}}",
+    "legalNoteRecurring": "{{price}}, अपने-आप रिन्यू होता है। कभी भी रद्द करें।",
+    "legalNoteOneTime": "{{price}}, एक बार का भुगतान। हमेशा के लिए आपका।",
+    "offerUnavailable": "अभी प्लान उपलब्ध नहीं हैं। अपना कनेक्शन जाँचें और फिर से कोशिश करें।",
+    "ctaSubscribeMonthly": "सदस्यता लें — {{price}}/महीना",
+    "ctaSubscribeAnnual": "सदस्यता लें — {{price}}/साल",
+    "pricesUnavailable": "कीमतें उपलब्ध नहीं हैं।",
+    "pricesRetry": "फिर से कोशिश करें",
+    "benefit": {
+      "noAds": "कोई विज्ञापन नहीं, कभी नहीं"
+    },
+    "priceWeekly": "{{price}}/हफ़्ता",
+    "priceMonthly": "{{price}}/महीना",
+    "priceAnnual": "{{price}}/साल",
+    "priceEveryMonths": "हर {{months}} महीने में {{price}}",
+    "legalNoteTrial": "{{days}} दिन मुफ़्त, फिर {{price}}। जब तक आप रद्द न करें, अपने-आप रिन्यू होता रहेगा।",
+    "legalNoteTrialNoDays": "मुफ़्त ट्रायल, फिर {{price}}। जब तक आप रद्द न करें, अपने-आप रिन्यू होता रहेगा।",
+    "trustStore": "{{store}} से सुरक्षित भुगतान",
+    "trustTrial": "मुफ़्त ट्रायल के दौरान कोई भुगतान नहीं",
+    "trustCancel": "कभी भी रद्द करें, कोई बंधन नहीं",
+    "trustOneTime": "एक ही भुगतान, कोई सदस्यता नहीं"
   },
   "premiumGate": {
     "unlock": "अनलॉक करें",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "सदस्यता समाप्त हो सकती है",
-    "graceBannerMessage": "अपनी सदस्यता सत्यापित करने के लिए {{date}} से पहले इंटरनेट से कनेक्ट करें।",
-    "graceBannerCta": "सदस्यता सत्यापित करें"
+    "graceBannerTitle": "हो सकता है आपकी सदस्यता खत्म हो गई हो",
+    "graceBannerMessage": "अपनी सदस्यता की पुष्टि के लिए {{date}} से पहले इंटरनेट से जुड़ें।",
+    "graceBannerCta": "सदस्यता की पुष्टि करें",
+    "billingIssueTitle": "भुगतान में समस्या",
+    "billingIssueMessage": "आपकी सदस्यता रिन्यू नहीं हो सकी। Pro बनाए रखने के लिए {{date}} से पहले भुगतान का तरीका अपडेट करें।"
+  },
+  "notifications": {
+    "channelName": "रिमाइंडर",
+    "channelDescription": "शेड्यूल किए गए लोकल रिमाइंडर"
   }
 }

@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Đang tải...",
+    "loading": "Đang tải…",
     "error": "Lỗi",
-    "retry": "Thử Lại",
+    "retry": "Thử lại",
     "cancel": "Hủy",
     "ok": "OK",
     "save": "Lưu",
@@ -12,15 +12,53 @@
     "done": "Xong",
     "close": "Đóng",
     "search": "Tìm kiếm",
-    "noResults": "Không tìm thấy kết quả",
+    "noResults": "Không có kết quả",
     "offline": "Ngoại tuyến",
-    "back": "Quay lại"
+    "back": "Quay lại",
+    "clear": "Xóa"
   },
   "tabs": {
+    "home": "Trang chủ",
     "settings": "Cài đặt"
   },
+  "home": {
+    "hero": {
+      "title": "Starter cao cấp",
+      "subtitle": "Phát hành một ứng dụng React Native chỉn chu, có kiếm tiền — theme, i18n, paywall và quảng cáo đã sẵn sàng."
+    },
+    "features": {
+      "title": "Starter này có sẵn những gì",
+      "theme": {
+        "label": "Hệ thống theme",
+        "desc": "Chế độ sáng & tối với token NativeWind và các thành phần design system."
+      },
+      "i18n": {
+        "label": "Quốc tế hóa",
+        "desc": "20 ngôn ngữ, hỗ trợ RTL và tệp dịch chỉ tải khi cần."
+      },
+      "paywall": {
+        "label": "Paywall & gói đăng ký",
+        "desc": "Tích hợp RevenueCat: paywall dựng từ chính ưu đãi trên cửa hàng, kèm chặn tính năng premium."
+      },
+      "ads": {
+        "label": "Quảng cáo (AdMob)",
+        "desc": "Banner, interstitial và quảng cáo có thưởng — tắt với người dùng premium."
+      },
+      "notifications": {
+        "label": "Thông báo",
+        "desc": "Hỏi quyền ngay ở màn hình cần đến, banner khi app đang mở, kênh Android và lời nhắc hằng ngày — sẵn sàng cho các thông báo app của bạn gửi đi."
+      }
+    },
+    "cta": {
+      "label": "Dùng thử Pro"
+    },
+    "demoAction": {
+      "label": "Thực hiện một hành động mẫu",
+      "sub": "Mỗi hành động tăng bộ đếm tương tác, thứ điều khiển paywall theo ngữ cảnh và lời mời đánh giá."
+    }
+  },
   "settings": {
-    "title": "Cài Đặt",
+    "title": "Cài đặt",
     "subtitle": "Tùy chỉnh giao diện và tùy chọn",
     "appearance": "Giao diện",
     "themeLight": "Sáng",
@@ -28,84 +66,144 @@
     "themeAuto": "Hệ thống",
     "display": "Hiển thị",
     "language": "Ngôn ngữ",
-    "selectLanguage": "Chọn Ngôn Ngữ",
-    "searchLanguage": "Tìm ngôn ngữ...",
+    "selectLanguage": "Chọn ngôn ngữ",
+    "searchLanguage": "Tìm ngôn ngữ…",
     "ads": "Quảng cáo",
-    "removeAds": "Xóa Quảng Cáo",
-    "removeAdsDescription": "Tận hưởng trải nghiệm không quảng cáo",
-    "watchAdButton": "Xem quảng cáo để được {{duration}} không quảng cáo",
-    "adFreeActive": "Không quảng cáo đang hoạt động (còn {{duration}})",
-    "adNotAvailableTitle": "Quảng cáo không khả dụng",
-    "adNotAvailableMessage": "Hiện không có quảng cáo. Vui lòng thử lại sau.",
-    "adRewardTitle": "Đã Mở Khóa Phần Thưởng!",
-    "adRewardMessage": "Bạn có {{duration}} trải nghiệm không quảng cáo. Tận hưởng nhé!",
-    "adErrorTitle": "Lỗi",
-    "adErrorMessage": "Không thể tải quảng cáo. Vui lòng thử lại sau.",
-    "about": "Giới thiệu",
-    "version": "Phiên bản",
-    "legalAndSupport": "Pháp lý & Hỗ trợ",
-    "privacyPolicy": "Chính Sách Bảo Mật",
-    "termsOfService": "Điều Khoản Dịch Vụ",
-    "support": "Hỗ trợ",
-    "rateApp": "Đánh giá ứng dụng này",
-    "languageChanged": "Cập nhật ngôn ngữ thành công",
     "goPremium": "Nâng cấp lên Pro",
     "premiumActive": "Bạn là thành viên Pro",
-    "premiumActiveUntil": "Hoạt động đến {{date}}",
-    "premiumLifetime": "Truy cập trọn đời"
+    "premiumActiveUntil": "Có hiệu lực đến {{date}}",
+    "premiumLifetime": "Truy cập trọn đời",
+    "manageSubscription": "Quản lý gói đăng ký",
+    "removeAds": "Gỡ quảng cáo",
+    "removeAdsDescription": "Xem một quảng cáo, nghỉ ngơi khỏi những quảng cáo còn lại",
+    "watchAdButton": "Xem quảng cáo, nhận {{duration}} không quảng cáo",
+    "adFreeActive": "Đang không quảng cáo (còn {{duration}})",
+    "adNotAvailableTitle": "Chưa có quảng cáo",
+    "adNotAvailableMessage": "Hiện chưa có quảng cáo nào sẵn sàng. Thử lại sau vài phút.",
+    "adRewardTitle": "Đã nhận thưởng!",
+    "adRewardMessage": "{{duration}} không một quảng cáo nào, bắt đầu từ bây giờ. Tận hưởng nhé!",
+    "adErrorTitle": "Lỗi",
+    "adErrorMessage": "Không tải được quảng cáo. Thử lại sau vài phút.",
+    "about": "Giới thiệu",
+    "version": "Phiên bản",
+    "legalAndSupport": "Pháp lý & hỗ trợ",
+    "privacyPolicy": "Chính sách quyền riêng tư",
+    "termsOfService": "Điều khoản dịch vụ",
+    "support": "Hỗ trợ",
+    "rateApp": "Đánh giá ứng dụng này",
+    "languageChanged": "Đã cập nhật ngôn ngữ",
+    "adPrivacy": "Cài đặt quyền riêng tư quảng cáo"
   },
   "onboarding": {
     "previous": "Quay lại",
     "welcome": {
+      "subtitle": "Mọi thứ bạn cần, được xây dựng chỉn chu và sẵn sàng phát hành.",
       "cta": "Bắt đầu",
       "reassurance": "Miễn phí · Không cần tài khoản"
     },
+    "premium": {
+      "headline": "Tiến xa hơn với Pro",
+      "timelineHeader": "Bản dùng thử hoạt động thế nào",
+      "ctaSkip": "Tiếp tục miễn phí",
+      "dayUnlock": "Ngày 0 — Mở khóa Pro ngay lập tức",
+      "dayBilling": "Ngày {{day}} — Bắt đầu tính phí, hủy bất cứ lúc nào"
+    },
     "exitIntent": {
-      "title": "Khoan đã — thử Pro miễn phí",
+      "title": "Khoan đã — dùng thử Pro miễn phí",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
-      "ctaSkip": "Không, tiếp tục bản miễn phí"
+      "ctaSkip": "Không cảm ơn, tiếp tục bản miễn phí",
+      "body": "{{days}} ngày miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
+      "bodyNoDays": "Dùng thử miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
+      "titleNoTrial": "Khoan đã — mở khóa Pro",
+      "bodyNoTrial": "Mọi thứ Pro mở khóa, ngay từ bây giờ.\nKhông ràng buộc — hủy bất cứ lúc nào.",
+      "ctaStartNoTrial": "Có, mở khóa Pro — {{price}}",
+      "titleOneTime": "Khoan đã — mở khóa Pro vĩnh viễn",
+      "bodyOneTime": "Trả một lần, của bạn mãi mãi.\nKhông cần đăng ký.",
+      "ctaOneTime": "Có, mở khóa vĩnh viễn — {{price}}"
     },
     "proWelcome": {
-      "body": "Chúng tôi tìm thấy gói Pro của bạn — đã được kích hoạt trên thiết bị này.",
-      "ctaContinue": "Tiếp tục khám phá",
+      "title": "Chào mừng trở lại!",
+      "body": "Chúng tôi đã tìm thấy gói đăng ký Pro của bạn — gói đã hoạt động trên thiết bị này.",
       "ctaSkip": "Bỏ qua phần giới thiệu",
-      "title": "Chào mừng trở lại!"
+      "ctaContinue": "Tiếp tục khám phá"
+    },
+    "a11y": {
+      "step": "Bước {{current}} trên {{total}}"
     }
   },
   "error": {
-    "networkError": "Lỗi mạng. Vui lòng kiểm tra kết nối.",
-    "serverError": "Lỗi máy chủ. Vui lòng thử lại sau.",
-    "unknownError": "Đã xảy ra lỗi không xác định"
+    "networkError": "Không kết nối được. Kiểm tra mạng của bạn rồi thử lại.",
+    "apiError": "Không tải được dữ liệu. Thử lại.",
+    "serverError": "Có trục trặc bên phía chúng tôi. Thử lại sau ít phút.",
+    "unknownError": "Đã xảy ra lỗi"
   },
   "appRating": {
+    "title": "Bạn thích RN Starter?",
     "message": "Đánh giá 5 sao giúp chúng tôi giữ ứng dụng miễn phí và không ngừng cải thiện.",
     "rateButton": "Đánh giá ngay",
     "laterButton": "Để sau",
     "declineButton": "Không, cảm ơn"
   },
   "rtlRestart": {
-    "title": "Cần cập nhật bố cục",
-    "message": "Khởi động lại trong {{count}}s để áp dụng bố cục mới.",
+    "title": "Đang đổi chiều đọc",
+    "message": "Khởi động lại sau {{count}} giây để áp dụng.",
     "restartNow": "Khởi động lại ngay",
-    "restartManually": "Khởi động lại thủ công"
+    "restartManually": "Tự khởi động lại",
+    "messageManual": "Khởi động lại ứng dụng để áp dụng.",
+    "announcement": "Đang đổi chiều đọc. Khởi động lại ứng dụng để áp dụng."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "Mở khóa toàn bộ tính năng",
     "planMonthly": "Hàng tháng",
     "planAnnual": "Hàng năm",
     "savingsBadge": "-{{percent}}%",
-    "trialBadge": "{{days}} ngày miễn phí",
+    "trialBadge": "Dùng thử miễn phí {{days}} ngày",
     "ctaTrial": "Bắt đầu dùng thử miễn phí {{days}} ngày",
-    "ctaSubscribeMonthly": "Đăng ký — {{price}}/tháng",
-    "ctaSubscribeAnnual": "Đăng ký — {{price}}/năm",
     "billedMonthly": "thanh toán hàng tháng",
-    "restore": "Khôi phục giao dịch",
+    "restore": "Khôi phục giao dịch mua",
     "restoreSuccess": "Đã khôi phục gói đăng ký!",
     "restoreNotFound": "Không tìm thấy gói đăng ký nào đang hoạt động",
     "welcomePro": "Chào mừng đến với Pro!",
-    "errorGeneric": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "errorGeneric": "Đã xảy ra lỗi. Thử lại.",
+    "errorNetwork": "Không có kết nối. Kiểm tra mạng của bạn rồi thử lại.",
+    "errorStoreUnavailable": "Hiện không thể mua hàng trên thiết bị này.",
+    "errorAlreadyOwned": "Bạn đã sở hữu Pro với tài khoản này. Chạm “Khôi phục giao dịch mua” để lấy lại.",
     "billedAnnually": "thanh toán hàng năm",
-    "perMonth": "≈ {{price}}/tháng"
+    "perMonth": "≈ {{price}}/tháng",
+    "planWeekly": "Hàng tuần",
+    "planLifetime": "Trọn đời",
+    "planMonths": "{{months}} tháng",
+    "planCustom": "Gói",
+    "billedWeekly": "thanh toán hàng tuần",
+    "billedOnce": "thanh toán một lần",
+    "billedEveryMonths": "thanh toán {{months}} tháng một lần",
+    "billedRecurring": "định kỳ",
+    "trialBadgeNoDays": "Dùng thử miễn phí",
+    "ctaTrialNoDays": "Bắt đầu dùng thử miễn phí",
+    "ctaSubscribeWeekly": "Đăng ký — {{price}}/tuần",
+    "ctaBuyLifetime": "Mở khóa với giá {{price}}",
+    "ctaSubscribe": "Đăng ký — {{price}}",
+    "legalNoteRecurring": "{{price}}, tự động gia hạn. Hủy bất cứ lúc nào.",
+    "legalNoteOneTime": "{{price}}, thanh toán một lần. Của bạn mãi mãi.",
+    "offerUnavailable": "Hiện chưa có gói nào. Kiểm tra kết nối của bạn rồi thử lại.",
+    "ctaSubscribeMonthly": "Đăng ký — {{price}}/tháng",
+    "ctaSubscribeAnnual": "Đăng ký — {{price}}/năm",
+    "pricesUnavailable": "Chưa có giá.",
+    "pricesRetry": "Thử lại",
+    "benefit": {
+      "noAds": "Không quảng cáo, mãi mãi"
+    },
+    "priceWeekly": "{{price}}/tuần",
+    "priceMonthly": "{{price}}/tháng",
+    "priceAnnual": "{{price}}/năm",
+    "priceEveryMonths": "{{price}} mỗi {{months}} tháng",
+    "legalNoteTrial": "Miễn phí {{days}} ngày, sau đó {{price}}. Tự động gia hạn cho đến khi bạn hủy.",
+    "legalNoteTrialNoDays": "Dùng thử miễn phí, sau đó {{price}}. Tự động gia hạn cho đến khi bạn hủy.",
+    "trustStore": "Thanh toán được bảo mật bởi {{store}}",
+    "trustTrial": "Không phải trả gì trong thời gian dùng thử miễn phí",
+    "trustCancel": "Hủy bất cứ lúc nào, không ràng buộc",
+    "trustOneTime": "Trả một lần, không đăng ký"
   },
   "premiumGate": {
     "unlock": "Mở khóa",
@@ -114,6 +212,12 @@
   "subscription": {
     "graceBannerTitle": "Gói đăng ký có thể đã hết hạn",
     "graceBannerMessage": "Kết nối internet trước {{date}} để xác minh gói đăng ký của bạn.",
-    "graceBannerCta": "Xác minh gói đăng ký"
+    "graceBannerCta": "Xác minh gói đăng ký",
+    "billingIssueTitle": "Sự cố thanh toán",
+    "billingIssueMessage": "Không thể gia hạn gói đăng ký của bạn. Cập nhật phương thức thanh toán trước {{date}} để giữ Pro."
+  },
+  "notifications": {
+    "channelName": "Lời nhắc",
+    "channelDescription": "Lời nhắc cục bộ theo lịch"
   }
 }

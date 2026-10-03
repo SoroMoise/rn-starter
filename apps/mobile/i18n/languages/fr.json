@@ -14,7 +14,8 @@
     "search": "Rechercher",
     "noResults": "Aucun résultat trouvé",
     "offline": "Hors ligne",
-    "back": "Retour"
+    "back": "Retour",
+    "clear": "Effacer"
   },
   "tabs": {
     "home": "Accueil",
@@ -125,6 +126,9 @@
       "body": "Nous avons retrouvé votre abonnement Pro — il est déjà actif sur cet appareil.",
       "ctaSkip": "Passer l'intro",
       "ctaContinue": "Continuer la visite"
+    },
+    "a11y": {
+      "step": "Étape {{current}} sur {{total}}"
     }
   },
   "error": {
@@ -144,7 +148,9 @@
     "title": "Changement du sens de lecture",
     "message": "Redémarrage dans {{count}} s pour l'appliquer.",
     "restartNow": "Redémarrer",
-    "restartManually": "Plus tard"
+    "restartManually": "Plus tard",
+    "messageManual": "Redémarrez l'app pour l'appliquer.",
+    "announcement": "Changement du sens de lecture. Redémarrez l'app pour l'appliquer."
   },
   "paywall": {
     "title": "RN Starter Pro",

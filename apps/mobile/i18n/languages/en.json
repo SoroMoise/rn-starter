@@ -14,7 +14,8 @@
     "search": "Search",
     "noResults": "No results found",
     "offline": "Offline",
-    "back": "Back"
+    "back": "Back",
+    "clear": "Clear"
   },
   "tabs": {
     "home": "Home",
@@ -125,6 +126,9 @@
       "body": "We found your Pro subscription — it's already active on this device.",
       "ctaSkip": "Skip the intro",
       "ctaContinue": "Keep exploring"
+    },
+    "a11y": {
+      "step": "Step {{current}} of {{total}}"
     }
   },
   "error": {
@@ -144,7 +148,9 @@
     "title": "Switching reading direction",
     "message": "Restarting in {{count}}s to apply it.",
     "restartNow": "Restart now",
-    "restartManually": "Restart manually"
+    "restartManually": "Restart manually",
+    "messageManual": "Restart the app to apply it.",
+    "announcement": "Switching reading direction. Restart the app to apply it."
   },
   "paywall": {
     "title": "RN Starter Pro",

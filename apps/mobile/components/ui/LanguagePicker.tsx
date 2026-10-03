@@ -93,6 +93,9 @@ export function LanguagePicker({
         <View className="px-4">
           <Pressable
             onPress={() => handleItemPress(item.code)}
+            accessibilityRole="radio"
+            accessibilityState={{ checked: isSelected }}
+            accessibilityLabel={item.nativeName}
             className={`mb-2 flex-row items-center justify-between rounded-2xl px-3 py-2 shadow-sm ${
               isSelected
                 ? 'bg-accent-50 shadow-accent-100 dark:bg-accent-900/30 dark:shadow-none'
@@ -161,7 +164,7 @@ export function LanguagePicker({
               shadowRadius: isSearchFocused ? 8 : 4,
               elevation: isSearchFocused ? 4 : 2,
             }}>
-            <ThemedText color="inherit" className="mr-2 text-xl">
+            <ThemedText color="inherit" className="mr-2 text-xl" importantForAccessibility="no">
               🔍
             </ThemedText>
             <TextInput
@@ -170,6 +173,7 @@ export function LanguagePicker({
               onFocus={handleSearchFocus}
               onBlur={handleSearchBlur}
               placeholder={t('settings.searchLanguage')}
+              accessibilityLabel={t('common.search')}
               placeholderTextColor="#9CA3AF"
               className="flex-1 py-2 text-base text-gray-900 dark:text-white"
               autoCapitalize="none"
@@ -179,12 +183,15 @@ export function LanguagePicker({
               <Animated.View entering={FadeIn.duration(200)} exiting={FadeOut.duration(200)}>
                 <TouchableOpacity
                   onPress={clearSearch}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('common.clear')}
                   className="h-8 w-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700"
                   activeOpacity={0.7}>
                   <ThemedText
                     variant="label"
                     color="inherit"
                     weight="normal"
+                    importantForAccessibility="no"
                     className="text-gray-600 dark:text-gray-300">
                     ✕
                   </ThemedText>

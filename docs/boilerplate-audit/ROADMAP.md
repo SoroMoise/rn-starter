@@ -35,7 +35,8 @@ audit of that gap and the plan to close it.
 | 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
 | 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
 | — | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
-| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner's offset | — | planned (§3) |
+| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert — ported from noise-remover's pass | 3 | **in review** |
+| — | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register — 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **in review** |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | 1 | colour tokens **in review**, the onboarding planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
 | 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
@@ -47,10 +48,11 @@ audit of that gap and the plan to close it.
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 48 have shipped (twelve with lots 1–3,
-three of them recorded only when the rest were scheduled, four with lot 14, five with lot 15 and two
-with lot 17's colour tokens), 5 are closed without shipping, and of the other 31, 28 are scheduled
-into lots 16–18 and 20–22 and 3 wait, with lot 19, for the Firebase migration (§3).
+says what comes after the audit. Of the 84 "later" items, 53 have shipped (twelve with lots 1–3,
+three of them recorded only when the rest were scheduled, four with lot 14, five with lot 15, two
+with lot 17's colour tokens and five with lot 16), 5 are closed without shipping, and of the other
+26, 23 are scheduled into lots 17–18 and 20–22 and 3 wait, with lot 19, for the Firebase migration
+(§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -194,9 +196,9 @@ always `git rev-list --count origin/main..HEAD`.
 
 ## 3. After the audit
 
-Every kept item has shipped. What is left is the "later" items, scheduled below into lots 16 to 18
-and 20 to 22 — lots 14 and 15 have shipped (§1), lot 19 waits for the Firebase migration — and one
-translation session, which runs between two of them.
+Every kept item has shipped. What is left is the "later" items, scheduled below into lots 17 and 18
+and 20 to 22 — lots 14, 15 and 16 have shipped (§1), lot 19 waits for the Firebase migration — and
+one translation session, which is next.
 
 ### The "later" items, scheduled
 
@@ -218,14 +220,14 @@ was checked against the code before it was given a lot, and eight left the list 
 The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
 that covers them. The order puts first what a user or the AdMob account meets, then what a derived
 app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
-earlier one. Each lot still runs as §2 and §18 say — verify, then refute, before anything ships —
+earlier one. Each lot still runs as §2 and §19 say — verify, then refute, before anything ships —
 and the notes below are where that verification starts, not its result.
 
 | Lot | Subject | Items | i18n |
 |---|---|---|---|
 | 14 | Ads: nothing offered that cannot be served — shipped (§1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
 | 15 | Session signals: friction, connectivity, settle — shipped (§1, §16) | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
-| 16 | Accessibility | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | a few labels, EN and FR |
+| 16 | Accessibility — shipped (§1, §18) | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | four keys, EN and FR |
 | 17 | Colour tokens and the onboarding — the colour tokens shipped (§1, §17) | `brand-color-tokens` and `gradients-tokens` (shipped), `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
 | 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
@@ -243,23 +245,16 @@ integration point; a rule that needs no code is written down instead; and nothin
 of a derived app would see on day one. An item that fails the line is closed with its rule written
 down, not shipped anyway.
 
-**Lot 16 — Accessibility.** `ModalBottomSheet`'s close button has been labelled since the off-audit
-fixes and `RatingModal` left with lot 4; `SlidingSelector`, `LanguagePicker`, `SettingsLinkRow` and
-`RTLRestartBanner` still carry no role, state or label. `AppRatingModal` is mounted nowhere: its
-star labels would be the lot's only plural keys, and leaving it to whoever wires it back is a fair
-call. The clear-search label is a `common.*` key, the one namespace kept as shared vocabulary. The
-banner still sits `TAB_BAR_HEIGHT + 50` above the bottom inset though it also shows during the
-onboarding, where the switch to Arabic happens and no tab bar is drawn — the same file.
-
-**The translation session runs after lot 16**, the last lot that adds keys: the session the parity
-rule describes (CLAUDE.md, Internationalization), bringing each of the 18 other languages to parity
-with `en.json` and to the voice charter, and nothing else. Each lacks 72 of `en.json`'s 163 keys — most of the
-paywall and its legal notes, the onboarding's pitch, the home screen, the billing banner — which its
-speakers read in English; of the 91 they hold, the ones lot 13 rewrote in EN and FR keep the old
-wording; and `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`).
-The starter has no installs, so nothing is lost by waiting, and every key is translated once. Lot
-22's licences row, if the app links the page, is the only key foreseen after it, and waits for the
-next session.
+**The translation session ran on 2026-10-03, with lot 16** (§1). Each of the 18 other languages
+lacked 76 of `en.json`'s 167 keys and kept lot 13's old wording on part of the 91 it held; `id.json`
+and the two `zh-*` files mixed registers. The session reused noise-remover's files, reviewed in its
+own translation session a day earlier, for every key whose English is the same (124 of 167, the app
+name swapped back), translated the 43 the starter alone has — the demo home screen, the premium
+step and the exit sheet, the errors — in the voice charter's register, and checked the result by
+script: key for key against `en.json`, `rtlRestart.message` in every plural form of `ar`, `ru` and
+`pl`, placeholders and line breaks preserved, no `你` and no `kamu` left. Nothing was heard on a
+device. Lot 22's licences row, if the app links the page, is the only key foreseen, and waits for
+the next session; so does every key a feature adds in EN and FR from now on.
 
 **Lot 17 — Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
 the brand colours are `palette`'s three roles and every gradient is a token. `InitialLoadingScreen`,
@@ -558,7 +553,7 @@ lifecycle, and that is where most of this came from.
   chain so that no card would land seconds after it; with the ask deferred, only an ad the user
   saw takes the moment.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
-  under lot 9; `lot == 6` alone would have missed it (§18, step 3).
+  under lot 9; `lot == 6` alone would have missed it (§19, step 3).
 
 The branch was then reviewed before it was pushed — once by the session reading the whole diff,
 once with the code-review skill — and each pass found what the stages had not:
@@ -1139,7 +1134,47 @@ whole content view.
 
 ---
 
-## 18. Resuming in a new session
+## 18. What verification caught on lot 16
+
+Run otherwise than the lots before it: noise-remover had already made this pass over the same
+components, in its PR #68, and app-factory's rule says a fix found in an app goes back to the
+template. So the lot is a port, read diff by diff against what the plan (§3, as it stood) and the
+items proposed, and refuted where the app's version carried the app rather than the rule.
+
+- **The plan's roles were the wrong ones.** It proposed `tablist` / `tab` for `SlidingSelector`, as
+  deep-focus had it; a theme selector is a choice of one, so it is a `radiogroup` of `radio`s with
+  `checked`, like the language rows and the paywall's plans — a `tab` announces a pane that does
+  not exist. And `SettingsLinkRow` is a `link`, not the `button` proposed: three of its four rows
+  leave the app, and the one that opens something in it passes `role="button"`.
+- **A labelled backdrop was the first stop.** The sheet's and the dialog's backdrop were buttons
+  named *Close*, so TalkBack landed on *Close* before the title. They are no longer controls — the
+  close button, the footer and the back key stay — and a sheet with no title, whose header the
+  close button used to force, gets a floating one.
+- **One helper did not pass the line of §3.** noise-remover's `useAnnouncement` wraps one effect
+  around `announceForAccessibility` and carries no trap: the rule names the call instead.
+  `useProgressAnnouncement` ships with no caller because it does carry one — a live region on a
+  value that moves many times a second reads nothing else — and CLAUDE.md names it as the
+  integration point; `useScreenReaderEnabled` has its caller, the banner.
+- **What was the app's stayed in the app.** `SettingsRowIcon` and the optional icon plate serve
+  noise-remover's own settings; its light-mode move from 500 to 700 on fills and text is a
+  contrast decision taken on its teal, which the starter's blue scale was not measured against
+  here — a question for the colour pass, not this lot.
+- **`TAB_BAR_HEIGHT` is gone, on purpose.** A constant height let a label scaled to 200 % overrun
+  the bar, and the banner and `useTabBarPadding` measured against it. `tabBarHeight(fontScale)`
+  replaces it, and an app importing the constant fails at typecheck rather than at 200 %.
+- **The banner answers lot 15's open question its own way.** Whether TalkBack announces a live
+  region that mounts already filled is still a device question; the banner does not depend on it
+  and announces itself through `announceForAccessibility`, once, when it appears.
+- **`rating-modal-a11y` stays dropped**, and the known gap says so: `AppRatingModal` is mounted
+  nowhere, and whoever wires it back owes it its roles and star labels, the lot's only plural keys.
+
+Nothing here has been heard with TalkBack or seen at 200 %: the environment has no phone, and the
+starter's known gaps now say so. The pass on a device is each derived app's, before its first
+release.
+
+---
+
+## 19. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
 2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
@@ -1148,7 +1183,7 @@ whole content view.
    files:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
-   print(json.dumps([x for x in d if x['plannedLot']==16 and x['status']=='todo'],ensure_ascii=False,indent=1))"
+   print(json.dumps([x for x in d if x['plannedLot']==17 and x['status']=='todo'],ensure_ascii=False,indent=1))"
    ```
 4. Run the verify-then-refute workflow over the lot's items grouped into families (§2).
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.

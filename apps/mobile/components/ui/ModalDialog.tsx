@@ -51,8 +51,8 @@ export function ModalDialog({
         <Pressable
           className="absolute inset-0 bg-black/50"
           onPress={handleClose}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.close')}
+          accessible={false}
+          importantForAccessibility="no"
         />
 
         <View
@@ -85,7 +85,10 @@ export function ModalDialog({
                   accessibilityRole="button"
                   accessibilityLabel={t('common.close')}
                   className="h-8 w-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700">
-                  <ThemedText color="inherit" className="text-lg text-gray-600 dark:text-gray-300">
+                  <ThemedText
+                    color="inherit"
+                    importantForAccessibility="no"
+                    className="text-lg text-gray-600 dark:text-gray-300">
                     ✕
                   </ThemedText>
                 </TouchableOpacity>

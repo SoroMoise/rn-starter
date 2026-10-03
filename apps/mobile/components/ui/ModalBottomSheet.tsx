@@ -4,9 +4,11 @@ import {
   ModalSnapContext,
 } from '@/components/ui/modalSheet/contexts'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { useThemeColor } from '@/components/Themed'
 import { useSheetSnap } from '@/hooks/useSheetSnap'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { SHEET_TOP_OFFSET } from '@utils/snapBottomSheet'
+import Ionicons from '@expo/vector-icons/Ionicons'
 import React, { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, TouchableOpacity, View } from 'react-native'
@@ -59,6 +61,7 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
     ref
   ) {
     const { t } = useTranslation()
+    const colors = useThemeColor()
     const sheet = useSheetSnap({ visible, initialSnap, dragLock, onClose })
     const { close, hasSnapPoints, snapToFull } = sheet
 
@@ -91,8 +94,8 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                   className="flex-1"
                   activeOpacity={1}
                   onPress={close}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('common.close')}
+                  accessible={false}
+                  importantForAccessibility="no"
                 />
               )}
               <Animated.View
@@ -104,7 +107,7 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                     <View className="h-1.5 w-12 rounded-full bg-gray-300 dark:bg-gray-600" />
                   </View>
 
-                  {title.length > 0 || subtitle || showCloseButton ? (
+                  {title.length > 0 || subtitle ? (
                     <View className="flex-row items-center justify-between px-6 py-4">
                       <View className="flex-1 pr-3">
                         <ThemedText variant="title">{title}</ThemedText>
@@ -124,6 +127,7 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                           activeOpacity={0.7}>
                           <ThemedText
                             color="inherit"
+                            importantForAccessibility="no"
                             className="text-lg text-gray-600 dark:text-gray-300">
                             ✕
                           </ThemedText>
@@ -139,6 +143,18 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                       </ModalSnapContext.Provider>
                     </ModalDraggableContext.Provider>
                   </ModalScrollContext.Provider>
+
+                  {title.length === 0 && !subtitle && showCloseButton ? (
+                    <TouchableOpacity
+                      onPress={close}
+                      accessibilityRole="button"
+                      accessibilityLabel={t('common.close')}
+                      className="absolute z-10 h-11 w-11 items-center justify-center rounded-xl"
+                      style={{ top: 10, end: 12 }}
+                      activeOpacity={0.6}>
+                      <Ionicons name="close" size={22} color={colors.textMuted} />
+                    </TouchableOpacity>
+                  ) : null}
                 </View>
 
                 <View

@@ -10,19 +10,22 @@ export type SettingsLinkRowProps = {
   icon: keyof typeof Ionicons.glyphMap
   label: string
   onPress: () => void
+  role?: 'link' | 'button'
 }
 
-export function SettingsLinkRow({ icon, label, onPress }: SettingsLinkRowProps) {
+export function SettingsLinkRow({ icon, label, onPress, role = 'link' }: SettingsLinkRowProps) {
   const isDark = useThemedColor()
   const mutedIconColor = isDark ? '#fff' : '#4b5563'
 
   return (
     <TouchableOpacity
       onPress={onPress}
-      className="flex-row items-center px-4 py-2"
+      accessibilityRole={role}
+      accessibilityLabel={label}
+      className="min-h-[52px] flex-row items-center px-4 py-2"
       activeOpacity={0.6}>
       <View className="mr-3 h-9 w-9 items-center justify-center">
-        <Ionicons name={icon} size={18} color={mutedIconColor} />
+        <Ionicons name={icon} size={18} color={mutedIconColor} importantForAccessibility="no" />
       </View>
       <ThemedText variant="body" color="dimmed" weight="medium" className="flex-1">
         {label}

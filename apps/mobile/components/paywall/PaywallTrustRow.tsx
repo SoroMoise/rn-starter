@@ -31,7 +31,7 @@ export function PaywallTrustRow({ plan }: { plan: OfferingPlan | null }) {
   return (
     <View className="gap-2 px-1">
       {items.map((item) => (
-        <View key={item.icon} className="flex-row items-center gap-2">
+        <View key={item.icon} accessible className="flex-row items-center gap-2">
           <Ionicons name={item.icon} size={14} color={isDark ? '#9ca3af' : '#6b7280'} />
           <ThemedText variant="caption" color="muted" className="flex-1">
             {item.text}

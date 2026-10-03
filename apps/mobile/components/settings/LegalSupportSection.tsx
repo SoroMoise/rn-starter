@@ -19,6 +19,7 @@ type LegalSupportItem = {
   icon: SettingsLinkRowProps['icon']
   label: string
   onPress: () => void
+  role?: SettingsLinkRowProps['role']
 }
 
 export function LegalSupportSection() {
@@ -72,6 +73,7 @@ export function LegalSupportSection() {
               id: 'adPrivacy',
               icon: 'options-outline' as const,
               label: t('settings.adPrivacy'),
+              role: 'button' as const,
               onPress: () => {
                 analyticsService.track('ad_privacy_options_opened')
                 void consentService.showPrivacyOptions()
@@ -90,7 +92,12 @@ export function LegalSupportSection() {
         {legalSupportItems.map((item, index) => (
           <Fragment key={item.id}>
             {index > 0 ? <Divider /> : null}
-            <SettingsLinkRow icon={item.icon} label={item.label} onPress={item.onPress} />
+            <SettingsLinkRow
+              icon={item.icon}
+              label={item.label}
+              onPress={item.onPress}
+              role={item.role}
+            />
           </Fragment>
         ))}
       </SectionContent>

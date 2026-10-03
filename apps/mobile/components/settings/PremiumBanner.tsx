@@ -35,7 +35,7 @@ export function PremiumBanner() {
     return (
       <Section>
         <SectionContent>
-          <View className="flex-row items-center px-4 py-3.5">
+          <View accessible className="flex-row items-center px-4 py-3.5">
             <View className="mr-3 h-9 w-9 items-center justify-center rounded-xl bg-pro-100 dark:bg-pro-500/20">
               <Ionicons name="star" size={18} color={UI_COLORS.pro[500]} />
             </View>
@@ -77,6 +77,7 @@ export function PremiumBanner() {
       <TouchableOpacity
         onPress={() => void openPaywall({ source: 'settings' })}
         activeOpacity={0.85}
+        accessibilityRole="button"
         className="overflow-hidden rounded-2xl bg-pro-600 dark:bg-pro-700">
         <View className="p-4">
           <View className="mb-2 flex-row items-center gap-2">

@@ -1,119 +1,228 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "جارٍ التحميل...",
+    "loading": "جارٍ التحميل…",
     "error": "خطأ",
     "retry": "إعادة المحاولة",
     "cancel": "إلغاء",
-    "ok": "موافق",
+    "ok": "حسنًا",
     "save": "حفظ",
     "delete": "حذف",
     "edit": "تعديل",
     "done": "تم",
     "close": "إغلاق",
     "search": "بحث",
-    "noResults": "لم يتم العثور على نتائج",
+    "noResults": "لا توجد نتائج",
     "offline": "غير متصل",
-    "back": "رجوع"
+    "back": "رجوع",
+    "clear": "مسح"
   },
   "tabs": {
+    "home": "الرئيسية",
     "settings": "الإعدادات"
+  },
+  "home": {
+    "hero": {
+      "title": "قالب انطلاق احترافي",
+      "subtitle": "أطلق تطبيق React Native متقنًا ومُدرًّا للدخل: السمات وi18n وpaywall والإعلانات كلها مهيّأة مسبقًا."
+    },
+    "features": {
+      "title": "ما يتضمنه هذا القالب",
+      "theme": {
+        "label": "نظام السمات",
+        "desc": "وضعان فاتح وداكن مع tokens من NativeWind ومكوّنات نظام التصميم."
+      },
+      "i18n": {
+        "label": "التدويل",
+        "desc": "20 لغة، ودعم RTL، وملفات ترجمة تُحمَّل عند الحاجة."
+      },
+      "paywall": {
+        "label": "Paywall والاشتراكات",
+        "desc": "تكامل مع RevenueCat: paywall يُبنى من عرض المتجر نفسه، وحصر الميزات المميزة بالمشتركين."
+      },
+      "ads": {
+        "label": "الإعلانات (AdMob)",
+        "desc": "إعلانات بانر، وإعلانات بينية، وإعلانات بمكافأة — تُعطَّل جميعها للمشتركين."
+      },
+      "notifications": {
+        "label": "الإشعارات",
+        "desc": "طلب الإذن من الشاشة التي تحتاجه، وبانرات في المقدمة، وقناة Android، وتذكيرات يومية — كل ذلك جاهز للإشعارات التي يرسلها تطبيقك."
+      }
+    },
+    "cta": {
+      "label": "جرّب Pro"
+    },
+    "demoAction": {
+      "label": "نفّذ إجراءً تجريبيًا",
+      "sub": "كل إجراء يرفع عدّاد التفاعل الذي يقود الـ paywall السياقي وطلب التقييم."
+    }
   },
   "settings": {
     "title": "الإعدادات",
-    "subtitle": "خصص المظهر والتفضيلات",
+    "subtitle": "خصّص المظهر وتفضيلاتك",
     "appearance": "المظهر",
     "themeLight": "فاتح",
     "themeDark": "داكن",
-    "themeAuto": "النظام",
+    "themeAuto": "حسب النظام",
     "display": "العرض",
     "language": "اللغة",
     "selectLanguage": "اختيار اللغة",
-    "searchLanguage": "البحث عن اللغات...",
+    "searchLanguage": "ابحث عن لغة…",
     "ads": "الإعلانات",
+    "goPremium": "الترقية إلى Pro",
+    "premiumActive": "أنت مشترك في Pro",
+    "premiumActiveUntil": "نشط حتى {{date}}",
+    "premiumLifetime": "وصول مدى الحياة",
+    "manageSubscription": "إدارة الاشتراك",
     "removeAds": "إزالة الإعلانات",
-    "removeAdsDescription": "استمتع بتجربة خالية من الإعلانات",
-    "watchAdButton": "شاهد إعلانًا لـ{{duration}} بدون إعلانات",
-    "adFreeActive": "بدون إعلانات نشط ({{duration}} متبقية)",
-    "adNotAvailableTitle": "الإعلان غير متاح",
-    "adNotAvailableMessage": "لا يوجد إعلان متاح حاليًا. يرجى المحاولة لاحقًا.",
-    "adRewardTitle": "تم فتح المكافأة!",
-    "adRewardMessage": "لديك {{duration}} من التجربة بدون إعلانات. استمتع!",
+    "removeAdsDescription": "شاهد إعلانًا واحدًا وارتَح من البقية",
+    "watchAdButton": "شاهد إعلانًا واحصل على {{duration}} بلا إعلانات",
+    "adFreeActive": "بلا إعلانات الآن (يتبقّى {{duration}})",
+    "adNotAvailableTitle": "لا يتوفر إعلان",
+    "adNotAvailableMessage": "لا يوجد إعلان جاهز حاليًا. حاول مرة أخرى بعد بضع دقائق.",
+    "adRewardTitle": "حصلت على المكافأة!",
+    "adRewardMessage": "{{duration}} بلا أي إعلان، بدءًا من الآن. استمتع!",
     "adErrorTitle": "خطأ",
-    "adErrorMessage": "فشل تحميل الإعلان. يرجى المحاولة لاحقًا.",
-    "about": "حول",
+    "adErrorMessage": "تعذّر تحميل الإعلان. حاول مرة أخرى بعد بضع دقائق.",
+    "about": "حول التطبيق",
     "version": "الإصدار",
-    "legalAndSupport": "القانونية والدعم",
+    "legalAndSupport": "الشؤون القانونية والدعم",
     "privacyPolicy": "سياسة الخصوصية",
     "termsOfService": "شروط الخدمة",
     "support": "الدعم",
     "rateApp": "قيّم هذا التطبيق",
-    "languageChanged": "تم تحديث اللغة بنجاح",
-    "goPremium": "الترقية إلى Pro",
-    "premiumActive": "أنت عضو Pro",
-    "premiumActiveUntil": "نشط حتى {{date}}",
-    "premiumLifetime": "وصول مدى الحياة"
+    "languageChanged": "تم تغيير اللغة",
+    "adPrivacy": "إعدادات خصوصية الإعلانات"
   },
   "onboarding": {
     "previous": "رجوع",
     "welcome": {
-      "cta": "ابدأ الآن",
-      "reassurance": "مجاناً · بدون حساب"
+      "subtitle": "كل ما تحتاجه، مبنيّ بعناية وجاهز للإطلاق.",
+      "cta": "ابدأ",
+      "reassurance": "مجانًا · بدون حساب"
+    },
+    "premium": {
+      "headline": "انطلق أبعد مع Pro",
+      "timelineHeader": "كيف تعمل فترة التجربة",
+      "ctaSkip": "المتابعة مجانًا",
+      "dayUnlock": "اليوم 0 — يُفتح Pro فورًا",
+      "dayBilling": "اليوم {{day}} — يبدأ الخصم، ويمكنك الإلغاء في أي وقت"
     },
     "exitIntent": {
-      "title": "لحظة — جرّب Pro مجاناً",
+      "title": "لحظة — جرّب Pro مجانًا",
       "ctaStart": "نعم، ابدأ تجربتي المجانية",
-      "ctaSkip": "لا شكراً، متابعة بالمجانية"
+      "ctaSkip": "لا شكرًا، المتابعة مجانًا",
+      "body": "مجانًا لمدة {{days}} يوم، ولا تدفع شيئًا اليوم.\nألغِ قبل انتهاء التجربة ولن يُخصم منك شيء.",
+      "bodyNoDays": "جرّب مجانًا، ولا تدفع شيئًا اليوم.\nألغِ قبل انتهاء التجربة ولن يُخصم منك شيء.",
+      "titleNoTrial": "لحظة — افتح Pro",
+      "bodyNoTrial": "كل ما يفتحه Pro، من الآن.\nبلا التزام، ويمكنك الإلغاء في أي وقت.",
+      "ctaStartNoTrial": "نعم، افتح Pro — {{price}}",
+      "titleOneTime": "لحظة — افتح Pro للأبد",
+      "bodyOneTime": "دفعة واحدة، ولك للأبد.\nبلا اشتراك.",
+      "ctaOneTime": "نعم، افتحه للأبد — {{price}}"
     },
     "proWelcome": {
-      "body": "وجدنا اشتراكك Pro — إنه مفعّل بالفعل على هذا الجهاز.",
-      "ctaContinue": "مواصلة الاستكشاف",
-      "ctaSkip": "تخطي المقدمة",
-      "title": "مرحباً بعودتك!"
+      "title": "مرحبًا بعودتك!",
+      "body": "وجدنا اشتراكك في Pro — وهو مفعّل بالفعل على هذا الجهاز.",
+      "ctaSkip": "تخطّي المقدمة",
+      "ctaContinue": "مواصلة الاستكشاف"
+    },
+    "a11y": {
+      "step": "الخطوة {{current}} من {{total}}"
     }
   },
   "error": {
-    "networkError": "خطأ في الشبكة. يرجى التحقق من الاتصال.",
-    "serverError": "خطأ في الخادم. يرجى المحاولة لاحقًا.",
-    "unknownError": "حدث خطأ غير معروف"
+    "networkError": "تعذّر الاتصال. تحقّق من اتصالك بالإنترنت وحاول مرة أخرى.",
+    "apiError": "تعذّر تحميل البيانات. حاول مرة أخرى.",
+    "serverError": "حدث خلل من جهتنا. حاول مرة أخرى بعد قليل.",
+    "unknownError": "حدث خطأ ما"
   },
   "appRating": {
-    "message": "تقييم 5 نجوم يساعدنا في الإبقاء على التطبيق مجانياً وتحسينه باستمرار.",
+    "title": "هل يعجبك RN Starter؟",
+    "message": "تقييم بخمس نجوم يساعدنا على إبقاء التطبيق مجانيًا وتحسينه باستمرار.",
     "rateButton": "قيّم الآن",
-    "laterButton": "لاحقاً",
-    "declineButton": "لا شكراً"
+    "laterButton": "لاحقًا",
+    "declineButton": "لا، شكرًا"
   },
   "rtlRestart": {
-    "title": "تحديث التخطيط مطلوب",
-    "message": "إعادة التشغيل خلال {{count}} ثانية لتطبيق التخطيط الجديد.",
+    "title": "تغيير اتجاه القراءة",
+    "message_zero": "سيُعاد تشغيل التطبيق الآن لتطبيق التغيير.",
+    "message_one": "سيُعاد تشغيل التطبيق خلال ثانية واحدة لتطبيق التغيير.",
+    "message_two": "سيُعاد تشغيل التطبيق خلال ثانيتين لتطبيق التغيير.",
+    "message_few": "سيُعاد تشغيل التطبيق خلال {{count}} ثوانٍ لتطبيق التغيير.",
+    "message_many": "سيُعاد تشغيل التطبيق خلال {{count}} ثانية لتطبيق التغيير.",
+    "message_other": "سيُعاد تشغيل التطبيق خلال {{count}} ثانية لتطبيق التغيير.",
     "restartNow": "إعادة التشغيل الآن",
-    "restartManually": "إعادة التشغيل يدوياً"
+    "restartManually": "إعادة التشغيل لاحقًا",
+    "messageManual": "أعِد تشغيل التطبيق لتطبيق التغيير.",
+    "announcement": "تغيير اتجاه القراءة. أعِد تشغيل التطبيق لتطبيق التغيير."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "افتح جميع الميزات",
     "planMonthly": "شهري",
     "planAnnual": "سنوي",
     "savingsBadge": "-{{percent}}%",
-    "trialBadge": "{{days}} أيام مجانية",
-    "ctaTrial": "تجربة مجانية لمدة {{days}} أيام",
-    "ctaSubscribeMonthly": "اشترك — {{price}}/شهر",
-    "ctaSubscribeAnnual": "اشترك — {{price}}/سنة",
-    "billedMonthly": "يُحسب شهرياً",
+    "trialBadge": "تجربة مجانية: {{days}} يوم",
+    "ctaTrial": "ابدأ التجربة المجانية ({{days}} يوم)",
+    "billedMonthly": "يُدفع شهريًا",
     "restore": "استعادة المشتريات",
     "restoreSuccess": "تمت استعادة الاشتراك!",
-    "restoreNotFound": "لم يُعثر على اشتراك نشط",
-    "welcomePro": "مرحباً بك في Pro!",
-    "errorGeneric": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-    "billedAnnually": "يُحسب سنوياً",
-    "perMonth": "≈ {{price}}/شهر"
+    "restoreNotFound": "لا يوجد اشتراك نشط",
+    "welcomePro": "مرحبًا بك في Pro!",
+    "errorGeneric": "حدث خطأ. حاول مرة أخرى.",
+    "errorNetwork": "لا يوجد اتصال. تحقّق من الشبكة وحاول مرة أخرى.",
+    "errorStoreUnavailable": "عمليات الشراء غير متاحة على هذا الجهاز حاليًا.",
+    "errorAlreadyOwned": "أنت تملك Pro بالفعل على هذا الحساب. انقر على «استعادة المشتريات» لاسترجاعه.",
+    "billedAnnually": "يُدفع سنويًا",
+    "perMonth": "≈ {{price}}/شهر",
+    "planWeekly": "أسبوعي",
+    "planLifetime": "مدى الحياة",
+    "planMonths": "{{months}} أشهر",
+    "planCustom": "خطة",
+    "billedWeekly": "يُدفع أسبوعيًا",
+    "billedOnce": "دفعة واحدة",
+    "billedEveryMonths": "يُدفع كل {{months}} أشهر",
+    "billedRecurring": "دفع متكرر",
+    "trialBadgeNoDays": "تجربة مجانية",
+    "ctaTrialNoDays": "ابدأ التجربة المجانية",
+    "ctaSubscribeWeekly": "اشترك — {{price}}/أسبوع",
+    "ctaBuyLifetime": "احصل عليه مقابل {{price}}",
+    "ctaSubscribe": "اشترك — {{price}}",
+    "legalNoteRecurring": "{{price}}، يتجدّد تلقائيًا. يمكنك الإلغاء في أي وقت.",
+    "legalNoteOneTime": "{{price}}، دفعة واحدة. لك مدى الحياة.",
+    "offerUnavailable": "الخطط غير متاحة حاليًا. تحقّق من اتصالك وحاول مرة أخرى.",
+    "ctaSubscribeMonthly": "اشترك — {{price}}/شهر",
+    "ctaSubscribeAnnual": "اشترك — {{price}}/سنة",
+    "pricesUnavailable": "الأسعار غير متاحة.",
+    "pricesRetry": "حاول مرة أخرى",
+    "benefit": {
+      "noAds": "بلا إعلانات، أبدًا"
+    },
+    "priceWeekly": "{{price}}/أسبوع",
+    "priceMonthly": "{{price}}/شهر",
+    "priceAnnual": "{{price}}/سنة",
+    "priceEveryMonths": "{{price}} كل {{months}} أشهر",
+    "legalNoteTrial": "مجانًا خلال التجربة ({{days}} يوم)، ثم {{price}}. يتجدّد تلقائيًا إلى أن تلغيه.",
+    "legalNoteTrialNoDays": "تجربة مجانية، ثم {{price}}. يتجدّد تلقائيًا إلى أن تلغيه.",
+    "trustStore": "دفع آمن عبر {{store}}",
+    "trustTrial": "لا تدفع شيئًا خلال التجربة المجانية",
+    "trustCancel": "ألغِ في أي وقت، بلا التزام",
+    "trustOneTime": "دفعة واحدة، بلا اشتراك"
   },
   "premiumGate": {
-    "unlock": "فتح",
+    "unlock": "فتح القفل",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "قد يكون الاشتراك منتهي الصلاحية",
+    "graceBannerTitle": "ربما انتهى اشتراكك",
     "graceBannerMessage": "اتصل بالإنترنت قبل {{date}} للتحقق من اشتراكك.",
-    "graceBannerCta": "التحقق من الاشتراك"
+    "graceBannerCta": "التحقق من الاشتراك",
+    "billingIssueTitle": "مشكلة في الدفع",
+    "billingIssueMessage": "تعذّر تجديد اشتراكك. حدّث وسيلة الدفع قبل {{date}} لتحتفظ بـ Pro."
+  },
+  "notifications": {
+    "channelName": "التذكيرات",
+    "channelDescription": "تذكيرات محلية مجدولة"
   }
 }

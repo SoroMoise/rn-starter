@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "載入中...",
+    "loading": "載入中…",
     "error": "錯誤",
     "retry": "重試",
     "cancel": "取消",
@@ -12,12 +12,50 @@
     "done": "完成",
     "close": "關閉",
     "search": "搜尋",
-    "noResults": "未找到結果",
+    "noResults": "找不到結果",
     "offline": "離線",
-    "back": "返回"
+    "back": "返回",
+    "clear": "清除"
   },
   "tabs": {
+    "home": "首頁",
     "settings": "設定"
+  },
+  "home": {
+    "hero": {
+      "title": "精品 Starter 樣板",
+      "subtitle": "推出一款精緻、可營利的 React Native App — 主題、i18n、付費牆與廣告都已接好。"
+    },
+    "features": {
+      "title": "樣板內建功能",
+      "theme": {
+        "label": "主題系統",
+        "desc": "淺色與深色模式，搭配 NativeWind tokens 與設計系統元件。"
+      },
+      "i18n": {
+        "label": "國際化",
+        "desc": "20 種語言、RTL 支援，翻譯檔案依需求載入。"
+      },
+      "paywall": {
+        "label": "付費牆與訂閱",
+        "desc": "整合 RevenueCat：付費牆直接依商店的方案呈現，並管控 Pro 功能的存取。"
+      },
+      "ads": {
+        "label": "廣告（AdMob）",
+        "desc": "橫幅、插頁與獎勵廣告 — Pro 用戶不會看到。"
+      },
+      "notifications": {
+        "label": "通知",
+        "desc": "在需要的畫面請求權限、前景橫幅、Android 通知頻道與每日提醒 — 您的 App 要發送的通知，這裡都已備妥。"
+      }
+    },
+    "cta": {
+      "label": "試用 Pro"
+    },
+    "demoAction": {
+      "label": "執行一次範例操作",
+      "sub": "每次操作都會累加互動計數，情境式付費牆與評分提示正是由它驅動。"
+    }
   },
   "settings": {
     "title": "設定",
@@ -29,83 +67,143 @@
     "display": "顯示",
     "language": "語言",
     "selectLanguage": "選擇語言",
-    "searchLanguage": "搜尋語言...",
+    "searchLanguage": "搜尋語言…",
     "ads": "廣告",
+    "goPremium": "升級至 Pro",
+    "premiumActive": "您是 Pro 會員",
+    "premiumActiveUntil": "有效期限至 {{date}}",
+    "premiumLifetime": "終身使用",
+    "manageSubscription": "管理訂閱",
     "removeAds": "移除廣告",
-    "removeAdsDescription": "享受無廣告體驗",
-    "watchAdButton": "觀看廣告享受{{duration}}無廣告",
-    "adFreeActive": "無廣告已啟用（剩餘{{duration}}）",
-    "adNotAvailableTitle": "廣告無法使用",
-    "adNotAvailableMessage": "目前沒有可用的廣告。請稍後再試。",
+    "removeAdsDescription": "觀看一則廣告，其餘廣告暫時不再出現",
+    "watchAdButton": "觀看廣告，{{duration}}內無廣告",
+    "adFreeActive": "無廣告模式已開啟（剩餘 {{duration}}）",
+    "adNotAvailableTitle": "暫無可用廣告",
+    "adNotAvailableMessage": "目前沒有準備好的廣告。幾分鐘後再試一次。",
     "adRewardTitle": "獎勵已解鎖！",
-    "adRewardMessage": "您已獲得{{duration}}無廣告體驗。盡情享受！",
+    "adRewardMessage": "從現在開始，{{duration}}內不會再出現任何廣告。盡情享受吧！",
     "adErrorTitle": "錯誤",
-    "adErrorMessage": "載入廣告失敗。請稍後再試。",
+    "adErrorMessage": "廣告無法載入。幾分鐘後再試一次。",
     "about": "關於",
     "version": "版本",
-    "legalAndSupport": "法律和支援",
+    "legalAndSupport": "法律與支援",
     "privacyPolicy": "隱私權政策",
     "termsOfService": "服務條款",
     "support": "支援",
-    "rateApp": "評價此應用程式",
-    "languageChanged": "語言更新成功",
-    "goPremium": "升級到 Pro",
-    "premiumActive": "您是 Pro 會員",
-    "premiumActiveUntil": "有效至 {{date}}",
-    "premiumLifetime": "終身存取"
+    "rateApp": "為這個 App 評分",
+    "languageChanged": "語言已更新",
+    "adPrivacy": "廣告隱私權設定"
   },
   "onboarding": {
     "previous": "返回",
     "welcome": {
+      "subtitle": "您需要的一切，精心打磨，開箱即用。",
       "cta": "開始使用",
-      "reassurance": "免費 · 無需帳號"
+      "reassurance": "免費 · 不需帳號"
+    },
+    "premium": {
+      "headline": "Pro 帶您更進一步",
+      "timelineHeader": "試用流程",
+      "ctaSkip": "繼續使用免費版",
+      "dayUnlock": "第 0 天 — Pro 立即解鎖",
+      "dayBilling": "第 {{day}} 天 — 開始收費，隨時可取消"
     },
     "exitIntent": {
       "title": "等一下 — 免費試用 Pro",
-      "ctaStart": "好的,開始我的免費試用",
-      "ctaSkip": "不用了,繼續使用免費版"
+      "ctaStart": "好，開始免費試用",
+      "ctaSkip": "不用了，繼續使用免費版",
+      "body": "{{days}} 天免費，今天不必付款。\n在試用結束前取消，就不會收費。",
+      "bodyNoDays": "免費試用，今天不必付款。\n在試用結束前取消，就不會收費。",
+      "titleNoTrial": "等一下 — 解鎖 Pro",
+      "bodyNoTrial": "Pro 的所有功能，現在就能用。\n無須綁約，隨時可取消。",
+      "ctaStartNoTrial": "好，解鎖 Pro — {{price}}",
+      "titleOneTime": "等一下 — 永久解鎖 Pro",
+      "bodyOneTime": "付款一次，永久擁有。\n無須訂閱。",
+      "ctaOneTime": "好，永久解鎖 — {{price}}"
     },
     "proWelcome": {
-      "body": "我們找到了你的 Pro 訂閱 — 已在此裝置上啟用。",
-      "ctaContinue": "繼續探索",
-      "ctaSkip": "跳過介紹",
-      "title": "歡迎回來！"
+      "title": "歡迎回來！",
+      "body": "我們找到了您的 Pro 訂閱，已在這個裝置上生效。",
+      "ctaSkip": "略過介紹",
+      "ctaContinue": "繼續探索"
+    },
+    "a11y": {
+      "step": "第 {{current}} 步，共 {{total}} 步"
     }
   },
   "error": {
-    "networkError": "網路錯誤。請檢查您的連線。",
-    "serverError": "伺服器錯誤。請稍後再試。",
-    "unknownError": "發生未知錯誤"
+    "networkError": "無法連線。檢查網路後再試一次。",
+    "apiError": "無法載入資料。再試一次。",
+    "serverError": "我們這邊出了點問題，稍後再試一次。",
+    "unknownError": "發生問題"
   },
   "appRating": {
-    "message": "5星好評幫助我們保持應用免費並持續改進。",
-    "rateButton": "立即評價",
+    "title": "喜歡 RN Starter 嗎？",
+    "message": "一個 5 星好評，能幫助我們維持 App 免費，並持續改進。",
+    "rateButton": "立即評分",
     "laterButton": "稍後",
-    "declineButton": "不了，謝謝"
+    "declineButton": "不用了"
   },
   "rtlRestart": {
-    "title": "需要更新版面",
-    "message": "{{count}}秒後重新啟動以套用新版面。",
+    "title": "正在切換閱讀方向",
+    "message": "{{count}} 秒後重新啟動以套用。",
     "restartNow": "立即重新啟動",
-    "restartManually": "手動重新啟動"
+    "restartManually": "稍後手動重新啟動",
+    "messageManual": "重新啟動 App 以套用。",
+    "announcement": "正在切換閱讀方向。重新啟動 App 以套用。"
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "解鎖所有功能",
     "planMonthly": "每月",
     "planAnnual": "每年",
     "savingsBadge": "-{{percent}}%",
-    "trialBadge": "{{days}}天免費試用",
-    "ctaTrial": "開始{{days}}天免費試用",
+    "trialBadge": "{{days}} 天免費試用",
+    "ctaTrial": "開始 {{days}} 天免費試用",
+    "billedMonthly": "按月計費",
+    "restore": "還原購買",
+    "restoreSuccess": "訂閱已還原！",
+    "restoreNotFound": "找不到有效的訂閱",
+    "welcomePro": "歡迎加入 Pro！",
+    "errorGeneric": "發生問題，再試一次。",
+    "errorNetwork": "沒有網路連線。檢查網路後再試一次。",
+    "errorStoreUnavailable": "這個裝置目前無法進行購買。",
+    "errorAlreadyOwned": "這個帳號已擁有 Pro。輕觸「還原購買」即可找回。",
+    "billedAnnually": "按年計費",
+    "perMonth": "≈ {{price}}/月",
+    "planWeekly": "每週",
+    "planLifetime": "終身",
+    "planMonths": "{{months}} 個月",
+    "planCustom": "方案",
+    "billedWeekly": "按週計費",
+    "billedOnce": "一次性付款",
+    "billedEveryMonths": "每 {{months}} 個月計費一次",
+    "billedRecurring": "自動續訂",
+    "trialBadgeNoDays": "免費試用",
+    "ctaTrialNoDays": "開始免費試用",
+    "ctaSubscribeWeekly": "訂閱 — {{price}}/週",
+    "ctaBuyLifetime": "以 {{price}} 解鎖",
+    "ctaSubscribe": "訂閱 — {{price}}",
+    "legalNoteRecurring": "{{price}}，自動續訂，隨時可取消。",
+    "legalNoteOneTime": "{{price}}，一次性付款，永久擁有。",
+    "offerUnavailable": "暫時無法取得訂閱方案。檢查網路後再試一次。",
     "ctaSubscribeMonthly": "訂閱 — {{price}}/月",
     "ctaSubscribeAnnual": "訂閱 — {{price}}/年",
-    "billedMonthly": "每月計費",
-    "restore": "恢復購買",
-    "restoreSuccess": "訂閱已恢復！",
-    "restoreNotFound": "未找到有效訂閱",
-    "welcomePro": "歡迎加入 Pro！",
-    "errorGeneric": "出了點問題。請重試。",
-    "billedAnnually": "每年計費",
-    "perMonth": "≈ {{price}}/月"
+    "pricesUnavailable": "暫時無法取得價格。",
+    "pricesRetry": "重試",
+    "benefit": {
+      "noAds": "永久無廣告"
+    },
+    "priceWeekly": "{{price}}/週",
+    "priceMonthly": "{{price}}/月",
+    "priceAnnual": "{{price}}/年",
+    "priceEveryMonths": "每 {{months}} 個月 {{price}}",
+    "legalNoteTrial": "免費試用 {{days}} 天，之後 {{price}}。在您取消之前自動續訂。",
+    "legalNoteTrialNoDays": "免費試用，之後 {{price}}。在您取消之前自動續訂。",
+    "trustStore": "由 {{store}} 保障付款安全",
+    "trustTrial": "免費試用期間無須付款",
+    "trustCancel": "隨時可取消，無須綁約",
+    "trustOneTime": "一次付款，無須訂閱"
   },
   "premiumGate": {
     "unlock": "解鎖",
@@ -113,7 +211,13 @@
   },
   "subscription": {
     "graceBannerTitle": "訂閱可能已過期",
-    "graceBannerMessage": "請在 {{date}} 之前連線以驗證您的訂閱。",
-    "graceBannerCta": "驗證訂閱"
+    "graceBannerMessage": "在 {{date}} 之前連上網路，以驗證您的訂閱。",
+    "graceBannerCta": "驗證訂閱",
+    "billingIssueTitle": "付款發生問題",
+    "billingIssueMessage": "您的訂閱未能續訂。在 {{date}} 之前更新付款方式，才能繼續使用 Pro。"
+  },
+  "notifications": {
+    "channelName": "提醒",
+    "channelDescription": "排定的本機提醒"
   }
 }

@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "로딩 중...",
+    "loading": "불러오는 중…",
     "error": "오류",
-    "retry": "재시도",
+    "retry": "다시 시도",
     "cancel": "취소",
     "ok": "확인",
     "save": "저장",
@@ -12,108 +12,212 @@
     "done": "완료",
     "close": "닫기",
     "search": "검색",
-    "noResults": "결과를 찾을 수 없습니다",
+    "noResults": "검색 결과가 없어요",
     "offline": "오프라인",
-    "back": "뒤로"
+    "back": "뒤로",
+    "clear": "지우기"
   },
   "tabs": {
+    "home": "홈",
     "settings": "설정"
+  },
+  "home": {
+    "hero": {
+      "title": "프리미엄 스타터",
+      "subtitle": "세련되고 수익화까지 갖춘 React Native 앱을 바로 출시하세요 — 테마, i18n, 페이월, 광고가 이미 연결되어 있어요."
+    },
+    "features": {
+      "title": "이 스타터에 들어 있는 것",
+      "theme": {
+        "label": "테마 시스템",
+        "desc": "NativeWind 토큰과 디자인 시스템 컴포넌트로 구성된 라이트·다크 모드."
+      },
+      "i18n": {
+        "label": "다국어 지원",
+        "desc": "20개 언어, RTL 지원, 필요할 때 불러오는 번역 파일."
+      },
+      "paywall": {
+        "label": "페이월과 구독",
+        "desc": "RevenueCat 연동: 스토어에 등록한 상품 그대로 그려지는 페이월과 Pro 기능 제한."
+      },
+      "ads": {
+        "label": "광고 (AdMob)",
+        "desc": "배너, 전면, 보상형 광고 — Pro 사용자에게는 표시되지 않아요."
+      },
+      "notifications": {
+        "label": "알림",
+        "desc": "필요한 화면에서의 권한 요청, 포그라운드 배너, Android 채널, 매일 리마인더 — 앱이 보낼 알림을 위한 준비가 끝나 있어요."
+      }
+    },
+    "cta": {
+      "label": "Pro 체험하기"
+    },
+    "demoAction": {
+      "label": "샘플 동작 실행",
+      "sub": "동작할 때마다 참여도 카운터가 올라가고, 이 카운터가 상황별 페이월과 평가 요청을 띄워요."
+    }
   },
   "settings": {
     "title": "설정",
-    "subtitle": "모양과 환경설정 사용자 지정",
-    "appearance": "모양",
+    "subtitle": "테마와 환경설정을 원하는 대로",
+    "appearance": "테마",
     "themeLight": "라이트",
     "themeDark": "다크",
     "themeAuto": "시스템",
-    "display": "표시",
+    "display": "화면",
     "language": "언어",
     "selectLanguage": "언어 선택",
-    "searchLanguage": "언어 검색...",
+    "searchLanguage": "언어 검색…",
     "ads": "광고",
+    "goPremium": "Pro로 업그레이드",
+    "premiumActive": "Pro 회원이에요",
+    "premiumActiveUntil": "{{date}}까지 이용할 수 있어요",
+    "premiumLifetime": "평생 이용",
+    "manageSubscription": "구독 관리",
     "removeAds": "광고 제거",
-    "removeAdsDescription": "광고 없는 경험을 즐기세요",
-    "watchAdButton": "광고 시청하고 {{duration}} 무광고",
-    "adFreeActive": "무광고 활성화 ({{duration}} 남음)",
-    "adNotAvailableTitle": "광고를 사용할 수 없습니다",
-    "adNotAvailableMessage": "현재 사용 가능한 광고가 없습니다. 나중에 다시 시도해주세요.",
-    "adRewardTitle": "보상 잠금 해제!",
-    "adRewardMessage": "{{duration}} 동안 광고 없는 경험을 획득했습니다. 즐기세요!",
+    "removeAdsDescription": "광고 하나를 보면 한동안 다른 광고가 나오지 않아요",
+    "watchAdButton": "광고 보고 {{duration}} 동안 광고 없이 사용",
+    "adFreeActive": "광고 없이 사용 중 ({{duration}} 남음)",
+    "adNotAvailableTitle": "광고를 사용할 수 없어요",
+    "adNotAvailableMessage": "지금은 준비된 광고가 없어요. 몇 분 뒤에 다시 시도해 주세요.",
+    "adRewardTitle": "보상이 잠금 해제됐어요!",
+    "adRewardMessage": "지금부터 {{duration}} 동안 광고가 하나도 나오지 않아요. 즐겁게 사용하세요!",
     "adErrorTitle": "오류",
-    "adErrorMessage": "광고를 불러올 수 없습니다. 나중에 다시 시도해주세요.",
+    "adErrorMessage": "광고를 불러오지 못했어요. 몇 분 뒤에 다시 시도해 주세요.",
     "about": "정보",
     "version": "버전",
-    "legalAndSupport": "법률 및 지원",
-    "privacyPolicy": "개인정보 보호정책",
-    "termsOfService": "서비스 약관",
+    "legalAndSupport": "법적 고지 및 지원",
+    "privacyPolicy": "개인정보 처리방침",
+    "termsOfService": "서비스 이용약관",
     "support": "지원",
     "rateApp": "앱 평가하기",
-    "languageChanged": "언어가 성공적으로 업데이트되었습니다",
-    "goPremium": "Pro로 업그레이드",
-    "premiumActive": "Pro 회원입니다",
-    "premiumActiveUntil": "{{date}}까지 활성",
-    "premiumLifetime": "평생 이용"
+    "languageChanged": "언어를 변경했어요",
+    "adPrivacy": "광고 개인정보 설정"
   },
   "onboarding": {
     "previous": "뒤로",
     "welcome": {
+      "subtitle": "필요한 모든 것이 아름답게 만들어져, 바로 출시할 수 있어요.",
       "cta": "시작하기",
       "reassurance": "무료 · 계정 필요 없음"
     },
+    "premium": {
+      "headline": "Pro로 한 걸음 더",
+      "timelineHeader": "무료 체험은 이렇게 진행돼요",
+      "ctaSkip": "무료로 계속하기",
+      "dayUnlock": "0일차 — Pro 바로 잠금 해제",
+      "dayBilling": "{{day}}일차 — 결제 시작, 언제든 취소 가능"
+    },
     "exitIntent": {
       "title": "잠깐만요 — Pro를 무료로 체험해 보세요",
-      "ctaStart": "네, 무료 체험을 시작할게요",
-      "ctaSkip": "괜찮아요, 무료로 계속할게요"
+      "ctaStart": "네, 무료 체험 시작할게요",
+      "ctaSkip": "괜찮아요, 무료로 계속할게요",
+      "body": "{{days}}일 무료, 오늘은 결제되지 않아요.\n체험 종료 전에 취소하면 요금이 청구되지 않아요.",
+      "bodyNoDays": "무료로 체험해 보세요. 오늘은 결제되지 않아요.\n체험 종료 전에 취소하면 요금이 청구되지 않아요.",
+      "titleNoTrial": "잠깐만요 — Pro를 잠금 해제하세요",
+      "bodyNoTrial": "Pro의 모든 기능을 지금 바로.\n약정 없이, 언제든 취소할 수 있어요.",
+      "ctaStartNoTrial": "네, Pro 잠금 해제할게요 — {{price}}",
+      "titleOneTime": "잠깐만요 — Pro를 평생 소장하세요",
+      "bodyOneTime": "한 번만 결제하면 평생 내 것.\n구독은 없어요.",
+      "ctaOneTime": "네, 평생 잠금 해제할게요 — {{price}}"
     },
     "proWelcome": {
-      "body": "Pro 구독을 찾았습니다 — 이 기기에서 이미 활성화되어 있습니다.",
-      "ctaContinue": "계속 탐색",
-      "ctaSkip": "인트로 건너뛰기",
-      "title": "돌아오신 것을 환영합니다!"
+      "title": "다시 오신 것을 환영해요!",
+      "body": "Pro 구독을 찾았어요. 이 기기에서 이미 사용할 수 있어요.",
+      "ctaSkip": "소개 건너뛰기",
+      "ctaContinue": "계속 둘러보기"
+    },
+    "a11y": {
+      "step": "{{total}}단계 중 {{current}}단계"
     }
   },
   "error": {
-    "networkError": "네트워크 오류. 연결을 확인해주세요.",
-    "serverError": "서버 오류. 나중에 다시 시도해주세요.",
-    "unknownError": "알 수 없는 오류가 발생했습니다"
+    "networkError": "연결되지 않았어요. 네트워크를 확인하고 다시 시도해 주세요.",
+    "apiError": "데이터를 불러오지 못했어요. 다시 시도해 주세요.",
+    "serverError": "저희 쪽에서 문제가 생겼어요. 잠시 뒤에 다시 시도해 주세요.",
+    "unknownError": "문제가 생겼어요"
   },
   "appRating": {
-    "message": "별 5개 평가는 앱을 무료로 유지하고 꾸준히 개선하는 데 큰 도움이 됩니다.",
+    "title": "RN Starter가 마음에 드시나요?",
+    "message": "별 5개 평가는 앱을 계속 무료로 제공하고 더 좋게 만드는 데 큰 힘이 돼요.",
     "rateButton": "지금 평가하기",
     "laterButton": "나중에",
-    "declineButton": "괜찮습니다"
+    "declineButton": "괜찮아요"
   },
   "rtlRestart": {
-    "title": "레이아웃 업데이트 필요",
-    "message": "새 레이아웃 적용을 위해 {{count}}초 후 재시작합니다.",
-    "restartNow": "지금 재시작",
-    "restartManually": "수동으로 재시작"
+    "title": "읽기 방향을 바꾸는 중이에요",
+    "message": "{{count}}초 뒤에 다시 시작해서 적용해요.",
+    "restartNow": "지금 다시 시작",
+    "restartManually": "나중에 직접 다시 시작",
+    "messageManual": "앱을 다시 시작하면 적용돼요.",
+    "announcement": "읽기 방향을 바꾸는 중이에요. 앱을 다시 시작하면 적용돼요."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "모든 기능 잠금 해제",
     "planMonthly": "월간",
     "planAnnual": "연간",
     "savingsBadge": "-{{percent}}%",
     "trialBadge": "{{days}}일 무료 체험",
     "ctaTrial": "{{days}}일 무료 체험 시작",
+    "billedMonthly": "매월 결제",
+    "restore": "구매 복원",
+    "restoreSuccess": "구독을 복원했어요!",
+    "restoreNotFound": "활성 구독을 찾을 수 없어요",
+    "welcomePro": "Pro에 오신 것을 환영해요!",
+    "errorGeneric": "문제가 생겼어요. 다시 시도해 주세요.",
+    "errorNetwork": "연결되지 않았어요. 네트워크를 확인하고 다시 시도해 주세요.",
+    "errorStoreUnavailable": "지금은 이 기기에서 구매할 수 없어요.",
+    "errorAlreadyOwned": "이 계정에서 이미 Pro를 사용 중이에요. ‘구매 복원’을 탭하면 되찾을 수 있어요.",
+    "billedAnnually": "매년 결제",
+    "perMonth": "≈ {{price}}/월",
+    "planWeekly": "주간",
+    "planLifetime": "평생",
+    "planMonths": "{{months}}개월",
+    "planCustom": "플랜",
+    "billedWeekly": "매주 결제",
+    "billedOnce": "한 번만 결제",
+    "billedEveryMonths": "{{months}}개월마다 결제",
+    "billedRecurring": "자동 갱신",
+    "trialBadgeNoDays": "무료 체험",
+    "ctaTrialNoDays": "무료 체험 시작",
+    "ctaSubscribeWeekly": "구독하기 — {{price}}/주",
+    "ctaBuyLifetime": "{{price}}에 잠금 해제",
+    "ctaSubscribe": "구독하기 — {{price}}",
+    "legalNoteRecurring": "{{price}}, 자동으로 갱신돼요. 언제든 취소할 수 있어요.",
+    "legalNoteOneTime": "{{price}}, 한 번만 결제해요. 평생 사용할 수 있어요.",
+    "offerUnavailable": "지금은 플랜을 불러올 수 없어요. 연결을 확인하고 다시 시도해 주세요.",
     "ctaSubscribeMonthly": "구독하기 — {{price}}/월",
     "ctaSubscribeAnnual": "구독하기 — {{price}}/년",
-    "billedMonthly": "매월 청구",
-    "restore": "구매 복원",
-    "restoreSuccess": "구독이 복원되었습니다!",
-    "restoreNotFound": "활성 구독을 찾을 수 없습니다",
-    "welcomePro": "Pro에 오신 것을 환영합니다!",
-    "errorGeneric": "오류가 발생했습니다. 다시 시도해주세요.",
-    "billedAnnually": "매년 청구",
-    "perMonth": "≈ {{price}}/월"
+    "pricesUnavailable": "가격을 불러올 수 없어요.",
+    "pricesRetry": "다시 시도",
+    "benefit": {
+      "noAds": "평생 광고 없음"
+    },
+    "priceWeekly": "{{price}}/주",
+    "priceMonthly": "{{price}}/월",
+    "priceAnnual": "{{price}}/년",
+    "priceEveryMonths": "{{months}}개월마다 {{price}}",
+    "legalNoteTrial": "{{days}}일 동안 무료, 이후 {{price}}. 취소하기 전까지 자동으로 갱신돼요.",
+    "legalNoteTrialNoDays": "무료 체험 후 {{price}}. 취소하기 전까지 자동으로 갱신돼요.",
+    "trustStore": "{{store}}의 안전한 결제",
+    "trustTrial": "무료 체험 중에는 결제되지 않아요",
+    "trustCancel": "언제든 취소 가능, 약정 없음",
+    "trustOneTime": "한 번만 결제, 구독 없음"
   },
   "premiumGate": {
     "unlock": "잠금 해제",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "구독이 만료되었을 수 있습니다",
-    "graceBannerMessage": "구독을 확인하려면 {{date}} 이전에 인터넷에 연결하세요.",
-    "graceBannerCta": "구독 확인"
+    "graceBannerTitle": "구독이 만료되었을 수 있어요",
+    "graceBannerMessage": "{{date}} 전에 인터넷에 연결해서 구독을 확인해 주세요.",
+    "graceBannerCta": "구독 확인",
+    "billingIssueTitle": "결제에 문제가 있어요",
+    "billingIssueMessage": "구독을 갱신하지 못했어요. Pro를 계속 사용하려면 {{date}} 전에 결제 수단을 업데이트해 주세요."
+  },
+  "notifications": {
+    "channelName": "리마인더",
+    "channelDescription": "예약된 로컬 리마인더"
   }
 }

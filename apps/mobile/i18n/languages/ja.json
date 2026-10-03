@@ -1,7 +1,7 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "読み込み中...",
+    "loading": "読み込み中…",
     "error": "エラー",
     "retry": "再試行",
     "cancel": "キャンセル",
@@ -12,12 +12,50 @@
     "done": "完了",
     "close": "閉じる",
     "search": "検索",
-    "noResults": "結果が見つかりませんでした",
+    "noResults": "該当する結果がありません",
     "offline": "オフライン",
-    "back": "戻る"
+    "back": "戻る",
+    "clear": "クリア"
   },
   "tabs": {
+    "home": "ホーム",
     "settings": "設定"
+  },
+  "home": {
+    "hero": {
+      "title": "プレミアムスターター",
+      "subtitle": "洗練された収益化済みのReact Nativeアプリをリリース — テーマ、i18n、ペイウォール、広告まで組み込み済み。"
+    },
+    "features": {
+      "title": "このスターターに含まれるもの",
+      "theme": {
+        "label": "テーマシステム",
+        "desc": "ライト／ダークモード対応。NativeWindのトークンとデザインシステムのコンポーネントを備えています。"
+      },
+      "i18n": {
+        "label": "多言語対応",
+        "desc": "20言語、RTL対応、翻訳ファイルの遅延読み込み。"
+      },
+      "paywall": {
+        "label": "ペイウォールとサブスクリプション",
+        "desc": "RevenueCat連携。ストアに登録したオファーをそのまま表示するペイウォールと、Pro機能の制御。"
+      },
+      "ads": {
+        "label": "広告（AdMob）",
+        "desc": "バナー、インタースティシャル、リワード広告 — Proユーザーには表示されません。"
+      },
+      "notifications": {
+        "label": "通知",
+        "desc": "必要な画面での権限リクエスト、フォアグラウンドのバナー、Androidの通知チャンネル、毎日のリマインダー — アプリが送る通知の土台が整っています。"
+      }
+    },
+    "cta": {
+      "label": "Proを試す"
+    },
+    "demoAction": {
+      "label": "サンプルアクションを実行",
+      "sub": "アクションごとにエンゲージメントカウンターが増え、コンテキストに応じたペイウォールと評価依頼のトリガーになります。"
+    }
   },
   "settings": {
     "title": "設定",
@@ -29,91 +67,157 @@
     "display": "表示",
     "language": "言語",
     "selectLanguage": "言語を選択",
-    "searchLanguage": "言語を検索...",
+    "searchLanguage": "言語を検索…",
     "ads": "広告",
-    "removeAds": "広告を削除",
-    "removeAdsDescription": "広告なしの体験をお楽しみください",
-    "watchAdButton": "広告を見て{{duration}}広告なし",
-    "adFreeActive": "広告なし有効（残り{{duration}}）",
-    "adNotAvailableTitle": "広告を利用できません",
-    "adNotAvailableMessage": "現在利用可能な広告がありません。後でもう一度お試しください。",
-    "adRewardTitle": "報酬をアンロック！",
-    "adRewardMessage": "{{duration}}の広告なし体験を獲得しました。お楽しみください！",
+    "goPremium": "Proにアップグレード",
+    "premiumActive": "Proメンバーです",
+    "premiumActiveUntil": "{{date}}まで有効",
+    "premiumLifetime": "永久に利用可能",
+    "manageSubscription": "サブスクリプションを管理",
+    "removeAds": "広告を非表示",
+    "removeAdsDescription": "広告を1本見ると、しばらくほかの広告が表示されなくなります",
+    "watchAdButton": "広告を見て{{duration}}広告なしにする",
+    "adFreeActive": "広告非表示中（残り{{duration}}）",
+    "adNotAvailableTitle": "広告を表示できません",
+    "adNotAvailableMessage": "現在、再生できる広告がありません。数分後にもう一度お試しください。",
+    "adRewardTitle": "特典がアンロックされました！",
+    "adRewardMessage": "今から{{duration}}、広告は一切表示されません。どうぞお楽しみください！",
     "adErrorTitle": "エラー",
-    "adErrorMessage": "広告の読み込みに失敗しました。後でもう一度お試しください。",
-    "about": "について",
+    "adErrorMessage": "広告を読み込めませんでした。数分後にもう一度お試しください。",
+    "about": "このアプリについて",
     "version": "バージョン",
     "legalAndSupport": "法的情報とサポート",
     "privacyPolicy": "プライバシーポリシー",
     "termsOfService": "利用規約",
     "support": "サポート",
     "rateApp": "このアプリを評価",
-    "languageChanged": "言語が正常に更新されました",
-    "goPremium": "Proにアップグレード",
-    "premiumActive": "Proメンバーです",
-    "premiumActiveUntil": "{{date}}まで有効",
-    "premiumLifetime": "永久アクセス"
+    "languageChanged": "言語を更新しました",
+    "adPrivacy": "広告のプライバシー設定"
   },
   "onboarding": {
     "previous": "戻る",
     "welcome": {
+      "subtitle": "必要なものはすべて、美しく作り込まれ、すぐに使えます。",
       "cta": "はじめる",
       "reassurance": "無料 · アカウント不要"
     },
+    "premium": {
+      "headline": "Proでさらにその先へ",
+      "timelineHeader": "無料トライアルの流れ",
+      "ctaSkip": "無料版で続ける",
+      "dayUnlock": "0日目 — Proがすぐに使えます",
+      "dayBilling": "{{day}}日目 — 課金開始、いつでも解約できます"
+    },
     "exitIntent": {
-      "title": "少しだけお待ちを — Pro を無料で",
-      "ctaStart": "はい、無料トライアルを開始",
-      "ctaSkip": "いいえ、無料版で続ける"
+      "title": "その前に — Proを無料で試せます",
+      "ctaStart": "はい、無料トライアルを始める",
+      "ctaSkip": "いいえ、無料版で続ける",
+      "body": "{{days}}日間無料、今日のお支払いはありません。\nトライアル終了前に解約すれば、料金はかかりません。",
+      "bodyNoDays": "無料でお試しいただけます。今日のお支払いはありません。\nトライアル終了前に解約すれば、料金はかかりません。",
+      "titleNoTrial": "その前に — Proをアンロック",
+      "bodyNoTrial": "Proのすべての機能を、今すぐ。\n継続の義務はなく、いつでも解約できます。",
+      "ctaStartNoTrial": "はい、Proをアンロック — {{price}}",
+      "titleOneTime": "その前に — Proを買い切りでアンロック",
+      "bodyOneTime": "1回のお支払いで、ずっとお使いいただけます。\nサブスクリプションはありません。",
+      "ctaOneTime": "はい、買い切りでアンロック — {{price}}"
     },
     "proWelcome": {
-      "body": "Proサブスクリプションが見つかりました — このデバイスですでに有効です。",
-      "ctaContinue": "探索を続ける",
+      "title": "おかえりなさい！",
+      "body": "Proサブスクリプションが見つかりました。この端末ですでに有効です。",
       "ctaSkip": "イントロをスキップ",
-      "title": "おかえりなさい！"
+      "ctaContinue": "アプリを見てみる"
+    },
+    "a11y": {
+      "step": "{{total}}ステップ中、{{current}}ステップ目"
     }
   },
   "error": {
-    "networkError": "ネットワークエラー。接続を確認してください。",
-    "serverError": "サーバーエラー。後でもう一度お試しください。",
-    "unknownError": "不明なエラーが発生しました"
+    "networkError": "接続できません。ネットワークを確認して、もう一度お試しください。",
+    "apiError": "データを読み込めませんでした。もう一度お試しください。",
+    "serverError": "こちら側で問題が起きました。しばらくしてからもう一度お試しください。",
+    "unknownError": "問題が発生しました"
   },
   "appRating": {
-    "message": "5つ星の評価は、アプリを無料で改善し続けるための大きな力になります。",
+    "title": "RN Starterを気に入っていただけましたか？",
+    "message": "5つ星の評価は、アプリを無料で提供し続け、改善していく力になります。",
     "rateButton": "今すぐ評価",
-    "laterButton": "後で",
+    "laterButton": "あとで",
     "declineButton": "結構です"
   },
   "rtlRestart": {
-    "title": "レイアウト更新が必要です",
-    "message": "新しいレイアウトを適用するため、{{count}}秒後に再起動します。",
+    "title": "文字の表示方向を切り替えています",
+    "message": "{{count}}秒後に再起動して反映します。",
     "restartNow": "今すぐ再起動",
-    "restartManually": "手動で再起動"
+    "restartManually": "あとで手動で再起動",
+    "messageManual": "アプリを再起動すると反映されます。",
+    "announcement": "文字の表示方向を切り替えています。アプリを再起動すると反映されます。"
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "すべての機能をアンロック",
-    "planMonthly": "月払い",
-    "planAnnual": "年払い",
+    "planMonthly": "月額",
+    "planAnnual": "年額",
     "savingsBadge": "-{{percent}}%",
     "trialBadge": "{{days}}日間無料トライアル",
     "ctaTrial": "{{days}}日間の無料トライアルを開始",
-    "ctaSubscribeMonthly": "登録する — {{price}}/月",
-    "ctaSubscribeAnnual": "登録する — {{price}}/年",
     "billedMonthly": "毎月請求",
     "restore": "購入を復元",
-    "restoreSuccess": "サブスクリプションが復元されました！",
+    "restoreSuccess": "サブスクリプションを復元しました！",
     "restoreNotFound": "有効なサブスクリプションが見つかりません",
     "welcomePro": "Proへようこそ！",
     "errorGeneric": "問題が発生しました。もう一度お試しください。",
-    "billedAnnually": "年間請求",
-    "perMonth": "≈ {{price}}/月"
+    "errorNetwork": "接続できません。ネットワークを確認して、もう一度お試しください。",
+    "errorStoreUnavailable": "現在、この端末では購入できません。",
+    "errorAlreadyOwned": "このアカウントではすでにProをご利用中です。「購入を復元」をタップすると、Proを復元できます。",
+    "billedAnnually": "毎年請求",
+    "perMonth": "≈ {{price}}/月",
+    "planWeekly": "週額",
+    "planLifetime": "買い切り",
+    "planMonths": "{{months}}か月",
+    "planCustom": "プラン",
+    "billedWeekly": "毎週請求",
+    "billedOnce": "1回払い",
+    "billedEveryMonths": "{{months}}か月ごとに請求",
+    "billedRecurring": "自動更新",
+    "trialBadgeNoDays": "無料トライアル",
+    "ctaTrialNoDays": "無料トライアルを開始",
+    "ctaSubscribeWeekly": "登録する — {{price}}/週",
+    "ctaBuyLifetime": "{{price}}でアンロック",
+    "ctaSubscribe": "登録する — {{price}}",
+    "legalNoteRecurring": "{{price}}、自動更新されます。いつでも解約できます。",
+    "legalNoteOneTime": "{{price}}、1回払い。ずっとお使いいただけます。",
+    "offerUnavailable": "現在、プランを表示できません。接続を確認して、もう一度お試しください。",
+    "ctaSubscribeMonthly": "登録する — {{price}}/月",
+    "ctaSubscribeAnnual": "登録する — {{price}}/年",
+    "pricesUnavailable": "価格を取得できません。",
+    "pricesRetry": "再試行",
+    "benefit": {
+      "noAds": "広告は一切なし"
+    },
+    "priceWeekly": "{{price}}/週",
+    "priceMonthly": "{{price}}/月",
+    "priceAnnual": "{{price}}/年",
+    "priceEveryMonths": "{{months}}か月ごとに{{price}}",
+    "legalNoteTrial": "{{days}}日間は無料、その後は{{price}}。解約するまで自動更新されます。",
+    "legalNoteTrialNoDays": "無料トライアル、その後は{{price}}。解約するまで自動更新されます。",
+    "trustStore": "{{store}}による安全な支払い",
+    "trustTrial": "無料トライアル中は支払い不要",
+    "trustCancel": "いつでも解約可能、継続の義務なし",
+    "trustOneTime": "支払いは1回だけ、サブスクリプションなし"
   },
   "premiumGate": {
-    "unlock": "ロック解除",
+    "unlock": "アンロック",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "サブスクリプションが期限切れの可能性があります",
-    "graceBannerMessage": "{{date}} 前にインターネットに接続して、サブスクリプションを確認してください。",
-    "graceBannerCta": "サブスクリプションを確認"
+    "graceBannerTitle": "サブスクリプションの期限が切れた可能性があります",
+    "graceBannerMessage": "{{date}}までにインターネットに接続して、サブスクリプションを確認してください。",
+    "graceBannerCta": "サブスクリプションを確認",
+    "billingIssueTitle": "お支払いに問題があります",
+    "billingIssueMessage": "サブスクリプションを更新できませんでした。Proを引き続き使うには、{{date}}までにお支払い方法を更新してください。"
+  },
+  "notifications": {
+    "channelName": "リマインダー",
+    "channelDescription": "予定されたローカルのリマインダー"
   }
 }

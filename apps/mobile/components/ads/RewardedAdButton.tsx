@@ -101,8 +101,13 @@ export function RewardedAdButton() {
           style={styles.buttonGradient}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}>
-          <Ionicons name="checkmark-circle" size={24} color="#ffffff" />
-          <ThemedText color="inherit" style={styles.buttonText}>
+          <Ionicons
+            name="checkmark-circle"
+            size={24}
+            color="#ffffff"
+            importantForAccessibility="no"
+          />
+          <ThemedText color="inherit" align="center" className="shrink" style={styles.buttonText}>
             {t('settings.adFreeActive', { duration: remainingLabel })}
           </ThemedText>
         </LinearGradient>
@@ -121,7 +126,7 @@ export function RewardedAdButton() {
       gradientStyle={styles.buttonGradient}
       accessibilityLabel={t('settings.watchAdButton', { duration: durationLabel })}>
       <Ionicons name="play-circle" size={24} color="#ffffff" />
-      <ThemedText color="inherit" style={styles.buttonText}>
+      <ThemedText color="inherit" align="center" className="shrink" style={styles.buttonText}>
         {t('settings.watchAdButton', { duration: durationLabel })}
       </ThemedText>
     </GradientButton>

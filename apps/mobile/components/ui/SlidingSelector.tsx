@@ -169,7 +169,7 @@ export function SlidingSelector<T extends string | number>({
   const s = STYLES[variant]
 
   return (
-    <View className={s.container}>
+    <View className={s.container} accessibilityRole="radiogroup">
       <View
         className="flex-1 flex-row"
         onLayout={(e) => handleLayout(e.nativeEvent.layout.width)}
@@ -186,11 +186,15 @@ export function SlidingSelector<T extends string | number>({
               onPressIn={() => handlePressIn(index)}
               onPress={() => handlePress(index, option.value)}
               onPressOut={() => handlePressOut(index)}
+              accessibilityRole="radio"
+              accessibilityState={{ checked: isSelected }}
+              accessibilityLabel={option.label}
               className={`flex-1 flex-row items-center justify-center gap-2 text-gray-400 ${s.itemPadding}`}
               activeOpacity={1}>
               {option.icon && option.activeIcon && (
                 <Ionicons
                   name={isSelected ? option.activeIcon : option.icon}
+                  importantForAccessibility="no"
                   size={17}
                   color={
                     isSelected
@@ -205,7 +209,8 @@ export function SlidingSelector<T extends string | number>({
                 variant="label"
                 weight="semibold"
                 color="inherit"
-                className={isSelected ? s.activeText : s.inactiveText}>
+                align="center"
+                className={`shrink ${isSelected ? s.activeText : s.inactiveText}`}>
                 {option.label}
               </ThemedText>
             </TouchableOpacity>

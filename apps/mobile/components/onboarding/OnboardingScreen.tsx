@@ -231,14 +231,20 @@ export function OnboardingScreen() {
               isDark ? 'bg-white/10' : 'bg-black/[0.05]'
             }`}
             accessibilityRole="button"
-            accessibilityLabel={t('settings.selectLanguage')}>
+            accessibilityLabel={t('settings.selectLanguage')}
+            accessibilityValue={{ text: activeLanguage?.nativeName }}>
             <ThemedText variant="label" color="inherit">
               {activeLanguage?.flag}
             </ThemedText>
             <ThemedText variant="label" weight="medium">
               {activeLanguage?.nativeName}
             </ThemedText>
-            <Ionicons name="chevron-down" size={14} color={isDark ? '#cbd5e1' : '#475569'} />
+            <Ionicons
+              name="chevron-down"
+              size={14}
+              color={isDark ? '#cbd5e1' : '#475569'}
+              importantForAccessibility="no"
+            />
           </Pressable>
         </Animated.View>
       )}
@@ -258,7 +264,7 @@ export function OnboardingScreen() {
             pressScale={0}
             pressOpacity={0.75}
             accessibilityLabel={t('onboarding.welcome.cta')}>
-            <ThemedText variant="buttonLarge" color="inverse">
+            <ThemedText variant="buttonLarge" color="inverse" align="center" className="shrink">
               {t('onboarding.welcome.cta')}
             </ThemedText>
             <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />

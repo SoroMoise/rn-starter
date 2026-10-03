@@ -31,6 +31,7 @@ export function OfflineBanner() {
           name="cloud-offline"
           size={16}
           color={isDark ? UI_COLORS.offlineDark : UI_COLORS.offline}
+          importantForAccessibility="no"
         />
         <ThemedText
           variant="label"

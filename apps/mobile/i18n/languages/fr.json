@@ -14,7 +14,8 @@
     "search": "Rechercher",
     "noResults": "Aucun résultat trouvé",
     "offline": "Hors ligne",
-    "back": "Retour"
+    "back": "Retour",
+    "clear": "Effacer"
   },
   "tabs": {
     "home": "Accueil",
@@ -125,6 +126,9 @@
       "body": "Nous avons retrouvé votre abonnement Pro — il est déjà actif sur cet appareil.",
       "ctaSkip": "Passer l'intro",
       "ctaContinue": "Continuer la visite"
+    },
+    "a11y": {
+      "step": "Étape {{current}} sur {{total}}"
     }
   },
   "error": {

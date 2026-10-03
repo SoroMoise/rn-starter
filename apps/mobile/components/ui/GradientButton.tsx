@@ -3,10 +3,22 @@ import React from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 
+const SIZED_PADDING_VERTICAL = 12
+
 function extractBorderRadius(style: StyleProp<ViewStyle>): number | undefined {
   if (!style) return undefined
   const flat = StyleSheet.flatten(style)
   return typeof flat?.borderRadius === 'number' ? flat.borderRadius : undefined
+}
+
+function asMinimumHeight(style: StyleProp<ViewStyle>): {
+  style: StyleProp<ViewStyle>
+  minHeight: number | undefined
+} {
+  const flat = StyleSheet.flatten(style)
+  if (typeof flat?.height !== 'number') return { style, minHeight: undefined }
+  const { height, ...rest } = flat
+  return { style: [rest, { minHeight: height }], minHeight: height }
 }
 
 interface GradientButtonProps {
@@ -39,15 +51,16 @@ export function GradientButton({
   children,
 }: GradientButtonProps) {
   const borderRadius = extractBorderRadius(style)
+  const sized = asMinimumHeight(style)
 
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || isLoading}
-      style={style}
+      style={sized.style}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled: disabled || isLoading }}>
+      accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}>
       {({ pressed }) => (
         <View
           style={[
@@ -63,7 +76,14 @@ export function GradientButton({
             colors={colors}
             start={start}
             end={end}
-            style={[styles.gradient, gradientStyle]}>
+            style={[
+              styles.gradient,
+              sized.minHeight !== undefined && {
+                minHeight: sized.minHeight,
+                paddingVertical: SIZED_PADDING_VERTICAL,
+              },
+              gradientStyle,
+            ]}>
             {isLoading ? <ActivityIndicator size="small" color="#ffffff" /> : children}
           </LinearGradient>
         </View>
@@ -74,10 +94,12 @@ export function GradientButton({
 
 const styles = StyleSheet.create({
   container: {
+    flexGrow: 1,
     borderRadius: 14,
     overflow: 'hidden',
   },
   gradient: {
+    flexGrow: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

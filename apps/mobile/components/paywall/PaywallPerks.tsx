@@ -15,6 +15,7 @@ export function PaywallPerks() {
       {PRO_BENEFITS.map((benefit, index) => (
         <View
           key={benefit.key}
+          accessible
           className="flex-row items-center gap-3 py-3"
           style={
             index < PRO_BENEFITS.length - 1 && [styles.rowBorder, isDark && styles.rowBorderDark]

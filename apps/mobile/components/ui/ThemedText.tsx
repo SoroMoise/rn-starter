@@ -74,6 +74,8 @@ type Color = keyof typeof COLOR_CLASSES
 type Weight = keyof typeof WEIGHT_CLASSES
 type Align = keyof typeof ALIGN_CLASSES
 
+const HEADING_VARIANTS: ReadonlySet<Variant> = new Set(['display', 'title', 'sectionHeader'])
+
 export interface Props extends TextProps {
   variant?: Variant
   color?: Color
@@ -89,6 +91,7 @@ export function ThemedText({
   align,
   className,
   style,
+  accessibilityRole,
   ...textProps
 }: Props) {
   const variantClass = VARIANT_CLASSES[variant]
@@ -103,6 +106,9 @@ export function ThemedText({
     <Text
       className={combinedClassName}
       style={withDerivedLineHeight({ style, className: combinedClassName })}
+      accessibilityRole={
+        accessibilityRole ?? (HEADING_VARIANTS.has(variant) ? 'header' : undefined)
+      }
       {...textProps}
     />
   )

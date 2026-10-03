@@ -124,7 +124,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             </View>
           ) : (
             <>
-              <View style={styles.plans}>
+              <View style={styles.plans} accessibilityRole="radiogroup">
                 {options.map((option) => (
                   <PaywallPlanCard
                     key={option.plan.id}

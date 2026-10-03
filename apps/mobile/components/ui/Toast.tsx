@@ -4,7 +4,7 @@ import { triggerError, triggerSuccess, triggerWarning } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef } from 'react'
-import { useWindowDimensions, View } from 'react-native'
+import { AccessibilityInfo, useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   runOnJS,
@@ -39,8 +39,10 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
   const scale = useSharedValue(1)
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const timerGenerationRef = useRef(0)
 
   const cancelTimer = useCallback(() => {
+    timerGenerationRef.current += 1
     if (timerRef.current) {
       clearTimeout(timerRef.current)
       timerRef.current = null
@@ -48,12 +50,18 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
   }, [])
 
   const startTimer = useCallback(() => {
-    timerRef.current = setTimeout(() => {
-      translateY.value = withSpring(100, { damping: 20, stiffness: 300 })
-      opacity.value = withTiming(0, { duration: 200 }, (finished) => {
-        if (finished) scheduleOnRN(onHide)
+    const generation = ++timerGenerationRef.current
+    void AccessibilityInfo.getRecommendedTimeoutMillis(duration)
+      .catch(() => duration)
+      .then((visibleMs) => {
+        if (generation !== timerGenerationRef.current) return
+        timerRef.current = setTimeout(() => {
+          translateY.value = withSpring(100, { damping: 20, stiffness: 300 })
+          opacity.value = withTiming(0, { duration: 200 }, (finished) => {
+            if (finished) scheduleOnRN(onHide)
+          })
+        }, visibleMs)
       })
-    }, duration)
   }, [duration, onHide, opacity, translateY])
 
   useEffect(() => {
@@ -70,11 +78,12 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
 
     translateY.value = withSpring(0, { damping: 30, stiffness: 250 })
     opacity.value = withTiming(1, { duration: 300 })
+    AccessibilityInfo.announceForAccessibility(message)
 
     startTimer()
 
     return () => cancelTimer()
-  }, [visible, type, cancelTimer, startTimer, opacity, scale, translateX, translateY])
+  }, [visible, message, type, cancelTimer, startTimer, opacity, scale, translateX, translateY])
 
   const panGesture = useMemo(
     () =>
@@ -168,6 +177,8 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
           },
         ]}>
         <View
+          accessible
+          accessibilityRole="alert"
           className={`flex-row items-center rounded-2xl px-5 py-4 shadow-2xl ${
             isDark ? 'border border-gray-700 bg-gray-800/95' : 'border border-gray-200 bg-white/95'
           }`}
@@ -179,7 +190,12 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
             elevation: 12,
           }}>
           <View>
-            <Ionicons name={iconConfig.name} size={28} color={iconConfig.color} />
+            <Ionicons
+              name={iconConfig.name}
+              size={28}
+              color={iconConfig.color}
+              importantForAccessibility="no"
+            />
           </View>
           <ThemedText variant="body" weight="medium" className="ml-3 flex-1">
             {message}

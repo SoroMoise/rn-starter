@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Yükleniyor...",
+    "loading": "Yükleniyor…",
     "error": "Hata",
-    "retry": "Tekrar Dene",
+    "retry": "Tekrar dene",
     "cancel": "İptal",
     "ok": "Tamam",
     "save": "Kaydet",
@@ -14,10 +14,48 @@
     "search": "Ara",
     "noResults": "Sonuç bulunamadı",
     "offline": "Çevrimdışı",
-    "back": "Geri"
+    "back": "Geri",
+    "clear": "Sil"
   },
   "tabs": {
+    "home": "Ana sayfa",
     "settings": "Ayarlar"
+  },
+  "home": {
+    "hero": {
+      "title": "Premium starter",
+      "subtitle": "Özenli ve para kazandıran bir React Native uygulaması yayınlayın — tema, i18n, paywall ve reklamlar hazır kurulu."
+    },
+    "features": {
+      "title": "Bu starter ile gelenler",
+      "theme": {
+        "label": "Tema sistemi",
+        "desc": "NativeWind token'ları ve design system bileşenleriyle açık ve koyu mod."
+      },
+      "i18n": {
+        "label": "Çoklu dil desteği",
+        "desc": "20 dil, RTL desteği ve gerektiğinde yüklenen çeviri dosyaları."
+      },
+      "paywall": {
+        "label": "Paywall ve abonelikler",
+        "desc": "RevenueCat entegrasyonu: mağazanın kendi teklifinden oluşturulan bir paywall ve premium erişim denetimi."
+      },
+      "ads": {
+        "label": "Reklamlar (AdMob)",
+        "desc": "Banner, geçiş ve ödüllü reklamlar — premium kullanıcılarda kapalı."
+      },
+      "notifications": {
+        "label": "Bildirimler",
+        "desc": "İhtiyaç duyan ekranda izin isteği, ön planda banner'lar, Android kanalı ve günlük hatırlatıcılar — uygulamanızın göndereceği bildirimler için hazır."
+      }
+    },
+    "cta": {
+      "label": "Pro'yu deneyin"
+    },
+    "demoAction": {
+      "label": "Örnek bir eylem yapın",
+      "sub": "Her eylem, bağlamsal paywall'u ve değerlendirme isteğini tetikleyen etkileşim sayacını bir artırır."
+    }
   },
   "settings": {
     "title": "Ayarlar",
@@ -26,86 +64,146 @@
     "themeLight": "Açık",
     "themeDark": "Koyu",
     "themeAuto": "Sistem",
-    "display": "Görüntüleme",
+    "display": "Ekran",
     "language": "Dil",
-    "selectLanguage": "Dil Seçin",
-    "searchLanguage": "Dil ara...",
+    "selectLanguage": "Dil seçin",
+    "searchLanguage": "Dil ara…",
     "ads": "Reklamlar",
-    "removeAds": "Reklamları Kaldır",
-    "removeAdsDescription": "Reklamsız deneyimin keyfini çıkarın",
-    "watchAdButton": "{{duration}} reklamsız için reklam izle",
-    "adFreeActive": "Reklamsız aktif ({{duration}} kaldı)",
-    "adNotAvailableTitle": "Reklam mevcut değil",
-    "adNotAvailableMessage": "Şu anda mevcut reklam yok. Lütfen daha sonra tekrar deneyin.",
-    "adRewardTitle": "Ödül Kazanıldı!",
-    "adRewardMessage": "{{duration}} reklamsız deneyim kazandınız. Keyfini çıkarın!",
-    "adErrorTitle": "Hata",
-    "adErrorMessage": "Reklam yüklenemedi. Lütfen daha sonra tekrar deneyin.",
-    "about": "Hakkında",
-    "version": "Versiyon",
-    "legalAndSupport": "Yasal ve Destek",
-    "privacyPolicy": "Gizlilik Politikası",
-    "termsOfService": "Hizmet Koşulları",
-    "support": "Destek",
-    "rateApp": "Bu uygulamayı değerlendirin",
-    "languageChanged": "Dil başarıyla güncellendi",
     "goPremium": "Pro'ya yükselt",
     "premiumActive": "Pro üyesisiniz",
-    "premiumActiveUntil": "{{date}} tarihine kadar aktif",
-    "premiumLifetime": "Ömür boyu erişim"
+    "premiumActiveUntil": "{{date}} tarihine kadar etkin",
+    "premiumLifetime": "Ömür boyu erişim",
+    "manageSubscription": "Aboneliği yönet",
+    "removeAds": "Reklamları kaldır",
+    "removeAdsDescription": "Bir reklam izleyin, diğerlerine ara verin",
+    "watchAdButton": "Reklam izle, {{duration}} reklamsız kullan",
+    "adFreeActive": "Reklamsız mod etkin ({{duration}} kaldı)",
+    "adNotAvailableTitle": "Reklam mevcut değil",
+    "adNotAvailableMessage": "Şu anda hazır bir reklam yok. Birkaç dakika sonra tekrar deneyin.",
+    "adRewardTitle": "Ödül kazandınız!",
+    "adRewardMessage": "Şu andan itibaren {{duration}} boyunca tek bir reklam yok. Keyfini çıkarın!",
+    "adErrorTitle": "Hata",
+    "adErrorMessage": "Reklam yüklenemedi. Birkaç dakika sonra tekrar deneyin.",
+    "about": "Hakkında",
+    "version": "Sürüm",
+    "legalAndSupport": "Yasal ve destek",
+    "privacyPolicy": "Gizlilik Politikası",
+    "termsOfService": "Hizmet Şartları",
+    "support": "Destek",
+    "rateApp": "Uygulamayı değerlendir",
+    "languageChanged": "Dil güncellendi",
+    "adPrivacy": "Reklam gizliliği ayarları"
   },
   "onboarding": {
     "previous": "Geri",
     "welcome": {
+      "subtitle": "İhtiyacınız olan her şey, özenle hazırlanmış ve yayına hazır.",
       "cta": "Başla",
-      "reassurance": "Ücretsiz · Hesap gerekmiyor"
+      "reassurance": "Ücretsiz · Hesap gerekmez"
+    },
+    "premium": {
+      "headline": "Pro ile daha ileri gidin",
+      "timelineHeader": "Deneme süreniz nasıl işler",
+      "ctaSkip": "Ücretsiz devam edin",
+      "dayUnlock": "0. gün — Pro anında açılır",
+      "dayBilling": "{{day}}. gün — Ödeme başlar, istediğiniz zaman iptal edin"
     },
     "exitIntent": {
-      "title": "Bekle — Pro'yu ücretsiz dene",
+      "title": "Bir saniye — Pro'yu ücretsiz deneyin",
       "ctaStart": "Evet, ücretsiz denememi başlat",
-      "ctaSkip": "Hayır teşekkürler, ücretsiz devam"
+      "ctaSkip": "Hayır teşekkürler, ücretsiz devam edeceğim",
+      "body": "{{days}} gün ücretsiz, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
+      "bodyNoDays": "Ücretsiz deneyin, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
+      "titleNoTrial": "Bir saniye — Pro'nun kilidini açın",
+      "bodyNoTrial": "Pro'nun açtığı her şey, hemen şimdi.\nTaahhüt yok — istediğiniz zaman iptal edin.",
+      "ctaStartNoTrial": "Evet, Pro'yu aç — {{price}}",
+      "titleOneTime": "Bir saniye — Pro'yu kalıcı olarak açın",
+      "bodyOneTime": "Tek ödeme, sonsuza dek sizin.\nAbonelik yok.",
+      "ctaOneTime": "Evet, kalıcı olarak aç — {{price}}"
     },
     "proWelcome": {
-      "body": "Pro aboneliğinizi bulduk — bu cihazda zaten aktif.",
-      "ctaContinue": "Keşfetmeye devam",
-      "ctaSkip": "Giriş kısmını atla",
-      "title": "Tekrar hoş geldiniz!"
+      "title": "Tekrar hoş geldiniz!",
+      "body": "Pro aboneliğinizi bulduk — bu cihazda zaten etkin.",
+      "ctaSkip": "Girişi atla",
+      "ctaContinue": "Keşfetmeye devam"
+    },
+    "a11y": {
+      "step": "{{total}} adımdan {{current}}. adım"
     }
   },
   "error": {
-    "networkError": "Ağ hatası. Lütfen bağlantınızı kontrol edin.",
-    "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin.",
-    "unknownError": "Bilinmeyen bir hata oluştu"
+    "networkError": "Bağlantı kurulamadı. Ağınızı kontrol edip tekrar deneyin.",
+    "apiError": "Veriler yüklenemedi. Tekrar deneyin.",
+    "serverError": "Bizim tarafımızda bir sorun oluştu. Birazdan tekrar deneyin.",
+    "unknownError": "Bir şeyler ters gitti"
   },
   "appRating": {
-    "message": "5 yıldızlı bir değerlendirme, uygulamayı ücretsiz ve sürekli gelişen tutmamıza yardımcı olur.",
+    "title": "RN Starter'ı beğendiniz mi?",
+    "message": "5 yıldızlı bir değerlendirme, uygulamayı ücretsiz tutmamıza ve sürekli geliştirmemize yardımcı olur.",
     "rateButton": "Şimdi değerlendir",
     "laterButton": "Sonra",
     "declineButton": "Hayır, teşekkürler"
   },
   "rtlRestart": {
-    "title": "Düzen güncellemesi gerekli",
-    "message": "Yeni düzeni uygulamak için {{count}}s içinde yeniden başlatılıyor.",
+    "title": "Okuma yönü değiştiriliyor",
+    "message": "Değişikliğin geçerli olması için {{count}} sn içinde yeniden başlatılıyor.",
     "restartNow": "Şimdi yeniden başlat",
-    "restartManually": "Manuel olarak yeniden başlat"
+    "restartManually": "Elle yeniden başlat",
+    "messageManual": "Değişikliğin geçerli olması için uygulamayı yeniden başlatın.",
+    "announcement": "Okuma yönü değiştiriliyor. Değişikliğin geçerli olması için uygulamayı yeniden başlatın."
   },
   "paywall": {
-    "subtitle": "Tüm özellikleri aç",
+    "title": "RN Starter Pro",
+    "subtitle": "Tüm özelliklerin kilidini açın",
     "planMonthly": "Aylık",
     "planAnnual": "Yıllık",
-    "savingsBadge": "-{{percent}}%",
+    "savingsBadge": "-%{{percent}}",
     "trialBadge": "{{days}} gün ücretsiz",
     "ctaTrial": "{{days}} günlük ücretsiz denemeyi başlat",
-    "ctaSubscribeMonthly": "Abone ol — {{price}}/ay",
-    "ctaSubscribeAnnual": "Abone ol — {{price}}/yıl",
     "billedMonthly": "aylık faturalandırılır",
     "restore": "Satın alımları geri yükle",
     "restoreSuccess": "Abonelik geri yüklendi!",
-    "restoreNotFound": "Aktif abonelik bulunamadı",
+    "restoreNotFound": "Etkin abonelik bulunamadı",
     "welcomePro": "Pro'ya hoş geldiniz!",
-    "errorGeneric": "Bir şeyler ters gitti. Lütfen tekrar deneyin.",
+    "errorGeneric": "Bir şeyler ters gitti. Tekrar deneyin.",
+    "errorNetwork": "Bağlantı yok. Ağınızı kontrol edip tekrar deneyin.",
+    "errorStoreUnavailable": "Satın alma işlemleri şu anda bu cihazda kullanılamıyor.",
+    "errorAlreadyOwned": "Bu hesapla zaten Pro'ya sahipsiniz. Geri getirmek için “Satın alımları geri yükle” seçeneğine dokunun.",
     "billedAnnually": "yıllık faturalandırılır",
-    "perMonth": "≈ {{price}}/ay"
+    "perMonth": "≈ {{price}}/ay",
+    "planWeekly": "Haftalık",
+    "planLifetime": "Ömür boyu",
+    "planMonths": "{{months}} ay",
+    "planCustom": "Plan",
+    "billedWeekly": "haftalık faturalandırılır",
+    "billedOnce": "tek seferlik ödeme",
+    "billedEveryMonths": "{{months}} ayda bir faturalandırılır",
+    "billedRecurring": "yenilenir",
+    "trialBadgeNoDays": "Ücretsiz deneme",
+    "ctaTrialNoDays": "Ücretsiz denemeyi başlat",
+    "ctaSubscribeWeekly": "Abone ol — {{price}}/hafta",
+    "ctaBuyLifetime": "{{price}} ile kilidi aç",
+    "ctaSubscribe": "Abone ol — {{price}}",
+    "legalNoteRecurring": "{{price}}, otomatik yenilenir. İstediğiniz zaman iptal edin.",
+    "legalNoteOneTime": "{{price}}, tek seferlik ödeme. Sonsuza dek sizin.",
+    "offerUnavailable": "Planlar şu anda kullanılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
+    "ctaSubscribeMonthly": "Abone ol — {{price}}/ay",
+    "ctaSubscribeAnnual": "Abone ol — {{price}}/yıl",
+    "pricesUnavailable": "Fiyatlar kullanılamıyor.",
+    "pricesRetry": "Tekrar dene",
+    "benefit": {
+      "noAds": "Reklam yok, asla"
+    },
+    "priceWeekly": "{{price}}/hafta",
+    "priceMonthly": "{{price}}/ay",
+    "priceAnnual": "{{price}}/yıl",
+    "priceEveryMonths": "{{months}} ayda bir {{price}}",
+    "legalNoteTrial": "{{days}} gün ücretsiz, sonra {{price}}. İptal edene kadar otomatik yenilenir.",
+    "legalNoteTrialNoDays": "Ücretsiz deneme, sonra {{price}}. İptal edene kadar otomatik yenilenir.",
+    "trustStore": "Ödemeniz {{store}} ile güvende",
+    "trustTrial": "Ücretsiz deneme süresince ödeme yok",
+    "trustCancel": "İstediğiniz zaman iptal edin, taahhüt yok",
+    "trustOneTime": "Tek ödeme, abonelik yok"
   },
   "premiumGate": {
     "unlock": "Kilidi aç",
@@ -114,6 +212,12 @@
   "subscription": {
     "graceBannerTitle": "Aboneliğinizin süresi dolmuş olabilir",
     "graceBannerMessage": "Aboneliğinizi doğrulamak için {{date}} tarihinden önce internete bağlanın.",
-    "graceBannerCta": "Aboneliği doğrula"
+    "graceBannerCta": "Aboneliği doğrula",
+    "billingIssueTitle": "Ödeme sorunu",
+    "billingIssueMessage": "Aboneliğiniz yenilenemedi. Pro'yu kaybetmemek için {{date}} tarihinden önce ödeme yönteminizi güncelleyin."
+  },
+  "notifications": {
+    "channelName": "Hatırlatıcılar",
+    "channelDescription": "Zamanlanmış yerel hatırlatıcılar"
   }
 }

@@ -1,9 +1,9 @@
 {
   "common": {
     "appName": "RN Starter",
-    "loading": "Memuat...",
+    "loading": "Memuat…",
     "error": "Kesalahan",
-    "retry": "Coba Lagi",
+    "retry": "Coba lagi",
     "cancel": "Batal",
     "ok": "OK",
     "save": "Simpan",
@@ -12,12 +12,50 @@
     "done": "Selesai",
     "close": "Tutup",
     "search": "Cari",
-    "noResults": "Tidak ada hasil ditemukan",
+    "noResults": "Tidak ada hasil",
     "offline": "Offline",
-    "back": "Kembali"
+    "back": "Kembali",
+    "clear": "Hapus"
   },
   "tabs": {
+    "home": "Beranda",
     "settings": "Pengaturan"
+  },
+  "home": {
+    "hero": {
+      "title": "Starter premium",
+      "subtitle": "Rilis aplikasi React Native yang rapi dan siap menghasilkan — tema, i18n, paywall, dan iklan sudah terpasang."
+    },
+    "features": {
+      "title": "Yang disertakan dalam starter ini",
+      "theme": {
+        "label": "Sistem tema",
+        "desc": "Mode terang & gelap dengan token NativeWind dan komponen design system."
+      },
+      "i18n": {
+        "label": "Internasionalisasi",
+        "desc": "20 bahasa, dukungan RTL, dan berkas terjemahan yang dimuat saat dibutuhkan."
+      },
+      "paywall": {
+        "label": "Paywall & langganan",
+        "desc": "Integrasi RevenueCat: paywall yang dibangun dari penawaran store, plus pembatasan akses premium."
+      },
+      "ads": {
+        "label": "Iklan (AdMob)",
+        "desc": "Banner, interstitial, dan iklan berhadiah — dinonaktifkan untuk pengguna premium."
+      },
+      "notifications": {
+        "label": "Notifikasi",
+        "desc": "Permintaan izin di layar yang membutuhkannya, banner saat aplikasi di depan, kanal Android, dan pengingat harian — siap untuk notifikasi yang dikirim aplikasi Anda."
+      }
+    },
+    "cta": {
+      "label": "Coba Pro"
+    },
+    "demoAction": {
+      "label": "Lakukan aksi contoh",
+      "sub": "Setiap aksi menambah penghitung keterlibatan yang memicu paywall kontekstual dan permintaan penilaian."
+    }
   },
   "settings": {
     "title": "Pengaturan",
@@ -26,94 +64,160 @@
     "themeLight": "Terang",
     "themeDark": "Gelap",
     "themeAuto": "Sistem",
-    "display": "Tampilan",
+    "display": "Layar",
     "language": "Bahasa",
-    "selectLanguage": "Pilih Bahasa",
-    "searchLanguage": "Cari bahasa...",
+    "selectLanguage": "Pilih bahasa",
+    "searchLanguage": "Cari bahasa…",
     "ads": "Iklan",
-    "removeAds": "Hapus Iklan",
-    "removeAdsDescription": "Nikmati pengalaman bebas iklan",
-    "watchAdButton": "Tonton iklan untuk {{duration}} bebas iklan",
-    "adFreeActive": "Bebas iklan aktif ({{duration}} tersisa)",
+    "goPremium": "Upgrade ke Pro",
+    "premiumActive": "Anda anggota Pro",
+    "premiumActiveUntil": "Aktif hingga {{date}}",
+    "premiumLifetime": "Akses seumur hidup",
+    "manageSubscription": "Kelola langganan",
+    "removeAds": "Hapus iklan",
+    "removeAdsDescription": "Tonton satu iklan, bebas dari iklan lainnya",
+    "watchAdButton": "Tonton iklan, dapatkan {{duration}} bebas iklan",
+    "adFreeActive": "Bebas iklan aktif (sisa {{duration}})",
     "adNotAvailableTitle": "Iklan tidak tersedia",
-    "adNotAvailableMessage": "Tidak ada iklan yang tersedia saat ini. Silakan coba lagi nanti.",
-    "adRewardTitle": "Hadiah Terbuka!",
-    "adRewardMessage": "Anda mendapat {{duration}} pengalaman bebas iklan. Nikmati!",
+    "adNotAvailableMessage": "Belum ada iklan yang siap saat ini. Coba lagi dalam beberapa menit.",
+    "adRewardTitle": "Hadiah didapat!",
+    "adRewardMessage": "{{duration}} tanpa satu pun iklan, mulai sekarang. Selamat menikmati!",
     "adErrorTitle": "Kesalahan",
-    "adErrorMessage": "Gagal memuat iklan. Silakan coba lagi nanti.",
+    "adErrorMessage": "Iklan tidak dapat dimuat. Coba lagi dalam beberapa menit.",
     "about": "Tentang",
     "version": "Versi",
-    "legalAndSupport": "Hukum & Dukungan",
+    "legalAndSupport": "Legal & dukungan",
     "privacyPolicy": "Kebijakan Privasi",
     "termsOfService": "Ketentuan Layanan",
     "support": "Dukungan",
     "rateApp": "Beri nilai aplikasi ini",
-    "languageChanged": "Bahasa berhasil diperbarui",
-    "goPremium": "Upgrade ke Pro",
-    "premiumActive": "Anda adalah anggota Pro",
-    "premiumActiveUntil": "Aktif hingga {{date}}",
-    "premiumLifetime": "Akses seumur hidup"
+    "languageChanged": "Bahasa diperbarui",
+    "adPrivacy": "Pengaturan privasi iklan"
   },
   "onboarding": {
     "previous": "Kembali",
     "welcome": {
+      "subtitle": "Semua yang Anda butuhkan, dibangun dengan rapi dan siap dirilis.",
       "cta": "Mulai",
       "reassurance": "Gratis · Tanpa akun"
+    },
+    "premium": {
+      "headline": "Melangkah lebih jauh dengan Pro",
+      "timelineHeader": "Cara kerja uji coba Anda",
+      "ctaSkip": "Lanjut gratis",
+      "dayUnlock": "Hari 0 — Pro langsung terbuka",
+      "dayBilling": "Hari {{day}} — Penagihan dimulai, batalkan kapan saja"
     },
     "exitIntent": {
       "title": "Sebentar — coba Pro gratis",
       "ctaStart": "Ya, mulai uji coba gratis",
-      "ctaSkip": "Tidak, lanjut gratis saja"
+      "ctaSkip": "Tidak, lanjut gratis saja",
+      "body": "{{days}} hari gratis, tidak ada yang dibayar hari ini.\nBatalkan sebelum uji coba berakhir dan Anda tidak akan ditagih.",
+      "bodyNoDays": "Coba gratis dulu, tidak ada yang dibayar hari ini.\nBatalkan sebelum uji coba berakhir dan Anda tidak akan ditagih.",
+      "titleNoTrial": "Sebentar — buka Pro",
+      "bodyNoTrial": "Semua yang dibuka Pro, mulai sekarang.\nTanpa komitmen — batalkan kapan saja.",
+      "ctaStartNoTrial": "Ya, buka Pro — {{price}}",
+      "titleOneTime": "Sebentar — buka Pro selamanya",
+      "bodyOneTime": "Sekali bayar, milik Anda selamanya.\nTanpa langganan.",
+      "ctaOneTime": "Ya, buka selamanya — {{price}}"
     },
     "proWelcome": {
-      "body": "Kami menemukan langganan Pro kamu — sudah aktif di perangkat ini.",
-      "ctaContinue": "Terus menjelajahi",
-      "ctaSkip": "Lewati intro",
-      "title": "Selamat datang kembali!"
+      "title": "Selamat datang kembali!",
+      "body": "Kami menemukan langganan Pro Anda — sudah aktif di perangkat ini.",
+      "ctaSkip": "Lewati pengenalan",
+      "ctaContinue": "Lanjut menjelajah"
+    },
+    "a11y": {
+      "step": "Langkah {{current}} dari {{total}}"
     }
   },
   "error": {
-    "networkError": "Kesalahan jaringan. Silakan periksa koneksi Anda.",
-    "serverError": "Kesalahan server. Silakan coba lagi nanti.",
-    "unknownError": "Terjadi kesalahan yang tidak diketahui"
+    "networkError": "Tidak dapat terhubung. Periksa koneksi Anda, lalu coba lagi.",
+    "apiError": "Data tidak dapat dimuat. Coba lagi.",
+    "serverError": "Ada masalah di sisi kami. Coba lagi sebentar lagi.",
+    "unknownError": "Terjadi kesalahan"
   },
   "appRating": {
-    "message": "Rating 5 bintang membantu kami menjaga aplikasi tetap gratis dan terus berkembang.",
-    "rateButton": "Nilai sekarang",
+    "title": "Suka RN Starter?",
+    "message": "Rating bintang 5 membantu kami menjaga aplikasi tetap gratis dan terus berkembang.",
+    "rateButton": "Beri nilai sekarang",
     "laterButton": "Nanti",
     "declineButton": "Tidak, terima kasih"
   },
   "rtlRestart": {
-    "title": "Pembaruan tata letak diperlukan",
-    "message": "Mulai ulang dalam {{count}}d untuk menerapkan tata letak baru.",
+    "title": "Mengubah arah baca",
+    "message": "Memulai ulang dalam {{count}} dtk untuk menerapkannya.",
     "restartNow": "Mulai ulang sekarang",
-    "restartManually": "Mulai ulang secara manual"
+    "restartManually": "Mulai ulang manual",
+    "messageManual": "Mulai ulang aplikasi untuk menerapkannya.",
+    "announcement": "Mengubah arah baca. Mulai ulang aplikasi untuk menerapkannya."
   },
   "paywall": {
+    "title": "RN Starter Pro",
     "subtitle": "Buka semua fitur",
     "planMonthly": "Bulanan",
     "planAnnual": "Tahunan",
     "savingsBadge": "-{{percent}}%",
-    "trialBadge": "{{days}} hari gratis",
+    "trialBadge": "Uji coba gratis {{days}} hari",
     "ctaTrial": "Mulai uji coba gratis {{days}} hari",
-    "ctaSubscribeMonthly": "Berlangganan — {{price}}/bulan",
-    "ctaSubscribeAnnual": "Berlangganan — {{price}}/tahun",
     "billedMonthly": "ditagih setiap bulan",
     "restore": "Pulihkan pembelian",
     "restoreSuccess": "Langganan dipulihkan!",
-    "restoreNotFound": "Tidak ada langganan aktif ditemukan",
+    "restoreNotFound": "Tidak ada langganan aktif yang ditemukan",
     "welcomePro": "Selamat datang di Pro!",
-    "errorGeneric": "Ada yang salah. Silakan coba lagi.",
+    "errorGeneric": "Terjadi kesalahan. Coba lagi.",
+    "errorNetwork": "Tidak ada koneksi. Periksa jaringan Anda, lalu coba lagi.",
+    "errorStoreUnavailable": "Pembelian sedang tidak tersedia di perangkat ini.",
+    "errorAlreadyOwned": "Anda sudah memiliki Pro dengan akun ini. Ketuk Pulihkan pembelian untuk mengembalikannya.",
     "billedAnnually": "ditagih setiap tahun",
-    "perMonth": "≈ {{price}}/bln"
+    "perMonth": "≈ {{price}}/bln",
+    "planWeekly": "Mingguan",
+    "planLifetime": "Seumur hidup",
+    "planMonths": "{{months}} bulan",
+    "planCustom": "Paket",
+    "billedWeekly": "ditagih setiap minggu",
+    "billedOnce": "sekali bayar",
+    "billedEveryMonths": "ditagih setiap {{months}} bulan",
+    "billedRecurring": "berulang",
+    "trialBadgeNoDays": "Uji coba gratis",
+    "ctaTrialNoDays": "Mulai uji coba gratis",
+    "ctaSubscribeWeekly": "Berlangganan — {{price}}/minggu",
+    "ctaBuyLifetime": "Buka seharga {{price}}",
+    "ctaSubscribe": "Berlangganan — {{price}}",
+    "legalNoteRecurring": "{{price}}, diperpanjang otomatis. Batalkan kapan saja.",
+    "legalNoteOneTime": "{{price}}, sekali bayar. Milik Anda selamanya.",
+    "offerUnavailable": "Paket sedang tidak tersedia. Periksa koneksi Anda, lalu coba lagi.",
+    "ctaSubscribeMonthly": "Berlangganan — {{price}}/bulan",
+    "ctaSubscribeAnnual": "Berlangganan — {{price}}/tahun",
+    "pricesUnavailable": "Harga tidak tersedia.",
+    "pricesRetry": "Coba lagi",
+    "benefit": {
+      "noAds": "Tanpa iklan, selamanya"
+    },
+    "priceWeekly": "{{price}}/minggu",
+    "priceMonthly": "{{price}}/bulan",
+    "priceAnnual": "{{price}}/tahun",
+    "priceEveryMonths": "{{price}} setiap {{months}} bulan",
+    "legalNoteTrial": "Gratis selama {{days}} hari, lalu {{price}}. Diperpanjang otomatis hingga Anda membatalkan.",
+    "legalNoteTrialNoDays": "Uji coba gratis, lalu {{price}}. Diperpanjang otomatis hingga Anda membatalkan.",
+    "trustStore": "Pembayaran diamankan oleh {{store}}",
+    "trustTrial": "Tidak ada yang perlu dibayar selama uji coba gratis",
+    "trustCancel": "Batalkan kapan saja, tanpa komitmen",
+    "trustOneTime": "Sekali bayar, tanpa langganan"
   },
   "premiumGate": {
     "unlock": "Buka kunci",
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Langganan mungkin telah kedaluwarsa",
-    "graceBannerMessage": "Sambungkan ke internet sebelum {{date}} untuk memverifikasi langganan Anda.",
-    "graceBannerCta": "Verifikasi langganan"
+    "graceBannerTitle": "Langganan mungkin sudah berakhir",
+    "graceBannerMessage": "Hubungkan ke internet sebelum {{date}} untuk memverifikasi langganan Anda.",
+    "graceBannerCta": "Verifikasi langganan",
+    "billingIssueTitle": "Masalah pembayaran",
+    "billingIssueMessage": "Langganan Anda tidak dapat diperpanjang. Perbarui metode pembayaran sebelum {{date}} agar tetap memakai Pro."
+  },
+  "notifications": {
+    "channelName": "Pengingat",
+    "channelDescription": "Pengingat lokal terjadwal"
   }
 }

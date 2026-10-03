@@ -140,7 +140,9 @@ Three layers, one responsibility each: **`services/`** holds logic (no React, no
 | `useSheetSnap` | `ModalBottomSheet`'s springs, snap points and dismiss pan |
 | `useKeyboardHeight` | `useKeyboardHeight({ enabled })` — the keyboard's height, off its own events |
 | `useResponsiveLayout` | `width`, `height`, `contentWidth`, `gutter`, `isLargeScreen` |
-| `useTabBarPadding` | `useTabBarPadding(extra)` — `TAB_BAR_HEIGHT + insets.bottom + extra`, the room under the absolute tab bar |
+| `useTabBarPadding` | `useTabBarPadding(extra)` — `tabBarHeight(fontScale) + insets.bottom + extra`, the room under the absolute tab bar, which grows with the system font scale by its label's line (`PremiumTabBar`) |
+| `useScreenReaderEnabled` | Whether a screen reader is on: `AccessibilityInfo.isScreenReaderEnabled()`, then the `screenReaderChanged` event — what holds the RTL banner's countdown |
+| `useProgressAnnouncement` | `useProgressAnnouncement({ progress, describe })` — announces a running progress at 25, 50 and 75 %, never at every tick (no caller yet: the app's first running task) |
 | `useThemedColor` | Whether the scheme on screen is dark |
 | `useDebounce` | `useDebounce(value, delay)` — the value once it has settled (no caller yet) |
 
@@ -207,7 +209,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 ## i18n
 
-20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`). RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
+20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`): `RTLRestartBanner` announces itself (`rtlRestart.announcement`), counts down 15 s and restarts — unless a screen reader is on (`useScreenReaderEnabled`), when it shows `rtlRestart.messageManual`, no countdown, and restarts only on *Restart now*; a screen reader turned on mid-countdown stops it. It sits above the tab bar once the onboarding is complete, and just above the bottom inset during it, where there is no tab bar. RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
 
 EN and FR are the source of truth; the translation policy, the voice charter and the parity a translation session owes are in CLAUDE.md.
 
@@ -237,11 +239,13 @@ Tabs share a 20 px gutter, set as `paddingHorizontal` on the `ScrollView`'s cont
 
 `ModalDialog` — the centred sibling of `ModalBottomSheet` (title, subtitle, body, a `footer` outside the body); it pads itself by `useKeyboardHeight()`, since the keyboard no longer resizes a modal window on Android.
 
-`SettingsRow` — the settings row (icon plate, title, description, value, `pro` badge, accessory, chevron); `toggle` makes the whole row a switch, drawing `AppSwitch` (decoration only) and carrying the switch role and state. The language row in `DisplaySection` is built on it; `SettingsLinkRow` stays for plain links. `ProBadge` marks what the free tier cannot use.
+`SettingsRow` — the settings row (icon plate, title, description, value, `pro` badge, accessory, chevron); `toggle` makes the whole row a switch, drawing `AppSwitch` (decoration only) and carrying the switch role and state; `disabled` keeps a row's handler but makes it inert, and a row with neither `onPress` nor `toggle` is a plain `View`, read as one element. The language row in `DisplaySection` is built on it; `SettingsLinkRow` stays for plain links, a `link` by default and a `button` (`role`) for a row that opens something in the app. `ProBadge` marks what the free tier cannot use.
 
 `WheelPicker` — a snapping wheel whose touch column is far wider than its digits, `unit` drawn inside it untouchable; it blocks a host sheet's pan.
 
 `OfflineBanner` — no props: reads `useNetworkStatus()` and renders nothing online, else an orange plate with `cloud-offline` and `common.offline`, a polite live region on Android and announced on iOS. Mounted nowhere yet.
+
+What a screen reader meets (the rules are CLAUDE.md's, Accessibility): the theme selector (`SlidingSelector`) and the paywall's plans are radio groups; the language sheet's rows are radios named by the language, under a labelled search field and its *Clear* (`common.clear`); `SettingsLinkRow` is a `link`, but a `button` for *Privacy options*, which opens in the app; the tab bar a `tablist` of `tab`s; the onboarding's progress bar reads *Step 1 of 2* (`onboarding.a11y.step`) and its back button *Back*; a `ThemedText` in `display`, `title` or `sectionHeader` is a `header`; the toast is an `alert`, announced, and stays for Android's accessibility timeout; the paywall's perks and trust lines are one element per row. A sheet's and a dialog's backdrop is no stop for the reader, and a title-less sheet's floating close button comes after its content. `GradientButton` reads a `height` in its `style` as a minimum, and nothing sets `maxFontSizeMultiplier`.
 
 ---
 
@@ -253,8 +257,10 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **The starter asks for no permission and schedules nothing.** `POST_NOTIFICATIONS` stays declared and the ask, the grant's readback and `syncDailyReminders` wait for the app's first notification.
 - **Remote push is not wired on the device.** `apps/api` ships the FCM sender; `@react-native-firebase/messaging` is not installed, since a handler nothing registers would look like working push.
 - **`aps-environment` is declared though nothing is pushed.** `expo-notifications` writes the entitlement whatever the config says; the declaration only states it.
-- **`AppRatingModal` compiles and is mounted nowhere.** Play forbids pre-filtering the review; `SENTIMENT_GATE_ENABLED` is read by nothing, so bringing it back means wiring it.
-- **Nothing is capped, persisted or called yet.** `useCappedByTier`, `useDebounce` and `OfflineBanner` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
+- **`AppRatingModal` compiles and is mounted nowhere.** Play forbids pre-filtering the review; `SENTIMENT_GATE_ENABLED` is read by nothing, so bringing it back means wiring it — with the roles, states and star labels the accessibility pass left it without (`rating-modal-a11y`, dropped).
+- **Nothing here has been heard with TalkBack or seen at 200 %.** The roles, states and labels were written from the code (lot 16, ported from noise-remover); the pass on a phone — every control reached and named in a sensible order, the RTL banner holding its countdown, nothing clipped at the largest font — is each app's, before its first release.
+- **A tab label can be cut at the largest font.** `PremiumTabBar` keeps each label on one line (`numberOfLines={1}`) and `tabBarHeight` adds one label line's growth for the font scale: half a phone's width holds *Paramètres* at 200 %, a third only just, and wrapping a one-word label would break the word itself. TalkBack reads the whole label, from the text, whatever the ellipsis hides.
+- **Nothing is capped, persisted or called yet.** `useCappedByTier`, `useDebounce`, `useProgressAnnouncement` and `OfflineBanner` have no caller, `PERSISTED_QUERY_KEYS` is empty, `exampleService` is the pattern a backend call copies, and `PRO_BENEFITS` holds one entry — the ads, the only thing the starter gates.
 - **The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set**, and says so in its logs.
 - **The onboarding is not capped on large screens**, unlike every tab: a design pass, not a structural one.
 - **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing that path from the app changes the paths contract.

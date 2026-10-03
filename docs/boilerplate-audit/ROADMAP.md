@@ -35,8 +35,8 @@ audit of that gap and the plan to close it.
 | 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
 | 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
 | — | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
-| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert — ported from noise-remover's pass | 3 | **in review** |
-| — | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register — 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **in review** |
+| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert — ported from noise-remover's pass | 3 | **merged into `main`** |
+| — | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register — 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **merged into `main`** |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | 1 | colour tokens **in review**, the onboarding planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
 | 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |

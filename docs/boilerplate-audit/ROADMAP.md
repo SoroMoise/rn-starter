@@ -36,6 +36,7 @@ audit of that gap and the plan to close it.
 | 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
 | — | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
 | 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert — ported from noise-remover's pass | 3 | **in review** |
+| — | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register — 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **in review** |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | 1 | colour tokens **in review**, the onboarding planned (§3) |
 | 18 | Primitives for a first caller, and the render path | — | planned (§3) |
 | 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
@@ -244,16 +245,16 @@ integration point; a rule that needs no code is written down instead; and nothin
 of a derived app would see on day one. An item that fails the line is closed with its rule written
 down, not shipped anyway.
 
-**The translation session is next**: lot 16, the last lot that adds keys, has shipped. It is the
-session the parity rule describes (CLAUDE.md, Internationalization), bringing each of the 18 other
-languages to parity with `en.json` and to the voice charter, and nothing else. Each lacks 76 of
-`en.json`'s 167 keys — most of the paywall and its legal notes, the onboarding's pitch, the home
-screen, the billing banner, lot 16's four labels — which its speakers read in English; of the 91
-they hold, the ones lot 13 rewrote in EN and FR keep the old
-wording; and `id.json` and the two `zh-*` files mix registers (`Anda` and `kamu`, `您` and `你`).
-The starter has no installs, so nothing is lost by waiting, and every key is translated once. Lot
-22's licences row, if the app links the page, is the only key foreseen after it, and waits for the
-next session.
+**The translation session ran on 2026-10-03, with lot 16** (§1). Each of the 18 other languages
+lacked 76 of `en.json`'s 167 keys and kept lot 13's old wording on part of the 91 it held; `id.json`
+and the two `zh-*` files mixed registers. The session reused noise-remover's files, reviewed in its
+own translation session a day earlier, for every key whose English is the same (124 of 167, the app
+name swapped back), translated the 43 the starter alone has — the demo home screen, the premium
+step and the exit sheet, the errors — in the voice charter's register, and checked the result by
+script: key for key against `en.json`, `rtlRestart.message` in every plural form of `ar`, `ru` and
+`pl`, placeholders and line breaks preserved, no `你` and no `kamu` left. Nothing was heard on a
+device. Lot 22's licences row, if the app links the page, is the only key foreseen, and waits for
+the next session; so does every key a feature adds in EN and FR from now on.
 
 **Lot 17 — Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
 the brand colours are `palette`'s three roles and every gradient is a token. `InitialLoadingScreen`,

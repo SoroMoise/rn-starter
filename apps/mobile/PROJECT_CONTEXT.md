@@ -211,7 +211,7 @@ After completion, `onboardingStore.markCompleted()` is called and `AppContent` r
 
 20 languages: en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. Lazy-loaded JSON files in `i18n/languages/`. RTL for `ar` triggers `I18nManager.forceRTL` + restart (gated by `RTL_RESTART_BANNER_ENABLED`): `RTLRestartBanner` announces itself (`rtlRestart.announcement`), counts down 15 s and restarts — unless a screen reader is on (`useScreenReaderEnabled`), when it shows `rtlRestart.messageManual`, no countdown, and restarts only on *Restart now*; a screen reader turned on mid-countdown stops it. It sits above the tab bar once the onboarding is complete, and just above the bottom inset during it, where there is no tab bar. RTL mirrors the layout but never a transform: an indicator sliding along a row flips its travel by `I18nManager.isRTL`.
 
-EN and FR are the source of truth; the translation policy, the voice charter and the parity a translation session owes are in CLAUDE.md.
+EN and FR are the source of truth; the translation policy, the voice charter and the parity a translation session owes are in CLAUDE.md. All twenty files are at parity with `en.json`, key for key and per plural category (`rtlRestart.message` carries every form in `ar`, `ru` and `pl`), since the translation session of 2026-10-03; a feature adds its keys in EN and FR, and the next session brings the other eighteen back to parity.
 
 ---
 
@@ -266,7 +266,6 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing that path from the app changes the paths contract.
 - **`APP_STORE_APP_ID` is `null`** until the iOS release; the App Store opens nothing from a bundle id.
 - **The starter ships no data migration**: it has no installs. An app porting a storage change onto a released build owes its users one.
-- **The 18 other languages lag `en.json`**, most of the paywall, the onboarding and the home screen showing in English; they are brought to parity in a translation session, never alongside feature work.
 
 ---
 

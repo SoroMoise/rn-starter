@@ -4,50 +4,15 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 
 ---
 
-## Features
+## What is inside
 
-- **Theme system** — light / dark mode with RTL support (Arabic and any RTL language)
-- **i18n** — 20 languages (EN, FR, ES, DE, PT-BR, ZH-CN, ZH-TW, JA, KO, AR, HI, BN, RU, ID, TR, IT, NL, SV, PL, VI), lazy-loaded
-- **RevenueCat paywall** — renders whatever the store's current offering holds (plans, prices, trial), states beside every buy button what it will charge, and is built from blocks the onboarding reuses; a payment-problem banner and an offline allowance for subscribers
-- **Contextual paywall** — triggers on a generic action count fed by `useActionRating().recordAction()`, never during the first session — no business logic baked in
-- **AdMob** — banner (per-screen), interstitial, rewarded with configurable ad-free window
-- **Firebase Analytics + Crashlytics** — typed wrapper, ready to track custom events
-- **Local notifications** — `expo-notifications`; the grant read off the OS and asked in context (`useNotificationPermission`), foreground presentation, the Android channel and a daily reminder scheduler that says why when it cannot schedule — nothing asks or schedules until your app does. Remote push is not wired on the device
-- **App-store rating prompt** — Play's in-app review card, armed by an action and raised once the user is back; one pure policy decides and names every refusal; the store listing for explicit taps
-- **Onboarding flow** — welcome (with a language picker) → premium pitch, navigated by step name so a step gated on the device can join; the Android back key steps back through it
-- **2-tab navigation** — Home (premium demo) + Settings; Expo Router file-based
-- **Custom tab bar** — blur effect, haptics, premium-aware
-- **UI kit** — bottom sheet and centred dialog (kept clear of the keyboard on Android), settings rows with switches and a Pro badge, a thumb-sized wheel picker, a sliding selector that mirrors in Arabic; on tablets, foldables and freeform windows the content sits in a centred 600 dp column
-- **Free-tier limits on read** — `useCappedByTier` caps a list by tier without touching what the user chose, so a renewal gives everything back
-- **Cloudflare Workers API** — Hono, API-key auth, rate limiter, a server-side RevenueCat entitlement check cached in KV, FCM push service, `/health` + `/example` + `/example/premium` (`exampleService` holds their app-side calls, through one axios client and `withRetry` — the pattern to copy, called by nothing yet)
-- **Website** — `apps/web`, a static Next.js site in English and French carrying the privacy policy and terms the app links to, written for the SDKs the starter ships, placeholders marked
-- **Shared types** — `packages/shared`, the API's response types
+- **Monetization** — a RevenueCat paywall rendered from the store's live offering, a contextual paywall paced by a generic action counter, AdMob (banner, interstitial, rewarded) behind Google's consent gate, a payment-problem banner and an offline allowance for subscribers
+- **Platform** — light / dark / system theme with RTL, 20 lazy-loaded languages (EN and FR as source of truth), local notifications ready to wire up (nothing asks or schedules until the app does), Play's in-app review card armed by an action, Firebase Analytics + Crashlytics
+- **Navigation and UI** — Expo Router with a root stack over two tabs, an onboarding navigated by step name, a blurred tab bar, a bottom sheet and a centred dialog kept clear of the keyboard, settings rows, a thumb-sized wheel picker, a centred column on large screens, accessibility roles and labels throughout
+- **Backend (optional)** — a Cloudflare Worker (Hono) with API-key auth, a rate limiter, a server-side RevenueCat check and an FCM sender, removable in one command
+- **Website** — a static Next.js site in English and French carrying the privacy policy and terms the app links to
 
----
-
-## Tech Stack
-
-| Technology | Version | Role |
-|---|---|---|
-| Expo | ~54.0.23 | React Native platform |
-| React | 19.1.0 | UI |
-| React Native | 0.81.5 | Native framework |
-| Expo Router | ~6.0.14 | File-based navigation |
-| NativeWind | ^4.2.1 | Tailwind CSS for React Native |
-| Zustand | ^5.0.8 | State management (with `persist` + MMKV) |
-| TanStack Query | ^5.100.8 | Server state, persisted via MMKV |
-| react-native-mmkv | ^3.3.3 | Synchronous local storage |
-| i18next / react-i18next | ^25 / ^16 | Internationalization |
-| react-native-reanimated | ~4.1.1 | Animations |
-| Moti | ^0.30.0 | Declarative animations |
-| @react-native-firebase | ^24.0.0 | Analytics, Crashlytics |
-| react-native-google-mobile-ads | ^15.5.0 | AdMob |
-| react-native-purchases | ^10.0.1 | RevenueCat IAP |
-| expo-notifications | ~0.32.17 | Local notifications |
-| expo-store-review | ~9.0.8 | In-app rating |
-| Hono | ^4 | API framework (Cloudflare Workers) |
-| TypeScript | 5.x | Strict typing throughout |
-| pnpm workspaces + Turborepo | — | Monorepo tooling |
+Stack: Expo SDK 54 / React Native 0.81.5 / React 19, Expo Router 6, NativeWind 4, Zustand 5 + MMKV, TanStack Query 5, i18next, Reanimated 4 + Moti, @react-native-firebase, react-native-google-mobile-ads, react-native-purchases, expo-notifications, Hono, TypeScript strict, pnpm workspaces + Turborepo. Exact versions: `apps/mobile/package.json` and `apps/api/package.json`.
 
 ---
 

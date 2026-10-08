@@ -63,14 +63,13 @@ export function GradientButton({
       accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}>
       {({ pressed }) => (
         <View
+          className={`grow overflow-hidden rounded-[14px] ${disabled || isLoading ? 'opacity-50' : ''}`}
           style={[
-            styles.container,
             borderRadius !== undefined && { borderRadius },
             pressed && {
               ...(pressOpacity !== 0 && { opacity: pressOpacity }),
               ...(pressScale !== 0 && { transform: [{ scale: pressScale }] }),
             },
-            (disabled || isLoading) && styles.disabled,
           ]}>
           <LinearGradient
             colors={colors}
@@ -93,11 +92,6 @@ export function GradientButton({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    borderRadius: 14,
-    overflow: 'hidden',
-  },
   gradient: {
     flexGrow: 1,
     flexDirection: 'row',
@@ -105,8 +99,5 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
     gap: 8,
-  },
-  disabled: {
-    opacity: 0.5,
   },
 })

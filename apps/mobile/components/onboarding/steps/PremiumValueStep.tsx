@@ -47,8 +47,6 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
     void purchaseSelected()
   }, [purchaseSelected])
 
-  const offerPanelClass = `mt-6 rounded-2xl p-4 ${isDark ? 'bg-white/5' : 'bg-accent-500/[0.06]'}`
-
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
       <LinearGradient
@@ -77,7 +75,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         </View>
 
         {timeline.length > 0 && (
-          <View className={offerPanelClass}>
+          <View className="mt-6 rounded-2xl bg-accent-500/[0.06] p-4 dark:bg-white/5">
             <ThemedText variant="caption" color="muted" className="mb-3 uppercase">
               {t('onboarding.premium.timelineHeader')}
             </ThemedText>
@@ -130,7 +128,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         ) : (
           // With no plan loaded there is no price to state, so no button to press either: a
           // disabled CTA reads as broken, a sentence with a retry reads as a network problem.
-          <View className={offerPanelClass}>
+          <View className="mt-6 rounded-2xl bg-accent-500/[0.06] p-4 dark:bg-white/5">
             <ThemedText variant="body" color="muted" align="center" className="mb-2">
               {t('paywall.offerUnavailable')}
             </ThemedText>

@@ -61,13 +61,10 @@ export function ModalDialog({
           className="flex-1 justify-center px-5">
           <View
             style={{
-              width: '100%',
               maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
               maxHeight: availableHeight * MAX_HEIGHT_RATIO,
-              flexShrink: 1,
-              alignSelf: 'center',
             }}
-            className="overflow-hidden rounded-3xl bg-gray-50 dark:bg-gray-900">
+            className="w-full shrink self-center overflow-hidden rounded-3xl bg-gray-50 dark:bg-gray-900">
             <View className="flex-row items-start justify-between px-5 pb-3 pt-5">
               <View className="flex-1 pe-3">
                 <ThemedText variant="title">{title}</ThemedText>

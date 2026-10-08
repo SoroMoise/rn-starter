@@ -147,16 +147,9 @@ export function WheelPicker<T extends string | number>({
 
       <View
         pointerEvents="none"
-        style={{
-          position: 'absolute',
-          top: paddingVertical,
-          left: 0,
-          right: 0,
-          height: WHEEL_ITEM_HEIGHT,
-          alignItems: 'center',
-          zIndex: 1,
-        }}>
-        <View style={{ width: contentWidth, height: WHEEL_ITEM_HEIGHT, flexDirection: 'row' }}>
+        className="absolute inset-x-0 z-[1] items-center"
+        style={{ top: paddingVertical, height: WHEEL_ITEM_HEIGHT }}>
+        <View className="flex-row" style={{ width: contentWidth, height: WHEEL_ITEM_HEIGHT }}>
           <View
             style={{ width: contentWidth - unitInset, height: WHEEL_ITEM_HEIGHT }}
             className="border-y border-accent-500/40 bg-accent-500/5 dark:border-accent-500/30 dark:bg-accent-500/10"
@@ -200,16 +193,8 @@ function WheelItem({
 
   return (
     <Animated.View
-      style={[
-        animatedStyle,
-        {
-          height: WHEEL_ITEM_HEIGHT,
-          width,
-          paddingEnd,
-          alignItems: 'center',
-          justifyContent: 'center',
-        },
-      ]}>
+      className="items-center justify-center"
+      style={[animatedStyle, { height: WHEEL_ITEM_HEIGHT, width, paddingEnd }]}>
       <ThemedText variant="heading" weight="semibold" numberOfLines={1}>
         {label}
       </ThemedText>

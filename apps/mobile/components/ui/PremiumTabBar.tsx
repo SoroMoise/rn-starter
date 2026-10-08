@@ -92,7 +92,8 @@ function TabItem({
       {isFocused && (
         <Animated.View
           entering={FadeIn.duration(250)}
-          style={[styles.activeIndicator, { backgroundColor: colors.primaryMuted }]}
+          className="absolute inset-x-2 inset-y-0.5 rounded-[14px]"
+          style={{ backgroundColor: colors.primaryMuted }}
         />
       )}
 
@@ -100,13 +101,8 @@ function TabItem({
 
       <ThemedText
         color="inherit"
-        style={[
-          styles.label,
-          {
-            color: labelColor,
-            fontWeight: isFocused ? '600' : '500',
-          },
-        ]}
+        className={`text-xs tracking-[0.2px] ${isFocused ? 'font-semibold' : 'font-medium'}`}
+        style={{ color: labelColor, lineHeight: TAB_LABEL_LINE_HEIGHT }}
         numberOfLines={1}>
         {t(config.labelKey)}
       </ThemedText>
@@ -127,10 +123,11 @@ function TabBarContent({
 }) {
   return (
     <>
-      <View style={[styles.accentLine, { backgroundColor: '#ffffff08' }]} />
+      <View className="w-full bg-[#ffffff08]" style={styles.accentLine} />
       <View
         accessibilityRole="tablist"
-        style={[styles.tabsRow, { paddingBottom: Math.max(bottomInset, 8) }]}>
+        className="flex-row px-2 pt-2"
+        style={{ paddingBottom: Math.max(bottomInset, 8) }}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index
 
@@ -184,7 +181,7 @@ export function PremiumTabBar({ state, navigation }: BottomTabBarProps) {
   )
 
   return (
-    <View style={styles.wrapper}>
+    <View className="absolute inset-x-0 bottom-0">
       <BlurView
         intensity={85}
         blurReductionFactor={30}
@@ -204,23 +201,11 @@ export const tabBarHeight = (fontScale: number) =>
   TAB_BAR_HEIGHT + Math.max(0, fontScale - 1) * TAB_LABEL_LINE_HEIGHT
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
   container: {
     borderTopWidth: StyleSheet.hairlineWidth,
   },
   accentLine: {
     height: StyleSheet.hairlineWidth,
-    width: '100%',
-  },
-  tabsRow: {
-    flexDirection: 'row',
-    paddingTop: 8,
-    paddingHorizontal: 8,
   },
   tabItem: {
     flex: 1,
@@ -230,18 +215,5 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     position: 'relative',
     gap: 4,
-  },
-  activeIndicator: {
-    position: 'absolute',
-    top: 2,
-    bottom: 2,
-    left: 8,
-    right: 8,
-    borderRadius: 14,
-  },
-  label: {
-    fontSize: 12,
-    lineHeight: TAB_LABEL_LINE_HEIGHT,
-    letterSpacing: 0.2,
   },
 })

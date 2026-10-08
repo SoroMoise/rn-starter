@@ -71,7 +71,7 @@ export function ExitIntentSheet({
       title=""
       showCloseButton={false}
       compact>
-      <View style={{ paddingHorizontal: 24, paddingTop: 12, paddingBottom: insets.bottom + 40 }}>
+      <View className="px-6 pt-3" style={{ paddingBottom: insets.bottom + 40 }}>
         <View className="mb-4 h-14 w-14 items-center justify-center self-center rounded-full bg-pro-500/20">
           <Ionicons name="time-outline" size={28} color={UI_COLORS.pro[500]} />
         </View>

@@ -28,21 +28,20 @@ export function AppSwitch({ value }: { value: boolean }) {
 
   return (
     <View
-      className={value ? 'bg-accent-500' : 'bg-gray-300 dark:bg-gray-600'}
+      className={`shrink-0 ${value ? 'bg-accent-500' : 'bg-gray-300 dark:bg-gray-600'}`}
       style={{
         width: TRACK_WIDTH,
         height: TRACK_HEIGHT,
         borderRadius: TRACK_HEIGHT / 2,
         padding: KNOB_INSET,
-        flexShrink: 0,
       }}>
       <Animated.View
+        className="bg-white"
         style={[
           {
             width: KNOB_SIZE,
             height: KNOB_SIZE,
             borderRadius: KNOB_SIZE / 2,
-            backgroundColor: '#ffffff',
             shadowColor: '#000000',
             shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.3,

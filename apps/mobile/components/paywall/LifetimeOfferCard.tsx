@@ -24,8 +24,8 @@ export function LifetimeOfferCard({ plan, source, onDecline }: LifetimeOfferCard
   const ctaLabel = planCtaLabel({ plan, t })
 
   return (
-    <View style={[StyleSheet.absoluteFill, styles.layer, { paddingTop: insets.top }]}>
-      <Animated.View entering={FadeIn.duration(180)} style={StyleSheet.absoluteFill}>
+    <View className="absolute inset-0 justify-end" style={{ paddingTop: insets.top }}>
+      <Animated.View entering={FadeIn.duration(180)} className="absolute inset-0">
         <Pressable
           className="absolute inset-0 bg-black/50"
           onPress={onDecline}
@@ -38,15 +38,13 @@ export function LifetimeOfferCard({ plan, source, onDecline }: LifetimeOfferCard
       <Animated.View
         entering={SlideInDown.duration(260)}
         accessibilityViewIsModal
-        style={styles.card}>
+        className="w-full shrink self-center"
+        style={{ maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH }}>
         <View className="shrink overflow-hidden rounded-t-3xl bg-gray-50 dark:bg-gray-900">
           <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={{
-              paddingHorizontal: 24,
-              paddingTop: 24,
-              paddingBottom: Math.max(insets.bottom, 16) + 8,
-            }}
+            className="grow-0"
+            contentContainerClassName="px-6 pt-6"
+            contentContainerStyle={{ paddingBottom: Math.max(insets.bottom, 16) + 8 }}
             showsVerticalScrollIndicator={false}>
             <View
               className="mb-4 h-14 w-14 items-center justify-center self-center rounded-full bg-pro-500/20"
@@ -94,18 +92,6 @@ export function LifetimeOfferCard({ plan, source, onDecline }: LifetimeOfferCard
 }
 
 const styles = StyleSheet.create({
-  layer: {
-    justifyContent: 'flex-end',
-  },
-  card: {
-    width: '100%',
-    maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
-    alignSelf: 'center',
-    flexShrink: 1,
-  },
-  scroll: {
-    flexGrow: 0,
-  },
   cta: {
     marginTop: 24,
     borderRadius: 14,

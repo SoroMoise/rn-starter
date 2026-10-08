@@ -47,17 +47,17 @@ export function OnboardingStepLayout({
       />
 
       <ScrollView
+        contentContainerClassName="px-6"
         contentContainerStyle={{
           paddingTop: insets.top + 96,
           paddingBottom: insets.bottom + 24,
-          paddingHorizontal: 24,
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <View className="mb-5 h-16 w-16 items-center justify-center overflow-hidden rounded-3xl">
           <View
-            className="absolute inset-0"
-            style={{ backgroundColor: iconColor, opacity: 0.15 }}
+            className="absolute inset-0 opacity-[0.15]"
+            style={{ backgroundColor: iconColor }}
           />
           <Ionicons name={icon} size={30} color={iconColor} />
         </View>

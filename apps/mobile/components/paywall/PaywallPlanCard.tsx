@@ -1,12 +1,14 @@
 import { ThemedText } from '@/components/ui/ThemedText'
-import Colors from '@/constants/Colors'
-import { UI_COLORS } from '@/constants/uiColors'
-import { useThemedColor } from '@/hooks/useThemedColor'
+import { cssInterop } from 'nativewind'
 import React from 'react'
-import { Pressable, StyleSheet, View } from 'react-native'
+import { Pressable, View } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+// NativeWind only knows the components it registers: a wrapper made by createAnimatedComponent
+// would take the className and draw nothing of it.
+const AnimatedPressable = cssInterop(Animated.createAnimatedComponent(Pressable), {
+  className: 'style',
+})
 
 const SPRING_DOWN = { damping: 20, stiffness: 300, mass: 0.5 }
 const SPRING_UP = { damping: 15, stiffness: 200, mass: 0.6 }
@@ -32,12 +34,16 @@ export function PaywallPlanCard({
   isDisabled,
   onSelect,
 }: PaywallPlanCardProps) {
-  const isDark = useThemedColor()
   const scale = useSharedValue(1)
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
   }))
+
+  const cardClass = isSelected
+    ? 'border-pro-500 bg-pro-50 dark:bg-pro-500/[0.08]'
+    : 'border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800'
+  const radioClass = isSelected ? 'border-pro-500' : 'border-gray-300 dark:border-gray-600'
 
   return (
     <AnimatedPressable
@@ -49,27 +55,24 @@ export function PaywallPlanCard({
         scale.value = withSpring(1, SPRING_UP)
       }}
       disabled={isDisabled}
-      style={[
-        animatedStyle,
-        styles.card,
-        isDark ? styles.cardDark : styles.cardLight,
-        isSelected && styles.cardSelected,
-        isSelected && isDark && styles.cardSelectedDark,
-      ]}
+      className={`relative mb-2.5 flex-row items-center gap-3 rounded-[14px] border-[1.5px] p-[14px] ${cardClass}`}
+      style={animatedStyle}
       accessibilityRole="radio"
       accessibilityState={{ checked: isSelected, disabled: isDisabled }}>
       {(savingsBadge || trialBadge) && (
-        <View style={styles.badges}>
+        <View className="absolute -top-3 left-3 flex-row gap-2.5">
           {savingsBadge && (
-            <View style={styles.savingsBadge}>
-              <ThemedText style={styles.savingsText} color="inherit">
+            <View className="rounded-full bg-pro-500 px-2.5 py-px">
+              <ThemedText className="text-[11px] font-bold leading-4 text-white" color="inherit">
                 {savingsBadge}
               </ThemedText>
             </View>
           )}
           {trialBadge && (
-            <View style={[styles.trialBadge, isDark && styles.trialBadgeDark]}>
-              <ThemedText style={[styles.trialText, isDark && { color: '#fff' }]} color="inherit">
+            <View className="rounded-full bg-success-100 px-2.5 py-px dark:bg-success-500">
+              <ThemedText
+                className="text-[11px] font-semibold leading-4 text-success-600 dark:text-white"
+                color="inherit">
                 {trialBadge}
               </ThemedText>
             </View>
@@ -77,7 +80,7 @@ export function PaywallPlanCard({
         </View>
       )}
 
-      <View style={styles.info}>
+      <View className="flex-1 gap-0.5">
         <ThemedText variant="body" weight="semibold">
           {label}
         </ThemedText>
@@ -86,105 +89,14 @@ export function PaywallPlanCard({
         </ThemedText>
       </View>
 
-      <View style={styles.right}>
+      <View className="items-end gap-1.5">
         <ThemedText variant="body" weight="bold">
           {priceString}
         </ThemedText>
-        <View
-          style={[styles.radio, isDark && styles.radioDark, isSelected && styles.radioSelected]}>
-          {isSelected && <View style={styles.radioDot} />}
+        <View className={`h-5 w-5 items-center justify-center rounded-full border-2 ${radioClass}`}>
+          {isSelected && <View className="h-2.5 w-2.5 rounded-full bg-pro-500" />}
         </View>
       </View>
     </AnimatedPressable>
   )
 }
-
-const styles = StyleSheet.create({
-  card: {
-    borderRadius: 14,
-    borderWidth: 1.5,
-    padding: 14,
-    marginBottom: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    position: 'relative',
-  },
-  cardLight: {
-    backgroundColor: '#ffffff',
-    borderColor: '#f3f4f6',
-  },
-  cardDark: {
-    backgroundColor: Colors.dark.card,
-    borderColor: '#374151',
-  },
-  cardSelected: {
-    borderColor: UI_COLORS.pro[500],
-    backgroundColor: UI_COLORS.pro[50],
-  },
-  cardSelectedDark: {
-    backgroundColor: `${UI_COLORS.pro[500]}14`,
-    borderColor: UI_COLORS.pro[500],
-  },
-  badges: {
-    position: 'absolute',
-    top: -12,
-    left: 12,
-    flexDirection: 'row',
-    gap: 10,
-  },
-  savingsBadge: {
-    backgroundColor: UI_COLORS.pro[500],
-    paddingHorizontal: 10,
-    paddingVertical: 1,
-    borderRadius: 99,
-  },
-  savingsText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '700',
-  },
-  trialBadge: {
-    backgroundColor: UI_COLORS.success[100],
-    paddingHorizontal: 10,
-    paddingVertical: 1,
-    borderRadius: 99,
-  },
-  trialBadgeDark: {
-    backgroundColor: UI_COLORS.success[500],
-  },
-  trialText: {
-    color: UI_COLORS.success[600],
-    fontSize: 11,
-    fontWeight: '600',
-  },
-  info: {
-    flex: 1,
-    gap: 2,
-  },
-  right: {
-    alignItems: 'flex-end',
-    gap: 6,
-  },
-  radio: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: '#d1d5db',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioDark: {
-    borderColor: '#4b5563',
-  },
-  radioSelected: {
-    borderColor: UI_COLORS.pro[500],
-  },
-  radioDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
-    backgroundColor: UI_COLORS.pro[500],
-  },
-})

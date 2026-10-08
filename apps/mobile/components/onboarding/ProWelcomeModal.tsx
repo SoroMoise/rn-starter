@@ -1,5 +1,4 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useThemedColor } from '@hooks/useThemedColor'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, View } from 'react-native'
 
@@ -15,12 +14,11 @@ type Props = {
 
 export function ProWelcomeModal({ visible, onSkip, onContinue }: Props) {
   const { t } = useTranslation()
-  const isDark = useThemedColor()
 
   return (
     <Modal visible={visible} animationType="fade" transparent onRequestClose={onContinue}>
       <View className="flex-1 items-center justify-center bg-black/60 px-6">
-        <View className={`w-full max-w-md rounded-3xl p-6 ${isDark ? 'bg-[#1a1a2e]' : 'bg-white'}`}>
+        <View className="w-full max-w-md rounded-3xl bg-white p-6 dark:bg-[#1a1a2e]">
           <View className="mb-4 h-14 w-14 items-center justify-center rounded-2xl bg-pro-500/20">
             <Ionicons name="star" size={28} color={UI_COLORS.pro[500]} />
           </View>

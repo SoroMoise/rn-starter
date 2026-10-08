@@ -1,4 +1,3 @@
-import { useThemedColor } from '@hooks/useThemedColor'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -10,7 +9,6 @@ interface OnboardingProgressBarProps {
 
 export function OnboardingProgressBar({ totalSteps, currentStep }: OnboardingProgressBarProps) {
   const { t } = useTranslation()
-  const isDark = useThemedColor()
   return (
     <View
       className="flex-row gap-2"
@@ -22,14 +20,11 @@ export function OnboardingProgressBar({ totalSteps, currentStep }: OnboardingPro
       {Array.from({ length: totalSteps }).map((_, index) => (
         <View
           key={index}
-          className={`h-1 flex-1 overflow-hidden rounded-full ${
-            isDark ? 'bg-white/10' : 'bg-black/10'
-          }`}>
+          className="h-1 flex-1 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
           <Animated.View
             className={`h-full rounded-full ${
-              index <= currentStep ? 'bg-accent-400' : 'bg-transparent'
+              index <= currentStep ? 'w-full bg-accent-400' : 'w-0 bg-transparent'
             }`}
-            style={{ width: index <= currentStep ? '100%' : '0%' }}
           />
         </View>
       ))}

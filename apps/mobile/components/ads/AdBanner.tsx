@@ -4,7 +4,7 @@ import { useStageActive } from '@/hooks/useStageActive'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
 import { reportAdFailure } from '@/services/api/adFailures'
 import React from 'react'
-import { StyleSheet, View, useWindowDimensions } from 'react-native'
+import { View, useWindowDimensions } from 'react-native'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -31,7 +31,10 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
   if (!isPlacementActive || !isStageActive || adBannerId === null) return null
 
   return (
-    <View style={[styles.container, { bottom: tabBarPadding }]} key={`ad-banner-${screenName}`}>
+    <View
+      className="absolute left-0 right-0 items-center bg-transparent"
+      style={{ bottom: tabBarPadding }}
+      key={`ad-banner-${screenName}`}>
       <BannerAd
         unitId={adBannerId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
@@ -41,13 +44,3 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-  },
-})

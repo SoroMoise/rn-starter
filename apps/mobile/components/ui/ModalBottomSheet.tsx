@@ -149,8 +149,7 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
                       onPress={close}
                       accessibilityRole="button"
                       accessibilityLabel={t('common.close')}
-                      className="absolute z-10 h-11 w-11 items-center justify-center rounded-xl"
-                      style={{ top: 10, end: 12 }}
+                      className="absolute end-3 top-2.5 z-10 h-11 w-11 items-center justify-center rounded-xl"
                       activeOpacity={0.6}>
                       <Ionicons name="close" size={22} color={colors.textMuted} />
                     </TouchableOpacity>
@@ -159,8 +158,8 @@ export const ModalBottomSheet = forwardRef<ModalBottomSheetRef, ModalBottomSheet
 
                 <View
                   pointerEvents="none"
-                  className="absolute left-0 right-0 bg-white dark:bg-gray-800"
-                  style={{ top: '100%', height: OVERSHOOT_BUFFER }}
+                  className="absolute left-0 right-0 top-full bg-white dark:bg-gray-800"
+                  style={{ height: OVERSHOOT_BUFFER }}
                 />
               </Animated.View>
             </View>

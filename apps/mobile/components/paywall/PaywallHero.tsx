@@ -20,17 +20,26 @@ export function PaywallHero({
   const isDark = useThemedColor()
 
   return (
-    <View style={[styles.container, { height }]}>
-      <Image source={isDark ? heroDark : heroLight} style={styles.image} resizeMode="cover" />
+    <View className="overflow-hidden" style={{ height }}>
+      <Image source={isDark ? heroDark : heroLight} className="h-full w-full" resizeMode="cover" />
       <LinearGradient
         colors={['transparent', 'rgba(0,0,0,0.65)']}
         style={styles.overlay}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}>
-        <ThemedText variant="title" weight="bold" color="inverse" style={styles.title}>
+        <ThemedText
+          variant="title"
+          weight="bold"
+          color="inverse"
+          align="center"
+          className="text-[22px] leading-[29px]">
           {title}
         </ThemedText>
-        <ThemedText variant="body" color="inherit" style={styles.subtitle}>
+        <ThemedText
+          variant="body"
+          color="inherit"
+          align="center"
+          className="text-[15px] leading-[22px] text-white/75">
           {subtitle}
         </ThemedText>
       </LinearGradient>
@@ -39,13 +48,6 @@ export function PaywallHero({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
-  image: {
-    width: '100%',
-    height: '100%',
-  },
   overlay: {
     position: 'absolute',
     bottom: 0,
@@ -57,14 +59,5 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
     gap: 4,
-  },
-  title: {
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  subtitle: {
-    fontSize: 15,
-    textAlign: 'center',
-    color: 'rgba(255,255,255,0.75)',
   },
 })

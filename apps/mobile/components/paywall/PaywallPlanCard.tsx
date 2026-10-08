@@ -49,7 +49,7 @@ export function PaywallPlanCard({
         scale.value = withSpring(1, SPRING_UP)
       }}
       disabled={isDisabled}
-      className={`mb-2.5 flex-row items-center gap-3 rounded-[14px] border-[1.5px] p-[14px] ${cardClass}`}
+      className={`mb-2.5 flex-row items-center gap-3 rounded-[0.875rem] border-[1.5px] p-[0.875rem] ${cardClass}`}
       style={animatedStyle}
       accessibilityRole="radio"
       accessibilityState={{ checked: isSelected, disabled: isDisabled }}>
@@ -57,7 +57,7 @@ export function PaywallPlanCard({
         <View className="absolute -top-3 left-3 flex-row gap-2.5">
           {savingsBadge && (
             <View className="rounded-full bg-pro-500 px-2.5 py-px">
-              <ThemedText color="inverse" weight="bold" className="text-[11px] leading-4">
+              <ThemedText color="inverse" weight="bold" className="text-[0.6875rem] leading-4">
                 {savingsBadge}
               </ThemedText>
             </View>
@@ -65,7 +65,7 @@ export function PaywallPlanCard({
           {trialBadge && (
             <View className="rounded-full bg-success-100 px-2.5 py-px dark:bg-success-500">
               <ThemedText
-                className="text-[11px] font-semibold leading-4 text-success-600 dark:text-white"
+                className="text-[0.6875rem] font-semibold leading-4 text-success-600 dark:text-white"
                 color="inherit">
                 {trialBadge}
               </ThemedText>

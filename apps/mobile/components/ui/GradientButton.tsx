@@ -63,7 +63,7 @@ export function GradientButton({
       accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}>
       {({ pressed }) => (
         <View
-          className={`grow overflow-hidden rounded-[14px] ${disabled || isLoading ? 'opacity-50' : ''}`}
+          className={`grow overflow-hidden rounded-[0.875rem] ${disabled || isLoading ? 'opacity-50' : ''}`}
           style={[
             borderRadius !== undefined && { borderRadius },
             pressed && {

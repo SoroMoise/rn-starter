@@ -168,7 +168,7 @@ export function RTLRestartBanner() {
 
             <View className="p-4">
               <View className="mb-2 flex-row items-center">
-                <View className="mr-2.5 h-[34px] w-[34px] items-center justify-center rounded-full border border-accent-500/20 bg-accent-500/10 dark:border-accent-400/30 dark:bg-accent-400/15">
+                <View className="mr-2.5 h-[2.125rem] w-[2.125rem] items-center justify-center rounded-full border border-accent-500/20 bg-accent-500/10 dark:border-accent-400/30 dark:bg-accent-400/15">
                   <Ionicons
                     name="refresh-circle"
                     size={18}
@@ -197,7 +197,7 @@ export function RTLRestartBanner() {
                       startProgressAnim(width, animStartTime.current)
                     }
                   }}
-                  className="mb-3.5 h-[3px] overflow-hidden rounded-sm bg-black/[0.08] dark:bg-white/[0.08]">
+                  className="mb-3.5 h-[0.1875rem] overflow-hidden rounded-sm bg-black/[0.08] dark:bg-white/[0.08]">
                   <Animated.View
                     className="h-full rounded-sm bg-accent-500 dark:bg-accent-400"
                     style={progressBarStyle}

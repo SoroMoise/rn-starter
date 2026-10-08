@@ -22,7 +22,7 @@ export function OnboardingBackButton({ onPress }: OnboardingBackButtonProps) {
     <Animated.View entering={FadeIn.duration(200)}>
       <Pressable
         onPress={handlePress}
-        className="h-[58px] w-[58px] items-center justify-center overflow-hidden rounded-2xl bg-black/5 dark:bg-white/10"
+        className="h-[3.625rem] w-[3.625rem] items-center justify-center overflow-hidden rounded-2xl bg-black/5 dark:bg-white/10"
         accessibilityRole="button"
         accessibilityLabel={t('onboarding.previous')}>
         <DirectionalIcon

@@ -42,14 +42,14 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
         accessibilityRole="button"
         accessibilityLabel={t('premiumGate.unlock')}>
         <View className="items-center gap-2">
-          <View className="h-[52px] w-[52px] items-center justify-center rounded-full bg-pro-100 dark:bg-pro-500/[0.15]">
+          <View className="h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full bg-pro-100 dark:bg-pro-500/[0.15]">
             <Ionicons name="lock-closed" size={22} color={UI_COLORS.pro[500]} />
           </View>
-          <View className="rounded-full bg-pro-500 px-2.5 py-[3px]">
+          <View className="rounded-full bg-pro-500 px-2.5 py-[0.1875rem]">
             <ThemedText
               color="inverse"
               weight="bold"
-              className="text-[11px] leading-4 tracking-[0.5px]">
+              className="text-[0.6875rem] leading-4 tracking-[0.03125rem]">
               {t('premiumGate.proBadge')}
             </ThemedText>
           </View>
@@ -57,7 +57,7 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
             variant="body"
             weight="semibold"
             color="inherit"
-            className="text-[13px] leading-[19px] text-pro-500">
+            className="text-[0.8125rem] leading-[1.1875rem] text-pro-500">
             {t('premiumGate.unlock')}
           </ThemedText>
         </View>

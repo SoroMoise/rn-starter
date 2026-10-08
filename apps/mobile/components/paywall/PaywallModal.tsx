@@ -182,7 +182,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
               variant="caption"
               color="muted"
               align="center"
-              className="mb-4 mt-3.5 text-[11px]">
+              className="mb-4 mt-3.5 text-[0.6875rem]">
               {legalNote}
             </ThemedText>
           ) : null}

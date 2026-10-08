@@ -92,7 +92,7 @@ function TabItem({
       {isFocused && (
         <Animated.View
           entering={FadeIn.duration(250)}
-          className="absolute inset-x-2 inset-y-0.5 rounded-[14px]"
+          className="absolute inset-x-2 inset-y-0.5 rounded-[0.875rem]"
           style={{ backgroundColor: colors.primaryMuted }}
         />
       )}
@@ -101,7 +101,7 @@ function TabItem({
 
       <ThemedText
         color="inherit"
-        className={`text-xs tracking-[0.2px] ${isFocused ? 'font-semibold' : 'font-medium'}`}
+        className={`text-xs tracking-[0.0125rem] ${isFocused ? 'font-semibold' : 'font-medium'}`}
         style={{ color: labelColor, lineHeight: TAB_LABEL_LINE_HEIGHT }}
         numberOfLines={1}>
         {t(config.labelKey)}

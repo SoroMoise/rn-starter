@@ -111,7 +111,7 @@ export function RewardedAdButton() {
             color="inverse"
             align="center"
             weight="semibold"
-            className="shrink text-[13px] leading-[19px]">
+            className="shrink text-[0.8125rem] leading-[1.1875rem]">
             {t('settings.adFreeActive', { duration: remainingLabel })}
           </ThemedText>
         </LinearGradient>
@@ -134,7 +134,7 @@ export function RewardedAdButton() {
         color="inverse"
         align="center"
         weight="semibold"
-        className="shrink text-[13px] leading-[19px]">
+        className="shrink text-[0.8125rem] leading-[1.1875rem]">
         {t('settings.watchAdButton', { duration: durationLabel })}
       </ThemedText>
     </GradientButton>

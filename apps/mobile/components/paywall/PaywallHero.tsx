@@ -32,14 +32,14 @@ export function PaywallHero({
           weight="bold"
           color="inverse"
           align="center"
-          className="text-[22px] leading-[29px]">
+          className="text-[1.375rem] leading-[1.8125rem]">
           {title}
         </ThemedText>
         <ThemedText
           variant="body"
           color="inherit"
           align="center"
-          className="text-[15px] leading-[22px] text-white/75">
+          className="text-[0.9375rem] leading-[1.375rem] text-white/75">
           {subtitle}
         </ThemedText>
       </LinearGradient>

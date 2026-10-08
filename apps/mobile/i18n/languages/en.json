@@ -203,7 +203,12 @@
     "trustStore": "Payment secured by {{store}}",
     "trustTrial": "Nothing to pay during the free trial",
     "trustCancel": "Cancel anytime, no commitment",
-    "trustOneTime": "One payment, no subscription"
+    "trustOneTime": "One payment, no subscription",
+    "lifetimeOffer": {
+      "title": "Not into subscriptions?",
+      "body": "Pay once and keep Pro for good. Nothing to renew, nothing to cancel.",
+      "decline": "No thanks"
+    }
   },
   "premiumGate": {
     "unlock": "Unlock",

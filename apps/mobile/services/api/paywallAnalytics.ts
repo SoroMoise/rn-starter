@@ -46,15 +46,27 @@ export const paywallAnalytics = {
     source,
     openedAtMs,
     selectedPlan,
+    lifetimeOfferShown,
   }: {
     source: string
     openedAtMs: number
     selectedPlan: PlanPeriod | null
+    lifetimeOfferShown: boolean
   }): void {
     analyticsService.track('paywall_dismissed', {
       source,
       time_on_paywall_s: Math.round((Date.now() - openedAtMs) / 1000),
       selected_plan: selectedPlan ?? 'none',
+      lifetime_offer_shown: lifetimeOfferShown,
+    })
+  },
+
+  trackLifetimeOfferShown({ source, plan }: { source: string; plan: OfferingPlan }): void {
+    analyticsService.track('paywall_lifetime_offer_shown', {
+      source,
+      product_id: plan.pkg.product.identifier,
+      price: plan.pkg.product.price,
+      currency: plan.pkg.product.currencyCode,
     })
   },
 

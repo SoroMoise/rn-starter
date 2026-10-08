@@ -121,6 +121,13 @@ export type AnalyticsEventMap = {
     source: string
     time_on_paywall_s: number
     selected_plan: PlanPeriod | 'none'
+    lifetime_offer_shown: boolean
+  }
+  paywall_lifetime_offer_shown: {
+    source: string
+    product_id: string
+    price: number
+    currency: string
   }
   paywall_plan_selected: {
     plan: PlanPeriod

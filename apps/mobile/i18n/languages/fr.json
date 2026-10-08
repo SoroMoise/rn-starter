@@ -203,7 +203,12 @@
     "trustStore": "Paiement sécurisé par {{store}}",
     "trustTrial": "Rien à payer pendant l'essai gratuit",
     "trustCancel": "Résiliable à tout moment, sans engagement",
-    "trustOneTime": "Un seul paiement, aucun abonnement"
+    "trustOneTime": "Un seul paiement, aucun abonnement",
+    "lifetimeOffer": {
+      "title": "Pas fan des abonnements ?",
+      "body": "Payez une fois et gardez Pro pour de bon. Rien à renouveler, rien à résilier.",
+      "decline": "Non merci"
+    }
   },
   "premiumGate": {
     "unlock": "Débloquer",

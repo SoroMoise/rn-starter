@@ -22,6 +22,7 @@ import { useOnboardingStore } from '@/stores/onboardingStore'
 import {
   buildOfferingPlans,
   pickDefaultPlan,
+  pickLifetimeOffer,
   type OfferingPlan,
   type PlanPeriod,
 } from '@/utils/offerings'
@@ -138,6 +139,10 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
   const plans = useMemo(() => buildOfferingPlans(offering), [offering])
   const defaultPlan = useMemo(() => pickDefaultPlan({ offering, plans }), [offering, plans])
+  const lifetimeOffer = useMemo(
+    () => pickLifetimeOffer({ offering, plans, defaultPlan }),
+    [offering, plans, defaultPlan]
+  )
 
   useEffect(() => {
     plansRef.current = plans
@@ -430,6 +435,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       activeSubscription,
       plans,
       defaultPlan,
+      lifetimeOffer,
       hasPrices: plans.length > 0,
       isLoadingPrices,
       retryPrices,
@@ -449,6 +455,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       activeSubscription,
       plans,
       defaultPlan,
+      lifetimeOffer,
       isLoadingPrices,
       retryPrices,
       purchasePlan,

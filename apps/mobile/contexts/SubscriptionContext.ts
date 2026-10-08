@@ -15,6 +15,7 @@ export type SubscriptionContextValue = {
   activeSubscription: PlanPeriod | null
   plans: OfferingPlan[]
   defaultPlan: OfferingPlan | null
+  lifetimeOffer: OfferingPlan | null
   hasPrices: boolean
   isLoadingPrices: boolean
   retryPrices: () => Promise<void>
@@ -35,6 +36,7 @@ const initial: SubscriptionContextValue = {
   activeSubscription: null,
   plans: [],
   defaultPlan: null,
+  lifetimeOffer: null,
   hasPrices: false,
   isLoadingPrices: false,
   retryPrices: async () => {},

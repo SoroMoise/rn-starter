@@ -107,6 +107,22 @@ export function pickDefaultPlan({
   return longestCycle ?? plans[0] ?? null
 }
 
+const LIFETIME_PLACEMENT_KEY = 'lifetimePlacement'
+
+export function pickLifetimeOffer({
+  offering,
+  plans,
+  defaultPlan,
+}: {
+  offering: PurchasesOffering | null
+  plans: OfferingPlan[]
+  defaultPlan: OfferingPlan | null
+}): OfferingPlan | null {
+  if (offering?.metadata?.[LIFETIME_PLACEMENT_KEY] === 'inline') return null
+  if (!defaultPlan || defaultPlan.period === 'lifetime') return null
+  return plans.find((plan) => plan.period === 'lifetime') ?? null
+}
+
 /** The shortest cycle in the offer — what a savings badge is measured against. */
 export function findSavingsReference(plans: OfferingPlan[]): OfferingPlan | null {
   return plans.reduce<OfferingPlan | null>((best, plan) => {

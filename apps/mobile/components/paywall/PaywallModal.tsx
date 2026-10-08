@@ -37,7 +37,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
   const { height: screenHeight, isLargeScreen } = useResponsiveLayout()
-  const { isPremium } = usePremium()
+  const { isPremium, lifetimeOffer } = usePremium()
   const {
     options,
     selectedPlan,
@@ -47,8 +47,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     hasPrices,
     isLoadingPurchase,
     purchaseSelected,
-    lifetimeOffer,
-    purchaseLifetimeOffer,
   } = usePaywallPlans({ source, surface: 'paywall' })
 
   // A short landscape window would hand most of the viewport to the illustration before the plans
@@ -59,8 +57,8 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     : PAYWALL_HERO_HEIGHT
 
   const paywallOpenTimeRef = useRef<number>(0)
-  const lifetimeOfferShownRef = useRef(false)
   const [isLifetimeOfferVisible, setLifetimeOfferVisible] = useState(false)
+  const paywallA11y = isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'
 
   // Auto-close once purchase is confirmed
   useEffect(() => {
@@ -70,7 +68,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   useEffect(() => {
     if (visible) {
       paywallOpenTimeRef.current = Date.now()
-      lifetimeOfferShownRef.current = false
       setLifetimeOfferVisible(false)
     }
   }, [visible])
@@ -80,17 +77,16 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       source,
       openedAtMs: paywallOpenTimeRef.current,
       selectedPlan: selectedPlan?.period ?? null,
-      lifetimeOfferShown: lifetimeOfferShownRef.current,
+      lifetimeOfferShown: isLifetimeOfferVisible,
     })
     setLifetimeOfferVisible(false)
     onClose()
   }
 
   const handleClose = () => {
-    if (lifetimeOffer && !lifetimeOfferShownRef.current) {
-      lifetimeOfferShownRef.current = true
+    if (lifetimeOffer && !isLifetimeOfferVisible) {
       setLifetimeOfferVisible(true)
-      paywallAnalytics.trackLifetimeOfferShown({ source, plan: lifetimeOffer.plan })
+      paywallAnalytics.trackLifetimeOfferShown({ source, plan: lifetimeOffer })
       return
     }
     dismiss()
@@ -105,7 +101,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       <GestureHandlerRootView style={[styles.container, isDark && styles.containerDark]}>
         <View
           style={[styles.header, { top: Math.max(insets.top, 8) }]}
-          importantForAccessibility={isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'}>
+          importantForAccessibility={paywallA11y}>
           <Pressable
             onPress={handleClose}
             style={styles.closeButton}
@@ -119,7 +115,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
         </View>
 
         <ScrollView
-          importantForAccessibility={isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'}
+          importantForAccessibility={paywallA11y}
           style={styles.scrollColumn}
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
           showsVerticalScrollIndicator={false}>
@@ -188,13 +184,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           <PaywallLegalLinks origin={{ source, surface: 'paywall' }} />
         </ScrollView>
         {isLifetimeOfferVisible && lifetimeOffer ? (
-          <LifetimeOfferCard
-            ctaLabel={lifetimeOffer.ctaLabel}
-            legalNote={lifetimeOffer.legalNote}
-            isLoading={isLoadingPurchase}
-            onPurchase={() => void purchaseLifetimeOffer()}
-            onDecline={dismiss}
-          />
+          <LifetimeOfferCard plan={lifetimeOffer} source={source} onDecline={dismiss} />
         ) : null}
         <ModalToastViewport active={visible} />
       </GestureHandlerRootView>

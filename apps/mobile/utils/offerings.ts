@@ -107,13 +107,7 @@ export function pickDefaultPlan({
   return longestCycle ?? plans[0] ?? null
 }
 
-export type LifetimePlacement = 'exit' | 'inline'
-
 const LIFETIME_PLACEMENT_KEY = 'lifetimePlacement'
-
-function readLifetimePlacement(offering: PurchasesOffering | null): LifetimePlacement {
-  return offering?.metadata?.[LIFETIME_PLACEMENT_KEY] === 'inline' ? 'inline' : 'exit'
-}
 
 export function pickLifetimeOffer({
   offering,
@@ -124,7 +118,7 @@ export function pickLifetimeOffer({
   plans: OfferingPlan[]
   defaultPlan: OfferingPlan | null
 }): OfferingPlan | null {
-  if (readLifetimePlacement(offering) === 'inline') return null
+  if (offering?.metadata?.[LIFETIME_PLACEMENT_KEY] === 'inline') return null
   if (!defaultPlan || defaultPlan.period === 'lifetime') return null
   return plans.find((plan) => plan.period === 'lifetime') ?? null
 }

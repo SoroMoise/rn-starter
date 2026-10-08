@@ -5,6 +5,7 @@ import { analyticsService } from '@/services/api/analyticsService'
 import { findSavingsReference, type OfferingPlan } from '@/utils/offerings'
 import { computePricePerMonth, computeSavingsPercent, formatPrice } from '@/utils/pricing'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import type { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 
 export type PaywallPlanOption = {
@@ -24,6 +25,65 @@ function wholeMonths(plan: OfferingPlan): number | null {
   if (months === null) return null
   const rounded = Math.round(months)
   return Math.abs(months - rounded) < WHOLE_MONTH_TOLERANCE ? rounded : null
+}
+
+const NO_SELECTION = { ctaLabel: '', selectedPrice: null, legalNote: null }
+
+export function planCtaLabel({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
+  if (plan.hasTrial) {
+    return plan.trialDays
+      ? t('paywall.ctaTrial', { days: plan.trialDays })
+      : t('paywall.ctaTrialNoDays')
+  }
+  const price = plan.pkg.product.priceString
+  switch (plan.period) {
+    case 'weekly':
+      return t('paywall.ctaSubscribeWeekly', { price })
+    case 'monthly':
+      return t('paywall.ctaSubscribeMonthly', { price })
+    case 'annual':
+      return t('paywall.ctaSubscribeAnnual', { price })
+    case 'lifetime':
+      return t('paywall.ctaBuyLifetime', { price })
+    default:
+      return t('paywall.ctaSubscribe', { price })
+  }
+}
+
+// The price with the period it buys — a one-time purchase has none, and a cycle the store
+// reports in no nameable unit keeps the bare price.
+function planPrice({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
+  const price = plan.pkg.product.priceString
+  switch (plan.period) {
+    case 'weekly':
+      return t('paywall.priceWeekly', { price })
+    case 'monthly':
+      return t('paywall.priceMonthly', { price })
+    case 'annual':
+      return t('paywall.priceAnnual', { price })
+    case 'lifetime':
+      return price
+    default: {
+      const months = wholeMonths(plan)
+      return months !== null && months >= 2
+        ? t('paywall.priceEveryMonths', { price, months })
+        : price
+    }
+  }
+}
+
+// What the store will charge and how often, stated beside the button that buys it: a surface
+// may show no plan card to carry the period, and a trial must say what it turns into. A
+// one-time purchase never "renews automatically".
+export function planLegalNote({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
+  const price = planPrice({ plan, t })
+  if (plan.period === 'lifetime') return t('paywall.legalNoteOneTime', { price })
+  if (plan.hasTrial) {
+    return plan.trialDays
+      ? t('paywall.legalNoteTrial', { days: plan.trialDays, price })
+      : t('paywall.legalNoteTrialNoDays', { price })
+  }
+  return t('paywall.legalNoteRecurring', { price })
 }
 
 /**
@@ -124,86 +184,16 @@ export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
     })
   }, [listedPlans, t])
 
-  const ctaFor = useCallback(
-    (plan: OfferingPlan): string => {
-      if (plan.hasTrial) {
-        return plan.trialDays
-          ? t('paywall.ctaTrial', { days: plan.trialDays })
-          : t('paywall.ctaTrialNoDays')
-      }
-      const price = plan.pkg.product.priceString
-      switch (plan.period) {
-        case 'weekly':
-          return t('paywall.ctaSubscribeWeekly', { price })
-        case 'monthly':
-          return t('paywall.ctaSubscribeMonthly', { price })
-        case 'annual':
-          return t('paywall.ctaSubscribeAnnual', { price })
-        case 'lifetime':
-          return t('paywall.ctaBuyLifetime', { price })
-        default:
-          return t('paywall.ctaSubscribe', { price })
-      }
-    },
-    [t]
-  )
-
-  // The price with the period it buys — a one-time purchase has none, and a cycle the store
-  // reports in no nameable unit keeps the bare price.
-  const priceFor = useCallback(
-    (plan: OfferingPlan): string => {
-      const price = plan.pkg.product.priceString
-      switch (plan.period) {
-        case 'weekly':
-          return t('paywall.priceWeekly', { price })
-        case 'monthly':
-          return t('paywall.priceMonthly', { price })
-        case 'annual':
-          return t('paywall.priceAnnual', { price })
-        case 'lifetime':
-          return price
-        default: {
-          const months = wholeMonths(plan)
-          return months !== null && months >= 2
-            ? t('paywall.priceEveryMonths', { price, months })
-            : price
-        }
-      }
-    },
-    [t]
-  )
-
-  // What the store will charge and how often, stated beside the button that buys it: a surface
-  // may show no plan card to carry the period, and a trial must say what it turns into. A
-  // one-time purchase never "renews automatically".
-  const legalNoteFor = useCallback(
-    (plan: OfferingPlan): string => {
-      const price = priceFor(plan)
-      if (plan.period === 'lifetime') return t('paywall.legalNoteOneTime', { price })
-      if (plan.hasTrial) {
-        return plan.trialDays
-          ? t('paywall.legalNoteTrial', { days: plan.trialDays, price })
-          : t('paywall.legalNoteTrialNoDays', { price })
-      }
-      return t('paywall.legalNoteRecurring', { price })
-    },
-    [priceFor, t]
-  )
-
-  const ctaLabel = selectedPlan ? ctaFor(selectedPlan) : ''
-  const selectedPrice = selectedPlan ? priceFor(selectedPlan) : null
-  const legalNote = selectedPlan ? legalNoteFor(selectedPlan) : null
-
-  const lifetime = useMemo(
+  const { ctaLabel, selectedPrice, legalNote } = useMemo(
     () =>
-      lifetimeOffer
+      selectedPlan
         ? {
-            plan: lifetimeOffer,
-            ctaLabel: ctaFor(lifetimeOffer),
-            legalNote: legalNoteFor(lifetimeOffer),
+            ctaLabel: planCtaLabel({ plan: selectedPlan, t }),
+            selectedPrice: planPrice({ plan: selectedPlan, t }),
+            legalNote: planLegalNote({ plan: selectedPlan, t }),
           }
-        : null,
-    [lifetimeOffer, ctaFor, legalNoteFor]
+        : NO_SELECTION,
+    [selectedPlan, t]
   )
 
   const selectPlan = useCallback(
@@ -224,11 +214,6 @@ export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
     await purchasePlan({ plan: selectedPlan, source, surface })
   }, [purchasePlan, selectedPlan, source, surface])
 
-  const purchaseLifetimeOffer = useCallback(async () => {
-    if (!lifetimeOffer) return
-    await purchasePlan({ plan: lifetimeOffer, source, surface: 'lifetime_offer' })
-  }, [purchasePlan, lifetimeOffer, source])
-
   return {
     options,
     selectedPlan,
@@ -239,7 +224,5 @@ export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
     hasPrices,
     isLoadingPurchase,
     purchaseSelected,
-    lifetimeOffer: lifetime,
-    purchaseLifetimeOffer,
   }
 }

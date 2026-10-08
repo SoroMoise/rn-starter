@@ -25,8 +25,7 @@ export function WelcomeStep() {
           from={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ type: 'spring', delay: 70, damping: 15, stiffness: 80 }}>
-          <View
-            className={`mb-6 h-28 w-28 items-center justify-center self-center rounded-[32px] ${isDark ? 'bg-white/10' : 'bg-accent-500/10'}`}>
+          <View className="mb-6 h-28 w-28 items-center justify-center self-center rounded-[2rem] bg-accent-500/10 dark:bg-white/10">
             <ThemedText variant="inherit" color="inherit" className="py-4 text-6xl">
               ✦
             </ThemedText>

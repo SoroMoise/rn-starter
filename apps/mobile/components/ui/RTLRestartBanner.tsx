@@ -56,11 +56,6 @@ export function RTLRestartBanner() {
   const dismissScale = useSharedValue(1)
 
   const primary = isDark ? UI_COLORS.accent[400] : UI_COLORS.accent[500]
-  const primaryMuted = `${primary}${isDark ? '26' : '1a'}`
-  const primaryBorder = `${primary}${isDark ? '4d' : '33'}`
-  const glassBorder = isDark ? 'rgba(180, 180, 180, 0.4)' : 'rgba(184, 179, 179, 0.4)'
-  const glassBg = isDark ? 'rgba(10,18,35,0.65)' : 'rgba(240,247,255,0.55)'
-  const trackBg = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'
 
   const startProgressAnim = useCallback(
     (containerWidth: number, startedAt: number) => {
@@ -157,26 +152,23 @@ export function RTLRestartBanner() {
     : insets.bottom + ONBOARDING_CLEARANCE
 
   return (
-    <Animated.View style={[styles.wrapper, { bottom }, animatedStyle]}>
+    <Animated.View className="absolute inset-x-4 z-[9998]" style={[{ bottom }, animatedStyle]}>
       {/* Shadow layer — separate from clip layer so shadow bleeds out */}
       <View
+        className="rounded-3xl"
         style={[styles.shadowLayer, { shadowColor: primary, shadowOpacity: isDark ? 0.45 : 0.22 }]}>
         {/* Clip layer — overflow hidden for border radius on BlurView */}
-        <View style={[styles.clipLayer, { borderColor: glassBorder }]}>
+        <View className="overflow-hidden rounded-3xl border border-[#b8b3b3]/40 dark:border-[#b4b4b4]/40">
           <BlurView
             intensity={85}
             blurReductionFactor={10}
             tint={isDark ? 'dark' : 'light'}
             experimentalBlurMethod="dimezisBlurView">
-            <View style={[StyleSheet.absoluteFillObject, { backgroundColor: glassBg }]} />
+            <View className="absolute inset-0 bg-[#f0f7ff]/[0.55] dark:bg-[#0a1223]/[0.65]" />
 
-            <View style={styles.content}>
-              <View style={styles.headerRow}>
-                <View
-                  style={[
-                    styles.iconBubble,
-                    { backgroundColor: primaryMuted, borderColor: primaryBorder },
-                  ]}>
+            <View className="p-4">
+              <View className="mb-2 flex-row items-center">
+                <View className="mr-2.5 h-[2.125rem] w-[2.125rem] items-center justify-center rounded-full border border-accent-500/20 bg-accent-500/10 dark:border-accent-400/30 dark:bg-accent-400/15">
                   <Ionicons
                     name="refresh-circle"
                     size={18}
@@ -185,12 +177,12 @@ export function RTLRestartBanner() {
                   />
                 </View>
 
-                <ThemedText variant="subheading" accessibilityRole="header" style={styles.title}>
+                <ThemedText variant="subheading" accessibilityRole="header" className="flex-1">
                   {t('rtlRestart.title')}
                 </ThemedText>
               </View>
 
-              <ThemedText variant="label" color="muted" style={styles.message}>
+              <ThemedText variant="label" color="muted" className="mb-3 pl-11">
                 {isManual ? t('rtlRestart.messageManual') : t('rtlRestart.message', { count })}
               </ThemedText>
 
@@ -205,14 +197,15 @@ export function RTLRestartBanner() {
                       startProgressAnim(width, animStartTime.current)
                     }
                   }}
-                  style={[styles.progressTrack, { backgroundColor: trackBg }]}>
+                  className="mb-3.5 h-[0.1875rem] overflow-hidden rounded-sm bg-black/[0.08] dark:bg-white/[0.08]">
                   <Animated.View
-                    style={[styles.progressFill, { backgroundColor: primary }, progressBarStyle]}
+                    className="h-full rounded-sm bg-accent-500 dark:bg-accent-400"
+                    style={progressBarStyle}
                   />
                 </View>
               )}
 
-              <View style={styles.buttonsRow}>
+              <View className="flex-row gap-2.5">
                 <AnimatedPressable
                   onPress={restartApp}
                   accessibilityRole="button"
@@ -260,66 +253,10 @@ export function RTLRestartBanner() {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    position: 'absolute',
-    left: 16,
-    right: 16,
-    zIndex: 9998,
-  },
   shadowLayer: {
-    borderRadius: 24,
     shadowOffset: { width: 0, height: 8 },
     shadowRadius: 24,
     elevation: 14,
-  },
-  clipLayer: {
-    borderRadius: 24,
-    overflow: 'hidden',
-    borderWidth: 1,
-  },
-  content: {
-    padding: 16,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  iconBubble: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 10,
-  },
-  title: {
-    flex: 1,
-  },
-  countdownPill: {
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderWidth: 1,
-  },
-  message: {
-    marginBottom: 12,
-    paddingLeft: 44,
-  },
-  progressTrack: {
-    height: 3,
-    borderRadius: 2,
-    marginBottom: 14,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    borderRadius: 2,
-  },
-  buttonsRow: {
-    flexDirection: 'row',
-    gap: 10,
   },
   btnPrimary: {
     flex: 1,

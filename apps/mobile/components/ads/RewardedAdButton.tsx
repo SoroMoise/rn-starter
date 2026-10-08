@@ -95,7 +95,7 @@ export function RewardedAdButton() {
 
   if (isAdFreeActive) {
     return (
-      <View style={styles.button}>
+      <View className="my-2.5 w-full overflow-hidden rounded-xl">
         <LinearGradient
           colors={GRADIENTS.success}
           style={styles.buttonGradient}
@@ -107,7 +107,11 @@ export function RewardedAdButton() {
             color="#ffffff"
             importantForAccessibility="no"
           />
-          <ThemedText color="inherit" align="center" className="shrink" style={styles.buttonText}>
+          <ThemedText
+            color="inverse"
+            align="center"
+            weight="semibold"
+            className="shrink text-[0.8125rem] leading-[1.1875rem]">
             {t('settings.adFreeActive', { duration: remainingLabel })}
           </ThemedText>
         </LinearGradient>
@@ -126,7 +130,11 @@ export function RewardedAdButton() {
       gradientStyle={styles.buttonGradient}
       accessibilityLabel={t('settings.watchAdButton', { duration: durationLabel })}>
       <Ionicons name="play-circle" size={24} color="#ffffff" />
-      <ThemedText color="inherit" align="center" className="shrink" style={styles.buttonText}>
+      <ThemedText
+        color="inverse"
+        align="center"
+        weight="semibold"
+        className="shrink text-[0.8125rem] leading-[1.1875rem]">
         {t('settings.watchAdButton', { duration: durationLabel })}
       </ThemedText>
     </GradientButton>
@@ -147,10 +155,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-  },
-  buttonText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#ffffff',
   },
 })

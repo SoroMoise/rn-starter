@@ -100,15 +100,16 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       onRequestClose={handleClose}>
       <GestureHandlerRootView style={[styles.container, isDark && styles.containerDark]}>
         <View
+          className="absolute inset-x-0 z-10 items-end pb-2"
           style={[styles.header, { top: Math.max(insets.top, 8) }]}
           importantForAccessibility={paywallA11y}>
           <Pressable
             onPress={handleClose}
-            style={styles.closeButton}
+            className="p-1"
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
             accessibilityLabel={t('common.close')}>
-            <View style={styles.closeCircle}>
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-black/30">
               <Ionicons name="close" size={18} color="#ffffff" />
             </View>
           </Pressable>
@@ -116,10 +117,11 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
 
         <ScrollView
           importantForAccessibility={paywallA11y}
+          className="w-full self-center"
           style={styles.scrollColumn}
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
           showsVerticalScrollIndicator={false}>
-          <View style={styles.hero}>
+          <View className="mb-2" style={styles.hero}>
             <PaywallHero
               title={t('paywall.title')}
               subtitle={t('paywall.subtitle')}
@@ -127,14 +129,14 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             />
           </View>
 
-          <View style={styles.perks}>
+          <View className="my-4">
             <PaywallPerks />
           </View>
 
           {!hasPrices ? (
             // No offer loaded: showing a price that does not exist, behind an active
             // button that silently does nothing, is worse than saying so.
-            <View style={styles.offerUnavailable}>
+            <View className="py-6">
               <ThemedText variant="body" color="muted" align="center">
                 {t('paywall.offerUnavailable')}
               </ThemedText>
@@ -142,7 +144,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             </View>
           ) : (
             <>
-              <View style={styles.plans} accessibilityRole="radiogroup">
+              <View className="mb-5 mt-2" accessibilityRole="radiogroup">
                 {options.map((option) => (
                   <PaywallPlanCard
                     key={option.plan.id}
@@ -164,19 +166,19 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
                 isLoading={isLoadingPurchase}
                 disabled={!selectedPlan}
                 gradientStyle={styles.ctaGradient}>
-                <ThemedText color="inherit" style={styles.ctaText}>
+                <ThemedText color="inverse" weight="bold">
                   {ctaLabel}
                 </ThemedText>
               </GradientButton>
 
-              <View style={styles.trust}>
+              <View className="mt-3.5">
                 <PaywallTrustRow plan={selectedPlan} />
               </View>
             </>
           )}
 
           {legalNote ? (
-            <ThemedText variant="caption" color="muted" style={styles.legalNote}>
+            <ThemedText variant="caption" color="muted" align="center" className="mb-4 mt-3.5">
               {legalNote}
             </ThemedText>
           ) : null}
@@ -201,64 +203,20 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.dark.screenBackground,
   },
   header: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    zIndex: 10,
     paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
-    paddingBottom: 8,
-    alignItems: 'flex-end',
-  },
-  closeButton: {
-    padding: 4,
-  },
-  closeCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(0,0,0,0.3)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   // The modal is its own window, outside ScreenContainer's column, so it caps itself. Capping the
   // scroll view rather than its content keeps the hero's full-bleed margin on the column's edge.
   scrollColumn: {
-    width: '100%',
     maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
-    alignSelf: 'center',
   },
   scroll: {
     paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
   },
   hero: {
     marginHorizontal: -CONTENT_HORIZONTAL_PADDING,
-    marginBottom: 8,
-  },
-  perks: {
-    marginVertical: 16,
-  },
-  offerUnavailable: {
-    paddingVertical: 24,
-  },
-  plans: {
-    marginTop: 8,
-    marginBottom: 20,
   },
   ctaGradient: {
     minHeight: 54,
-  },
-  ctaText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  trust: {
-    marginTop: 14,
-  },
-  legalNote: {
-    textAlign: 'center',
-    marginTop: 14,
-    marginBottom: 16,
-    fontSize: 11,
   },
 })

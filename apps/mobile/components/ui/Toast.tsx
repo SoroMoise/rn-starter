@@ -2,7 +2,6 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { UI_COLORS } from '@/constants/uiColors'
 import { triggerError, triggerSuccess, triggerWarning } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useThemedColor } from '@hooks/useThemedColor'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef } from 'react'
 import { AccessibilityInfo, useWindowDimensions, View } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
@@ -30,7 +29,6 @@ const SPRING_CONFIG = { damping: 25, stiffness: 300 }
 
 export function Toast({ message, type = 'success', visible, onHide, duration = 3000 }: ToastProps) {
   const insets = useSafeAreaInsets()
-  const isDark = useThemedColor()
   const { width: screenWidth } = useWindowDimensions()
 
   const translateY = useSharedValue(100)
@@ -166,22 +164,12 @@ export function Toast({ message, type = 'success', visible, onHide, duration = 3
   return (
     <GestureDetector gesture={panGesture}>
       <Animated.View
-        style={[
-          animatedStyle,
-          {
-            position: 'absolute',
-            bottom: insets.bottom + 20,
-            left: 16,
-            right: 16,
-            zIndex: 9999,
-          },
-        ]}>
+        className="absolute inset-x-4 z-[9999]"
+        style={[animatedStyle, { bottom: insets.bottom + 20 }]}>
         <View
           accessible
           accessibilityRole="alert"
-          className={`flex-row items-center rounded-2xl px-5 py-4 shadow-2xl ${
-            isDark ? 'border border-gray-700 bg-gray-800/95' : 'border border-gray-200 bg-white/95'
-          }`}
+          className="flex-row items-center rounded-2xl border border-gray-200 bg-white/95 px-5 py-4 shadow-2xl dark:border-gray-700 dark:bg-gray-800/95"
           style={{
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 8 },

@@ -227,9 +227,7 @@ export function OnboardingScreen() {
           style={{ top: insets.top + 44 }}>
           <Pressable
             onPress={openLanguagePicker}
-            className={`flex-row items-center gap-2 rounded-full px-3 py-2 ${
-              isDark ? 'bg-white/10' : 'bg-black/[0.05]'
-            }`}
+            className="flex-row items-center gap-2 rounded-full bg-black/[0.05] px-3 py-2 dark:bg-white/10"
             accessibilityRole="button"
             accessibilityLabel={t('settings.selectLanguage')}
             accessibilityValue={{ text: activeLanguage?.nativeName }}>

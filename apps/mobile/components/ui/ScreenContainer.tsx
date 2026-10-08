@@ -20,7 +20,9 @@ export function ScreenContainer({ children, className }: ScreenContainerProps) {
     <SafeAreaView
       edges={EDGES}
       className={`flex-1 bg-gray-50 dark:bg-gray-900${className ? ` ${className}` : ''}`}>
-      <View style={styles.content}>{children}</View>
+      <View className="w-full flex-1 self-center" style={styles.content}>
+        {children}
+      </View>
     </SafeAreaView>
   )
 }
@@ -29,9 +31,6 @@ const styles = StyleSheet.create({
   // A max rather than a measured width: below MAX_CONTENT_WIDTH the cap never binds, so a phone
   // resolves to the exact box it did before, with no dimension read and no re-render on resize.
   content: {
-    flex: 1,
-    width: '100%',
     maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
-    alignSelf: 'center',
   },
 })

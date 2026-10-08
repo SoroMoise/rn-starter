@@ -25,7 +25,7 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
   if (isPremium) return <>{children}</>
 
   return (
-    <View style={styles.container}>
+    <View>
       {children}
       {/* Android renders no blur at all without `experimentalBlurMethod`, and samples the screen
           the view sits in: inside a native Modal it would blur the screen under the modal. */}
@@ -37,20 +37,27 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
         pointerEvents="none"
       />
       <Pressable
-        style={[styles.overlay, isDark && styles.overlayDark]}
+        className="absolute inset-0 items-center justify-center rounded-xl bg-white/[0.55] dark:bg-[#0f0f14]/[0.55]"
         onPress={() => void openPaywall({ source })}
         accessibilityRole="button"
         accessibilityLabel={t('premiumGate.unlock')}>
-        <View style={styles.lockContent}>
-          <View style={[styles.lockCircle, isDark && styles.lockCircleDark]}>
+        <View className="items-center gap-2">
+          <View className="h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full bg-pro-100 dark:bg-pro-500/[0.15]">
             <Ionicons name="lock-closed" size={22} color={UI_COLORS.pro[500]} />
           </View>
-          <View style={styles.badge}>
-            <ThemedText style={styles.badgeText} color="inherit">
+          <View className="rounded-full bg-pro-500 px-2.5 py-[0.1875rem]">
+            <ThemedText
+              color="inverse"
+              weight="bold"
+              className="text-[0.6875rem] leading-4 tracking-[0.03125rem]">
               {t('premiumGate.proBadge')}
             </ThemedText>
           </View>
-          <ThemedText variant="body" weight="semibold" style={styles.unlockLabel}>
+          <ThemedText
+            variant="body"
+            weight="semibold"
+            color="inherit"
+            className="text-[0.8125rem] leading-[1.1875rem] text-pro-500">
             {t('premiumGate.unlock')}
           </ThemedText>
         </View>
@@ -60,53 +67,9 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'relative',
-  },
   blur: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 12,
     overflow: 'hidden',
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(255, 255, 255, 0.55)',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  overlayDark: {
-    backgroundColor: 'rgba(15, 15, 20, 0.55)',
-  },
-  lockContent: {
-    alignItems: 'center',
-    gap: 8,
-  },
-  lockCircle: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: UI_COLORS.pro[100],
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  lockCircleDark: {
-    backgroundColor: 'rgba(139, 92, 246, 0.15)',
-  },
-  badge: {
-    backgroundColor: UI_COLORS.pro[500],
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 99,
-  },
-  badgeText: {
-    color: '#ffffff',
-    fontSize: 11,
-    fontWeight: '700',
-    letterSpacing: 0.5,
-  },
-  unlockLabel: {
-    color: UI_COLORS.pro[500],
-    fontSize: 13,
   },
 })

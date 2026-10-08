@@ -108,10 +108,10 @@ export function RewardedAdButton() {
             importantForAccessibility="no"
           />
           <ThemedText
-            color="inherit"
+            color="inverse"
             align="center"
             weight="semibold"
-            className="shrink text-[13px] leading-[19px] text-white">
+            className="shrink text-[13px] leading-[19px]">
             {t('settings.adFreeActive', { duration: remainingLabel })}
           </ThemedText>
         </LinearGradient>
@@ -131,10 +131,10 @@ export function RewardedAdButton() {
       accessibilityLabel={t('settings.watchAdButton', { duration: durationLabel })}>
       <Ionicons name="play-circle" size={24} color="#ffffff" />
       <ThemedText
-        color="inherit"
+        color="inverse"
         align="center"
         weight="semibold"
-        className="shrink text-[13px] leading-[19px] text-white">
+        className="shrink text-[13px] leading-[19px]">
         {t('settings.watchAdButton', { duration: durationLabel })}
       </ThemedText>
     </GradientButton>

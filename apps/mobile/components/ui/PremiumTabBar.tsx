@@ -123,7 +123,7 @@ function TabBarContent({
 }) {
   return (
     <>
-      <View className="w-full bg-[#ffffff08]" style={styles.accentLine} />
+      <View className="w-full bg-white/[0.03]" style={styles.accentLine} />
       <View
         accessibilityRole="tablist"
         className="flex-row px-2 pt-2"

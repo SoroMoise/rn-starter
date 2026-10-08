@@ -25,7 +25,7 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
   if (isPremium) return <>{children}</>
 
   return (
-    <View className="relative">
+    <View>
       {children}
       {/* Android renders no blur at all without `experimentalBlurMethod`, and samples the screen
           the view sits in: inside a native Modal it would blur the screen under the modal. */}
@@ -47,8 +47,9 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
           </View>
           <View className="rounded-full bg-pro-500 px-2.5 py-[3px]">
             <ThemedText
-              color="inherit"
-              className="text-[11px] font-bold leading-4 tracking-[0.5px] text-white">
+              color="inverse"
+              weight="bold"
+              className="text-[11px] leading-4 tracking-[0.5px]">
               {t('premiumGate.proBadge')}
             </ThemedText>
           </View>

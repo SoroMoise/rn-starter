@@ -1,14 +1,8 @@
+import { AnimatedPressable } from '@/components/ui/AnimatedPressable'
 import { ThemedText } from '@/components/ui/ThemedText'
-import { cssInterop } from 'nativewind'
 import React from 'react'
-import { Pressable, View } from 'react-native'
-import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
-
-// NativeWind only knows the components it registers: a wrapper made by createAnimatedComponent
-// would take the className and draw nothing of it.
-const AnimatedPressable = cssInterop(Animated.createAnimatedComponent(Pressable), {
-  className: 'style',
-})
+import { View } from 'react-native'
+import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 const SPRING_DOWN = { damping: 20, stiffness: 300, mass: 0.5 }
 const SPRING_UP = { damping: 15, stiffness: 200, mass: 0.6 }
@@ -55,7 +49,7 @@ export function PaywallPlanCard({
         scale.value = withSpring(1, SPRING_UP)
       }}
       disabled={isDisabled}
-      className={`relative mb-2.5 flex-row items-center gap-3 rounded-[14px] border-[1.5px] p-[14px] ${cardClass}`}
+      className={`mb-2.5 flex-row items-center gap-3 rounded-[14px] border-[1.5px] p-[14px] ${cardClass}`}
       style={animatedStyle}
       accessibilityRole="radio"
       accessibilityState={{ checked: isSelected, disabled: isDisabled }}>
@@ -63,7 +57,7 @@ export function PaywallPlanCard({
         <View className="absolute -top-3 left-3 flex-row gap-2.5">
           {savingsBadge && (
             <View className="rounded-full bg-pro-500 px-2.5 py-px">
-              <ThemedText className="text-[11px] font-bold leading-4 text-white" color="inherit">
+              <ThemedText color="inverse" weight="bold" className="text-[11px] leading-4">
                 {savingsBadge}
               </ThemedText>
             </View>

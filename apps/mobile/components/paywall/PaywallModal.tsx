@@ -166,7 +166,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
                 isLoading={isLoadingPurchase}
                 disabled={!selectedPlan}
                 gradientStyle={styles.ctaGradient}>
-                <ThemedText color="inherit" className="font-bold text-white">
+                <ThemedText color="inverse" weight="bold">
                   {ctaLabel}
                 </ThemedText>
               </GradientButton>

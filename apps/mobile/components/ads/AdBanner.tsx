@@ -32,7 +32,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
 
   return (
     <View
-      className="absolute left-0 right-0 items-center bg-transparent"
+      className="absolute left-0 right-0 items-center"
       style={{ bottom: tabBarPadding }}
       key={`ad-banner-${screenName}`}>
       <BannerAd

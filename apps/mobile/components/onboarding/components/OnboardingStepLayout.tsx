@@ -55,10 +55,7 @@ export function OnboardingStepLayout({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <View className="mb-5 h-16 w-16 items-center justify-center overflow-hidden rounded-3xl">
-          <View
-            className="absolute inset-0 opacity-[0.15]"
-            style={{ backgroundColor: iconColor }}
-          />
+          <View className="absolute inset-0 opacity-15" style={{ backgroundColor: iconColor }} />
           <Ionicons name={icon} size={30} color={iconColor} />
         </View>
 

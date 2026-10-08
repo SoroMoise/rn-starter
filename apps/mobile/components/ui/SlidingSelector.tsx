@@ -170,9 +170,7 @@ export function SlidingSelector<T extends string | number>({
 
   return (
     <View className={s.container} accessibilityRole="radiogroup">
-      <View
-        className="relative flex-1 flex-row"
-        onLayout={(e) => handleLayout(e.nativeEvent.layout.width)}>
+      <View className="flex-1 flex-row" onLayout={(e) => handleLayout(e.nativeEvent.layout.width)}>
         <Animated.View
           className={`absolute bottom-0 start-0 top-0 ${s.indicator}`}
           style={indicatorStyle}

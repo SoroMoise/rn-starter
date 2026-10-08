@@ -14,9 +14,7 @@ export function PaywallPerks() {
         <View
           key={benefit.key}
           accessible
-          className={`flex-row items-center gap-3 py-3 ${
-            index < PRO_BENEFITS.length - 1 ? 'border-gray-200 dark:border-gray-700' : ''
-          }`}
+          className="flex-row items-center gap-3 border-gray-200 py-3 dark:border-gray-700"
           style={index < PRO_BENEFITS.length - 1 && styles.rowBorder}>
           <Ionicons name={benefit.icon} size={20} color={UI_COLORS.pro[500]} />
           <ThemedText variant="body" weight="medium" className="flex-1">

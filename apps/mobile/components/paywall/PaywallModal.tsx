@@ -178,11 +178,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
           )}
 
           {legalNote ? (
-            <ThemedText
-              variant="caption"
-              color="muted"
-              align="center"
-              className="mb-4 mt-3.5 text-[0.6875rem]">
+            <ThemedText variant="caption" color="muted" align="center" className="mb-4 mt-3.5">
               {legalNote}
             </ThemedText>
           ) : null}

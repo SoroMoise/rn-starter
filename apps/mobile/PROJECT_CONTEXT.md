@@ -41,7 +41,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `/(tabs)/index` | `app/(tabs)/index.tsx` | Home — premium feature showcase, paywall CTA |
 | `/(tabs)/settings` | `app/(tabs)/settings.tsx` | Settings (lazy) — theme, language, premium, ads, legal |
 | Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2 steps: welcome → premium value (top-left language selector on welcome) |
-| Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet, assembled from `components/paywall/` (`PaywallHero`, `PaywallPerks`, `PaywallPlanCard`, `PaywallTrustRow`, `PaywallLegalLinks`, `PriceRetryNotice`) over `usePaywallPlans` |
+| Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet, assembled from `components/paywall/` (`PaywallHero`, `PaywallPerks`, `PaywallPlanCard`, `PaywallTrustRow`, `PaywallLegalLinks`, `PriceRetryNotice`) over `usePaywallPlans`; its first close raises `LifetimeOfferCard` when the offer holds a one-time plan |
 
 ---
 
@@ -69,7 +69,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `adEnvironment.ts` | `adsAllowedInEnvironment()` — false on a Firebase Test Lab device (`modules/app-environment`); gates the banner, both ad services and the consent flow |
 | `consentService.ts` | Google UMP consent gate (`gather`, `presentForm`, `canRequestAds`, `arePrivacyOptionsRequired`); only caller of `mobileAds().initialize()` |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
-| `paywallAnalytics.ts` | `trackShown` / `trackDismissed` compose `paywall_shown` (default plan's `default_price` + `currency`) and `paywall_dismissed`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
+| `paywallAnalytics.ts` | `trackShown` / `trackDismissed` / `trackLifetimeOfferShown` compose `paywall_shown` (default plan's `default_price` + `currency`), `paywall_dismissed` (`lifetime_offer_shown`) and `paywall_lifetime_offer_shown`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count), paywall counter, `getPaywallContext` |
 | `purchaseService.ts` | RevenueCat — `getOfferings`, `purchasePackage`, `restorePurchases`, `getAppUserId` (the id a backend call sends), `managementUrl` (the store page of the subscription held, or null), `reportFailure({ error, source })` → `cancelled` / `pending` / `already_owned` / `not_allowed` / `store_problem` / `network` / `unknown` (only `unknown` is a non-fatal). Toasts: `paywall.errorNetwork`, `errorStoreUnavailable`, `errorAlreadyOwned`, `errorGeneric` |
@@ -166,7 +166,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`). `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content. `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
+`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content. `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
 
 ### Contextual Paywall
 

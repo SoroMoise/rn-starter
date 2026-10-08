@@ -167,7 +167,9 @@ does:
   Play only lets you create them once a build that uses Play Billing is on a track.
 - [ ] **RevenueCat** — a project connected to the Play app, the products imported, an entitlement
   whose identifier is `ENTITLEMENT_PREMIUM` (`'premium'`, in `apps/mobile/constants/purchases.ts`)
-  with every product attached, and a current offering. The public SDK keys go in `.env`.
+  with every product attached, and a current offering. The public SDK keys go in `.env`. A
+  one-time product in the offering is offered when the paywall closes rather than in its plan
+  list; the offering's metadata `{ "lifetimePlacement": "inline" }` lists it with the others.
 - [ ] **AdMob** — the app and one unit per placement: the app ids in `app.config.js`, the unit ids
   in `constants/admob.ts` (`apps/mobile/ADS.md`).
 - [ ] **The website** — `apps/web` live with its legal pages filled in (Website). The Play listing

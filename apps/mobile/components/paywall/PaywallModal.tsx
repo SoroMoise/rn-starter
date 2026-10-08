@@ -1,3 +1,4 @@
+import { LifetimeOfferCard } from '@/components/paywall/LifetimeOfferCard'
 import { PAYWALL_HERO_HEIGHT, PaywallHero } from '@/components/paywall/PaywallHero'
 import { PaywallLegalLinks } from '@/components/paywall/PaywallLegalLinks'
 import { PaywallPerks } from '@/components/paywall/PaywallPerks'
@@ -16,7 +17,7 @@ import { useThemedColor } from '@/hooks/useThemedColor'
 import { ModalToastViewport } from '@/providers/ToastProvider'
 import { paywallAnalytics } from '@/services/api/paywallAnalytics'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -46,6 +47,8 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     hasPrices,
     isLoadingPurchase,
     purchaseSelected,
+    lifetimeOffer,
+    purchaseLifetimeOffer,
   } = usePaywallPlans({ source, surface: 'paywall' })
 
   // A short landscape window would hand most of the viewport to the illustration before the plans
@@ -56,6 +59,8 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     : PAYWALL_HERO_HEIGHT
 
   const paywallOpenTimeRef = useRef<number>(0)
+  const lifetimeOfferShownRef = useRef(false)
+  const [isLifetimeOfferVisible, setLifetimeOfferVisible] = useState(false)
 
   // Auto-close once purchase is confirmed
   useEffect(() => {
@@ -65,16 +70,30 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   useEffect(() => {
     if (visible) {
       paywallOpenTimeRef.current = Date.now()
+      lifetimeOfferShownRef.current = false
+      setLifetimeOfferVisible(false)
     }
   }, [visible])
 
-  const handleClose = () => {
+  const dismiss = () => {
     paywallAnalytics.trackDismissed({
       source,
       openedAtMs: paywallOpenTimeRef.current,
       selectedPlan: selectedPlan?.period ?? null,
+      lifetimeOfferShown: lifetimeOfferShownRef.current,
     })
+    setLifetimeOfferVisible(false)
     onClose()
+  }
+
+  const handleClose = () => {
+    if (lifetimeOffer && !lifetimeOfferShownRef.current) {
+      lifetimeOfferShownRef.current = true
+      setLifetimeOfferVisible(true)
+      paywallAnalytics.trackLifetimeOfferShown({ source, plan: lifetimeOffer.plan })
+      return
+    }
+    dismiss()
   }
 
   return (
@@ -84,7 +103,9 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
       presentationStyle="pageSheet"
       onRequestClose={handleClose}>
       <GestureHandlerRootView style={[styles.container, isDark && styles.containerDark]}>
-        <View style={[styles.header, { top: Math.max(insets.top, 8) }]}>
+        <View
+          style={[styles.header, { top: Math.max(insets.top, 8) }]}
+          importantForAccessibility={isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'}>
           <Pressable
             onPress={handleClose}
             style={styles.closeButton}
@@ -98,6 +119,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
         </View>
 
         <ScrollView
+          importantForAccessibility={isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'}
           style={styles.scrollColumn}
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 40 }]}
           showsVerticalScrollIndicator={false}>
@@ -165,6 +187,15 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
 
           <PaywallLegalLinks origin={{ source, surface: 'paywall' }} />
         </ScrollView>
+        {isLifetimeOfferVisible && lifetimeOffer ? (
+          <LifetimeOfferCard
+            ctaLabel={lifetimeOffer.ctaLabel}
+            legalNote={lifetimeOffer.legalNote}
+            isLoading={isLoadingPurchase}
+            onPurchase={() => void purchaseLifetimeOffer()}
+            onDecline={dismiss}
+          />
+        ) : null}
         <ModalToastViewport active={visible} />
       </GestureHandlerRootView>
     </Modal>

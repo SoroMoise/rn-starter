@@ -35,5 +35,5 @@ runs:
         releaseName: ${{ inputs.release-name }}
         releaseFiles: apps/mobile/android/app/build/outputs/bundle/release/app-release.aab
         mappingFile: apps/mobile/android/app/build/outputs/mapping/release/mapping.txt
-        track: ${{ inputs.track }}
+        tracks: ${{ inputs.track }}
         status: completed

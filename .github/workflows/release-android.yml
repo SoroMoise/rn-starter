@@ -105,8 +105,13 @@ jobs:
           distribution: temurin
           java-version: '17'
 
+      # The action's default `packages` is `tools platform-tools`, and Google's SDK
+      # repository no longer carries `tools`: sdkmanager exits 1 and the job dies here.
+      # Every package the build needs is installed by `Ensure required SDK packages`.
       - name: Set up Android SDK
         uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+        with:
+          packages: ''
 
       # Wraps every ./gradlew invocation below (they only happen after prebuild
       # generates android/) with automatic caching of ~/.gradle: the dependency

@@ -22,7 +22,10 @@ jobs:
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.merged == true &&
        contains(github.event.pull_request.labels.*.name, 'release'))
-    runs-on: ubuntu-latest
+    # Pinned rather than `ubuntu-latest`: the label moves to a new image on GitHub's
+    # schedule, and a release is the wrong place to find out what the move broke.
+    # Change it here, in a PR whose release run proves the new image.
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
       # A GitHub-hosted runner boots with roughly 20 GB free, and a release build
@@ -60,7 +63,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: main
@@ -100,13 +103,13 @@ jobs:
           echo "Releasing $NEW_VERSION (versionCode ${{ steps.version.outputs.version_code }}, bump ${{ steps.version.outputs.bump }})"
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
 
       # Wraps every ./gradlew invocation below (they only happen after prebuild
       # generates android/) with automatic caching of ~/.gradle: the dependency
@@ -119,16 +122,16 @@ jobs:
       # No manual cache key needed: the action fingerprints the actual Gradle
       # invocation, not files that don't exist yet at this point in the job.
       - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@48b5f213c81028ace310571dc5ec0fbbca0b2947 # v4
+        uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
 
       - name: Ensure required SDK packages
         run: sdkmanager "platform-tools" "platforms;android-36" "platforms;android-35" "build-tools;36.0.0"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@b906affcce14559ad1aafd4ab0e942779e9f58b1 # v4
+        uses: pnpm/action-setup@fc06bc1257f339d1d5d8b3a19a8cae5388b55320 # v4.4.0
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: pnpm
@@ -377,7 +380,7 @@ jobs:
       # from tripping `if-no-files-found: error`.
       - name: Upload AAB for manual publishing (publish never landed)
         if: failure() && steps.publish_attempt_3.outcome == 'failure'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: app-release-aab
           path: apps/mobile/android/app/build/outputs/bundle/release/app-release.aab

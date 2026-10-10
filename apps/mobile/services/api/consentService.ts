@@ -16,9 +16,6 @@ export type ConsentSnapshot = {
 
 const NO_CONSENT_YET: ConsentSnapshot = { canRequestAds: false, arePrivacyOptionsRequired: false }
 
-// Test aid for the consent form outside the EEA (`ADS.md` §10), checked against `__DEV__` here
-// and not only by the release workflow: a simulated geography in a release would show the form
-// to users it does not concern.
 function readDebugConsentOptions(): AdsConsentInfoOptions {
   if (!__DEV__) return {}
   const debug = Constants.expoConfig?.extra?.consentDebug

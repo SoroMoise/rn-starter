@@ -208,9 +208,10 @@ reset at every launch.
 | File | Responsibility |
 |------|----------------|
 | `constants/admob.ts` | unit ids, kill switches, reward constants — the only place any of them appear |
-| `app.config.js` | the AdMob app ids (plugin block) |
+| `app.config.js` | the AdMob app ids (plugin block); the consent test aid (`extra.consentDebug`) |
 | `.github/workflows/release-android.yml` | refuses a release that still carries Google's sample app id, warns when no unit is configured |
-| `services/api/consentService.ts` | the UMP gate; the only caller of `mobileAds().initialize()` |
+| `plugins/withReleaseEnvGuard.js` | a release build, local or CI, refuses a consent test aid (`scripts/check-release-env.js`) |
+| `services/api/consentService.ts` | the UMP gate; the only caller of `mobileAds().initialize()`; under `__DEV__` it reads the consent test aid (§10) |
 | `services/api/adEnvironment.ts` | no request from a Firebase Test Lab device |
 | `modules/app-environment/` | the native side of it — reads the `firebase.test.lab` system setting |
 | `services/api/adService.ts` | interstitial: preload, cadence, show; `setPremium` |
@@ -280,7 +281,7 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 - **The consent test aid is a development build's, and nothing else's** (steps in §10). `UMP_DEBUG_GEOGRAPHY` and
   `UMP_TEST_DEVICE_IDS` (`.env`, through `app.config.js` `extra`) are read by `consentService` under
   `__DEV__` only: a release neither simulates a region nor registers a test device, whatever its
-  config holds, and the release workflow refuses a `MOBILE_DOTENV` that sets either.
+  config holds, and a release build refuses to start with either set, local or CI (`withReleaseEnvGuard`).
 
 ---
 

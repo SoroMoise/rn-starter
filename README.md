@@ -242,7 +242,7 @@ The Play Developer API only publishes to an app that already holds a build, so t
 
 | Secret | Holds | Where it comes from |
 |---|---|---|
-| `MOBILE_DOTENV` | the whole `apps/mobile/.env` | the file's contents — never with `FORCE_FREE` or `FORCE_PRO`, which the workflow refuses |
+| `MOBILE_DOTENV` | the whole `apps/mobile/.env` | the file's contents — never with `FORCE_FREE`, `FORCE_PRO`, `UMP_DEBUG_GEOGRAPHY` or `UMP_TEST_DEVICE_IDS` set, which the workflow refuses |
 | `GOOGLE_SERVICES_JSON` | `apps/mobile/google-services.json` | the file's contents, from the Firebase Console |
 | `ANDROID_KEYSTORE_BASE64` | the upload keystore | `base64 -w0 apps/mobile/release.keystore` (macOS: `base64 -i`) |
 | `ANDROID_KEYSTORE_PASSWORD` | the keystore's password | `STORE_PASSWORD` in `keystore.properties` |
@@ -341,6 +341,7 @@ See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
 - **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
 - **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
+- **UMP_DEBUG_GEOGRAPHY / UMP_TEST_DEVICE_IDS** — show Google's consent form from outside the EEA on a development build (`apps/mobile/ADS.md` §10); ignored by a release, which the workflow refuses to build with them set
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 
 AdMob identifiers are not environment variables: the app IDs are literals in

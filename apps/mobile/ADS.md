@@ -277,6 +277,10 @@ Deliberate and load-bearing — don't undo them without a reason written down he
   never opened — is a non-fatal. Most failed loads are no-fills: recorded as crashes they would
   bury the wrong unit id that serves nothing without an error anywhere, and a `console.warn`
   reaches no release. Sort on the code, never on the message.
+- **The consent test aid is a development build's, and nothing else's** (steps in §10). `UMP_DEBUG_GEOGRAPHY` and
+  `UMP_TEST_DEVICE_IDS` (`.env`, through `app.config.js` `extra`) are read by `consentService` under
+  `__DEV__` only: a release neither simulates a region nor registers a test device, whatever its
+  config holds, and the release workflow refuses a `MOBILE_DOTENV` that sets either.
 
 ---
 
@@ -298,3 +302,23 @@ with no AdMob account involved and no risk to the publisher account:
    actions, with an offer loaded) — never after a video watched in full.
 5. Subscribe (sandbox) mid-session → both banners go, the interstitial never shows again, and
    Home's premium CTA disappears.
+
+### The consent form from outside the EEA
+
+The form only appears where the law requires it, and UMP geolocates by IP. On a development build,
+two variables of `apps/mobile/.env` (see `.env.example`) bring it up from anywhere:
+
+1. Run the debug build once with `UMP_TEST_DEVICE_IDS` empty and finish the onboarding, then read
+   the phone's hashed id in the log: `adb logcat | grep -i "addTestDeviceHashedId"` — UMP prints
+   *Use new ConsentDebugSettings.Builder().addTestDeviceHashedId("…") to set this as a debug device*.
+   The id is 32 hexadecimal characters.
+2. Put it in `.env` as `UMP_TEST_DEVICE_IDS=<id>` (several, comma-separated) and set
+   `UMP_DEBUG_GEOGRAPHY=EEA`, then restart the dev server with a cleared cache — the values travel
+   through `app.config.js` `extra`, read when Metro starts.
+3. The form is shown once and its answer is kept: clear the app's data (or reinstall) to see it
+   again, and finish the onboarding to reach the point where it is gathered. With it answered,
+   Settings shows *Ad privacy settings* (`arePrivacyOptionsRequired`).
+
+The debug geography only applies to a registered test device, and both variables are ignored in a
+release build (§9). Test ads still resolve to `TestIds` in `__DEV__`; the real units and the
+published messages are only verified on a build from the internal track.

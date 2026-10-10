@@ -242,7 +242,7 @@ The Play Developer API only publishes to an app that already holds a build, so t
 
 | Secret | Holds | Where it comes from |
 |---|---|---|
-| `MOBILE_DOTENV` | the whole `apps/mobile/.env` | the file's contents — never with `FORCE_FREE` or `FORCE_PRO`, which the workflow refuses |
+| `MOBILE_DOTENV` | the whole `apps/mobile/.env` | the file's contents — never with `FORCE_FREE`, `FORCE_PRO`, `UMP_DEBUG_GEOGRAPHY` or `UMP_TEST_DEVICE_IDS` set, which every release build refuses |
 | `GOOGLE_SERVICES_JSON` | `apps/mobile/google-services.json` | the file's contents, from the Firebase Console |
 | `ANDROID_KEYSTORE_BASE64` | the upload keystore | `base64 -w0 apps/mobile/release.keystore` (macOS: `base64 -i`) |
 | `ANDROID_KEYSTORE_PASSWORD` | the keystore's password | `STORE_PASSWORD` in `keystore.properties` |
@@ -251,6 +251,8 @@ The Play Developer API only publishes to an app that already holds a build, so t
 | `PLAY_SERVICE_ACCOUNT_JSON` | the Play Developer API key | the service account's JSON key |
 
 The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`, or with the template's placeholder site or support address still in `apps/mobile/constants/legal.ts`.
+
+A release build made on your machine (`build:aab`, `build:install`) refuses the same development overrides as the workflow, wherever they are set — `.env`, `.env.local` or the shell: it stops before compiling and names the variable. Set it back to empty (or `false` for `FORCE_*`) and build again.
 
 ### When a release fails
 
@@ -340,7 +342,8 @@ All commands run from the repo root unless noted.
 See `apps/mobile/.env.example` for all keys with comments. Key groups:
 
 - **REVENUECAT_*** — the two public SDK keys; the entitlement id is a constant in `constants/purchases.ts`, and the plans come from the store's current offering
-- **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; the release workflow refuses them
+- **FORCE_FREE / FORCE_PRO** — development overrides of the subscription tier, never written to the offline cache; a release build refuses them, local or CI
+- **UMP_DEBUG_GEOGRAPHY / UMP_TEST_DEVICE_IDS** — show Google's consent form from outside the EEA on a development build (`apps/mobile/ADS.md` §10); a release build refuses them, local or CI
 - **BACKEND_URL / BACKEND_API_KEY** — points to your deployed Cloudflare Worker
 
 AdMob identifiers are not environment variables: the app IDs are literals in

@@ -1,9 +1,12 @@
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import { promoCoordinator } from '@/services/promo/promoCoordinator'
+import Constants from 'expo-constants'
 import mobileAds, {
   AdsConsent,
+  AdsConsentDebugGeography,
   AdsConsentPrivacyOptionsRequirementStatus,
   type AdsConsentInfo,
+  type AdsConsentInfoOptions,
 } from 'react-native-google-mobile-ads'
 
 export type ConsentSnapshot = {
@@ -12,6 +15,19 @@ export type ConsentSnapshot = {
 }
 
 const NO_CONSENT_YET: ConsentSnapshot = { canRequestAds: false, arePrivacyOptionsRequired: false }
+
+function readDebugConsentOptions(): AdsConsentInfoOptions {
+  if (!__DEV__) return {}
+  const debug = Constants.expoConfig?.extra?.consentDebug
+  const options: AdsConsentInfoOptions = {}
+  if (debug?.geography === 'EEA') options.debugGeography = AdsConsentDebugGeography.EEA
+  const testDeviceIdentifiers = String(debug?.testDeviceIds ?? '')
+    .split(',')
+    .map((id) => id.trim())
+    .filter((id) => id.length > 0)
+  if (testDeviceIdentifiers.length > 0) options.testDeviceIdentifiers = testDeviceIdentifiers
+  return options
+}
 
 /**
  * Google's UMP consent gate, and the only place the ads SDK is ever started.
@@ -55,7 +71,7 @@ class ConsentServiceClass {
     let info: AdsConsentInfo | null = null
 
     try {
-      info = await this.presentForm(() => AdsConsent.gatherConsent())
+      info = await this.presentForm(() => AdsConsent.gatherConsent(readDebugConsentOptions()))
     } catch (err) {
       void crashlyticsService.recordError(err, { source: 'ads_consent_gather' })
       // A network failure shouldn't cost a decision already made — fall back to the cached one.

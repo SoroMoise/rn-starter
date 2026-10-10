@@ -5,6 +5,7 @@ const withCrashlyticsMapping = require('./plugins/withCrashlyticsMapping')
 const withGradleBuildCache = require('./plugins/withGradleBuildCache')
 const withGradleMemory = require('./plugins/withGradleMemory')
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
+const withReleaseEnvGuard = require('./plugins/withReleaseEnvGuard')
 
 export default () => {
   const version = '1.0.0'
@@ -91,6 +92,7 @@ export default () => {
         withGradleBuildCache,
         withCrashlyticsMapping,
         withAndroidFontFilter,
+        withReleaseEnvGuard,
         [
           'expo-build-properties',
           {
@@ -125,6 +127,10 @@ export default () => {
 
       extra: {
         rtlRestartBannerEnabled: process.env.RTL_RESTART_BANNER_ENABLED !== 'false',
+        consentDebug: {
+          geography: process.env.UMP_DEBUG_GEOGRAPHY ?? '',
+          testDeviceIds: process.env.UMP_TEST_DEVICE_IDS ?? '',
+        },
         backendUrl: process.env.BACKEND_URL,
         backendApiKey: process.env.BACKEND_API_KEY,
         purchases: {

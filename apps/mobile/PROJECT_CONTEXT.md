@@ -67,7 +67,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `fullScreenAd.ts` | `presentFullScreenAd` — settles an interstitial or rewarded ad on `CLOSED` / `ERROR`, or no `OPENED` within `PRESENTATION_TIMEOUT_MS`; `onEnd` runs whenever the presentation really ends |
 | `adFailures.ts` | `reportAdFailure({ error, source })` — sorts by the library's code (prefixes `googleMobileAds/` and `error-code-` stripped): no fill, network, server, timeout, internal error, OS too old, `null-activity` / `nil-vc` are breadcrumbs; anything else a non-fatal. Called by both ad services, `presentFullScreenAd` and `AdBanner` |
 | `adEnvironment.ts` | `adsAllowedInEnvironment()` — false on a Firebase Test Lab device (`modules/app-environment`); gates the banner, both ad services and the consent flow |
-| `consentService.ts` | Google UMP consent gate (`gather`, `presentForm`, `canRequestAds`, `arePrivacyOptionsRequired`); only caller of `mobileAds().initialize()` |
+| `consentService.ts` | Google UMP consent gate (`gather`, `presentForm`, `canRequestAds`, `arePrivacyOptionsRequired`); only caller of `mobileAds().initialize()`. Under `__DEV__` it passes `UMP_DEBUG_GEOGRAPHY` (`EEA`) and `UMP_TEST_DEVICE_IDS` (from `app.config.js` `extra.consentDebug`) to the request, to see the form from outside the EEA (`ADS.md` §10) |
 | `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
 | `paywallAnalytics.ts` | `trackShown` / `trackDismissed` / `trackLifetimeOfferShown` compose `paywall_shown` (default plan's `default_price` + `currency`), `paywall_dismissed` (`lifetime_offer_shown`) and `paywall_lifetime_offer_shown`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
@@ -147,6 +147,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 |---|---|
 | `modules/app-environment/` | Local Expo module, Android only: reads the `firebase.test.lab` system setting for `adEnvironment` |
 | `plugins/withAndroidSigning.js` | Release `signingConfig` from `keystore.properties`, read at build time; fails without it or EAS credentials |
+| `plugins/withReleaseEnvGuard.js` | `checkReleaseEnv` before `preReleaseBuild`: runs `scripts/check-release-env.js`, which fails a release build whose embedded config sets `FORCE_FREE` / `FORCE_PRO` or `UMP_DEBUG_GEOGRAPHY` / `UMP_TEST_DEVICE_IDS`; the release workflow runs it too |
 | `plugins/withGradleMemory.js` | `org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m` |
 | `plugins/withGradleBuildCache.js` | `org.gradle.caching=true` |
 | `plugins/withCrashlyticsMapping.js` | R8 mapping upload when `CI=true` |

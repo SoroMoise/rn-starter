@@ -5,6 +5,7 @@ const withCrashlyticsMapping = require('./plugins/withCrashlyticsMapping')
 const withGradleBuildCache = require('./plugins/withGradleBuildCache')
 const withGradleMemory = require('./plugins/withGradleMemory')
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
+const withReleaseEnvGuard = require('./plugins/withReleaseEnvGuard')
 
 export default () => {
   const version = '1.0.0'
@@ -91,6 +92,7 @@ export default () => {
         withGradleBuildCache,
         withCrashlyticsMapping,
         withAndroidFontFilter,
+        withReleaseEnvGuard,
         [
           'expo-build-properties',
           {

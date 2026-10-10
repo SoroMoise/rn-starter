@@ -194,25 +194,11 @@ jobs:
           MOBILE_DOTENV: ${{ secrets.MOBILE_DOTENV }}
         run: printf '%s' "$MOBILE_DOTENV" > .env
 
-      # FORCE_FREE and FORCE_PRO replace the store's answer for every user of the build:
-      # shipped, one locks every subscriber out of what they pay for, the other gives Pro away.
-      - name: Refuse a forced subscription tier
+      # A forced tier or a consent test aid: the release build refuses them as well
+      # (withReleaseEnvGuard), and the same script run here fails the job before the prebuild.
+      - name: Refuse development overrides
         working-directory: apps/mobile
-        run: |
-          if grep -Eq "^[[:space:]]*(export[[:space:]]+)?FORCE_(FREE|PRO)[[:space:]]*=[[:space:]]*[\"']?true[\"']?[[:space:]]*(#.*)?$" .env; then
-            echo "::error::MOBILE_DOTENV sets FORCE_FREE or FORCE_PRO to true. Both are development overrides: remove them from the secret before releasing."
-            exit 1
-          fi
-
-      # UMP_DEBUG_GEOGRAPHY and UMP_TEST_DEVICE_IDS are consent test aids for development builds
-      # (a simulated region, a test device): a local .env's, never the secret a release is built from.
-      - name: Refuse the consent test aids
-        working-directory: apps/mobile
-        run: |
-          if grep -Eq "^[[:space:]]*(export[[:space:]]+)?UMP_(DEBUG_GEOGRAPHY|TEST_DEVICE_IDS)[[:space:]]*=[[:space:]]*([^[:space:]#\"']|[\"'][^\"'])" .env; then
-            echo "::error::MOBILE_DOTENV sets UMP_DEBUG_GEOGRAPHY or UMP_TEST_DEVICE_IDS. Both are development aids for Google's consent form, not values for a release: remove them from the secret before releasing."
-            exit 1
-          fi
+        run: node scripts/check-release-env.js
 
       - name: Restore google-services.json from secret
         working-directory: apps/mobile

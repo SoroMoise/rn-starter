@@ -154,14 +154,18 @@ the button names the reward before anything plays (`settings.watchAdButton`).
 | Tier | `isPremium` (RevenueCat), mirrored into `AdService.setPremium` by `SubscriptionProvider` | no ads at all; a purchase mid-process drops a preloaded interstitial and its pending retries |
 | Ad-free window | `isAdFreeActive` | no ads while it lasts |
 | UMP consent | `consentService.canRequestAds()` — at init **and** at show time | nothing reaches the EEA/UK/CH without the form; the state can change after init |
-| On screen | `useStageActive()` in `AdBanner` | a blurred or backgrounded screen unmounts its banner |
+| On screen | `useStageActive()` in `AdBanner` | a blurred or backgrounded screen unmounts its banner; a native `Modal` over it does neither (§9) |
 
 `useAdPlacementActive` (`hooks/useAdPlacementActive.ts`) is the single React-side answer to the
-first six for a banner. `AdBanner` renders from it and its screen reserves `AD_BANNER_RESERVED_HEIGHT`
-from the same call, so the room kept free below the last row always matches the banner actually
-drawn. It is `useCanServeAd` (`hooks/useCanServeAd.ts`) plus the ad-free window: the rewarded
-section renders from `useCanServeAd` alone, since it stays up through the window to show the time
-left.
+first six for a banner. It is `useCanServeAd` (`hooks/useCanServeAd.ts`) plus the ad-free window:
+the rewarded section renders from `useCanServeAd` alone, since it stays up through the window to
+show the time left.
+
+`AdBanner` renders from `useAdPlacementActive`, and its screen hands the same answer to
+`useAdBannerReserve({ isBannerVisible })` (`hooks/useAdBannerReserve.ts`), so room is kept free
+below the last row exactly when a banner is drawn — and as tall as it is drawn: `AdBanner` reports
+the height `BannerAd` measured (`onSizeChange`) into `adBannerStore` (`stores/adBannerStore.ts`, in
+memory), which the reserve reads, `AD_BANNER_RESERVED_HEIGHT` standing in until the first measure.
 
 ---
 
@@ -177,7 +181,7 @@ take, and an incomplete env silently shipped a sibling app's release with no ads
 | `AD_INTERSTITIAL_ENABLED` / `AD_REWARDED_ENABLED` | `true` | format kill switches |
 | `AD_REWARDED_FREE_DURATION_MINUTES` | `60` | ad-free window a completed video grants |
 | `AD_REWARDED_FREE_MAX_MINUTES` | `1440` | ceiling on the accumulated window |
-| `AD_BANNER_RESERVED_HEIGHT` | `60` | room a screen keeps below its last row while its banner shows |
+| `AD_BANNER_RESERVED_HEIGHT` | `60` | room a screen keeps below its last row while its banner shows, until a banner has reported its measured height (§4) |
 | `AD_NON_PERSONALIZED_ONLY` | `false` | every request asks for non-personalized ads only (`AD_REQUEST_OPTIONS`) — `true` for an app whose audience a health or other sensitive condition defines |
 
 `services/api/adService.ts` — the interstitial cadence (§2): `INITIAL_EXECUTIONS_THRESHOLD` (4),
@@ -230,8 +234,10 @@ reset at every launch.
 | `services/promo/promoCoordinator.ts` | no stacking, one automatic interruption per session |
 | `hooks/useActionRating.ts` | the action chain: counter, then paywall, interstitial, and the rating ask armed |
 | `hooks/useAdPlacementActive.ts` | may this placement run right now — `useCanServeAd` plus the ad-free window |
+| `hooks/useAdBannerReserve.ts` | the room a screen keeps below its last row: the banner's measured height while it shows, `AD_BANNER_RESERVED_HEIGHT` before the first measure, 0 otherwise |
+| `stores/adBannerStore.ts` | the last height a banner reported (`onSizeChange`), in memory |
 | `hooks/useCanServeAd.ts` | can an ad be served here at all — every gate but the ad-free window |
-| `components/ads/AdBanner.tsx` | the banner, pinned above the tab bar |
+| `components/ads/AdBanner.tsx` | the banner, pinned above the tab bar; reports its measured height to `adBannerStore` |
 | `components/ads/RewardedAdButton.tsx` | the Settings rewarded entry point |
 | `components/settings/AdFreeSection.tsx` | the Settings "Remove ads" section, rendered only where a video can be served |
 | `providers/AdFreeProvider.tsx` | the ad-free window: grant, accumulate, expire |
@@ -256,6 +262,10 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 - **A banner the user cannot see is unmounted, not hidden.** `useStageActive()` (focus +
   foreground) gates every one: a stack keeps the screens under the top one mounted, and a
   zero-height or covered `AdView` keeps requesting — only unmounting stops it.
+- **A native `Modal` over a screen leaves its banner mounted and covered** (`PaywallModal`,
+  `ModalBottomSheet`, `ModalDialog`), the one exception to the rule above: unmounting it would
+  rebuild it, a new request, at every close — the impression inflation the once-per-visit rule
+  forbids — and `useStageActive` reads focus and app state only, neither of which a modal changes.
 - **A pending unit renders nothing.** Don't paper over a missing id with another placement's unit:
   it destroys the per-placement revenue reporting this file exists to protect.
 - **Unit ids stay literals, never `.env`.** They are public by construction (the app id ships in
@@ -281,10 +291,12 @@ Deliberate and load-bearing — don't undo them without a reason written down he
   unless given a `width`. On a tablet or an open foldable, `ScreenContainer` caps its content at a
   600 dp column, and a device-wide ad hangs past its container — where Android delivers no touch,
   a partly dead ad. `AdBanner` passes the column's width, `min(MAX_CONTENT_WIDTH, window − side
-  insets)`, which on a phone is the device's own.
+  insets)`, which on a phone is the device's own. Its height follows that width — 50 to 90 dp, the
+  tallest at the 600 dp column — so the room its screen keeps is the height the banner reports
+  (`useAdBannerReserve`), never a constant: a fixed 60 left the last row under a 90 dp banner.
 - **A banner never sits flush against a tappable control.** A finger that misses the control and
-  lands on the ad is a mis-tap, which AdMob counts as an invalid click — the screen reserves
-  `AD_BANNER_RESERVED_HEIGHT` below its last row.
+  lands on the ad is a mis-tap, which AdMob counts as an invalid click — the screen reserves the
+  banner's measured height and a margin below its last row (`useAdBannerReserve`).
 - **Call `recordAction` where the screen has settled.** An interstitial presented while a
   transition is still sliding in under the finger that triggered it collects the tail of that
   gesture as a click.
@@ -310,7 +322,8 @@ with no AdMob account involved and no risk to the publisher account:
 
 1. Finish the onboarding on a fresh install — the consent form appears first where the law
    requires one. Home and Settings each show a **test banner** above the tab bar, and the last row
-   of each still scrolls clear of it.
+   of each still scrolls clear of it — on a tablet or a resizable window at its widest too, where
+   the banner is taller.
 2. Tap **Perform a sample action** on Home four times → a **test interstitial** on the fourth. Keep
    tapping: nothing else interrupts for the rest of the session, neither another ad nor the
    paywall nor the rating prompt.

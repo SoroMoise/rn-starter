@@ -8,11 +8,8 @@ import { SubscriptionGraceBanner } from '@/components/settings/SubscriptionGrace
 import { Section, SectionContent, SectionHeader } from '@/components/settings/SettingsSection'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
-import {
-  ADMOB_SETTINGS_BANNER_ID,
-  AD_BANNER_RESERVED_HEIGHT,
-  AD_BANNER_SETTINGS_ENABLED,
-} from '@/constants/admob'
+import { ADMOB_SETTINGS_BANNER_ID, AD_BANNER_SETTINGS_ENABLED } from '@/constants/admob'
+import { useAdBannerReserve } from '@/hooks/useAdBannerReserve'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { loadLanguage } from '@/i18n/service'
 import { useToast } from '@/providers/ToastProvider'
@@ -44,7 +41,8 @@ export default function SettingsScreen() {
     unitId: ADMOB_SETTINGS_BANNER_ID,
     enabled: AD_BANNER_SETTINGS_ENABLED,
   })
-  const tabBarPadding = useTabBarPadding(isBannerVisible ? AD_BANNER_RESERVED_HEIGHT : 0) + 20
+  const bannerReserve = useAdBannerReserve({ isBannerVisible })
+  const tabBarPadding = useTabBarPadding(bannerReserve) + 20
 
   const [showLanguagePicker, setShowLanguagePicker] = useState(false)
 
@@ -65,7 +63,7 @@ export default function SettingsScreen() {
       language_code: next,
       previous_language: language,
     })
-    void analyticsService.setUserProperty('preferred_language', next)
+    void analyticsService.setUserProperty({ name: 'preferred_language', value: next })
     setLanguage(next)
 
     if (RTL_RESTART_BANNER_ENABLED) return

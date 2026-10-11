@@ -21,7 +21,7 @@ export function LegalDocumentView({
 
   return (
     <article className="legal">
-      {hasPlaceholders(JSON.stringify(document)) ? (
+      {hasPlaceholders(document) ? (
         <p className="template-notice" role="note">
           {t.legal.templateNotice}
         </p>

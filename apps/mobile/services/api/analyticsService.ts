@@ -226,9 +226,9 @@ export const analyticsService = {
     const appVersion = Constants.expoConfig?.version ?? 'unknown'
     try {
       await Promise.all([
-        this.setUserProperty('platform', context.platform),
-        this.setUserProperty('app_version', appVersion),
-        this.setUserProperty('is_premium', String(context.isPremium)),
+        this.setUserProperty({ name: 'platform', value: context.platform }),
+        this.setUserProperty({ name: 'app_version', value: appVersion }),
+        this.setUserProperty({ name: 'is_premium', value: String(context.isPremium) }),
       ])
     } catch {
       /* silent */
@@ -240,11 +240,16 @@ export const analyticsService = {
       this._context = { ...this._context, ...patch }
     }
     if (patch.isPremium !== undefined) {
-      void this.setUserProperty('is_premium', String(patch.isPremium))
+      void this.setUserProperty({ name: 'is_premium', value: String(patch.isPremium) })
     }
   },
 
-  async setUserProperty(name: string, value: string | null): Promise<void> {
+  async setUserProperty({ name, value }: { name: string; value: string | null }): Promise<void> {
+    if (__DEV__) {
+      console.log(`__DEV__ [Analytics] user_property: ${name} = ${value}`)
+      return
+    }
+
     try {
       await setAnalyticsUserProperty(analytics(), name, value)
     } catch {
@@ -253,6 +258,11 @@ export const analyticsService = {
   },
 
   async setUserId(id: string | null): Promise<void> {
+    if (__DEV__) {
+      console.log(`__DEV__ [Analytics] user_id: ${id}`)
+      return
+    }
+
     try {
       await setAnalyticsUserId(analytics(), id)
     } catch {

@@ -4,6 +4,7 @@ import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { useStageActive } from '@/hooks/useStageActive'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
 import { reportAdFailure } from '@/services/api/adFailures'
+import { useAdBannerStore } from '@/stores/adBannerStore'
 import React from 'react'
 import { View, useWindowDimensions } from 'react-native'
 import { BannerAd, BannerAdSize } from 'react-native-google-mobile-ads'
@@ -22,6 +23,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
   // pre-launch crawler. One mount per visit, unmounted the moment the screen is
   // no longer the one in front of the user.
   const isStageActive = useStageActive()
+  const reportBannerHeight = useAdBannerStore((s) => s.reportBannerHeight)
   const tabBarPadding = useTabBarPadding() + 8
   const { width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
@@ -41,6 +43,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         width={bannerWidth}
         requestOptions={AD_REQUEST_OPTIONS}
+        onSizeChange={({ height }) => reportBannerHeight(height)}
         onAdFailedToLoad={(error) => reportAdFailure({ error, source: 'banner_load' })}
       />
     </View>

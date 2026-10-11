@@ -4,13 +4,10 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
-import {
-  ADMOB_INDEX_BANNER_ID,
-  AD_BANNER_INDEX_ENABLED,
-  AD_BANNER_RESERVED_HEIGHT,
-} from '@/constants/admob'
+import { ADMOB_INDEX_BANNER_ID, AD_BANNER_INDEX_ENABLED } from '@/constants/admob'
 import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
+import { useAdBannerReserve } from '@/hooks/useAdBannerReserve'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { usePremium } from '@/hooks/usePremium'
 import { useTabBarPadding } from '@/hooks/useTabBarPadding'
@@ -48,7 +45,8 @@ export default function HomeScreen() {
     unitId: ADMOB_INDEX_BANNER_ID,
     enabled: AD_BANNER_INDEX_ENABLED,
   })
-  const tabBarPadding = useTabBarPadding((isBannerVisible ? AD_BANNER_RESERVED_HEIGHT : 0) + 24)
+  const bannerReserve = useAdBannerReserve({ isBannerVisible })
+  const tabBarPadding = useTabBarPadding(bannerReserve + 24)
 
   const { recordAction } = useActionRating({
     isAdFreeActive,

@@ -1,3 +1,4 @@
+import type { PaywallSource } from '@/constants/purchases'
 import { analyticsService } from '@/services/api/analyticsService'
 import { engagementService } from '@/services/api/engagementService'
 import { engagementStorage } from '@/services/storage/domains/engagement'
@@ -19,7 +20,7 @@ export const paywallAnalytics = {
     plans,
     defaultPlan,
   }: {
-    source: string
+    source: PaywallSource
     offeringId: string
     plans: OfferingPlan[]
     defaultPlan: OfferingPlan | null
@@ -48,7 +49,7 @@ export const paywallAnalytics = {
     selectedPlan,
     lifetimeOfferShown,
   }: {
-    source: string
+    source: PaywallSource
     openedAtMs: number
     selectedPlan: PlanPeriod | null
     lifetimeOfferShown: boolean
@@ -61,7 +62,7 @@ export const paywallAnalytics = {
     })
   },
 
-  trackLifetimeOfferShown({ source, plan }: { source: string; plan: OfferingPlan }): void {
+  trackLifetimeOfferShown({ source, plan }: { source: PaywallSource; plan: OfferingPlan }): void {
     analyticsService.track('paywall_lifetime_offer_shown', {
       source,
       product_id: plan.pkg.product.identifier,

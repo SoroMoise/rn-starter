@@ -65,7 +65,11 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         }}
         showsVerticalScrollIndicator={false}>
         <View className="mb-5 h-16 w-16 items-center justify-center self-center rounded-3xl bg-pro-500/20">
-          <Ionicons name="star" size={32} color={UI_COLORS.pro[500]} />
+          <Ionicons
+            name="star"
+            size={32}
+            color={isDark ? UI_COLORS.pro[400] : UI_COLORS.pro[600]}
+          />
         </View>
 
         <ThemedText variant="display" align="center" className="text-3xl">

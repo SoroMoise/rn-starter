@@ -14,10 +14,10 @@ export const UI_COLORS = {
 // Named by role, never by hue. The tuple is what expo-linear-gradient requires — a one-colour
 // token fails the build instead of rendering a flat block.
 export const GRADIENTS = {
-  cta: ['#3b82f6', '#6366f1', '#8b5cf6'],
+  cta: ['#2563eb', '#4f46e5', '#7c3aed'],
   pro: [palette.pro[600], palette.pro[700]],
-  rewarded: [palette.accent[500], palette.accent[400]],
-  success: [palette.success[500], palette.success[600]],
+  rewarded: [palette.accent[600], palette.accent[700]],
+  success: [palette.success[700], palette.success[800]],
   onboardingStepLight: ['#f8faff', '#eef2ff', '#f5f3ff'],
-  onboardingStepDark: ['#0f0c29', '#302b63', '#24243e'],
+  onboardingStepDark: ['#0f0c29', '#2b2659', '#24243e'],
 } as const satisfies Record<string, readonly [string, string, ...string[]]>

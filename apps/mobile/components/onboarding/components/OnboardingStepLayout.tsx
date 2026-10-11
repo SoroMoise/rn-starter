@@ -24,7 +24,7 @@ type OnboardingStepLayoutProps = {
 
 export function OnboardingStepLayout({
   icon,
-  iconColor = UI_COLORS.accent[500],
+  iconColor,
   title,
   subtitle,
   children,
@@ -35,6 +35,7 @@ export function OnboardingStepLayout({
 }: OnboardingStepLayoutProps) {
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
+  const resolvedIconColor = iconColor ?? (isDark ? UI_COLORS.accent[400] : UI_COLORS.accent[600])
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
 
   return (
@@ -55,8 +56,11 @@ export function OnboardingStepLayout({
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
         <View className="mb-5 h-16 w-16 items-center justify-center overflow-hidden rounded-3xl">
-          <View className="absolute inset-0 opacity-15" style={{ backgroundColor: iconColor }} />
-          <Ionicons name={icon} size={30} color={iconColor} />
+          <View
+            className="absolute inset-0 opacity-15"
+            style={{ backgroundColor: resolvedIconColor }}
+          />
+          <Ionicons name={icon} size={30} color={resolvedIconColor} />
         </View>
 
         <ThemedText variant="display" className="text-3xl">

@@ -199,7 +199,7 @@ export function RTLRestartBanner() {
                   }}
                   className="mb-3.5 h-[0.1875rem] overflow-hidden rounded-sm bg-black/[0.08] dark:bg-white/[0.08]">
                   <Animated.View
-                    className="h-full rounded-sm bg-accent-500 dark:bg-accent-400"
+                    className="h-full rounded-sm bg-accent-600 dark:bg-accent-400"
                     style={progressBarStyle}
                   />
                 </View>
@@ -214,7 +214,7 @@ export function RTLRestartBanner() {
                   style={[
                     styles.btnPrimary,
                     {
-                      backgroundColor: primary,
+                      backgroundColor: UI_COLORS.accent[600],
                       borderColor: isDark ? 'rgba(255,255,255,0.28)' : 'rgba(255,255,255,0.5)',
                       shadowColor: primary,
                       shadowOpacity: isDark ? 0.5 : 0.35,

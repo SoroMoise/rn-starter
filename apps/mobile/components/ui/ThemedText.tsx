@@ -14,15 +14,17 @@ const VARIANT_CLASSES = {
   inherit: 'text-inherit',
 } as const
 
+const MUTED_CLASS = 'text-gray-600 dark:text-gray-400'
+
 const COLOR_CLASSES = {
   default: 'text-gray-900 dark:text-white',
-  muted: 'text-gray-500 dark:text-gray-400',
-  subtle: 'text-gray-400 dark:text-gray-500',
+  muted: MUTED_CLASS,
+  subtle: MUTED_CLASS,
   dimmed: 'text-gray-600 dark:text-gray-200',
-  primary: 'text-accent-500 dark:text-accent-400',
-  error: 'text-red-500 dark:text-red-400',
-  success: 'text-success-500 dark:text-success-400',
-  warning: 'text-orange-500 dark:text-orange-400',
+  primary: 'text-accent-700 dark:text-accent-400',
+  error: 'text-red-700 dark:text-red-400',
+  success: 'text-success-700 dark:text-success-400',
+  warning: 'text-orange-700 dark:text-orange-400',
   inverse: 'text-white',
   inherit: '',
 } as const

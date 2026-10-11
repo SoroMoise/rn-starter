@@ -25,9 +25,7 @@ type UseActionRatingProps = {
  *
  * `recordAction({ allowPromos: false })` moves the counter and nothing else — for the user's
  * first success, which decides whether they come back tomorrow, and for an action abandoned
- * or failed, which has nothing to celebrate. `recordAction({ allowInterstitial: false })` still
- * offers the moment to the contextual paywall but never to an ad — for an action the user repeats
- * inside a flow, where an interstitial is the interruption reviews punish.
+ * or failed, which has nothing to celebrate.
  *
  * This is the integration point a new app wires into its own value moments.
  */

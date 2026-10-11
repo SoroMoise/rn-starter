@@ -13,7 +13,7 @@ function notify(online: boolean) {
 }
 
 // `isConnected` is null while NetInfo cannot tell. Read as online: the request itself answers, where
-// reading it as offline would pause every query on a connection that works.
+// reading it as offline would hold back everything that waits on connectivity on a connection that works.
 const isConnected = (state: NetInfoState) => state.isConnected !== false
 
 NetInfo.fetch().then((state) => {

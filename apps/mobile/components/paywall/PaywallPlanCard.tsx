@@ -37,7 +37,7 @@ export function PaywallPlanCard({
   const cardClass = isSelected
     ? 'border-pro-500 bg-pro-50 dark:bg-pro-500/[0.08]'
     : 'border-gray-100 bg-white dark:border-gray-700 dark:bg-gray-800'
-  const radioClass = isSelected ? 'border-pro-500' : 'border-gray-300 dark:border-gray-600'
+  const radioClass = isSelected ? 'border-pro-500' : 'border-gray-500 dark:border-gray-400'
 
   return (
     <AnimatedPressable
@@ -56,16 +56,16 @@ export function PaywallPlanCard({
       {(savingsBadge || trialBadge) && (
         <View className="absolute -top-3 left-3 flex-row gap-2.5">
           {savingsBadge && (
-            <View className="rounded-full bg-pro-500 px-2.5 py-px">
+            <View className="rounded-full bg-pro-600 px-2.5 py-px">
               <ThemedText color="inverse" weight="bold" className="text-[0.6875rem] leading-4">
                 {savingsBadge}
               </ThemedText>
             </View>
           )}
           {trialBadge && (
-            <View className="rounded-full bg-success-100 px-2.5 py-px dark:bg-success-500">
+            <View className="rounded-full bg-success-100 px-2.5 py-px dark:bg-success-700">
               <ThemedText
-                className="text-[0.6875rem] font-semibold leading-4 text-success-600 dark:text-white"
+                className="text-[0.6875rem] font-semibold leading-4 text-success-700 dark:text-white"
                 color="inherit">
                 {trialBadge}
               </ThemedText>

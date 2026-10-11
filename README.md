@@ -171,7 +171,8 @@ does:
   one-time product in the offering is offered when the paywall closes rather than in its plan
   list; the offering's metadata `{ "lifetimePlacement": "inline" }` lists it with the others.
 - [ ] **AdMob** — the app and one unit per placement: the app ids in `app.config.js`, the unit ids
-  in `constants/admob.ts` (`apps/mobile/ADS.md`).
+  in `constants/admob.ts` (`apps/mobile/ADS.md`); for a health or other sensitive audience,
+  `AD_NON_PERSONALIZED_ONLY` and its privacy-policy wording (`ADS.md` §1).
 - [ ] **The website** — `apps/web` live with its legal pages filled in (Website). The Play listing
   asks for the privacy policy's URL, and the data safety form must say what the policy says.
 - [ ] **Release automation** — the Play service account and the repository secrets (Android

@@ -110,7 +110,7 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
             hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
             accessibilityRole="button"
             accessibilityLabel={t('common.close')}>
-            <View className="h-8 w-8 items-center justify-center rounded-full bg-black/30">
+            <View className="h-8 w-8 items-center justify-center rounded-full bg-black/50">
               <Ionicons name="close" size={18} color="#ffffff" />
             </View>
           </Pressable>

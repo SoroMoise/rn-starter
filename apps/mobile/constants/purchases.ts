@@ -19,8 +19,6 @@ export type PurchaseSurface =
   | 'onboarding_premium'
   | 'onboarding_exit_intent'
 
-// What brought the sale up. The funnel groups on it, so a new spelling would split it in two with
-// no error anywhere: an app's own sources join this union.
 export type PaywallSource =
   | 'settings'
   | 'home_cta'

@@ -27,7 +27,7 @@ export function SectionContent({
 
 export function SectionHeader({ children }: { children: string }) {
   return (
-    <ThemedText variant="sectionHeader" color="subtle" className="mb-2 ml-1">
+    <ThemedText variant="sectionHeader" color="muted" className="mb-2 ml-1">
       {children}
     </ThemedText>
   )

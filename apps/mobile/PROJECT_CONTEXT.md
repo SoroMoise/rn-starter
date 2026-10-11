@@ -19,15 +19,15 @@ Composition in `app/_layout.tsx` (outer → inner):
 ```
 SafeAreaProvider
   > RootLayoutContent
-      TelemetryEffects         <- side-effect only, no children (screen view = route pattern)
-      GestureHandlerRootView
-        > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
-          > ThemeProvider      <- light/dark via NativeWind 'class'; mounts AppSystemBars
-            > ToastProvider    <- toast stack (ModalToastViewport for modals)
-              > SubscriptionProvider   <- RevenueCat, offline allowance, billing issue, PaywallModal
-                > AdFreeProvider       <- ad-free window tracking
-                  > AppContent         <- onboarding gate, then the root Stack (+ RatingAskHost once the session started)
-      RTLRestartBanner         <- outside provider tree
+      > GestureHandlerRootView
+          TelemetryEffects     <- side-effect only, no children (screen view = route pattern, `/onboarding` before the tabs)
+          > QueryProvider      <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
+            > ThemeProvider    <- light/dark via NativeWind 'class'; mounts AppSystemBars
+              > ToastProvider  <- toast stack (ModalToastViewport for modals)
+                > SubscriptionProvider   <- RevenueCat, offline allowance, billing issue, PaywallModal
+                  > AdFreeProvider       <- ad-free window tracking
+                    > AppContent         <- onboarding gate, then the root Stack (+ RatingAskHost once the session started)
+          RTLRestartBanner     <- inside GestureHandlerRootView, outside the providers
 ```
 
 Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at module import; there is no async boot gate.
@@ -100,14 +100,14 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 | File/Dir | Description |
 |---|---|
-| `mmkv.ts` | Main MMKV instance (id from `app.config.js`, swept by `setup.sh`) |
+| `mmkv.ts` | Main MMKV instance (id `rn-starter`, a literal `setup.sh` sweeps) |
 | `secure.ts` | Encrypted instance `entitlements` — the subscription cache and the ad-free window only; excluded from backup by `plugins/withBackupRules.js` |
-| `adapter.ts` | `createMmkvStateStorage` — sync `StateStorage` for Zustand `persist` |
+| `adapter.ts` | `mmkvStateStorage` — sync `StateStorage` for Zustand `persist` |
 | `keys.ts` | All key constants (`KEYS`) |
 | `domains/adFree.ts` | Ad-free window expiry (encrypted); a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, generic action counter (`getActionCount` / `incrementAction`) |
-| `domains/review.ts` | Review streak count and last request (`recordRequest`), `setArmed` / `isArmed`, `isOptedOut()` (two legacy flags nothing writes) |
+| `domains/review.ts` | Review streak count and last request (`recordRequest`), `setArmed` / `getArmed`, `isOptedOut()` (two legacy flags nothing writes) |
 | `domains/subscription.ts` | Expiry + lifetime flag (encrypted); `persistFromEntitlement`, `derive(now, gracePeriodMs)` |
 
 ---
@@ -145,7 +145,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 | Path | Description |
 |---|---|
-| `modules/app-environment/` | Local Expo module, Android only: reads the `firebase.test.lab` system setting for `adEnvironment` |
+| `modules/app-environment/` | Local Expo module, Android only: reads the `firebase.test.lab` system setting for `adEnvironment`; package `com.yourcompany.appenvironment`, moved under the bundle id's prefix by `setup.sh` |
 | `plugins/withAndroidSigning.js` | Release `signingConfig` from `keystore.properties`, read at build time; fails without it or EAS credentials |
 | `plugins/withReleaseEnvGuard.js` | `checkReleaseEnv` before `preReleaseBuild`: runs `scripts/check-release-env.js`, which fails a release build whose embedded config sets `FORCE_FREE` / `FORCE_PRO` or `UMP_DEBUG_GEOGRAPHY` / `UMP_TEST_DEVICE_IDS`; the release workflow runs it too |
 | `plugins/withGradleMemory.js` | `org.gradle.jvmargs=-Xmx4096m -XX:MaxMetaspaceSize=1024m` |
@@ -167,7 +167,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content (`onUnlockPress` runs before its paywall opens). `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
+`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content and hides it from TalkBack (`onUnlockPress` runs before its paywall opens). `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
 
 ### Contextual Paywall
 
@@ -175,7 +175,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### App Rating
 
-`RatingMoment`s and `STRONG_RATING_MOMENTS` in `constants/rating.ts`, with the Play listing derived from the package id and `APP_STORE_APP_ID` (`null`). `RatingAskHost` (`components/rating/`) raises `action_completed` at a launch or on a return after `RATING_ASK_MIN_AWAY_MS` (5 min), `RATING_ASK_SETTLE_MS` (1.2 s) after the screen is back. `REVIEW_REQUEST_CONFIG`: 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `AppRatingModal` (`components/ui/`) and `SENTIMENT_GATE_ENABLED` (off) are mounted and read by nothing.
+`RatingMoment`s and `STRONG_RATING_MOMENTS` in `constants/rating.ts`, with the Play listing derived from the package id and `APP_STORE_APP_ID` (`null`). `RatingAskHost` (`components/layout/`) raises `action_completed` at a launch or on a return after `RATING_ASK_MIN_AWAY_MS` (5 min), `RATING_ASK_SETTLE_MS` (1.2 s) after the screen is back. `REVIEW_REQUEST_CONFIG`: 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `AppRatingModal` (`components/ui/`) and `SENTIMENT_GATE_ENABLED` (off) are mounted and read by nothing.
 
 ---
 

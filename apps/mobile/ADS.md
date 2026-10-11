@@ -48,6 +48,9 @@ are testable without a real unit.
 2. Create one unit per placement in the AdMob console and paste each into `constants/admob.ts`.
    A placement with no unit stays `UNIT_PENDING`; never lend it another placement's unit.
 3. Update the inventory above.
+4. An app whose audience a health or other sensitive condition defines sets `AD_NON_PERSONALIZED_ONLY`
+   to `true`, adds the `apps/mobile/firebase.json` CLAUDE.md names (Monetization) and rewrites the
+   site's privacy policy to match (§9).
 
 ---
 
@@ -56,7 +59,7 @@ are testable without a real unit.
 The interstitial is the only interruptive ad, and `recordAction()` is its only caller. Each call:
 
 ```
-recordAction({ allowPromos })
+recordAction({ allowPromos, allowInterstitial })
   │
   ├─ engagementStorage.incrementAction()     (lifetime counter, +1, always)
   ├─ allowPromos: false ─────────────────────► stop
@@ -213,7 +216,7 @@ reset at every launch.
 
 | File | Responsibility |
 |------|----------------|
-| `constants/admob.ts` | unit ids, kill switches, reward constants — the only place any of them appear |
+| `constants/admob.ts` | unit ids, kill switches, reward constants, the request options every ad carries (`AD_REQUEST_OPTIONS`, from `AD_NON_PERSONALIZED_ONLY`) — the only place any of them appear |
 | `app.config.js` | the AdMob app ids (plugin block); the consent test aid (`extra.consentDebug`) |
 | `.github/workflows/release-android.yml` | refuses a release that still carries Google's sample app id, warns when no unit is configured |
 | `plugins/withReleaseEnvGuard.js` | a release build, local or CI, refuses a consent test aid (`scripts/check-release-env.js`) |
@@ -267,7 +270,11 @@ Deliberate and load-bearing — don't undo them without a reason written down he
   video alike. Google's publisher policies forbid personalizing ads on health or other sensitive
   information, and in an app whose audience such a condition defines (a blood-pressure log, a
   diabetes diary) using the app is that information: it sets `AD_NON_PERSONALIZED_ONLY`, whatever
-  the consent form allowed. A request built without the options would personalize anyway.
+  the consent form allowed. A request built without the options would personalize anyway. The
+  switch and the privacy policy move together: `apps/web/content/{en,fr}/legal.ts` describes
+  personalised advertising until it is rewritten to say ads are never personalised (the
+  advertising section, the advertising-id line and the legal basis, which stays consent where the
+  law requires it for the identifiers read on the device).
 - **No rewarded autoplay.** It is an AdMob policy breach and reads as a bait ad.
 - **Never chain an interstitial onto a declined rewarded video.** The user answered.
 - **A banner fits the column it sits in.** An anchored adaptive banner is as wide as the device

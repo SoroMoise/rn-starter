@@ -9,6 +9,7 @@ import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import Colors from '@/constants/Colors'
 import { UI_CONFIG } from '@/constants/config'
+import type { PaywallSource } from '@/constants/purchases'
 import { GRADIENTS } from '@/constants/uiColors'
 import { usePaywallPlans } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
@@ -25,7 +26,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type PaywallModalProps = {
   visible: boolean
-  source: string
+  source: PaywallSource
   onClose: () => void
 }
 

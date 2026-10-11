@@ -1,4 +1,5 @@
 // apps/mobile/constants/purchases.ts
+import type { ContextualTrigger } from '@/constants/contextualPaywall'
 import type Ionicons from '@expo/vector-icons/Ionicons'
 import Constants from 'expo-constants'
 import type { ComponentProps } from 'react'
@@ -18,10 +19,16 @@ export type PurchaseSurface =
   | 'onboarding_premium'
   | 'onboarding_exit_intent'
 
-// `source` is what brought the sale up and `surface` the screen the tap landed on. `source`
-// reuses the vocabulary `openPaywall` takes: the funnel groups on it, and a new spelling splits
-// the funnel in two with no error anywhere.
-export type PurchaseOrigin = { source: string; surface: PurchaseSurface }
+// What brought the sale up. The funnel groups on it, so a new spelling would split it in two with
+// no error anywhere: an app's own sources join this union.
+export type PaywallSource =
+  | 'settings'
+  | 'home_cta'
+  | 'onboarding_premium'
+  | 'onboarding_exit_intent'
+  | `contextual_${ContextualTrigger}`
+
+export type PurchaseOrigin = { source: PaywallSource; surface: PurchaseSurface }
 
 // The onboarding sells without `openPaywall`, so each of its surfaces is its own entry point.
 export const ONBOARDING_PREMIUM_ORIGIN: PurchaseOrigin = {

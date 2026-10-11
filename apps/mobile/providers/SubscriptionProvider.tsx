@@ -2,6 +2,7 @@ import { PaywallModal } from '@/components/paywall/PaywallModal'
 import {
   ENTITLEMENT_PREMIUM,
   SUBSCRIPTION_GRACE_PERIOD_MS,
+  type PaywallSource,
   type PurchaseOrigin,
 } from '@/constants/purchases'
 import {
@@ -132,7 +133,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
 
   const appState = useRef(AppState.currentState)
   const isConfiguredRef = useRef(false)
-  const paywallSourceRef = useRef<string>('')
+  const paywallSourceRef = useRef<PaywallSource>('settings')
   // Read inside applyCustomerInfo, which must not re-create itself when the offer
   // reloads — the init effect depends on it.
   const plansRef = useRef<OfferingPlan[]>([])
@@ -400,7 +401,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   // subscriber or ahead of the onboarding's own pitch — and `paywall_shown` only counts
   // impressions that could convert.
   const openPaywall = useCallback(
-    async ({ source }: { source: string }): Promise<boolean> => {
+    async ({ source }: { source: PaywallSource }): Promise<boolean> => {
       if (isPremium) return false
       if (!useOnboardingStore.getState().isCompleted) return false
 

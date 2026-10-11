@@ -1,4 +1,4 @@
-import type { PurchaseOrigin } from '@/constants/purchases'
+import type { PaywallSource, PurchaseOrigin } from '@/constants/purchases'
 import type { OfferingPlan, PlanPeriod } from '@/utils/offerings'
 import { createContext } from 'react'
 
@@ -21,7 +21,7 @@ export type SubscriptionContextValue = {
   retryPrices: () => Promise<void>
   purchasePlan: (params: { plan: OfferingPlan } & PurchaseOrigin) => Promise<void>
   restorePurchases: (params: PurchaseOrigin) => Promise<void>
-  openPaywall: (params: { source: string }) => Promise<boolean>
+  openPaywall: (params: { source: PaywallSource }) => Promise<boolean>
   refreshSubscription: () => Promise<void>
 }
 

@@ -19,7 +19,7 @@ Composition in `app/_layout.tsx` (outer → inner):
 ```
 SafeAreaProvider
   > RootLayoutContent
-      TelemetryEffects         <- side-effect only, no children
+      TelemetryEffects         <- side-effect only, no children (screen view = route pattern)
       GestureHandlerRootView
         > QueryProvider        <- TanStack Query (PersistQueryClientProvider + MMKV, persists nothing by default)
           > ThemeProvider      <- light/dark via NativeWind 'class'; mounts AppSystemBars
@@ -167,7 +167,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content. `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
+`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content (`onUnlockPress` runs before its paywall opens). `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
 
 ### Contextual Paywall
 

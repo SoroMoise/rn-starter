@@ -1,6 +1,7 @@
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { UI_CONFIG } from '@/constants/config'
+import type { PaywallSource } from '@/constants/purchases'
 import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { planCtaLabel, planLegalNote } from '@/hooks/usePaywallPlans'
 import { usePremium } from '@/hooks/usePremium'
@@ -13,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type LifetimeOfferCardProps = {
   plan: OfferingPlan
-  source: string
+  source: PaywallSource
   onDecline: () => void
 }
 

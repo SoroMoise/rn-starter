@@ -1,4 +1,5 @@
 import { ThemedText } from '@components/ui/ThemedText'
+import type { PaywallSource } from '@constants/purchases'
 import { UI_COLORS } from '@constants/uiColors'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { usePremium } from '@hooks/usePremium'
@@ -11,11 +12,12 @@ import { Pressable, StyleSheet, View } from 'react-native'
 const BLUR_INTENSITY = 18
 
 type PremiumGateProps = {
-  source: string
+  source: PaywallSource
   children: React.ReactNode
+  onUnlockPress?: () => void
 }
 
-export function PremiumGate({ source, children }: PremiumGateProps) {
+export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProps) {
   const { isPremium, isInitialized, openPaywall } = usePremium()
   const isDark = useThemedColor()
   const { t } = useTranslation()
@@ -38,7 +40,10 @@ export function PremiumGate({ source, children }: PremiumGateProps) {
       />
       <Pressable
         className="absolute inset-0 items-center justify-center rounded-xl bg-white/[0.55] dark:bg-[#0f0f14]/[0.55]"
-        onPress={() => void openPaywall({ source })}
+        onPress={() => {
+          onUnlockPress?.()
+          void openPaywall({ source })
+        }}
         accessibilityRole="button"
         accessibilityLabel={t('premiumGate.unlock')}>
         <View className="items-center gap-2">

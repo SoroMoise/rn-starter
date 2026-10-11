@@ -1,6 +1,6 @@
 import palette from './palette'
 
-const tintColorLight = palette.accent[500]
+const tintColorLight = palette.accent[700]
 const tintColorDark = palette.accent[400]
 
 export const SCREEN_BACKGROUND = {
@@ -14,9 +14,9 @@ export default {
     background: '#ffffff',
     screenBackground: SCREEN_BACKGROUND.light,
     tint: tintColorLight,
-    tabIcon: '#90a0b0',
+    tabIcon: '#64748b',
     tabIconFocused: tintColorLight,
-    tabText: '#90a0b0',
+    tabText: '#64748b',
     tabTextFocused: tintColorLight,
     card: '#f2f2f2',
     border: '#e5e5e5',
@@ -31,9 +31,9 @@ export default {
     background: '#000000',
     screenBackground: SCREEN_BACKGROUND.dark,
     tint: tintColorDark,
-    tabIcon: '#64748b',
+    tabIcon: '#94a3b8',
     tabIconFocused: tintColorDark,
-    tabText: '#64748b',
+    tabText: '#94a3b8',
     tabTextFocused: tintColorDark,
     card: '#1f2937',
     border: '#333',

@@ -28,7 +28,7 @@ export function AppSwitch({ value }: { value: boolean }) {
 
   return (
     <View
-      className={`shrink-0 ${value ? 'bg-accent-500' : 'bg-gray-300 dark:bg-gray-600'}`}
+      className={`shrink-0 ${value ? 'bg-accent-500' : 'bg-gray-500'}`}
       style={{
         width: TRACK_WIDTH,
         height: TRACK_HEIGHT,

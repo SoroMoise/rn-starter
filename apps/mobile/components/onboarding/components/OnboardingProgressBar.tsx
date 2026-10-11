@@ -23,7 +23,9 @@ export function OnboardingProgressBar({ totalSteps, currentStep }: OnboardingPro
           className="h-1 flex-1 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
           <Animated.View
             className={`h-full rounded-full ${
-              index <= currentStep ? 'w-full bg-accent-400' : 'w-0 bg-transparent'
+              index <= currentStep
+                ? 'w-full bg-accent-600 dark:bg-accent-400'
+                : 'w-0 bg-transparent'
             }`}
           />
         </View>

@@ -1,6 +1,7 @@
 import { Section, SectionContent } from '@/components/settings/SettingsSection'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { usePremium } from '@/hooks/usePremium'
+import { useThemedColor } from '@/hooks/useThemedColor'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -8,6 +9,7 @@ import { View } from 'react-native'
 export function BillingIssueBanner() {
   const { t, i18n } = useTranslation()
   const { billingIssue } = usePremium()
+  const isDark = useThemedColor()
 
   if (!billingIssue) return null
 
@@ -22,7 +24,7 @@ export function BillingIssueBanner() {
       <SectionContent>
         <View className="flex-row items-start gap-3 px-4 py-3.5">
           <View className="mt-0.5 h-8 w-8 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-500/20">
-            <Ionicons name="card-outline" size={17} color="#f59e0b" />
+            <Ionicons name="card-outline" size={17} color={isDark ? '#f59e0b' : '#b45309'} />
           </View>
           <View className="flex-1">
             <ThemedText variant="body" weight="semibold" className="mb-1">

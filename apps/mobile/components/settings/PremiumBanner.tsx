@@ -4,6 +4,7 @@ import { ThemedText } from '@/components/ui/ThemedText'
 import { PRO_BENEFITS } from '@/constants/purchases'
 import { UI_COLORS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
+import { useThemedColor } from '@/hooks/useThemedColor'
 import { analyticsService } from '@/services/api/analyticsService'
 import { subscriptionStorage } from '@/services/storage/domains/subscription'
 import { openExternalLink } from '@/utils/linking'
@@ -14,6 +15,7 @@ import { TouchableOpacity, View } from 'react-native'
 export function PremiumBanner() {
   const { t, i18n } = useTranslation()
   const { isPremium, isInitialized, managementUrl, openPaywall } = usePremium()
+  const isDark = useThemedColor()
 
   if (!isInitialized) return null
 
@@ -37,7 +39,11 @@ export function PremiumBanner() {
         <SectionContent>
           <View accessible className="flex-row items-center px-4 py-3.5">
             <View className="mr-3 h-9 w-9 items-center justify-center rounded-xl bg-pro-100 dark:bg-pro-500/20">
-              <Ionicons name="star" size={18} color={UI_COLORS.pro[500]} />
+              <Ionicons
+                name="star"
+                size={18}
+                color={isDark ? UI_COLORS.pro[400] : UI_COLORS.pro[500]}
+              />
             </View>
             <View className="flex-1">
               <ThemedText variant="body" weight="medium">
@@ -49,7 +55,7 @@ export function PremiumBanner() {
                 </ThemedText>
               )}
             </View>
-            <Ionicons name="checkmark-circle" size={20} color={UI_COLORS.success[500]} />
+            <Ionicons name="checkmark-circle" size={20} color={UI_COLORS.success[600]} />
           </View>
 
           {managementUrl !== null && (
@@ -86,7 +92,7 @@ export function PremiumBanner() {
               {t('paywall.title')}
             </ThemedText>
           </View>
-          <ThemedText color="inherit" className="mb-3 text-sm text-pro-200">
+          <ThemedText color="inherit" className="mb-3 text-sm text-pro-100">
             {PRO_BENEFITS.map((benefit) => t(benefit.i18nKey, benefit.params)).join(' · ')}
           </ThemedText>
           <View className="self-start rounded-full bg-white px-4 py-1.5">

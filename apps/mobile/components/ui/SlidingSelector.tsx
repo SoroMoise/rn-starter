@@ -35,21 +35,21 @@ const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 const STYLES = {
   accent: {
     container: 'flex-row rounded-2xl bg-white p-1.5 dark:bg-gray-800',
-    indicator: 'rounded-xl bg-accent-500 dark:bg-accent-600',
+    indicator: 'rounded-xl bg-accent-600',
     itemPadding: 'py-3',
     activeText: 'text-white',
     inactiveText: 'text-gray-500 dark:text-gray-400',
-    activeIconColor: '#ffffff',
+    activeIconColor: { dark: '#ffffff', light: '#ffffff' },
     inactiveIconColor: { dark: '#9ca3af', light: '#6b7280' },
   },
   white: {
     container: 'flex-row rounded-xl bg-gray-100 p-1 dark:bg-gray-900',
     indicator: 'rounded-lg bg-white dark:bg-gray-700',
     itemPadding: 'py-2',
-    activeText: 'text-accent-500 dark:text-accent-400',
-    inactiveText: 'text-gray-400 dark:text-gray-500',
-    activeIconColor: UI_COLORS.accent[500],
-    inactiveIconColor: { dark: '#9ca3af', light: '#9ca3af' },
+    activeText: 'text-accent-700 dark:text-accent-300',
+    inactiveText: 'text-gray-600 dark:text-gray-400',
+    activeIconColor: { dark: UI_COLORS.accent[300], light: UI_COLORS.accent[700] },
+    inactiveIconColor: { dark: '#9ca3af', light: '#4b5563' },
   },
 } as const
 
@@ -186,7 +186,7 @@ export function SlidingSelector<T extends string | number>({
               accessibilityRole="radio"
               accessibilityState={{ checked: isSelected }}
               accessibilityLabel={option.label}
-              className={`flex-1 flex-row items-center justify-center gap-2 text-gray-400 ${s.itemPadding}`}
+              className={`min-h-[44px] flex-1 flex-row items-center justify-center gap-2 ${s.itemPadding}`}
               activeOpacity={1}>
               {option.icon && option.activeIcon && (
                 <Ionicons
@@ -194,11 +194,9 @@ export function SlidingSelector<T extends string | number>({
                   importantForAccessibility="no"
                   size={17}
                   color={
-                    isSelected
-                      ? s.activeIconColor
-                      : isDark
-                        ? s.inactiveIconColor.dark
-                        : s.inactiveIconColor.light
+                    (isSelected ? s.activeIconColor : s.inactiveIconColor)[
+                      isDark ? 'dark' : 'light'
+                    ]
                   }
                 />
               )}

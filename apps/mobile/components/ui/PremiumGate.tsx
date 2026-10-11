@@ -28,7 +28,9 @@ export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProp
 
   return (
     <View>
-      {children}
+      <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
+        {children}
+      </View>
       {/* Android renders no blur at all without `experimentalBlurMethod`, and samples the screen
           the view sits in: inside a native Modal it would blur the screen under the modal. */}
       <BlurView
@@ -50,7 +52,7 @@ export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProp
           <View className="h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full bg-pro-100 dark:bg-pro-500/[0.15]">
             <Ionicons name="lock-closed" size={22} color={UI_COLORS.pro[500]} />
           </View>
-          <View className="rounded-full bg-pro-500 px-2.5 py-[0.1875rem]">
+          <View className="rounded-full bg-pro-600 px-2.5 py-[0.1875rem]">
             <ThemedText
               color="inverse"
               weight="bold"
@@ -62,7 +64,7 @@ export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProp
             variant="body"
             weight="semibold"
             color="inherit"
-            className="text-[0.8125rem] leading-[1.1875rem] text-pro-500">
+            className="text-[0.8125rem] leading-[1.1875rem] text-pro-700 dark:text-pro-300">
             {t('premiumGate.unlock')}
           </ThemedText>
         </View>

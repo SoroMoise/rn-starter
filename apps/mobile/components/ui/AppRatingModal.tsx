@@ -54,7 +54,7 @@ export function AppRatingModal({ visible, onRate, onLater, onDecline }: AppRatin
                 <Ionicons
                   name={index < selectedRating ? 'star' : 'star-outline'}
                   size={40}
-                  color="#F59E0B"
+                  color="#d97706"
                 />
               </Pressable>
             ))}

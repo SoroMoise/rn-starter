@@ -1,6 +1,7 @@
 import { ThemedText } from '@/components/ui/ThemedText'
 import type { Language } from '@/types'
 import { LANGUAGES, type LanguageConfig } from '@constants/languages'
+import { useThemedColor } from '@hooks/useThemedColor'
 import { triggerLight, triggerSelection, triggerSuccess } from '@utils/haptics'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -24,6 +25,7 @@ export function LanguagePicker({
   selectedLanguage,
 }: LanguagePickerProps) {
   const { t } = useTranslation()
+  const isDark = useThemedColor()
   const [searchQuery, setSearchQuery] = useState('')
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
@@ -126,7 +128,7 @@ export function LanguagePicker({
             </View>
 
             {isSelected && (
-              <View className="h-8 w-8 items-center justify-center rounded-full bg-accent-500">
+              <View className="h-8 w-8 items-center justify-center rounded-full bg-accent-600">
                 <ThemedText variant="heading" color="inverse">
                   ✓
                 </ThemedText>
@@ -174,7 +176,7 @@ export function LanguagePicker({
               onBlur={handleSearchBlur}
               placeholder={t('settings.searchLanguage')}
               accessibilityLabel={t('common.search')}
-              placeholderTextColor="#9CA3AF"
+              placeholderTextColor={isDark ? '#9ca3af' : '#6b7280'}
               className="flex-1 py-2 text-base text-gray-900 dark:text-white"
               autoCapitalize="none"
               autoCorrect={false}

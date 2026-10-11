@@ -23,7 +23,7 @@ export function PaywallHero({
     <View className="overflow-hidden" style={{ height }}>
       <Image source={isDark ? heroDark : heroLight} className="h-full w-full" resizeMode="cover" />
       <LinearGradient
-        colors={['transparent', 'rgba(0,0,0,0.65)']}
+        colors={['transparent', 'rgba(0,0,0,0.75)']}
         style={styles.overlay}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}>
@@ -39,7 +39,7 @@ export function PaywallHero({
           variant="body"
           color="inherit"
           align="center"
-          className="text-[0.9375rem] leading-[1.375rem] text-white/75">
+          className="text-[0.9375rem] leading-[1.375rem] text-white/90">
           {subtitle}
         </ThemedText>
       </LinearGradient>

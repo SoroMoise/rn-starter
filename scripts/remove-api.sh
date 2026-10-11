@@ -61,7 +61,8 @@ info "Deleted:"
 for p in "${REMOVED_PATHS[@]}"; do printf "  %s\n" "$p"; done
 info "Edited:"
 cat <<'LIST'
-  package.json              the dev:api and deploy:api scripts
+  package.json              the dev:api and deploy:api scripts, and esbuild and workerd in
+                            pnpm.onlyBuiltDependencies, which only wrangler and tsup bring
   turbo.json                the deploy task
   pnpm-workspace.yaml       packages/*
   apps/mobile/package.json  axios and @tanstack/* (3)
@@ -113,6 +114,12 @@ function dropLines(src, pattern) {
 editJson('package.json', (json) => {
   delete json.scripts['dev:api']
   delete json.scripts['deploy:api']
+  const builtDependencies = json.pnpm?.onlyBuiltDependencies
+  if (Array.isArray(builtDependencies)) {
+    json.pnpm.onlyBuiltDependencies = builtDependencies.filter(
+      (dep) => !['esbuild', 'workerd'].includes(dep)
+    )
+  }
 })
 
 edit('turbo.json', (src) => src.replace(/,\s*"deploy":\s*\{[^}]*\}/, ''))

@@ -209,6 +209,60 @@ if (fs.existsSync(localesDir)) {
   }
 }
 
+// A local module's Gradle namespace, Kotlin package, source directory and the class
+// expo-module.config.json registers move together: autolinking loads the class by that name,
+// and one left behind crashes the app at launch on a class that does not exist.
+const OLD_MODULE_PREFIX = OLD_BUNDLE.slice(0, OLD_BUNDLE.lastIndexOf('.'))
+const moduleNamespacePrefix = bundleId.includes('.')
+  ? bundleId.slice(0, bundleId.lastIndexOf('.'))
+  : bundleId
+const modulesDir = path.join(repoRoot, 'apps/mobile/modules')
+
+function moveModulePackage(javaRoot) {
+  const oldDir = path.join(javaRoot, ...OLD_MODULE_PREFIX.split('.'))
+  if (!fs.existsSync(oldDir)) return
+  const newDir = path.join(javaRoot, ...moduleNamespacePrefix.split('.'))
+  for (const entry of fs.readdirSync(oldDir)) {
+    const from = path.join(oldDir, entry)
+    const to = path.join(newDir, entry)
+    if (fs.existsSync(to)) throw new Error(`${path.relative(repoRoot, to)} already exists`)
+    fs.mkdirSync(newDir, { recursive: true })
+    fs.renameSync(from, to)
+    edits.push(`${path.relative(repoRoot, from)} -> ${path.relative(repoRoot, to)}`)
+  }
+  for (let dir = oldDir; dir !== javaRoot && fs.readdirSync(dir).length === 0; ) {
+    fs.rmdirSync(dir)
+    dir = path.dirname(dir)
+  }
+}
+
+function listSources(dir) {
+  if (!fs.existsSync(dir)) return []
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const full = path.join(dir, entry.name)
+    if (entry.isDirectory()) return listSources(full)
+    return /\.(kt|java)$/.test(entry.name) ? [full] : []
+  })
+}
+
+const keepsTemplatePrefix =
+  moduleNamespacePrefix === OLD_MODULE_PREFIX ||
+  moduleNamespacePrefix.startsWith(`${OLD_MODULE_PREFIX}.`)
+
+if (!keepsTemplatePrefix && fs.existsSync(modulesDir)) {
+  const renamePackage = (src) => all(src, `${OLD_MODULE_PREFIX}.`, `${moduleNamespacePrefix}.`)
+  for (const name of fs.readdirSync(modulesDir)) {
+    const moduleRoot = path.join('apps/mobile/modules', name)
+    const javaRoot = path.join(repoRoot, moduleRoot, 'android/src/main/java')
+    moveModulePackage(javaRoot)
+    patch(path.join(moduleRoot, 'expo-module.config.json'), renamePackage)
+    patch(path.join(moduleRoot, 'android/build.gradle'), renamePackage)
+    for (const file of listSources(javaRoot)) {
+      patch(path.relative(repoRoot, file), renamePackage)
+    }
+  }
+}
+
 console.log(edits.length ? edits.map((e) => `  ${e}`).join('\n') : '  nothing left to rename')
 NODE_SCRIPT
 

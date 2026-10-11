@@ -119,7 +119,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 | `usePremium` | The subscription context: `isPremium`, `isInitialized`, `plans`, `defaultPlan`, `purchasePlan({ plan, source, surface })`, `restorePurchases({ source, surface })`, `openPaywall({ source })` (resolves `false` for a subscriber or before onboarding completes), `retryPrices`, `refreshSubscription`, `billingIssue`, `managementUrl` |
 | `usePaywallPlans` | `usePaywallPlans({ source, surface })` — plan options, CTA label, trust lines, `legalNote`, `purchaseSelected` |
 | `useContextualPaywall` | `maybeTrigger(trigger)` — opens the paywall at a value moment when the policy allows; refuses while `defaultPlan === null`; records the impression once `openPaywall` resolved `true` |
-| `useActionRating` | `recordAction({ allowPromos })` — counts the action, offers it to the contextual paywall, then the interstitial, else arms the rating ask |
+| `useActionRating` | `recordAction({ allowPromos, allowInterstitial })` — counts the action, offers it to the contextual paywall, then the interstitial (unless `allowInterstitial: false`), else arms the rating ask |
 | `useRatingPrompt` | `maybeAskForRating({ moment })` — gathers the state, runs `evaluateReviewRequest`, asks for Play's card (`rating_ask_shown`) or traces `rating_ask_suppressed` |
 | `useCappedByTier` | `useCappedByTier({ items, freeLimit })` → `items`, `allItems`, `limit`, `isCapped`, `canAdd` (no caller yet) |
 | `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — `useCanServeAd` plus the ad-free window; what `AdBanner` renders from |
@@ -163,7 +163,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### AdMob
 
-`ADS.md` is the reference. `AdBanner` per screen (reserves `AD_BANNER_RESERVED_HEIGHT` from `useAdPlacementActive`, mounts on `useStageActive`, takes the column's width), interstitial via `adService`, rewarded via `rewardedAdService` (`AdFreeSection` in Settings). Unit ids and kill switches in `constants/admob.ts` (`pickUnitId` → `null` for `UNIT_PENDING`, an empty id or a `XXXX` placeholder; `TestIds` under `__DEV__`), app ids in `app.config.js`.
+`ADS.md` is the reference. `AdBanner` per screen (reserves `AD_BANNER_RESERVED_HEIGHT` from `useAdPlacementActive`, mounts on `useStageActive`, takes the column's width), interstitial via `adService`, rewarded via `rewardedAdService` (`AdFreeSection` in Settings). Unit ids and kill switches in `constants/admob.ts` (`pickUnitId` → `null` for `UNIT_PENDING`, an empty id or a `XXXX` placeholder; `TestIds` under `__DEV__`), app ids in `app.config.js`. Every request carries `AD_REQUEST_OPTIONS` (`requestNonPersonalizedAdsOnly` from `AD_NON_PERSONALIZED_ONLY`, `false` in the starter).
 
 ### RevenueCat
 

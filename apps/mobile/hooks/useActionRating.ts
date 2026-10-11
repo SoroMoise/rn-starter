@@ -25,7 +25,9 @@ type UseActionRatingProps = {
  *
  * `recordAction({ allowPromos: false })` moves the counter and nothing else — for the user's
  * first success, which decides whether they come back tomorrow, and for an action abandoned
- * or failed, which has nothing to celebrate.
+ * or failed, which has nothing to celebrate. `recordAction({ allowInterstitial: false })` still
+ * offers the moment to the contextual paywall but never to an ad — for an action the user repeats
+ * inside a flow, where an interstitial is the interruption reviews punish.
  *
  * This is the integration point a new app wires into its own value moments.
  */
@@ -33,7 +35,10 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { maybeTrigger } = useContextualPaywall()
 
   const recordAction = useCallback(
-    async ({ allowPromos = true }: { allowPromos?: boolean } = {}) => {
+    async ({
+      allowPromos = true,
+      allowInterstitial = true,
+    }: { allowPromos?: boolean; allowInterstitial?: boolean } = {}) => {
       try {
         const newTotal = engagementStorage.incrementAction()
         analyticsService.track('action_performed', { total_actions: newTotal })
@@ -51,7 +56,7 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
 
       // The ad's counter only moves on actions that could have gone to an ad: counted through a
       // session whose interruption is spent, it would open the next session on an ad at once.
-      if (!isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
+      if (allowInterstitial && !isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
         try {
           await AdService.recordExecution()
           const adShown =

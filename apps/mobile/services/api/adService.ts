@@ -1,4 +1,8 @@
-import { AD_INTERSTITIAL_ENABLED, ADMOB_INTERSTITIAL_ID } from '@/constants/admob'
+import {
+  AD_INTERSTITIAL_ENABLED,
+  AD_REQUEST_OPTIONS,
+  ADMOB_INTERSTITIAL_ID,
+} from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { reportAdFailure } from '@/services/api/adFailures'
 import { consentService } from '@/services/api/consentService'
@@ -51,7 +55,7 @@ class AdServiceClass {
   }
 
   private initializeInterstitial(unitId: string) {
-    const ad = InterstitialAd.createForAdRequest(unitId, {})
+    const ad = InterstitialAd.createForAdRequest(unitId, AD_REQUEST_OPTIONS)
 
     const detachers = [
       ad.addAdEventListener(AdEventType.LOADED, () => {

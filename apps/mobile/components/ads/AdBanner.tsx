@@ -1,3 +1,4 @@
+import { AD_REQUEST_OPTIONS } from '@/constants/admob'
 import { UI_CONFIG } from '@/constants/config'
 import { useAdPlacementActive } from '@/hooks/useAdPlacementActive'
 import { useStageActive } from '@/hooks/useStageActive'
@@ -39,6 +40,7 @@ export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerPro
         unitId={adBannerId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         width={bannerWidth}
+        requestOptions={AD_REQUEST_OPTIONS}
         onAdFailedToLoad={(error) => reportAdFailure({ error, source: 'banner_load' })}
       />
     </View>

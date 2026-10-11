@@ -69,6 +69,7 @@ cat <<'LIST'
   apps/mobile/app/_layout.tsx, constants/config.ts, app.config.js, .env.example,
   types/index.ts, services/api/purchaseService.ts
   apps/mobile/i18n/languages/*.json   the error.* keys, read only by the removed files
+  apps/mobile/constants/licences.generated.json   regenerated without axios and @tanstack/*
 LIST
 
 if [[ "$ASSUME_YES" != true ]]; then
@@ -176,6 +177,11 @@ success "Backend removed."
 
 header "Updating the lockfile"
 pnpm install
+
+header "Regenerating the open-source licences list"
+if ! node scripts/generate-licences.mjs; then
+  warn "The licences list still names the removed packages: run \`pnpm --filter mobile licences\` once the error above is fixed."
+fi
 
 header "Left to you"
 cat <<'NOTE'

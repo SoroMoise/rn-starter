@@ -42,17 +42,17 @@ audit of that gap and the plan to close it.
 | 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
 | 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
 | 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | — | planned (§3) |
-| 22 | The store listing: the listing's limits, release notes, the licences page | — | planned (§3) |
+| 22 | The store listing: the listing's limits, release notes — and the open-source licences, shipped ahead as an in-app screen ported from noise-remover | 1 | the licences screen **in review**, the listing and release notes planned (§3) |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 53 have shipped (twelve with lots 1–3,
+says what comes after the audit. Of the 84 "later" items, 54 have shipped (twelve with lots 1–3,
 three of them recorded only when the rest were scheduled, four with lot 14, five with lot 15, two
-with lot 17's colour tokens and five with lot 16), 5 are closed without shipping, and of the other
-26, 23 are scheduled into lots 17–18 and 20–22 and 3 wait, with lot 19, for the Firebase migration
-(§3).
+with lot 17's colour tokens, five with lot 16 and one, the licences screen, ahead of lot 22), 5 are
+closed without shipping, and of the other 25, 22 are scheduled into lots 17–18 and 20–22 and 3
+wait, with lot 19, for the Firebase migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
@@ -233,7 +233,7 @@ and the notes below are where that verification starts, not its result.
 | 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
 | 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
 | 21 | The offer's record and its prices | `doc-monetization-template`, `doc-living-documentation`, `play-price-sync` | none |
-| 22 | The store listing | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` | one row, if the app links the licences |
+| 22 | The store listing — the licences shipped ahead (§1) | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` (shipped) | `settings.openSourceLicences` and `licences.*`, EN and FR, waiting for a translation session |
 
 **A helper with no caller is judged, not assumed.** Lot 18 holds most of them, but lot 15's
 `sessionSignals`, lot 17's `FeatureStep` and lot 19's cron raise the same question, and the
@@ -253,8 +253,9 @@ name swapped back), translated the 43 the starter alone has — the demo home sc
 step and the exit sheet, the errors — in the voice charter's register, and checked the result by
 script: key for key against `en.json`, `rtlRestart.message` in every plural form of `ar`, `ru` and
 `pl`, placeholders and line breaks preserved, no `你` and no `kamu` left. Nothing was heard on a
-device. Lot 22's licences row, if the app links the page, is the only key foreseen, and waits for
-the next session; so does every key a feature adds in EN and FR from now on.
+device. The licences screen, shipped ahead of lot 22, added `settings.openSourceLicences` and the
+`licences.*` keys in EN and FR only; they wait for the next session, as do the lifetime offer's
+`paywall.lifetimeOffer.*` (d3539ef) and every key a feature adds in EN and FR from now on.
 
 **Lot 17 — Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
 the brand colours are `palette`'s three roles and every gradient is a token. `InitialLoadingScreen`,
@@ -300,10 +301,15 @@ reading the price matrix the record decides.
 (30, 80 and 4,000 characters) and the twenty listings that twenty languages imply. Release notes are
 written in the Play Console (CHANGELOG, lot 11) and the workflow uploads none, so the template is a
 paste-ready reference — Play's locale codes in one order — not an `artifacts/` folder nobody reads.
-The licences registry becomes a page of `apps/web`: the site serves only `/privacy` and `/terms`,
-`LEGAL_LICENSES_URL` left with lot 12 (87d660c), and `/licenses` joins the paths contract the moment
-a build links it. Its list follows what the APK ships — Hono is the Worker's — and is kept in step
-as living documentation, or it lies without failing.
+The licences registry shipped ahead of the lot, otherwise than this plan proposed: an in-app screen
+ported from noise-remover, `app/licences.tsx` opened from Settings, over a list that
+`scripts/generate-licences.mjs` writes from what the build holds — the bundle's source map, the
+autolinked packages, the C/C++ React Native and MMKV compile in, vendored `third_party/` libraries,
+embedded fonts and, with `--android`, Gradle's release classpath — and that `build:aab`,
+`build:install` and the release workflow regenerate (CLAUDE.md, Legal links). There is no `apps/web`
+page and no `/licenses` path contract: a page on the site would hand an old build a list it does not
+match, and a list kept by hand lies without failing. Hono, the Worker's, is not in the bundle and
+never enters it.
 
 ---
 
@@ -412,7 +418,8 @@ Replacing it is a design decision, not a structural one.
 **The site is a static export, and holds only what the app links to.** Home, privacy policy, terms:
 the pages Play and the app need, and nothing a derived app would have to delete on day one — no
 features, pricing or blog. English sits at the root because bg-remover's `Accept-Language` redirect
-needs a server runtime; a licences page is the "later" item `licenses-registry`.
+needs a server runtime. The open-source licences are an in-app screen (`licenses-registry`, shipped
+ahead of lot 22), not a page of the site, and `/licenses` is no part of the paths contract.
 
 **The server's entitlement check lets everyone through until it is configured.** all-currency-converter's
 choice, kept: a Worker deployed before its RevenueCat secret refuses no subscriber, at the price of

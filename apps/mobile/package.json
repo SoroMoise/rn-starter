@@ -5,6 +5,11 @@
   "expo": {
     "autolinking": {
       "nativeModulesDir": "./modules"
+    },
+    "install": {
+      "exclude": [
+        "react-native-worklets@0.5.1"
+      ]
     }
   },
   "scripts": {

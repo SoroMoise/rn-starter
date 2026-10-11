@@ -39,7 +39,8 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | Route | File | Description |
 |---|---|---|
 | `/(tabs)/index` | `app/(tabs)/index.tsx` | Home — premium feature showcase, paywall CTA |
-| `/(tabs)/settings` | `app/(tabs)/settings.tsx` | Settings (lazy) — theme, language, premium, ads, legal |
+| `/(tabs)/settings` | `app/(tabs)/settings.tsx` | Settings (lazy) — theme, language, premium, ads, `LegalSupportSection` (privacy, terms, *Open-source licences* → `/licences`, support, rate, ad privacy where required) |
+| `/licences` | `app/licences.tsx` | Open-source licences — stack route from Settings, offline: a `FlatList` of `constants/licences.generated.json` (`services/licences.ts`) in four cards — App libraries, Native libraries, Fonts, Android libraries — of `LicenceRow`s (`components/licences/`: name, version · licence; on tap the notes, the text's source, the text verbatim in monospace, *Read the terms* for Google's SDKs, *Project page*). While the JSON carries no Android list, that card says the release build writes it |
 | Onboarding | `components/onboarding/OnboardingScreen.tsx` | 2 steps: welcome → premium value (top-left language selector on welcome) |
 | Paywall modal | `components/paywall/PaywallModal.tsx` | RevenueCat purchase sheet, assembled from `components/paywall/` (`PaywallHero`, `PaywallPerks`, `PaywallPlanCard`, `PaywallTrustRow`, `PaywallLegalLinks`, `PriceRetryNotice`) over `usePaywallPlans`; its first close raises `LifetimeOfferCard` when the offer holds a one-time plan |
 
@@ -78,6 +79,10 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `contextualPaywall/` | `index.ts` (`evaluate`, `resetSession`, `recordShown`) + `policy.ts` (pure evaluation); triggers `power_action` / `after_n_actions` / `rewarded_ad_dismissed` |
 | `backendClient.ts` | `getBackendClient()` — the one axios instance for `apps/api` (`BACKEND_CONFIG` base URL, timeout, `x-api-key`) |
 | `exampleService.ts` | `fetchExample({ signal })` / `fetchPremiumExample({ signal })` — `GET /example` and `GET /example/premium` through `withRetry`; the second sends `x-rc-customer-id`, and a `403` is not retried. No caller yet |
+
+### `services/licences.ts`
+
+`loadLicences()` requires `constants/licences.generated.json` on first use; `buildLicenceRows()` flattens its four sections (`app`, `native`, `fonts`, `android`; types in `types/licences.ts`). The JSON is written by `scripts/generate-licences.mjs` (`pnpm --filter mobile licences`; `licences:android` adds Gradle's release classpath through `scripts/licences/android-licences.init.gradle`; `build:aab`, `build:install` and the release workflow run it, `remove-api.sh` once the backend is gone). Texts a package does not ship live in `scripts/licences/texts/` (`--fetch`, URLs in `sources.json`). The committed JSON lists the JS bundle, the C/C++ React Native and MMKV compile in and Ionicons, with no vendored native library and no embedded font yet; its Android section is `pending` until the first local `build:aab`.
 
 ### `services/notifications/`
 
@@ -181,7 +186,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ## Navigation
 
-Expo Router. `RootStack` (`app/_layout.tsx`) → `(tabs)` group (`app/(tabs)/_layout.tsx`: `index`, `settings`), with `unstable_settings.initialRouteName` on `(tabs)`. `PremiumTabBar` (`components/ui/`): blur, haptics, `tabBarHeight(fontScale)`. `AppContent` renders `OnboardingScreen` until `onboardingStore.isCompleted`. `resetToHome(href?)` in `utils/navigation.ts`; `<ExitToHome />` in `components/layout/`. No stack route beside `(tabs)` ships in the starter.
+Expo Router. `RootStack` (`app/_layout.tsx`) → `(tabs)` group (`app/(tabs)/_layout.tsx`: `index`, `settings`), with `unstable_settings.initialRouteName` on `(tabs)`. `PremiumTabBar` (`components/ui/`): blur, haptics, `tabBarHeight(fontScale)`. `AppContent` renders `OnboardingScreen` until `onboardingStore.isCompleted`. `resetToHome(href?)` in `utils/navigation.ts`; `<ExitToHome />` in `components/layout/`. One stack route ships beside `(tabs)`: `licences`, pushed from Settings.
 
 ---
 
@@ -198,7 +203,7 @@ Expo Router. `RootStack` (`app/_layout.tsx`) → `(tabs)` group (`app/(tabs)/_la
 
 ## i18n
 
-20 languages (`i18n/languages/*.json`, lazy-loaded): en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. `ar` triggers `I18nManager.forceRTL` + restart (`RTL_RESTART_BANNER_ENABLED`): `RTLRestartBanner` counts down 15 s and restarts, or waits for *Restart now* while a screen reader is on (`rtlRestart.messageManual`); it sits above the tab bar, or above the bottom inset during onboarding. `SlidingSelector` flips its travel by `I18nManager.isRTL`; `DirectionalIcon` flips a glyph. All twenty files are at parity with `en.json`, key for key and per plural category (`rtlRestart.message` carries every form in `ar`, `ru`, `pl`).
+20 languages (`i18n/languages/*.json`, lazy-loaded): en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. `ar` triggers `I18nManager.forceRTL` + restart (`RTL_RESTART_BANNER_ENABLED`): `RTLRestartBanner` counts down 15 s and restarts, or waits for *Restart now* while a screen reader is on (`rtlRestart.messageManual`); it sits above the tab bar, or above the bottom inset during onboarding. `SlidingSelector` flips its travel by `I18nManager.isRTL`; `DirectionalIcon` flips a glyph. All twenty files are at parity with `en.json`, key for key and per plural category (`rtlRestart.message` carries every form in `ar`, `ru`, `pl`), except `paywall.lifetimeOffer.*`, `settings.openSourceLicences` and `licences.*`, in EN and FR only until the next translation session.
 
 ---
 
@@ -212,9 +217,9 @@ TanStack Query v5: `QueryProvider` (`PersistQueryClientProvider` + MMKV persiste
 
 NativeWind v4, dark mode `'class'`, `inlineRem: 15` (`metro.config.js`). `applyColorScheme` maps `'auto'` to `'system'`; `useThemedColor()` resolves the scheme. Reanimated 4 + Moti. Brand scales `accent`, `pro`, `success` in `constants/palette.js` (CommonJS) → `tailwind.config.js`, `UI_COLORS` (`constants/uiColors.ts`), `Colors.ts`. `GRADIENTS` (`constants/uiColors.ts`): `cta`, `pro`, `rewarded`, `success`, `onboardingStepLight` / `onboardingStepDark`. `UI_CONFIG.MAX_CONTENT_WIDTH` = 600.
 
-`components/ui/`: `ScreenContainer` (edges top/left/right, centred 600 dp column), `ScreenHeading` (`mt-3.5`), `ThemedText` (variants; derives a line height for a bare `fontSize`), `GradientButton`, `AppSwitch`, `SettingsRow` (icon plate, title, description, `value`, `pro`, `accessory`, chevron, `toggle`, `disabled`), `SettingsLinkRow` (`link`, or `role="button"`), `ProBadge`, `PremiumGate`, `PremiumTabBar`, `ModalBottomSheet` (+ `modalSheet/`: `contexts.ts`, `scrollables.tsx` — `ModalBottomSheetFlatList`, `ModalBottomSheetScrollView`, `useModalSheetPanGesture()`, `dragLock`), `ModalDialog` (title, subtitle, close, body, `footer`; padded by `useKeyboardHeight()`), `WheelPicker` (`contentWidth`, `unit`, `width`; 5 rows under 700 dp), `SlidingSelector`, `DirectionalIcon`, `LanguagePicker`, `Toast` (+ `ModalToastViewport`), `OfflineBanner` (no props; mounted nowhere), `RTLRestartBanner`, `AppRatingModal`. `AppSystemBars` (in `ThemeProvider`) stacks forced navigation-bar styles.
+`components/ui/`: `ScreenContainer` (edges top/left/right, centred 600 dp column), `ScreenHeading` (`mt-3.5`), `ThemedText` (variants; derives a line height for a bare `fontSize`), `GradientButton`, `AppSwitch`, `SettingsRow` (icon plate, title, description, `value`, `pro`, `accessory`, chevron, `toggle`, `disabled`), `SettingsLinkRow` (`link`, or `role="button"`), `ProBadge`, `PremiumGate`, `PremiumTabBar`, `ModalBottomSheet` (+ `modalSheet/`: `contexts.ts`, `scrollables.tsx` — `ModalBottomSheetFlatList`, `ModalBottomSheetScrollView`, `useModalSheetPanGesture()`, `dragLock`), `ModalDialog` (title, subtitle, close, body, `footer`; padded by `useKeyboardHeight()`), `WheelPicker` (`contentWidth`, `unit`, `width`; 5 rows under 700 dp), `SlidingSelector`, `DirectionalIcon`, `LanguagePicker`, `Toast` (+ `ModalToastViewport`), `OfflineBanner` (no props; mounted nowhere), `RTLRestartBanner`, `AppRatingModal`. `components/licences/LicenceRow`. `AppSystemBars` (in `ThemeProvider`) stacks forced navigation-bar styles.
 
-Accessibility as implemented: `SlidingSelector` and the paywall's plans are `radiogroup`s; the language sheet's rows are radios under a labelled search field with *Clear* (`common.clear`); the tab bar is a `tablist`; the onboarding's progress bar reads `onboarding.a11y.step`; `display`, `title` and `sectionHeader` text is a `header`; the toast is an `alert` held for Android's accessibility timeout; the paywall's perks and trust lines are one element per row; `GradientButton` reads a `height` in `style` as a minimum; nothing sets `maxFontSizeMultiplier`.
+Accessibility as implemented: `SlidingSelector` and the paywall's plans are `radiogroup`s; the language sheet's rows are radios under a labelled search field with *Clear* (`common.clear`); the tab bar is a `tablist`; the onboarding's progress bar reads `onboarding.a11y.step`; `display`, `title` and `sectionHeader` text is a `header`; the toast is an `alert` held for Android's accessibility timeout; `SettingsLinkRow` is a `link`, a `button` for *Open-source licences* and *Ad privacy settings*; each licence row is a `button` carrying its `expanded` state, its text `selectable`; the paywall's perks and trust lines are one element per row; `GradientButton` reads a `height` in `style` as a minimum; nothing sets `maxFontSizeMultiplier`.
 
 ---
 
@@ -234,6 +239,7 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **The onboarding is not capped on large screens**, unlike every tab: a design pass, not a structural one.
 - **Every build opens `/privacy` and `/terms` in English**, whatever its language: the site serves `/fr/privacy`, but choosing it from the app would change the paths contract.
 - **`APP_STORE_APP_ID` is `null`** until the iOS release.
+- **The committed licences list has no Android libraries**: `constants/licences.generated.json` says `pending` for them until a local `build:aab` (or `licences:android` on a prebuilt tree) writes them, and the release workflow regenerates them for every release. Never filled in by hand.
 - **The starter ships no data migration**: it has no installs. An app porting a storage change onto a released build owes its users one.
 
 ---

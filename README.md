@@ -29,7 +29,9 @@ rn-starter/
 ├── scripts/
 │   ├── setup.sh         # Interactive setup script — personalizes the template
 │   ├── remove-api.sh    # Takes out apps/api, packages/shared and the app's network layer
-│   └── generate-brand-assets.py  # Draws the icon, splash, notification icon and favicon
+│   ├── generate-brand-assets.py  # Draws the icon, splash, notification icon and favicon
+│   ├── generate-licences.mjs     # Writes the in-app open-source licences list
+│   └── licences/        # Its Gradle init script and the licence texts packages do not ship
 └── turbo.json
 ```
 
@@ -40,9 +42,10 @@ apps/mobile/
 ├── app/
 │   ├── _layout.tsx      # Root layout — providers + tab navigator
 │   ├── index.tsx        # Home tab (premium demo)
-│   └── settings.tsx     # Settings tab
-├── components/          # ads/, layout/, onboarding/, paywall/, settings/, ui/
-├── constants/           # admob, config, legal, rating
+│   ├── settings.tsx     # Settings tab
+│   └── licences.tsx     # Open-source licences (a stack route over the tabs)
+├── components/          # ads/, layout/, licences/, onboarding/, paywall/, settings/, ui/
+├── constants/           # admob, config, legal, rating, licences.generated.json (generated)
 ├── hooks/               # usePremium, useCappedByTier, useHardwareBack, useKeyboardHeight,
 │                        #   useResponsiveLayout, useSheetSnap, useTabBarPadding, ...
 ├── i18n/                # service.ts + languages/ (20 JSON files)
@@ -52,6 +55,7 @@ apps/mobile/
 │   ├── api/             # adService, analyticsService, backendClient, contextualPaywall/,
 │   │                    #   crashlyticsService, engagementService, exampleService, paywallAnalytics,
 │   │                    #   purchaseService, ratingService, rewardedAdService
+│   ├── licences.ts      # loads and groups the generated licences list
 │   ├── notifications/   # permission, channel, daily reminders
 │   ├── promo/           # promoCoordinator (anti-stacking authority)
 │   └── storage/         # mmkv, adapter, keys, domains/
@@ -235,7 +239,7 @@ The base is `const version` in `apps/mobile/app.config.js`, and `versionCode` fo
 The Play Developer API only publishes to an app that already holds a build, so the first one goes up by hand:
 
 1. Generate the upload keystore (the command is in `apps/mobile/keystore.properties.example`), copy that file to `keystore.properties` and fill it in. Keep the keystore out of the repository and somewhere it cannot be lost: every later build must be signed with it.
-2. `pnpm --filter mobile preb:android`, then `pnpm --filter mobile build:aab`, and upload `apps/mobile/android/app/build/outputs/bundle/release/app-release.aab` to the internal track in the Play Console. It is `1.0.0`, versionCode `1000000`.
+2. `pnpm --filter mobile preb:android`, then `pnpm --filter mobile build:aab`, and upload `apps/mobile/android/app/build/outputs/bundle/release/app-release.aab` to the internal track in the Play Console. It is `1.0.0`, versionCode `1000000`. `build:aab` first writes the app's open-source licences list, Android libraries included: commit `apps/mobile/constants/licences.generated.json` as it leaves it, since the repository's copy carries no Android list until this first local build.
 3. Record it — `git rev-parse HEAD > .last_release_commit`, committed — so the workflow's first run counts only what came after.
 4. In Google Cloud, create a service account with a JSON key and enable the Google Play Android Developer API; in the Play Console, invite its email under *Users and permissions* with release rights on the app.
 
@@ -251,7 +255,7 @@ The Play Developer API only publishes to an app that already holds a build, so t
 | `ANDROID_KEY_PASSWORD` | the key's password | `KEY_PASSWORD` |
 | `PLAY_SERVICE_ACCOUNT_JSON` | the Play Developer API key | the service account's JSON key |
 
-The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`, or with the template's placeholder site or support address still in `apps/mobile/constants/legal.ts`.
+The workflow also refuses to publish with Google's sample AdMob app id still in `app.config.js`, or with the template's placeholder site or support address still in `apps/mobile/constants/legal.ts`. It regenerates the licences list before the bundle, so each release ships the notices of what it carries; that file is a build input and is not committed back.
 
 A release build made on your machine (`build:aab`, `build:install`) refuses the same development overrides as the workflow, wherever they are set — `.env`, `.env.local` or the shell: it stops before compiling and names the variable. Set it back to empty (or `false` for `FORCE_*`) and build again.
 
@@ -332,6 +336,7 @@ All commands run from the repo root unless noted.
 | `pnpm lint` | ESLint (all workspaces) |
 | `pnpm deploy:api` | `wrangler deploy` |
 | `pnpm --filter mobile preb` | `expo prebuild` (generate native projects) |
+| `pnpm --filter mobile licences` | Rewrite the in-app open-source licences list (`licences:android` adds the Android libraries, on a prebuilt tree; `build:aab` and `build:install` run it) |
 | `pnpm --filter mobile analyze` | Android bundle broken down by package, in `apps/mobile/report.html` — run it before and after a dependency change |
 
 ---

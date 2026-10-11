@@ -1,0 +1,94 @@
+// Lists every Maven artifact of :app's release runtime classpath with the licences its POM declares,
+// for scripts/generate-licences.mjs. An init script rather than a config plugin: it adds nothing to
+// the generated android/ and runs only when the generator asks for it.
+//
+//   ./gradlew -q -I ../../../scripts/licences/android-licences.init.gradle :app:licencesReport \
+//     -PlicencesOutput=/tmp/android-licences.json
+//
+// A POM without <licenses> inherits its parent's, so the parents are walked (up to eight levels),
+// and a platform (a BOM) is skipped: it constrains versions and ships no code.
+
+import groovy.json.JsonOutput
+import groovy.xml.XmlSlurper
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+import org.gradle.api.artifacts.result.ResolvedArtifactResult
+import org.gradle.maven.MavenModule
+import org.gradle.maven.MavenPomArtifact
+
+gradle.allprojects { Project project ->
+    if (project.path != ':app') return
+
+    project.tasks.register('licencesReport') { Task task ->
+        task.group = 'licences'
+        task.description = "Writes the licences of the release runtime classpath's Maven artifacts as JSON."
+        task.notCompatibleWithConfigurationCache('resolves POM files at execution time')
+
+        task.doLast {
+            def output = project.findProperty('licencesOutput') ?:
+                project.layout.buildDirectory.file('licences/android-dependencies.json').get().asFile.path
+
+            def pomCache = [:]
+            def pomOf = { String group, String name, String version ->
+                def key = "${group}:${name}:${version}"
+                if (pomCache.containsKey(key)) return pomCache[key]
+                def result = project.dependencies.createArtifactResolutionQuery()
+                    .forModule(group, name, version)
+                    .withArtifacts(MavenModule, MavenPomArtifact)
+                    .execute()
+                def file = result.resolvedComponents
+                    .collectMany { it.getArtifacts(MavenPomArtifact) }
+                    .find { it instanceof ResolvedArtifactResult }?.file
+                def pom = file ? new XmlSlurper(false, false).parse(file) : null
+                pomCache[key] = pom
+                return pom
+            }
+
+            def text = { node -> node == null ? '' : node.text().trim() }
+
+            def describe = { String group, String name, String version ->
+                def described = [licences: [], url: null, organization: null]
+                def pom = pomOf(group, name, version)
+                def depth = 0
+                while (pom != null && depth < 8) {
+                    if (described.licences.isEmpty()) {
+                        described.licences = pom.licenses.license.collect {
+                            [name: text(it.name), url: text(it.url)]
+                        }.findAll { it.name || it.url }
+                    }
+                    described.url = described.url ?: (text(pom.url) ?: text(pom.scm.url)) ?: null
+                    described.organization = described.organization ?: (text(pom.organization.name) ?: null)
+                    if (!described.licences.isEmpty() && described.url && described.organization) break
+                    def parent = pom.parent
+                    if (!text(parent.artifactId)) break
+                    pom = pomOf(text(parent.groupId), text(parent.artifactId), text(parent.version))
+                    depth++
+                }
+                return described
+            }
+
+            def isPlatform = { component ->
+                component.variants.any { variant ->
+                    def key = variant.attributes.keySet().find { it.name == 'org.gradle.category' }
+                    key != null && ['platform', 'enforced-platform'].contains(String.valueOf(variant.attributes.getAttribute(key)))
+                }
+            }
+
+            def configuration = project.configurations.getByName('releaseRuntimeClasspath')
+            def artifacts = configuration.incoming.resolutionResult.allComponents
+                .findAll { it.id instanceof ModuleComponentIdentifier && !isPlatform(it) }
+                .collect { component ->
+                    def id = (ModuleComponentIdentifier) component.id
+                    [group: id.group, name: id.module, version: id.version] + describe(id.group, id.module, id.version)
+                }
+                .sort { a, b -> a.group <=> b.group ?: a.name <=> b.name }
+
+            def target = new File(output.toString())
+            target.parentFile?.mkdirs()
+            target.text = JsonOutput.prettyPrint(JsonOutput.toJson([
+                configuration: 'releaseRuntimeClasspath',
+                artifacts    : artifacts,
+            ]))
+            println "licencesReport: ${artifacts.size()} artifacts written to ${target}"
+        }
+    }
+}

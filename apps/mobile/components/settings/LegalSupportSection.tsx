@@ -11,6 +11,7 @@ import { useAdsConsent } from '@/hooks/useAdsConsent'
 import { openStoreListing } from '@/services/api/ratingService'
 import { SettingsLinkRow, type SettingsLinkRowProps } from '@components/ui/SettingsLinkRow'
 import { openExternalLink } from '@/utils/linking'
+import { router } from 'expo-router'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -43,6 +44,16 @@ export function LegalSupportSection() {
         onPress: () => {
           analyticsService.track('external_link_opened', { link_type: 'terms_of_service' })
           void openExternalLink({ url: LEGAL_URLS.TERMS_OF_SERVICE })
+        },
+      },
+      {
+        id: 'licences',
+        icon: 'code-slash-outline',
+        label: t('settings.openSourceLicences'),
+        role: 'button',
+        onPress: () => {
+          analyticsService.track('licences_opened')
+          router.push('/licences')
         },
       },
       {

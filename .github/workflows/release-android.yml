@@ -259,6 +259,13 @@ jobs:
             echo "KEY_PASSWORD=$KEY_PASSWORD"
           } > keystore.properties
 
+      # The licences screen ships the list this step writes, so it runs between the prebuild (it
+      # reads Gradle's resolved release classpath) and the bundle (which embeds the JSON). A failure
+      # fails the release: a build whose notices are stale or missing owes them all the same.
+      - name: Generate the open-source licences list
+        working-directory: apps/mobile
+        run: node ../../scripts/generate-licences.mjs --android
+
       - name: Build release bundle (AAB)
         working-directory: apps/mobile/android
         run: ./gradlew :app:bundleRelease --no-daemon
@@ -387,12 +394,15 @@ jobs:
       # prebuild output has nothing to be excluded from — but the secrets restored
       # above sit in the same working tree, and a `git add -A` is one edit away from
       # committing a keystore. Everything the next run needs is in these two: the
-      # released version, and the commit the next range starts from.
+      # released version, and the commit the next range starts from. The regenerated
+      # licences list is a build input, not a release output: it is put back first,
+      # since the rebase below refuses to run over a modified tracked file.
       - name: Commit version bump back to main
         if: success()
         env:
           NEW_VERSION: ${{ steps.version.outputs.version }}
         run: |
+          git checkout -- apps/mobile/constants/licences.generated.json
           git rev-parse HEAD > .last_release_commit
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"

@@ -89,6 +89,7 @@
     "legalAndSupport": "Legal & support",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
+    "openSourceLicences": "Open-source licences",
     "support": "Support",
     "rateApp": "Rate this app",
     "languageChanged": "Language updated",
@@ -224,5 +225,27 @@
   "notifications": {
     "channelName": "Reminders",
     "channelDescription": "Scheduled local reminders"
+  },
+  "licences": {
+    "title": "Open-source licences",
+    "intro": "The app is built with the software below. Tap one to read its licence as its authors wrote it.",
+    "sections": {
+      "app": "App libraries",
+      "native": "Native libraries",
+      "fonts": "Fonts",
+      "android": "Android libraries"
+    },
+    "androidPending": "This build does not carry the list of its Android libraries: the release build writes it.",
+    "origin": {
+      "repository": "The package ships no licence file: this text is the one in its repository.",
+      "spdx": "The package ships no licence text: this is the standard text of the licence it declares, naming its author as the copyright holder where the package names one. The project's own copyright notice is in its source.",
+      "spdxTemplate": "The standard text of the licence its Maven POM declares, naming its publisher as the copyright holder where the POM names one. The project's own copyright notice is in its source.",
+      "pom": "Its Maven POM names this licence without its text."
+    },
+    "readTerms": "Read the terms",
+    "projectPage": "Project page",
+    "a11y": {
+      "toggle": "Shows or hides the licence"
+    }
   }
 }

@@ -89,6 +89,7 @@
     "legalAndSupport": "Légal et support",
     "privacyPolicy": "Politique de confidentialité",
     "termsOfService": "Conditions d'utilisation",
+    "openSourceLicences": "Licences open source",
     "support": "Support",
     "rateApp": "Noter cette application",
     "languageChanged": "Langue mise à jour",
@@ -224,5 +225,27 @@
   "notifications": {
     "channelName": "Rappels",
     "channelDescription": "Rappels locaux programmés"
+  },
+  "licences": {
+    "title": "Licences open source",
+    "intro": "L'application est construite avec les logiciels ci-dessous. Touchez-en un pour lire sa licence telle que ses auteurs l'ont écrite.",
+    "sections": {
+      "app": "Bibliothèques de l'application",
+      "native": "Bibliothèques natives",
+      "fonts": "Polices",
+      "android": "Bibliothèques Android"
+    },
+    "androidPending": "Cette version ne contient pas la liste de ses bibliothèques Android : c'est la compilation de publication qui l'écrit.",
+    "origin": {
+      "repository": "Le paquet ne contient aucun fichier de licence : ce texte est celui de son dépôt.",
+      "spdx": "Le paquet ne contient aucun texte de licence : voici le texte standard de la licence qu'il déclare, qui nomme son auteur comme titulaire des droits quand le paquet le nomme. La mention de droits d'auteur du projet figure dans ses sources.",
+      "spdxTemplate": "Le texte standard de la licence que déclare son POM Maven, qui nomme son éditeur comme titulaire des droits quand le POM le nomme. La mention de droits d'auteur du projet figure dans ses sources.",
+      "pom": "Son POM Maven nomme cette licence sans en donner le texte."
+    },
+    "readTerms": "Lire les conditions",
+    "projectPage": "Page du projet",
+    "a11y": {
+      "toggle": "Affiche ou masque la licence"
+    }
   }
 }

@@ -233,6 +233,7 @@ Deliberate and documented — do not "fix" them blindly. Each has its reason in 
 - **The starter asks for no permission and schedules nothing**: `POST_NOTIFICATIONS` stays declared; the ask and `syncDailyReminders` wait for the app's first notification.
 - **Remote push is not wired on the device**: `apps/api` ships the FCM sender, `@react-native-firebase/messaging` is not installed.
 - **`aps-environment` is declared though nothing is pushed**: `expo-notifications` writes it whatever the config says.
+- **`react-native-worklets` is 0.6.1 where SDK 54 expects 0.5.1**: Reanimated 4.1.x supports both 0.5.x and 0.6.x (its `compatibility.json`), so `expo.install.exclude` in `apps/mobile/package.json` names `react-native-worklets@0.5.1` and `npx expo install --check` passes. The version in the exclusion is the one the SDK expects, so the next SDK checks worklets again. A move to 0.5.1 is a native change of its own, never folded into another.
 - **`AppRatingModal` compiles and is mounted nowhere**; `SENTIMENT_GATE_ENABLED` is read by nothing. Bringing it back means wiring it, with the roles, states and star labels it still lacks.
 - **Nothing here has been heard with TalkBack or seen at 200 %**: the roles, states and labels were written from the code. The pass on a phone is each app's, before its first release.
 - **A tab label can be cut at the largest font**: `PremiumTabBar` keeps each label on one line and `tabBarHeight` adds one line's growth; a long one-word label is ellipsised, and TalkBack still reads it whole.

@@ -15,9 +15,15 @@ type PremiumGateProps = {
   source: PaywallSource
   children: React.ReactNode
   onUnlockPress?: () => void
+  accessibilityLabel?: string
 }
 
-export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProps) {
+export function PremiumGate({
+  source,
+  children,
+  onUnlockPress,
+  accessibilityLabel,
+}: PremiumGateProps) {
   const { isPremium, isInitialized, openPaywall } = usePremium()
   const isDark = useThemedColor()
   const { t } = useTranslation()
@@ -47,7 +53,7 @@ export function PremiumGate({ source, children, onUnlockPress }: PremiumGateProp
           void openPaywall({ source })
         }}
         accessibilityRole="button"
-        accessibilityLabel={t('premiumGate.unlock')}>
+        accessibilityLabel={accessibilityLabel ?? t('premiumGate.unlock')}>
         <View className="items-center gap-2">
           <View className="h-[3.25rem] w-[3.25rem] items-center justify-center rounded-full bg-pro-100 dark:bg-pro-500/[0.15]">
             <Ionicons name="lock-closed" size={22} color={UI_COLORS.pro[500]} />

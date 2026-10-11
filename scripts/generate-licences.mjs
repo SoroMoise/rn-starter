@@ -16,8 +16,9 @@
  *   map, never a licence checker over the node_modules apps/web shares) and the autolinked ones.
  * - Native libraries: what React Native and MMKV compile into their .so files, and every library
  *   vendored under a local module's `third_party/<lib>/`, read off its NOTICE.md.
- * - Fonts: every family under apps/mobile/assets/fonts, read off the licence text beside it, and
- *   every @expo/vector-icons family withAndroidFontFilter keeps.
+ * - Fonts: every family under apps/mobile/assets/fonts, named off each file's name table (its
+ *   folder when the file cannot be read, never its file stem), read off the licence text beside
+ *   it, and every @expo/vector-icons family withAndroidFontFilter keeps.
  * - Android libraries (--android): every Maven artifact of `:app:releaseRuntimeClasspath`, with the
  *   licences its POM declares, through scripts/licences/android-licences.init.gradle.
  */
@@ -713,12 +714,68 @@ function fontDirectories(dir) {
     : nested
 }
 
-function familyOf(file) {
+function stemStyle(file) {
   const stem = path.basename(file, path.extname(file))
-  const [family, ...style] = stem.split(/[-[]/)
-  return {
-    family,
-    style: style.length > 0 ? stem.slice(family.length).replace(/^-/, '') : 'Regular',
+  const separator = stem.search(/[-[]/)
+  return separator === -1 ? 'Regular' : stem.slice(separator).replace(/^-/, '')
+}
+
+const SFNT_VERSIONS = new Set(['00010000', '4f54544f', '74727565'])
+const NAME_IDS = { family: 1, subfamily: 2, typographicFamily: 16, typographicSubfamily: 17 }
+const WINDOWS_ENGLISH = 0x0409
+
+function nameRecordRank({ platform, encoding, language }) {
+  if (platform === 3 && language === WINDOWS_ENGLISH) return 0
+  if (platform === 3) return 1
+  if (platform === 0) return 2
+  if (platform === 1 && encoding === 0 && language === 0) return 3
+  return null
+}
+
+function decodeName({ platform, bytes }) {
+  if (platform === 1) return bytes.toString('latin1')
+  if (bytes.length % 2 !== 0) return ''
+  return Buffer.from(bytes).swap16().toString('utf16le')
+}
+
+function declaredNames(file) {
+  try {
+    const font = fs.readFileSync(file)
+    if (!SFNT_VERSIONS.has(font.toString('hex', 0, 4))) return null
+    const tableCount = font.readUInt16BE(4)
+    const nameRecord = Array.from({ length: tableCount }, (_, index) => 12 + index * 16).find(
+      (record) => font.toString('latin1', record, record + 4) === 'name'
+    )
+    if (nameRecord === undefined) return null
+    const table = font.readUInt32BE(nameRecord + 8)
+    const count = font.readUInt16BE(table + 2)
+    const storage = table + font.readUInt16BE(table + 4)
+    const best = new Map()
+    for (let index = 0; index < count; index++) {
+      const record = table + 6 + index * 12
+      const platform = font.readUInt16BE(record)
+      const rank = nameRecordRank({
+        platform,
+        encoding: font.readUInt16BE(record + 2),
+        language: font.readUInt16BE(record + 4),
+      })
+      const nameId = font.readUInt16BE(record + 6)
+      if (rank === null || (best.get(nameId)?.rank ?? Infinity) <= rank) continue
+      const start = storage + font.readUInt16BE(record + 10)
+      const end = start + font.readUInt16BE(record + 8)
+      if (end > font.length) continue
+      const value = decodeName({ platform, bytes: font.subarray(start, end) }).trim()
+      if (value) best.set(nameId, { rank, value })
+    }
+    const name = (id) => best.get(id)?.value
+    const family = name(NAME_IDS.typographicFamily) ?? name(NAME_IDS.family)
+    if (!family) return null
+    return {
+      family,
+      style: name(NAME_IDS.typographicSubfamily) ?? name(NAME_IDS.subfamily) ?? 'Regular',
+    }
+  } catch {
+    return null
   }
 }
 
@@ -769,16 +826,24 @@ function embeddedFonts(sources) {
       )
     }
     const url = text.match(/\((https?:\/\/[^)\s]+)\)/)?.[1]
+    const folder = path.relative(FONTS, dir).split(path.sep).join('/')
+    const familyFolder = folder.split('/')[0]
     const families = new Map()
     for (const font of fonts) {
-      const { family, style } = familyOf(font)
-      families.set(family, [...(families.get(family) ?? []), style])
+      const declared = declaredNames(path.join(dir, font))
+      if (!declared && !familyFolder) {
+        throw new Error(
+          `${relative(path.join(dir, font))} has no name table scripts/generate-licences.mjs can read, and no folder to name its family: move it, with its licence text, into a folder of apps/mobile/assets/fonts named after its family`
+        )
+      }
+      const family = declared?.family ?? familyFolder
+      const style = declared?.style ?? stemStyle(font)
+      families.set(family, new Set([...(families.get(family) ?? []), style]))
     }
-    const folder = path.relative(FONTS, dir).split(path.sep).join('/')
     return [...families].map(([family, styles]) => ({
-      id: `font:${[folder, family.toLowerCase()].filter(Boolean).join('/')}`,
+      id: `font:${[folder, family.toLowerCase().replace(/\s+/g, '-')].filter(Boolean).join('/')}`,
       name: family,
-      version: styles.join(', '),
+      version: [...styles].join(', '),
       licence,
       ...(url ? { url } : {}),
       notes: [],

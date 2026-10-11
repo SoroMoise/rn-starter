@@ -64,9 +64,15 @@ function AppContent() {
       contextualPaywallService.resetSession()
       setIsSessionStarted(true)
       await Promise.all([
-        analyticsService.setUserProperty('preferred_language', language),
-        analyticsService.setUserProperty('session_count', String(sessionCtx.sessionCount)),
-        analyticsService.setUserProperty('days_since_install', String(sessionCtx.daysSinceInstall)),
+        analyticsService.setUserProperty({ name: 'preferred_language', value: language }),
+        analyticsService.setUserProperty({
+          name: 'session_count',
+          value: String(sessionCtx.sessionCount),
+        }),
+        analyticsService.setUserProperty({
+          name: 'days_since_install',
+          value: String(sessionCtx.daysSinceInstall),
+        }),
       ])
       analyticsService.track('app_session_started', {
         language,

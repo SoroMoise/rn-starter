@@ -48,12 +48,13 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 
 ## Stores
 
-`apps/mobile/stores/`, Zustand `persist` + MMKV via `mmkvStateStorage`.
+`apps/mobile/stores/`, Zustand; the persisted ones through `persist` + MMKV via `mmkvStateStorage`.
 
 | Store | Persisted | Description |
 |---|---|---|
 | `settingsStore` | Yes | Theme (`'auto'` / `'light'` / `'dark'`), language, RTL restart state |
 | `onboardingStore` | Yes | `isCompleted`, `attemptedSkipTrial` (exit sheet offered once), `hasSeenProWelcome` — the current step is not persisted |
+| `adBannerStore` | No | `bannerHeight` — the last height `AdBanner` reported (`onSizeChange`), `null` before the first; `reportBannerHeight` |
 
 ---
 
@@ -69,7 +70,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 | `adFailures.ts` | `reportAdFailure({ error, source })` — sorts by the library's code (prefixes `googleMobileAds/` and `error-code-` stripped): no fill, network, server, timeout, internal error, OS too old, `null-activity` / `nil-vc` are breadcrumbs; anything else a non-fatal. Called by both ad services, `presentFullScreenAd` and `AdBanner` |
 | `adEnvironment.ts` | `adsAllowedInEnvironment()` — false on a Firebase Test Lab device (`modules/app-environment`); gates the banner, both ad services and the consent flow |
 | `consentService.ts` | Google UMP consent gate (`gather`, `presentForm`, `canRequestAds`, `arePrivacyOptionsRequired`); only caller of `mobileAds().initialize()`. Under `__DEV__` it passes `UMP_DEBUG_GEOGRAPHY` (`EEA`) and `UMP_TEST_DEVICE_IDS` (from `app.config.js` `extra.consentDebug`) to the request, to see the form from outside the EEA (`ADS.md` §10) |
-| `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `setUserProperty`, `init`) |
+| `analyticsService.ts` | Firebase Analytics typed wrapper (`track`, `logScreenView`, `setUserProperty({ name, value })`, `setUserId`, `init`); under `__DEV__` each prints a `__DEV__ [Analytics]` line and sends nothing to Firebase |
 | `paywallAnalytics.ts` | `trackShown` / `trackDismissed` / `trackLifetimeOfferShown` compose `paywall_shown` (default plan's `default_price` + `currency`), `paywall_dismissed` (`lifetime_offer_shown`) and `paywall_lifetime_offer_shown`; `conversionContext()` is the engagement snapshot `purchase_completed` carries |
 | `crashlyticsService.ts` | Firebase Crashlytics (`recordError`) |
 | `engagementService.ts` | Session init (install date, session count), paywall counter, `getPaywallContext` |
@@ -82,7 +83,7 @@ Persisted Zustand stores hydrate synchronously from MMKV (`mmkvStateStorage`) at
 
 ### `services/licences.ts`
 
-`loadLicences()` requires `constants/licences.generated.json` on first use; `buildLicenceRows()` flattens its four sections (`app`, `native`, `fonts`, `android`; types in `types/licences.ts`). The JSON is written by `scripts/generate-licences.mjs` (`pnpm --filter mobile licences`; `licences:android` adds Gradle's release classpath through `scripts/licences/android-licences.init.gradle`; `build:aab`, `build:install` and the release workflow run it, `remove-api.sh` once the backend is gone). Texts a package does not ship live in `scripts/licences/texts/` (`--fetch`, URLs in `sources.json`). The committed JSON lists the JS bundle, the C/C++ React Native and MMKV compile in and Ionicons, with no vendored native library and no embedded font yet; its Android section is `pending` until the first local `build:aab`.
+`loadLicences()` requires `constants/licences.generated.json` on first use; `buildLicenceRows()` flattens its four sections (`app`, `native`, `fonts`, `android`; types in `types/licences.ts`). The JSON is written by `scripts/generate-licences.mjs` (`pnpm --filter mobile licences`; `licences:android` adds Gradle's release classpath through `scripts/licences/android-licences.init.gradle`; `build:aab`, `build:install` and the release workflow run it, `remove-api.sh` once the backend is gone). Texts a package does not ship live in `scripts/licences/texts/` (`--fetch`, URLs in `sources.json`). An embedded font is one entry per family, named off its `name` table (ID 16, else 1; styles from 17, else 2) by a parser inside the script, or after its folder under `assets/fonts` when the file cannot be read (one at the root of `assets/fonts` then fails the run). The committed JSON lists the JS bundle, the C/C++ React Native and MMKV compile in and Ionicons, with no vendored native library and no embedded font yet; its Android section is `pending` until the first local `build:aab`.
 
 ### `services/notifications/`
 
@@ -128,6 +129,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 | `useRatingPrompt` | `maybeAskForRating({ moment })` — gathers the state, runs `evaluateReviewRequest`, asks for Play's card (`rating_ask_shown`) or traces `rating_ask_suppressed` |
 | `useCappedByTier` | `useCappedByTier({ items, freeLimit })` → `items`, `allItems`, `limit`, `isCapped`, `canAdd` (no caller yet) |
 | `useAdPlacementActive` | `useAdPlacementActive({ unitId, enabled })` — `useCanServeAd` plus the ad-free window; what `AdBanner` renders from |
+| `useAdBannerReserve` | `useAdBannerReserve({ isBannerVisible })` — the room a screen keeps under its last row: `adBannerStore`'s measured height, `AD_BANNER_RESERVED_HEIGHT` before the first measure, 0 when no banner shows |
 | `useCanServeAd` | `useCanServeAd({ unitId, enabled })` — kill switch, configured unit, tier (store answered), consent, environment; what `AdFreeSection` renders from |
 | `useAdsConsent` | The UMP snapshot (`canRequestAds`, `arePrivacyOptionsRequired`) |
 | `useAdFreeRemainingMinutes` | Minutes left in the ad-free window, ticking |
@@ -168,11 +170,11 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### AdMob
 
-`ADS.md` is the reference. `AdBanner` per screen (reserves `AD_BANNER_RESERVED_HEIGHT` from `useAdPlacementActive`, mounts on `useStageActive`, takes the column's width), interstitial via `adService`, rewarded via `rewardedAdService` (`AdFreeSection` in Settings). Unit ids and kill switches in `constants/admob.ts` (`pickUnitId` → `null` for `UNIT_PENDING`, an empty id or a `XXXX` placeholder; `TestIds` under `__DEV__`), app ids in `app.config.js`. Every request carries `AD_REQUEST_OPTIONS` (`requestNonPersonalizedAdsOnly` from `AD_NON_PERSONALIZED_ONLY`, `false` in the starter).
+`ADS.md` is the reference. `AdBanner` per screen (renders from `useAdPlacementActive`, mounts on `useStageActive`, stays mounted under a native `Modal`, takes the column's width, reports its measured height into `adBannerStore`; Home and Settings reserve `useAdBannerReserve({ isBannerVisible })` under their last row), interstitial via `adService`, rewarded via `rewardedAdService` (`AdFreeSection` in Settings). Unit ids and kill switches in `constants/admob.ts` (`pickUnitId` → `null` for `UNIT_PENDING`, an empty id or a `XXXX` placeholder; `TestIds` under `__DEV__`), app ids in `app.config.js`. Every request carries `AD_REQUEST_OPTIONS` (`requestNonPersonalizedAdsOnly` from `AD_NON_PERSONALIZED_ONLY`, `false` in the starter).
 
 ### RevenueCat
 
-`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content and hides it from TalkBack (`onUnlockPress` runs before its paywall opens). `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
+`SubscriptionProvider` wraps the SDK; `applyCustomerInfo` turns every CustomerInfo (boot, foreground sync, purchase, restore) into the tier, `unverifiedFlags()` seeds it from `subscriptionStorage.derive` before the store answers. `utils/offerings.ts` (`buildOfferingPlans`, `readFreeTrial`) turns `offerings.current` into `OfferingPlan[]` (`hasTrial`, `trialDays`); `pickDefaultPlan` reads the offering's `highlightedPackage` metadata, `pickLifetimeOffer` its `lifetimePlacement` (`'exit'` by default, `'inline'`) into the context's `lifetimeOffer`. `ENTITLEMENT_PREMIUM` = `'premium'`, `PRO_BENEFITS` (one entry: the ads), `PaywallSource`, `PurchaseSurface` (`paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`) and the onboarding's `PurchaseOrigin` constants live in `constants/purchases.ts`. Settings carries `PremiumBanner` (joins `PRO_BENEFITS`; *Manage subscription* when `managementUrl` is non-null), `BillingIssueBanner` and `SubscriptionGraceBanner`; `PremiumGate` blurs locked content and hides it from TalkBack (`onUnlockPress` runs before its paywall opens; `accessibilityLabel` names its unlock button, `premiumGate.unlock` by default). `FORCE_FREE` / `FORCE_PRO` (`.env`, development) replace the store's answer inside `applyCustomerInfo`.
 
 ### Contextual Paywall
 

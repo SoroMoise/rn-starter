@@ -61,6 +61,7 @@ recordAction({ allowPromos })
   ├─ engagementStorage.incrementAction()     (lifetime counter, +1, always)
   ├─ allowPromos: false ─────────────────────► stop
   ├─ contextual paywall takes the moment ───► stop
+  ├─ allowInterstitial: false ──────────────► skip the ad
   ├─ session's interruption already spent ──► skip the ad
   ├─ ad-free window open ───────────────────► skip the ad
   ├─ AdService.recordExecution()             (actions since the last ad, +1)
@@ -107,6 +108,10 @@ Rules that follow, and that the code enforces:
   or failed action. It does not advance the interstitial's own counter either, and neither does an
   action taken once the session's interruption is spent: that counter measures actions that could
   have gone to an ad, so a new session never opens on an ad the last one ran up.
+- **A moment can take the paywall and refuse the ad.** `recordAction({ allowInterstitial: false })`
+  is for an action the user repeats inside a flow — a reading just logged, an item just added —
+  where an interstitial is the interruption reviews punish: the contextual paywall may still take
+  the moment, the ad never does, and the ad's own counter does not move.
 - **The counters are persisted** (MMKV), so killing the app between two actions buys nothing.
 
 ---
@@ -170,6 +175,7 @@ take, and an incomplete env silently shipped a sibling app's release with no ads
 | `AD_REWARDED_FREE_DURATION_MINUTES` | `60` | ad-free window a completed video grants |
 | `AD_REWARDED_FREE_MAX_MINUTES` | `1440` | ceiling on the accumulated window |
 | `AD_BANNER_RESERVED_HEIGHT` | `60` | room a screen keeps below its last row while its banner shows |
+| `AD_NON_PERSONALIZED_ONLY` | `false` | every request asks for non-personalized ads only (`AD_REQUEST_OPTIONS`) — `true` for an app whose audience a health or other sensitive condition defines |
 
 `services/api/adService.ts` — the interstitial cadence (§2): `INITIAL_EXECUTIONS_THRESHOLD` (4),
 `PROGRESSIVE_EXECUTIONS_THRESHOLD` (2), `INTERSTITIAL_RAMP_UP_DAYS` (7), `MIN_INTERVAL_MS` (90 s).
@@ -257,6 +263,11 @@ Deliberate and load-bearing — don't undo them without a reason written down he
 - **Whatever follows an ad waits for it to close.** Never sequence on the native `show()`, and
   never leave the coordinator's interstitial flag raised: every exit path of
   `showInterstitialAd()` lowers it, or no automatic promo would run again that session.
+- **Every request carries `AD_REQUEST_OPTIONS`** — the banner, the interstitial and the rewarded
+  video alike. Google's publisher policies forbid personalizing ads on health or other sensitive
+  information, and in an app whose audience such a condition defines (a blood-pressure log, a
+  diabetes diary) using the app is that information: it sets `AD_NON_PERSONALIZED_ONLY`, whatever
+  the consent form allowed. A request built without the options would personalize anyway.
 - **No rewarded autoplay.** It is an AdMob policy breach and reads as a bait ad.
 - **Never chain an interstitial onto a declined rewarded video.** The user answered.
 - **A banner fits the column it sits in.** An anchored adaptive banner is as wide as the device

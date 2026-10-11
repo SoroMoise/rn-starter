@@ -1,4 +1,4 @@
-import { ADMOB_REWARDED_ID } from '@/constants/admob'
+import { AD_REQUEST_OPTIONS, ADMOB_REWARDED_ID } from '@/constants/admob'
 import { adsAllowedInEnvironment } from '@/services/api/adEnvironment'
 import { reportAdFailure } from '@/services/api/adFailures'
 import { consentService } from '@/services/api/consentService'
@@ -34,7 +34,7 @@ class RewardedAdServiceClass {
     const existing = this.slots.get(unitId)
     if (existing) return existing
 
-    const ad = RewardedAd.createForAdRequest(unitId, {})
+    const ad = RewardedAd.createForAdRequest(unitId, AD_REQUEST_OPTIONS)
     const slot: RewardedSlot = { ad, detach: () => {}, isLoaded: false, isLoading: false }
 
     const detachers = [

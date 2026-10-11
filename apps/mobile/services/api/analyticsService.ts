@@ -1,4 +1,4 @@
-import type { PurchaseSurface } from '@/constants/purchases'
+import type { PaywallSource, PurchaseSurface } from '@/constants/purchases'
 import type { RatingMoment } from '@/constants/rating'
 import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
 import type { FrictionReason } from '@/services/promo/sessionSignals'
@@ -106,7 +106,7 @@ export type AnalyticsEventMap = {
   // surfaces can sell Pro, and one unattributed conversion count cannot say which of them
   // earns its place.
   paywall_shown: {
-    source: string
+    source: PaywallSource
     offering_id: string
     session_count: number
     paywall_count: number
@@ -118,13 +118,13 @@ export type AnalyticsEventMap = {
     currency?: string
   }
   paywall_dismissed: {
-    source: string
+    source: PaywallSource
     time_on_paywall_s: number
     selected_plan: PlanPeriod | 'none'
     lifetime_offer_shown: boolean
   }
   paywall_lifetime_offer_shown: {
-    source: string
+    source: PaywallSource
     product_id: string
     price: number
     currency: string
@@ -132,12 +132,12 @@ export type AnalyticsEventMap = {
   paywall_plan_selected: {
     plan: PlanPeriod
     product_id: string
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
   }
   purchase_started: {
     plan: PlanPeriod
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
     product_id: string
     offering_id: string
@@ -146,13 +146,13 @@ export type AnalyticsEventMap = {
   // PAYMENT_PENDING_ERROR, and the entitlement follows once the store settles it.
   purchase_pending: {
     plan: PlanPeriod
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
     product_id: string
   }
   purchase_completed: {
     plan: PlanPeriod
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
     product_id: string
     offering_id: string
@@ -167,21 +167,21 @@ export type AnalyticsEventMap = {
   }
   purchase_failed: {
     plan: PlanPeriod
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
     error_code: string
   }
-  purchase_cancelled: { plan: PlanPeriod; source: string; surface: PurchaseSurface }
+  purchase_cancelled: { plan: PlanPeriod; source: PaywallSource; surface: PurchaseSurface }
   // A restore has three outcomes; `restore_purchases_completed` carries which one,
   // and `subscription_restored` fires only when something actually came back.
   restore_purchases_completed: {
     outcome: 'restored' | 'already_premium' | 'nothing_found'
-    source: string
+    source: PaywallSource
     surface: PurchaseSurface
   }
   subscription_restored: { plan: PlanPeriod }
-  restore_purchases_initiated: { source: string; surface: PurchaseSurface }
-  restore_purchases_failed: { error_code: string; source: string; surface: PurchaseSurface }
+  restore_purchases_initiated: { source: PaywallSource; surface: PurchaseSurface }
+  restore_purchases_failed: { error_code: string; source: PaywallSource; surface: PurchaseSurface }
   subscription_synced: { is_premium: boolean; plan: string }
 }
 

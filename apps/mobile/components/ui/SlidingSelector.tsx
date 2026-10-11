@@ -35,7 +35,7 @@ const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 const STYLES = {
   accent: {
     container: 'flex-row rounded-2xl bg-white p-1.5 dark:bg-gray-800',
-    indicator: 'rounded-xl bg-accent-600',
+    indicator: 'rounded-xl bg-accent-600 dark:border dark:border-accent-400',
     itemPadding: 'py-3',
     activeText: 'text-white',
     inactiveText: 'text-gray-500 dark:text-gray-400',
@@ -44,7 +44,7 @@ const STYLES = {
   },
   white: {
     container: 'flex-row rounded-xl bg-gray-100 p-1 dark:bg-gray-900',
-    indicator: 'rounded-lg bg-white dark:bg-gray-700',
+    indicator: 'rounded-lg border border-gray-500 bg-white dark:border-gray-400 dark:bg-gray-700',
     itemPadding: 'py-2',
     activeText: 'text-accent-700 dark:text-accent-300',
     inactiveText: 'text-gray-600 dark:text-gray-400',

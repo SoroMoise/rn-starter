@@ -100,14 +100,14 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 | File/Dir | Description |
 |---|---|
-| `mmkv.ts` | Main MMKV instance (id from `app.config.js`, swept by `setup.sh`) |
+| `mmkv.ts` | Main MMKV instance (id `rn-starter`, a literal `setup.sh` sweeps) |
 | `secure.ts` | Encrypted instance `entitlements` — the subscription cache and the ad-free window only; excluded from backup by `plugins/withBackupRules.js` |
-| `adapter.ts` | `createMmkvStateStorage` — sync `StateStorage` for Zustand `persist` |
+| `adapter.ts` | `mmkvStateStorage` — sync `StateStorage` for Zustand `persist` |
 | `keys.ts` | All key constants (`KEYS`) |
 | `domains/adFree.ts` | Ad-free window expiry (encrypted); a new reward adds to what is left, capped at `AD_REWARDED_FREE_MAX_MINUTES` |
 | `domains/ads.ts` | Ad-cadence state (interstitial / rewarded cooldowns) |
 | `domains/engagement.ts` | Session count, install date, paywall counter, generic action counter (`getActionCount` / `incrementAction`) |
-| `domains/review.ts` | Review streak count and last request (`recordRequest`), `setArmed` / `isArmed`, `isOptedOut()` (two legacy flags nothing writes) |
+| `domains/review.ts` | Review streak count and last request (`recordRequest`), `setArmed` / `getArmed`, `isOptedOut()` (two legacy flags nothing writes) |
 | `domains/subscription.ts` | Expiry + lifetime flag (encrypted); `persistFromEntitlement`, `derive(now, gracePeriodMs)` |
 
 ---
@@ -175,7 +175,7 @@ Nothing in the starter asks for the permission or schedules a reminder; `patches
 
 ### App Rating
 
-`RatingMoment`s and `STRONG_RATING_MOMENTS` in `constants/rating.ts`, with the Play listing derived from the package id and `APP_STORE_APP_ID` (`null`). `RatingAskHost` (`components/rating/`) raises `action_completed` at a launch or on a return after `RATING_ASK_MIN_AWAY_MS` (5 min), `RATING_ASK_SETTLE_MS` (1.2 s) after the screen is back. `REVIEW_REQUEST_CONFIG`: 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `AppRatingModal` (`components/ui/`) and `SENTIMENT_GATE_ENABLED` (off) are mounted and read by nothing.
+`RatingMoment`s and `STRONG_RATING_MOMENTS` in `constants/rating.ts`, with the Play listing derived from the package id and `APP_STORE_APP_ID` (`null`). `RatingAskHost` (`components/layout/`) raises `action_completed` at a launch or on a return after `RATING_ASK_MIN_AWAY_MS` (5 min), `RATING_ASK_SETTLE_MS` (1.2 s) after the screen is back. `REVIEW_REQUEST_CONFIG`: 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `AppRatingModal` (`components/ui/`) and `SENTIMENT_GATE_ENABLED` (off) are mounted and read by nothing.
 
 ---
 

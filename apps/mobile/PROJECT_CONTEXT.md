@@ -194,12 +194,12 @@ Expo Router. `RootStack` (`app/_layout.tsx`) → `(tabs)` group (`app/(tabs)/_la
 
 ## Onboarding
 
-`OnboardingStepKind`s (`types/onboarding.ts`) listed by `buildSteps()` in `OnboardingScreen.tsx`; `goToStep(kind)` / `goNext()`; `BackHandler` steps back from every step but the first. Events: `logOnboardingStepViewed`, `logOnboardingBackPressed`, `onboarding_pro_detected`.
+`OnboardingStepKind`s (`types/onboarding.ts`) listed by `buildSteps()` in `OnboardingScreen.tsx`; `goToStep(kind)` / `goNext()`; `BackHandler` steps back from every step but the first. The steps sit inside `OnboardingSwipeArea` (`components/onboarding/components/`: `onForward`, `onBack`; a horizontal `Gesture.Pan` — active past 20 dp, failed past 15 dp vertically, so the scroll keeps its vertical drag — that follows the finger at a quarter of its travel, springs back, and calls `onForward` or `onBack` past 60 dp or 600 dp/s, the forward direction flipped by `I18nManager.isRTL`): forward is `goNext` on the welcome step and otherwise the action the step registered through `useOnboardingForward(action | null)` (`components/onboarding/onboardingForward.ts`, a context `OnboardingScreen` provides) — `OnboardingStepLayout` its CTA while it is enabled, `PremiumValueStep` nothing —, back is `handlePrevious`. A step enters with `FadeInRight` going forward and `FadeInLeft` going back (swapped in RTL), 300 ms. Events: `logOnboardingStepViewed`, `logOnboardingBackPressed`, `onboarding_pro_detected`.
 
 1. `WelcomeStep` — introduction; a top-left pill opens `LanguagePicker`.
-2. `PremiumValueStep` — sells the default plan through `usePaywallPlans` and the paywall blocks, with a trial frieze drawn only for a free trial; `paywall.offerUnavailable` + `PriceRetryNotice` without a plan. Skip opens `ExitIntentSheet` once (`attemptedSkipTrial`), whose copy follows the default plan; leaving it, or becoming Pro on this step (an effect keyed on `isPremium`), completes the onboarding. `ProWelcomeModal` once for a subscriber met on the welcome step.
+2. `PremiumValueStep` — sells the default plan through `usePaywallPlans` and the paywall blocks, with a trial frieze drawn only for a free trial; `paywall.offerUnavailable` + `PriceRetryNotice` without a plan. The CTA block (button, trust row, legal note, skip, legal links) is pushed to the bottom while the content is shorter than the screen (`grow` content, `mt-auto`). Skip opens `ExitIntentSheet` once (`attemptedSkipTrial`), whose copy follows the default plan; leaving it, or becoming Pro on this step (an effect keyed on `isPremium`), completes the onboarding. `ProWelcomeModal` once for a subscriber met on the welcome step.
 
-`OnboardingStepLayout` (`components/onboarding/components/`) has no caller yet. Completion: `onboardingStore.markCompleted()`.
+`OnboardingStepLayout` (`components/onboarding/components/`) has no caller yet; its CTA and `secondary` sit in an `mt-auto pt-7` block of a `grow` scroll content, at the bottom while the content is shorter than the screen, and it registers the CTA with `useOnboardingForward` unless `isCtaDisabled`. Completion: `onboardingStore.markCompleted()`.
 
 ---
 

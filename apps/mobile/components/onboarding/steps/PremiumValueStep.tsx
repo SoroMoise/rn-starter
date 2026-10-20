@@ -58,6 +58,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
         className="absolute inset-0"
       />
       <ScrollView
+        contentContainerClassName="grow"
         contentContainerStyle={{
           paddingTop: insets.top + 88,
           paddingBottom: insets.bottom + 20,
@@ -102,58 +103,59 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
           </View>
         )}
 
-        {selectedPlan ? (
-          <>
-            <GradientButton
-              onPress={handleStart}
-              isLoading={isLoadingPurchase}
-              colors={GRADIENTS.cta}
-              style={{ height: 58, borderRadius: 16, marginTop: 20 }}
-              gradientStyle={{ height: '100%', gap: 8 }}
-              accessibilityLabel={ctaLabel}>
-              <ThemedText variant="buttonLarge" color="inverse">
-                {ctaLabel}
-              </ThemedText>
-              <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
-            </GradientButton>
+        <View className="mt-auto pt-5">
+          {selectedPlan ? (
+            <>
+              <GradientButton
+                onPress={handleStart}
+                isLoading={isLoadingPurchase}
+                colors={GRADIENTS.cta}
+                style={{ height: 58, borderRadius: 16 }}
+                accessibilityLabel={ctaLabel}>
+                <ThemedText variant="buttonLarge" color="inverse">
+                  {ctaLabel}
+                </ThemedText>
+                <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
+              </GradientButton>
 
-            <View className="mt-4">
-              <PaywallTrustRow plan={selectedPlan} />
+              <View className="mt-4">
+                <PaywallTrustRow plan={selectedPlan} />
+              </View>
+
+              {legalNote ? (
+                <ThemedText variant="caption" color="muted" align="center" className="mt-3">
+                  {legalNote}
+                </ThemedText>
+              ) : null}
+            </>
+          ) : isLoadingPrices ? (
+            <View className="mt-6">
+              <PriceRetryNotice />
             </View>
-
-            {legalNote ? (
-              <ThemedText variant="caption" color="muted" align="center" className="mt-3">
-                {legalNote}
+          ) : (
+            // With no plan loaded there is no price to state, so no button to press either: a
+            // disabled CTA reads as broken, a sentence with a retry reads as a network problem.
+            <View className={OFFER_PANEL_CLASS}>
+              <ThemedText variant="body" color="muted" align="center" className="mb-2">
+                {t('paywall.offerUnavailable')}
               </ThemedText>
-            ) : null}
-          </>
-        ) : isLoadingPrices ? (
-          <View className="mt-6">
-            <PriceRetryNotice />
-          </View>
-        ) : (
-          // With no plan loaded there is no price to state, so no button to press either: a
-          // disabled CTA reads as broken, a sentence with a retry reads as a network problem.
-          <View className={OFFER_PANEL_CLASS}>
-            <ThemedText variant="body" color="muted" align="center" className="mb-2">
-              {t('paywall.offerUnavailable')}
+              <PriceRetryNotice />
+            </View>
+          )}
+
+          <Pressable
+            onPress={onTriggerSkip}
+            disabled={isLoadingPurchase}
+            className="mt-4 items-center py-2"
+            accessibilityRole="button">
+            <ThemedText variant="body" weight="semibold" color="dimmed" className="underline">
+              {t('onboarding.premium.ctaSkip')}
             </ThemedText>
-            <PriceRetryNotice />
+          </Pressable>
+
+          <View className="mt-2">
+            <PaywallLegalLinks origin={ONBOARDING_PREMIUM_ORIGIN} />
           </View>
-        )}
-
-        <Pressable
-          onPress={onTriggerSkip}
-          disabled={isLoadingPurchase}
-          className="mt-4 items-center py-2"
-          accessibilityRole="button">
-          <ThemedText variant="body" weight="semibold" color="dimmed" className="underline">
-            {t('onboarding.premium.ctaSkip')}
-          </ThemedText>
-        </Pressable>
-
-        <View className="mt-2">
-          <PaywallLegalLinks origin={ONBOARDING_PREMIUM_ORIGIN} />
         </View>
       </ScrollView>
     </View>

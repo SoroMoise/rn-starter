@@ -102,14 +102,7 @@ export function LanguagePicker({
               isSelected
                 ? 'bg-accent-50 shadow-accent-100 dark:bg-accent-900/30 dark:shadow-none'
                 : 'bg-white shadow-gray-200 dark:bg-gray-800 dark:shadow-none'
-            }`}
-            style={({ pressed }) => ({
-              transform: [{ scale: pressed ? 0.98 : 1 }],
-              shadowOffset: { width: 0, height: pressed ? 2 : 4 },
-              shadowOpacity: pressed ? 0.1 : 0.15,
-              shadowRadius: pressed ? 4 : 8,
-              elevation: pressed ? 2 : 4,
-            })}>
+            } active:scale-[0.98]`}>
             <View className="flex-1 flex-row items-center gap-4">
               <View className="h-10 w-10 items-center justify-center rounded-full bg-gray-50 dark:bg-gray-700/50">
                 <ThemedText color="inherit" className="text-2xl">

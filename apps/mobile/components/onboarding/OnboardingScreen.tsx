@@ -1,6 +1,8 @@
 import { AppSystemBars } from '@/components/AppSystemBars'
 import { OnboardingBackButton } from '@/components/onboarding/components/OnboardingBackButton'
 import { OnboardingProgressBar } from '@/components/onboarding/components/OnboardingProgressBar'
+import { OnboardingSwipeArea } from '@/components/onboarding/components/OnboardingSwipeArea'
+import { OnboardingForwardContext } from '@/components/onboarding/onboardingForward'
 import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
 import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
@@ -21,8 +23,8 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { BackHandler, Pressable, View } from 'react-native'
-import Animated, { FadeIn } from 'react-native-reanimated'
+import { BackHandler, I18nManager, Pressable, View } from 'react-native'
+import Animated, { FadeIn, FadeInLeft, FadeInRight } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 // A step that depends on the device — a permission, a platform, a feature flag — is added here
@@ -41,6 +43,8 @@ export function OnboardingScreen() {
   const [exitIntentVisible, setExitIntentVisible] = useState(false)
   const [proWelcomeVisible, setProWelcomeVisible] = useState(false)
   const [languagePickerVisible, setLanguagePickerVisible] = useState(false)
+  const [moveDirection, setMoveDirection] = useState<'forward' | 'back'>('forward')
+  const forwardActionRef = useRef<(() => void) | null>(null)
   const onboardingStartTimeRef = useRef(Date.now())
   const slideStartTimeRef = useRef(Date.now())
   const premiumEnteredAtRef = useRef(0)
@@ -90,7 +94,9 @@ export function OnboardingScreen() {
     const index = steps.indexOf(stepKind)
     if (index < 0) return
     const next = steps[index + 1]
-    if (next) goToStep(next)
+    if (!next) return
+    setMoveDirection('forward')
+    goToStep(next)
   }, [goToStep, stepKind, steps])
 
   const handleComplete = useCallback(() => {
@@ -178,6 +184,7 @@ export function OnboardingScreen() {
     const previous = steps[steps.indexOf(stepKind) - 1]
     if (!previous) return
     analyticsService.logOnboardingBackPressed({ fromStep: currentStep, fromStepName: stepKind })
+    setMoveDirection('back')
     goToStep(previous)
   }, [currentStep, goToStep, stepKind, steps])
 
@@ -191,6 +198,19 @@ export function OnboardingScreen() {
     })
     return () => subscription.remove()
   }, [currentStep, handlePrevious])
+
+  const registerForward = useCallback((action: (() => void) | null) => {
+    forwardActionRef.current = action
+  }, [])
+
+  const handleSwipeForward = useCallback(() => {
+    if (stepKind === 'welcome') goNext()
+    else forwardActionRef.current?.()
+  }, [goNext, stepKind])
+
+  const stepEntering = (
+    (moveDirection === 'forward') !== I18nManager.isRTL ? FadeInRight : FadeInLeft
+  ).duration(300)
 
   const handleLanguageChange = useCallback(
     (language: Language) => {
@@ -247,10 +267,14 @@ export function OnboardingScreen() {
         </Animated.View>
       )}
 
-      <Animated.View key={stepKind} entering={FadeIn.duration(300)} className="flex-1">
-        {stepKind === 'welcome' && <WelcomeStep />}
-        {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
-      </Animated.View>
+      <OnboardingForwardContext.Provider value={registerForward}>
+        <OnboardingSwipeArea onForward={handleSwipeForward} onBack={handlePrevious}>
+          <Animated.View key={stepKind} entering={stepEntering} className="flex-1">
+            {stepKind === 'welcome' && <WelcomeStep />}
+            {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
+          </Animated.View>
+        </OnboardingSwipeArea>
+      </OnboardingForwardContext.Provider>
 
       {stepKind === 'welcome' && (
         <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
@@ -258,7 +282,7 @@ export function OnboardingScreen() {
             onPress={goNext}
             colors={GRADIENTS.cta}
             style={{ height: 58, borderRadius: 16 }}
-            gradientStyle={{ height: '100%', gap: 12 }}
+            gradientStyle={{ gap: 12 }}
             pressScale={0}
             pressOpacity={0.75}
             accessibilityLabel={t('onboarding.welcome.cta')}>

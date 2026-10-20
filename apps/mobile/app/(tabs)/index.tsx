@@ -112,7 +112,7 @@ export default function HomeScreen() {
                   onPress={() => void openPaywall({ source: 'home_cta' })}
                   colors={GRADIENTS.cta}
                   style={{ height: 58, borderRadius: 16 }}
-                  gradientStyle={{ height: '100%', gap: 10 }}
+                  gradientStyle={{ gap: 10 }}
                   accessibilityLabel={t('home.cta.label')}>
                   <ThemedText variant="buttonLarge" color="inverse">
                     {t('home.cta.label')}

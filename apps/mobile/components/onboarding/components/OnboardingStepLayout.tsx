@@ -1,3 +1,4 @@
+import { useOnboardingForward } from '@/components/onboarding/onboardingForward'
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -6,7 +7,7 @@ import { triggerLight } from '@/utils/haptics'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
-import type { ComponentProps, ReactNode } from 'react'
+import { useCallback, type ComponentProps, type ReactNode } from 'react'
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
@@ -38,6 +39,13 @@ export function OnboardingStepLayout({
   const resolvedIconColor = iconColor ?? (isDark ? UI_COLORS.accent[400] : UI_COLORS.accent[600])
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
 
+  const handleCta = useCallback(() => {
+    triggerLight()
+    onCta()
+  }, [onCta])
+
+  useOnboardingForward(isCtaDisabled ? null : handleCta)
+
   return (
     <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
       <LinearGradient
@@ -48,10 +56,10 @@ export function OnboardingStepLayout({
       />
 
       <ScrollView
-        contentContainerClassName="px-6"
+        contentContainerClassName="grow px-6"
         contentContainerStyle={{
           paddingTop: insets.top + 96,
-          paddingBottom: insets.bottom + 24,
+          paddingBottom: insets.bottom + 16,
         }}
         showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled">
@@ -73,35 +81,33 @@ export function OnboardingStepLayout({
 
         {children ? <View className="mt-6">{children}</View> : null}
 
-        <GradientButton
-          onPress={() => {
-            triggerLight()
-            onCta()
-          }}
-          disabled={isCtaDisabled}
-          colors={GRADIENTS.cta}
-          style={{ height: 58, borderRadius: 16, marginTop: 28 }}
-          gradientStyle={{ height: '100%', gap: 8 }}
-          accessibilityLabel={ctaLabel}>
-          <ThemedText variant="buttonLarge" color="inverse">
-            {ctaLabel}
-          </ThemedText>
-          <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
-        </GradientButton>
-
-        {secondary ? (
-          <Pressable
-            onPress={() => {
-              triggerLight()
-              secondary.onPress()
-            }}
-            className="mt-2 items-center py-2.5"
-            accessibilityRole="button">
-            <ThemedText variant="body" color="dimmed" weight="semibold">
-              {secondary.label}
+        <View className="mt-auto pt-7">
+          <GradientButton
+            onPress={handleCta}
+            disabled={isCtaDisabled}
+            colors={GRADIENTS.cta}
+            style={{ height: 58, borderRadius: 16 }}
+            accessibilityLabel={ctaLabel}>
+            <ThemedText variant="buttonLarge" color="inverse">
+              {ctaLabel}
             </ThemedText>
-          </Pressable>
-        ) : null}
+            <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
+          </GradientButton>
+
+          {secondary ? (
+            <Pressable
+              onPress={() => {
+                triggerLight()
+                secondary.onPress()
+              }}
+              className="mt-2 items-center py-2.5"
+              accessibilityRole="button">
+              <ThemedText variant="body" color="dimmed" weight="semibold">
+                {secondary.label}
+              </ThemedText>
+            </Pressable>
+          ) : null}
+        </View>
       </ScrollView>
     </View>
   )

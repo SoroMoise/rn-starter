@@ -1,15 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient'
-import React from 'react'
+import React, { useState } from 'react'
 import type { StyleProp, ViewStyle } from 'react-native'
 import { ActivityIndicator, Pressable, StyleSheet, View } from 'react-native'
 
 const SIZED_PADDING_VERTICAL = 12
-
-function extractBorderRadius(style: StyleProp<ViewStyle>): number | undefined {
-  if (!style) return undefined
-  const flat = StyleSheet.flatten(style)
-  return typeof flat?.borderRadius === 'number' ? flat.borderRadius : undefined
-}
 
 function asMinimumHeight(style: StyleProp<ViewStyle>): {
   style: StyleProp<ViewStyle>
@@ -50,50 +44,54 @@ export function GradientButton({
   accessibilityLabel,
   children,
 }: GradientButtonProps) {
-  const borderRadius = extractBorderRadius(style)
   const sized = asMinimumHeight(style)
+  const isInactive = disabled || isLoading
+  const [isPressed, setPressed] = useState(false)
 
+  // The gradient is an absolute fill and the content sizes the button. A flexGrow chain under a
+  // minHeight, or a '100%' height, grows to the rest of the ScrollView's viewport under React
+  // Native's Yoga errata: the button then takes half the screen.
+  // The press state is React state, never a `style` function: NativeWind's Pressable interop merges
+  // `style` as an object and drops a function, which took the radius and the margins with it.
   return (
     <Pressable
       onPress={onPress}
-      disabled={disabled || isLoading}
-      style={sized.style}
+      onPressIn={() => setPressed(true)}
+      onPressOut={() => setPressed(false)}
+      disabled={isInactive}
+      className="justify-center overflow-hidden rounded-[0.875rem]"
+      style={[
+        sized.style,
+        isInactive && styles.inactive,
+        isPressed && {
+          ...(pressOpacity !== 0 && { opacity: pressOpacity }),
+          ...(pressScale !== 0 && { transform: [{ scale: pressScale }] }),
+        },
+      ]}
       accessibilityRole="button"
       accessibilityLabel={accessibilityLabel}
-      accessibilityState={{ disabled: disabled || isLoading, busy: isLoading }}>
-      {({ pressed }) => (
-        <View
-          className={`grow overflow-hidden rounded-[0.875rem] ${disabled || isLoading ? 'opacity-50' : ''}`}
-          style={[
-            borderRadius !== undefined && { borderRadius },
-            pressed && {
-              ...(pressOpacity !== 0 && { opacity: pressOpacity }),
-              ...(pressScale !== 0 && { transform: [{ scale: pressScale }] }),
-            },
-          ]}>
-          <LinearGradient
-            colors={colors}
-            start={start}
-            end={end}
-            style={[
-              styles.gradient,
-              sized.minHeight !== undefined && {
-                minHeight: sized.minHeight,
-                paddingVertical: SIZED_PADDING_VERTICAL,
-              },
-              gradientStyle,
-            ]}>
-            {isLoading ? <ActivityIndicator size="small" color="#ffffff" /> : children}
-          </LinearGradient>
-        </View>
-      )}
+      accessibilityState={{ disabled: isInactive, busy: isLoading }}>
+      <LinearGradient colors={colors} start={start} end={end} style={StyleSheet.absoluteFill} />
+      <View
+        style={[
+          styles.content,
+          sized.minHeight !== undefined && {
+            minHeight: sized.minHeight,
+            paddingVertical: SIZED_PADDING_VERTICAL,
+          },
+          gradientStyle,
+        ]}>
+        {isLoading ? <ActivityIndicator size="small" color="#ffffff" /> : children}
+      </View>
     </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-  gradient: {
-    flexGrow: 1,
+  inactive: {
+    opacity: 0.5,
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

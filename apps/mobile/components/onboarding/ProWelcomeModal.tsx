@@ -34,7 +34,6 @@ export function ProWelcomeModal({ visible, onSkip, onContinue }: Props) {
             onPress={onSkip}
             colors={GRADIENTS.cta}
             style={{ height: 56, borderRadius: 14 }}
-            gradientStyle={{ height: '100%' }}
             accessibilityLabel={t('onboarding.proWelcome.ctaSkip')}>
             <ThemedText variant="buttonLarge" color="inverse">
               {t('onboarding.proWelcome.ctaSkip')}

@@ -15,7 +15,7 @@ import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 interface PremiumValueStepProps {
@@ -28,7 +28,6 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const { t } = useTranslation()
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions()
   const { isLoadingPrices } = usePremium()
   const { selectedPlan, ctaLabel, legalNote, isLoadingPurchase, purchaseSelected } =
     usePaywallPlans(ONBOARDING_PREMIUM_ORIGIN)
@@ -50,7 +49,7 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   }, [purchaseSelected])
 
   return (
-    <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
+    <View className="flex-1">
       <LinearGradient
         colors={isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight}
         start={{ x: 0, y: 0 }}

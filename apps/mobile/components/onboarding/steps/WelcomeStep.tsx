@@ -1,18 +1,29 @@
+import { LanguagePill } from '@/components/onboarding/components/LanguagePill'
+import { useOnboardingForward } from '@/components/onboarding/onboardingForward'
+import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
+import { GradientButton } from '@/components/ui/GradientButton'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { GRADIENTS } from '@/constants/uiColors'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
 import { MotiView } from 'moti'
 import { useTranslation } from 'react-i18next'
-import { useWindowDimensions, View } from 'react-native'
+import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-export function WelcomeStep() {
+type WelcomeStepProps = {
+  onStart: () => void
+  onOpenLanguagePicker: () => void
+}
+
+export function WelcomeStep({ onStart, onOpenLanguagePicker }: WelcomeStepProps) {
   const { t } = useTranslation()
   const isDark = useThemedColor()
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions()
+  const insets = useSafeAreaInsets()
+  useOnboardingForward(onStart)
 
   return (
-    <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
+    <View className="flex-1">
       <LinearGradient
         colors={isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight}
         start={{ x: 0, y: 0 }}
@@ -54,6 +65,30 @@ export function WelcomeStep() {
             {t('onboarding.welcome.subtitle')}
           </ThemedText>
         </MotiView>
+      </View>
+
+      <View className="absolute left-6 z-10" style={{ top: insets.top + 44 }}>
+        <LanguagePill onPress={onOpenLanguagePicker} />
+      </View>
+
+      <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
+        <GradientButton
+          onPress={onStart}
+          colors={GRADIENTS.cta}
+          style={{ height: 58, borderRadius: 16 }}
+          gradientStyle={{ gap: 12 }}
+          pressScale={0}
+          pressOpacity={0.75}
+          accessibilityLabel={t('onboarding.welcome.cta')}>
+          <ThemedText variant="buttonLarge" color="inverse" align="center" className="shrink">
+            {t('onboarding.welcome.cta')}
+          </ThemedText>
+          <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
+        </GradientButton>
+
+        <ThemedText variant="caption" color="muted" align="center" className="mt-2">
+          {t('onboarding.welcome.reassurance')}
+        </ThemedText>
       </View>
     </View>
   )

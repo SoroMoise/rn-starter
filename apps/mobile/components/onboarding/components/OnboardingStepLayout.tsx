@@ -8,7 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useCallback, type ComponentProps, type ReactNode } from 'react'
-import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native'
+import { Pressable, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 type OnboardingStepLayoutProps = {
@@ -20,6 +20,7 @@ type OnboardingStepLayoutProps = {
   ctaLabel: string
   onCta: () => void
   isCtaDisabled?: boolean
+  ctaOpensDialog?: boolean
   secondary?: { label: string; onPress: () => void }
 }
 
@@ -32,22 +33,22 @@ export function OnboardingStepLayout({
   ctaLabel,
   onCta,
   isCtaDisabled = false,
+  ctaOpensDialog = false,
   secondary,
 }: OnboardingStepLayoutProps) {
   const isDark = useThemedColor()
   const insets = useSafeAreaInsets()
   const resolvedIconColor = iconColor ?? (isDark ? UI_COLORS.accent[400] : UI_COLORS.accent[600])
-  const { width: screenWidth, height: screenHeight } = useWindowDimensions()
 
   const handleCta = useCallback(() => {
     triggerLight()
     onCta()
   }, [onCta])
 
-  useOnboardingForward(isCtaDisabled ? null : handleCta)
+  useOnboardingForward(isCtaDisabled || ctaOpensDialog ? null : onCta)
 
   return (
-    <View style={{ width: screenWidth, height: screenHeight }} className="flex-1">
+    <View className="flex-1">
       <LinearGradient
         colors={isDark ? GRADIENTS.onboardingStepDark : GRADIENTS.onboardingStepLight}
         start={{ x: 0, y: 0 }}

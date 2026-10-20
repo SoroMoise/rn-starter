@@ -1,14 +1,12 @@
 import { AppSystemBars } from '@/components/AppSystemBars'
 import { OnboardingBackButton } from '@/components/onboarding/components/OnboardingBackButton'
 import { OnboardingProgressBar } from '@/components/onboarding/components/OnboardingProgressBar'
+import { OnboardingPager } from '@/components/onboarding/components/OnboardingPager'
 import { ProWelcomeModal } from '@/components/onboarding/ProWelcomeModal'
 import { ExitIntentSheet } from '@/components/onboarding/steps/ExitIntentSheet'
 import { PremiumValueStep } from '@/components/onboarding/steps/PremiumValueStep'
 import { WelcomeStep } from '@/components/onboarding/steps/WelcomeStep'
-import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
-import { GradientButton } from '@/components/ui/GradientButton'
 import { LanguagePicker } from '@/components/ui/LanguagePicker'
-import { ThemedText } from '@/components/ui/ThemedText'
 import { GRADIENTS } from '@/constants/uiColors'
 import { usePremium } from '@/hooks/usePremium'
 import { analyticsService } from '@/services/api/analyticsService'
@@ -16,13 +14,10 @@ import { useOnboardingStore } from '@/stores/onboardingStore'
 import { useSettingsStore } from '@/stores/settingsStore'
 import type { Language, OnboardingStepKind } from '@/types'
 import { triggerLight, triggerSuccess } from '@/utils/haptics'
-import { getLanguageByCode } from '@constants/languages'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { useThemedColor } from '@hooks/useThemedColor'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { BackHandler, Pressable, View } from 'react-native'
-import Animated, { FadeIn } from 'react-native-reanimated'
+import { BackHandler, View } from 'react-native'
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 // A step that depends on the device — a permission, a platform, a feature flag — is added here
@@ -32,8 +27,10 @@ function buildSteps(): OnboardingStepKind[] {
   return ['welcome', 'premium']
 }
 
+const CHROME_ENTERING = FadeIn.duration(220)
+const CHROME_EXITING = FadeOut.duration(160)
+
 export function OnboardingScreen() {
-  const { t } = useTranslation()
   const insets = useSafeAreaInsets()
   const isDark = useThemedColor()
 
@@ -203,7 +200,14 @@ export function OnboardingScreen() {
     [setLanguage, currentLanguage]
   )
 
-  const activeLanguage = getLanguageByCode(currentLanguage)
+  const renderStep = (kind: OnboardingStepKind) => {
+    switch (kind) {
+      case 'welcome':
+        return <WelcomeStep onStart={goNext} onOpenLanguagePicker={openLanguagePicker} />
+      case 'premium':
+        return <PremiumValueStep onTriggerSkip={openExitIntent} />
+    }
+  }
 
   return (
     <View
@@ -220,64 +224,21 @@ export function OnboardingScreen() {
         <OnboardingProgressBar totalSteps={steps.length} currentStep={currentStep} />
       </View>
 
-      {stepKind === 'welcome' && (
-        <Animated.View
-          entering={FadeIn.duration(300)}
-          className="absolute left-6 z-30"
-          style={{ top: insets.top + 44 }}>
-          <Pressable
-            onPress={openLanguagePicker}
-            className="flex-row items-center gap-2 rounded-full bg-black/[0.05] px-3 py-2 dark:bg-white/10"
-            accessibilityRole="button"
-            accessibilityLabel={t('settings.selectLanguage')}
-            accessibilityValue={{ text: activeLanguage?.nativeName }}>
-            <ThemedText variant="label" color="inherit">
-              {activeLanguage?.flag}
-            </ThemedText>
-            <ThemedText variant="label" weight="medium">
-              {activeLanguage?.nativeName}
-            </ThemedText>
-            <Ionicons
-              name="chevron-down"
-              size={14}
-              color={isDark ? '#cbd5e1' : '#475569'}
-              importantForAccessibility="no"
-            />
-          </Pressable>
-        </Animated.View>
-      )}
-
-      <Animated.View key={stepKind} entering={FadeIn.duration(300)} className="flex-1">
-        {stepKind === 'welcome' && <WelcomeStep />}
-        {stepKind === 'premium' && <PremiumValueStep onTriggerSkip={openExitIntent} />}
-      </Animated.View>
-
-      {stepKind === 'welcome' && (
-        <View className="absolute left-0 right-0 z-10 px-6" style={{ bottom: insets.bottom + 16 }}>
-          <GradientButton
-            onPress={goNext}
-            colors={GRADIENTS.cta}
-            style={{ height: 58, borderRadius: 16 }}
-            gradientStyle={{ height: '100%', gap: 12 }}
-            pressScale={0}
-            pressOpacity={0.75}
-            accessibilityLabel={t('onboarding.welcome.cta')}>
-            <ThemedText variant="buttonLarge" color="inverse" align="center" className="shrink">
-              {t('onboarding.welcome.cta')}
-            </ThemedText>
-            <DirectionalIcon name="arrow-forward" size={20} color="#ffffff" />
-          </GradientButton>
-
-          <ThemedText variant="caption" color="muted" align="center" className="mt-2">
-            {t('onboarding.welcome.reassurance')}
-          </ThemedText>
-        </View>
-      )}
+      <OnboardingPager
+        pages={steps}
+        current={stepKind}
+        renderPage={renderStep}
+        onBack={handlePrevious}
+      />
 
       {currentStep > 0 && (
-        <View className="absolute left-6 z-30" style={{ top: insets.top + 24 }}>
+        <Animated.View
+          entering={CHROME_ENTERING}
+          exiting={CHROME_EXITING}
+          className="absolute left-6 z-30"
+          style={{ top: insets.top + 24 }}>
           <OnboardingBackButton onPress={handlePrevious} />
-        </View>
+        </Animated.View>
       )}
 
       <ExitIntentSheet

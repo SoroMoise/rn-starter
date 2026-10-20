@@ -89,7 +89,6 @@ export function ExitIntentSheet({
               isLoading={isLoadingPurchase}
               colors={GRADIENTS.cta}
               style={{ height: 56, borderRadius: 14, marginTop: 24 }}
-              gradientStyle={{ height: '100%' }}
               accessibilityLabel={copy.cta}>
               <ThemedText variant="buttonLarge" color="inverse">
                 {copy.cta}

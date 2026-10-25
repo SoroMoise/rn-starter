@@ -132,7 +132,7 @@ bash scripts/remove-api.sh
 
 It lists what goes and asks first, refuses a working tree with uncommitted changes (git is the only
 way back), and updates the lockfile. What it does not touch is the prose: the sections of
-`CLAUDE.md`, `apps/mobile/PROJECT_CONTEXT.md` and this README that describe the backend.
+`CLAUDE.md` and this README that describe the backend.
 
 ---
 

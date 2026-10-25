@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for Claude Code in this repository. This file says why, and what not to do; `apps/mobile/PROJECT_CONTEXT.md` says what exists (routes, providers, stores, services, hooks, storage keys, known gaps). Nothing lives in both: a convention lives here only. When a change alters something either documents, update it in the same change, surgically, without being asked. Both stay in English.
+Guidance for Claude Code in this repository. This file says why, and what not to do, plus a short Map of what exists and the Known gaps; the code is the rest. When a change alters something this file documents (routes, providers, stores, storage keys, premium gates, i18n policy, conventions), update it in the same change, surgically, without being asked. Keep it in English.
 
 Also: `apps/mobile/ADS.md` (every ad placement's unit, cadence, gates and invariants; update it in the same commit as any ad change) and `docs/boilerplate-audit/ROADMAP.md` §4 (decisions already taken: read it before re-opening one).
 
@@ -244,6 +244,34 @@ What costs a rejected release or suspended account. Most sits beside its code (p
 
 - **No urgency the store doesn't enforce**: a countdown, "today only" or "last chance" over an unchanging price is false scarcity (Play policies, EU Unfair Commercial Practices Directive). Only when a real store offer ends, and it states the date.
 - **A declaration is a form, not a design constraint**: where Play restricts a permission to certain app kinds, eligibility is a product decision taken once and the declaration filed at submission. Never narrow a feature or drop an API because "Play requires a declaration". What binds is an in-app disclosure in plain words before the system dialog, and a configuration no wider than the need.
+
+## Map
+
+Providers, outer to inner (`app/_layout.tsx`): `SafeAreaProvider > GestureHandlerRootView` (`TelemetryEffects`, `RTLRestartBanner` beside) `> QueryProvider > ThemeProvider` (mounts `AppSystemBars`) `> ToastProvider > SubscriptionProvider` (RevenueCat, `PaywallModal`) `> AdFreeProvider > AppContent` (onboarding gate, then the root Stack, `RatingAskHost` once the session started).
+
+- Routes: `(tabs)` = `index` (premium showcase) and `settings` (lazy; `LegalSupportSection`), stack route `licences` (from Settings), `OnboardingScreen` (welcome → premium value) until `onboardingStore.isCompleted`.
+- Stores: `settingsStore` (theme `'auto'|'light'|'dark'`, language, RTL restart) and `onboardingStore` (`isCompleted`, `attemptedSkipTrial`, `hasSeenProWelcome`) persist; `adBannerStore` is in memory.
+- Storage: main MMKV instance id `rn-starter` (a literal `setup.sh` sweeps); `secure.ts` instance `entitlements` (subscription cache, ad-free window), excluded from backup; `keys.ts` lists every key; `domains/` has `adFree`, `ads`, `engagement`, `review`, `subscription`.
+- `versionCode` in `app.config.js` is `major*1000000 + minor*1000 + patch`.
+- Rating numbers (`REVIEW_REQUEST_CONFIG`, `constants/rating.ts`): 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `RatingAskHost`: `RATING_ASK_MIN_AWAY_MS` 5 min, `RATING_ASK_SETTLE_MS` 1.2 s. Contextual paywall limits: `CONTEXTUAL_PAYWALL_CONFIG` (lifetime-capped impressions, each arming a cooldown).
+- `reportAdFailure({ error, source })` sorts by the library's code: no fill, network, server, timeout, internal error, OS too old, `null-activity`/`nil-vc` are breadcrumbs; anything else is a non-fatal. `adsAllowedInEnvironment()` gates the banner, both ad services and consent.
+- Config plugins (`apps/mobile/plugins/`): `withAndroidSigning`, `withReleaseEnvGuard`, `withGradleMemory`, `withGradleBuildCache`, `withCrashlyticsMapping`, `withAndroidFontFilter`, `withBackupRules`, `withAndroidConfigChanges`; local module `modules/app-environment` (Android, reads `firebase.test.lab`).
+- `PRO_BENEFITS` holds one entry (the ads); `ENTITLEMENT_PREMIUM = 'premium'`; `PurchaseSurface`: `paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`.
+
+## Known gaps — do not "fix" blindly
+
+Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
+
+- No onboarding step asks anything (`OnboardingStepLayout` has no caller); the starter asks for no permission and schedules nothing (`POST_NOTIFICATIONS` stays declared). Remote push isn't wired though `apps/api` ships the FCM sender; `aps-environment` is declared anyway.
+- `react-native-worklets` is 0.6.1 where SDK 54 expects 0.5.1: Reanimated 4.1.x supports both, so `expo.install.exclude` names `react-native-worklets@0.5.1` and `npx expo install --check` passes. A move to 0.5.1 is a native change of its own, never folded into another.
+- `AppRatingModal` compiles and is mounted nowhere.
+- Nothing has been heard with TalkBack or seen at 200 %: that pass is each app's before its first release. A long tab label can be ellipsised at the largest font.
+- No caller yet: `useCappedByTier`, `useDebounce`, `useProgressAnnouncement`, `OfflineBanner`, `exampleService` (the pattern a backend call copies); `PERSISTED_QUERY_KEYS` is empty.
+- The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set (it logs so).
+- The onboarding isn't width-capped on large screens (a design pass, not a structural one).
+- Every build opens `/privacy` and `/terms` in English whatever its language (choosing `/fr/privacy` would change the paths contract). `APP_STORE_APP_ID` is `null` until iOS.
+- The committed licences list says `pending` for Android libraries until a local `build:aab` (or `licences:android` on a prebuilt tree) writes them; never fill it by hand.
+- The starter ships no data migration (no installs): an app porting a storage change onto a released build owes its users one.
 
 ## Testing
 

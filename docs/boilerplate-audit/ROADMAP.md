@@ -172,7 +172,7 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
 - **i18n is EN and FR only.** A change that touches keys provides those two. Mass translation of
   the other 18 languages happens in its own session, never alongside feature work. *Deleting* a
   key is not translating: it is removed from all 20 files at once.
-- **Living documentation.** `CLAUDE.md` and `apps/mobile/PROJECT_CONTEXT.md` are updated in the
+- **Living documentation.** `CLAUDE.md` is updated in the
   same commit as the code they describe, surgically.
 - **Commit author is `Claude <noreply@anthropic.com>`**, matching lots 1–3 already in `main`. One
   commit breaks it, `03eba63` in lot 12 (§1).
@@ -443,9 +443,8 @@ CLAUDE.md (Bundle size) states the figure and the criterion, and `analyze` decid
 the comments that qualify say what breaks — why the entitlement and the prices are two calls, why a
 resolved purchase is not a granted one — and a cap would keep the claim and drop the reason.
 
-**`PROJECT_CONTEXT.md` says what exists, CLAUDE.md why.** A convention lives in CLAUDE.md only, and
-both files stay in English; all-currency-converter's context file, in French with conventions of its
-own, is what the rule prevents.
+**CLAUDE.md holds the rules, their reasons and a short map of what exists** (the separate
+`PROJECT_CONTEXT.md` was folded into it). It stays in English.
 
 ---
 

@@ -1,7 +1,7 @@
 # Advertising — RN Starter
 
 Everything the app shows as an ad: where each surface lives, which AdMob unit it uses, how often it
-fires, and what it must never do. `CLAUDE.md` and `PROJECT_CONTEXT.md` summarise this; **this file
+fires, and what it must never do. `CLAUDE.md` summarises this; **this file
 is the reference** — keep it in sync with `constants/admob.ts` in the same change as any surface,
 unit or frequency.
 

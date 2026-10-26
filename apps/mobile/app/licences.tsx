@@ -3,6 +3,7 @@ import { useThemeColor } from '@/components/Themed'
 import { DirectionalIcon } from '@/components/ui/DirectionalIcon'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
+import { UI_CONFIG } from '@/constants/config'
 import { buildLicenceRows, loadLicences, type LicenceListRow } from '@/services/licences'
 import { resetToHome } from '@/utils/navigation'
 import { router } from 'expo-router'
@@ -89,7 +90,10 @@ export default function LicencesScreen() {
         extraData={expanded}
         initialNumToRender={24}
         windowSize={11}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={{
+          paddingHorizontal: UI_CONFIG.SCREEN_GUTTER,
+          paddingBottom: insets.bottom + 24,
+        }}
         ListHeaderComponent={
           <ThemedText variant="label" weight="normal" color="muted" className="mb-2 mt-1">
             {t('licences.intro')}

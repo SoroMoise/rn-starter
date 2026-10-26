@@ -23,6 +23,7 @@ export const UI_CONFIG = {
   // windows hand the app widths its screens were never drawn for. Content is capped at that same
   // threshold and centred: below it the cap never binds and a phone is untouched.
   MAX_CONTENT_WIDTH: 600,
+  SCREEN_GUTTER: 12,
 }
 
 export const RTL_RESTART_BANNER_ENABLED: boolean = appConfig?.rtlRestartBannerEnabled !== false

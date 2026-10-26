@@ -5,6 +5,7 @@ import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ScreenHeading } from '@/components/ui/ScreenHeading'
 import { ThemedText } from '@/components/ui/ThemedText'
 import { ADMOB_INDEX_BANNER_ID, AD_BANNER_INDEX_ENABLED } from '@/constants/admob'
+import { UI_CONFIG } from '@/constants/config'
 import { GRADIENTS, UI_COLORS } from '@/constants/uiColors'
 import { useActionRating } from '@/hooks/useActionRating'
 import { useAdBannerReserve } from '@/hooks/useAdBannerReserve'
@@ -57,7 +58,10 @@ export default function HomeScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: tabBarPadding }}>
+        contentContainerStyle={{
+          paddingHorizontal: UI_CONFIG.SCREEN_GUTTER,
+          paddingBottom: tabBarPadding,
+        }}>
         <MotiView
           from={{ opacity: 0, translateY: 12 }}
           animate={{ opacity: 1, translateY: 0 }}

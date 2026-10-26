@@ -21,7 +21,7 @@ import { isRTLLanguage } from '@/utils/rtl'
 import { LanguagePicker } from '@components/ui/LanguagePicker'
 import { ScreenHeading } from '@components/ui/ScreenHeading'
 import { SlidingSelector } from '@components/ui/SlidingSelector'
-import { RTL_RESTART_BANNER_ENABLED } from '@constants/config'
+import { RTL_RESTART_BANNER_ENABLED, UI_CONFIG } from '@constants/config'
 import { APP_WEBSITE_URL } from '@constants/legal'
 import { useTabBarPadding } from '@hooks/useTabBarPadding'
 import Constants from 'expo-constants'
@@ -91,7 +91,10 @@ export default function SettingsScreen() {
       <ScrollView
         className="flex-1"
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: tabBarPadding }}>
+        contentContainerStyle={{
+          paddingHorizontal: UI_CONFIG.SCREEN_GUTTER,
+          paddingBottom: tabBarPadding,
+        }}>
         <ScreenHeading
           className="mb-4 mt-3.5"
           title={t('settings.title')}

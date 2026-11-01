@@ -27,3 +27,5 @@ export const UI_CONFIG = {
 }
 
 export const RTL_RESTART_BANNER_ENABLED: boolean = appConfig?.rtlRestartBannerEnabled !== false
+
+export const IN_APP_UPDATE_ENABLED: boolean = true

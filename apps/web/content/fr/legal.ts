@@ -49,6 +49,7 @@ export const frLegal: LegalContent = {
         list: [
           'Vos préférences : langue, thème, et si vous avez terminé la présentation de l’application.',
           'Des compteurs qui servent à doser l’application : combien de fois vous l’avez ouverte, combien d’actions vous avez menées à bien, sa date d’installation, et la dernière fois qu’une offre ou une demande d’avis s’est affichée.',
+          'Sur Android, le numéro de la dernière version que Google Play a proposée depuis l’application, pour ne proposer chaque version qu’une fois.',
           'Une copie chiffrée de votre statut Pro et de sa date d’expiration, pour que Pro fonctionne hors connexion.',
           'La fin d’une période sans publicité obtenue en regardant une vidéo récompensée.',
         ],
@@ -111,7 +112,7 @@ export const frLegal: LegalContent = {
         list: [
           'Google (AdMob) : choix et mesure des publicités de la version gratuite.',
           'Google (Firebase Analytics et Crashlytics) : mesure d’audience et rapports de plantage.',
-          'Votre boutique d’applications (Google Play ou l’App Store) : paiement, remboursements et gestion des abonnements.',
+          'Votre boutique d’applications (Google Play ou l’App Store) : paiement, remboursements et gestion des abonnements. Sur Android, l’application demande aussi à Google Play si une nouvelle version existe, et Google Play la propose et l’installe.',
           'RevenueCat : validation des achats et gestion du droit d’accès Pro pour notre compte.',
           'Les autorités publiques : uniquement sur demande légale valable, et dans la seule mesure requise.',
         ],

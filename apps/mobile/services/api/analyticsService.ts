@@ -4,6 +4,7 @@ import type { ReviewSuppressionReason } from '@/services/api/reviewPolicy'
 import type { FrictionReason } from '@/services/promo/sessionSignals'
 import type { OnboardingStepKind } from '@/types'
 import type { PlanPeriod } from '@/utils/offerings'
+import type { FlexibleUpdateResult } from 'in-app-updates'
 import { crashlyticsService } from '@/services/api/crashlyticsService'
 import {
   logEvent as analyticsLogEvent,
@@ -97,6 +98,10 @@ export type AnalyticsEventMap = {
   review_flow_launched: { duration_ms: number; likely_displayed: boolean }
   review_flow_failed: { error_code: string }
   store_listing_opened: { reason: string }
+  app_update_offered: undefined
+  app_update_answered: { result: FlexibleUpdateResult }
+  app_update_downloaded: undefined
+  app_update_restarted: undefined
   // Emitted by nothing: the in-app pre-prompt they belong to is dormant (SENTIMENT_GATE_ENABLED).
   rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }
   rating_later: { source: 'auto' | 'manual' }

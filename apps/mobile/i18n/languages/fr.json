@@ -153,6 +153,14 @@
     "messageManual": "Redémarrez l'app pour l'appliquer.",
     "announcement": "Changement du sens de lecture. Redémarrez l'app pour l'appliquer."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Mise à jour prête",
+      "body": "Redémarrez l'app pour terminer l'installation de la nouvelle version.",
+      "restart": "Redémarrer",
+      "later": "Plus tard"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Débloquez toutes les fonctionnalités",

@@ -57,6 +57,7 @@
     "expo-status-bar": "~3.0.9",
     "expo-store-review": "~9.0.8",
     "i18next": "^25.6.2",
+    "in-app-updates": "workspace:*",
     "moti": "^0.30.0",
     "nativewind": "^4.2.1",
     "react": "19.1.0",

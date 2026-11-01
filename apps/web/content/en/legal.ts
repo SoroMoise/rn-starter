@@ -53,6 +53,7 @@ export const enLegal: LegalContent = {
         list: [
           'Your preferences: language and theme, and whether you completed the introduction.',
           'Counters the app uses to pace itself: how many times you opened it, how many actions you completed, when it was installed, and when an offer or a rating prompt was last shown.',
+          'On Android, the version number of the last update Google Play offered inside the app, so that each version is offered once.',
           'An encrypted copy of your Pro status and its expiry date, so Pro keeps working offline.',
           'The end of an ad-free period earned by watching a rewarded video.',
         ],
@@ -115,7 +116,7 @@ export const enLegal: LegalContent = {
         list: [
           'Google (AdMob): selecting and measuring ads in the free version.',
           'Google (Firebase Analytics and Crashlytics): usage measurement and crash reports.',
-          'Your app store (Google Play or the App Store): payment, refunds and subscription management.',
+          'Your app store (Google Play or the App Store): payment, refunds and subscription management. On Android, the app also asks Google Play whether a newer version exists, and Google Play offers and installs it.',
           'RevenueCat: validating purchases and managing the Pro entitlement on our behalf.',
           'Public authorities: only when a valid legal request obliges us to, and only to the extent required.',
         ],

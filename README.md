@@ -7,7 +7,7 @@ A premium React Native / Expo monorepo boilerplate with production-grade monetiz
 ## What is inside
 
 - **Monetization** — a RevenueCat paywall rendered from the store's live offering, a contextual paywall paced by a generic action counter, AdMob (banner, interstitial, rewarded) behind Google's consent gate, a payment-problem banner and an offline allowance for subscribers
-- **Platform** — light / dark / system theme with RTL, 20 lazy-loaded languages (EN and FR as source of truth), local notifications ready to wire up (nothing asks or schedules until the app does), Play's in-app review card armed by an action, Firebase Analytics + Crashlytics
+- **Platform** — light / dark / system theme with RTL, 20 lazy-loaded languages (EN and FR as source of truth), local notifications ready to wire up (nothing asks or schedules until the app does), Play's in-app review card armed by an action, Play's flexible in-app update offered once per version, Firebase Analytics + Crashlytics
 - **Navigation and UI** — Expo Router with a root stack over two tabs, an onboarding navigated by step name, a blurred tab bar, a bottom sheet and a centred dialog kept clear of the keyboard, settings rows, a thumb-sized wheel picker, a centred column on large screens, accessibility roles and labels throughout
 - **Backend (optional)** — a Cloudflare Worker (Hono) with API-key auth, a rate limiter, a server-side RevenueCat check and an FCM sender, removable in one command
 - **Website** — a static Next.js site in English and French carrying the privacy policy and terms the app links to
@@ -52,9 +52,10 @@ apps/mobile/
 ├── providers/           # AdFreeProvider, QueryProvider,
 │                        #   SubscriptionProvider, ThemeProvider, ToastProvider
 ├── services/
-│   ├── api/             # adService, analyticsService, backendClient, contextualPaywall/,
-│   │                    #   crashlyticsService, engagementService, exampleService, paywallAnalytics,
-│   │                    #   purchaseService, ratingService, rewardedAdService
+│   ├── api/             # adService, analyticsService, appUpdatePolicy, appUpdateService,
+│   │                    #   backendClient, contextualPaywall/, crashlyticsService, engagementService,
+│   │                    #   exampleService, paywallAnalytics, purchaseService, ratingService,
+│   │                    #   rewardedAdService
 │   ├── licences.ts      # loads and groups the generated licences list
 │   ├── notifications/   # permission, channel, daily reminders
 │   ├── promo/           # promoCoordinator (anti-stacking authority)

@@ -102,7 +102,7 @@ const TIER_OVERRIDE = readTierOverride()
 // subscriber on a plane keeps their Pro until the last expiry the store reported.
 // A response that reports no active entitlement is a verified answer and never lands here.
 function unverifiedIsPremium(): boolean {
-  return subscriptionStorage.derive(Date.now()).isPremium
+  return subscriptionStorage.derive(Date.now())
 }
 
 export function SubscriptionProvider({ children }: { children: React.ReactNode }) {

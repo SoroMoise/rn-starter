@@ -50,14 +50,11 @@ export const subscriptionStorage = {
     this.setIsLifetime(true)
   },
 
-  // The offline allowance — read only when the store could not be reached at all. It ends
-  // at the last expiry the store reported: the grace period after a failed payment is
-  // the store's (Play Console), already inside that expiry, never a window of our own.
-  derive(nowMs: number): { isPremium: boolean; expiresAtMs: number | null } {
-    if (this.getIsLifetime()) return { isPremium: true, expiresAtMs: null }
+  // The offline allowance — read only when the store could not be reached at all.
+  derive(nowMs: number): boolean {
+    if (this.getIsLifetime()) return true
     const expiresAtMs = this.getExpiresAt()
-    if (expiresAtMs === null) return { isPremium: false, expiresAtMs: null }
-    return { isPremium: nowMs < expiresAtMs, expiresAtMs }
+    return expiresAtMs !== null && nowMs < expiresAtMs
   },
 
   clear(): void {

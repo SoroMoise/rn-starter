@@ -5,8 +5,6 @@ import { consentService } from '@/services/api/consentService'
 import { presentFullScreenAd } from '@/services/api/fullScreenAd'
 import { AdEventType, RewardedAd, RewardedAdEventType } from 'react-native-google-mobile-ads'
 
-// A presentation that failed is not a refusal: only a user who closed the video early is
-// someone who declined the reward.
 export type RewardedOutcome = 'earned' | 'dismissed' | 'failed'
 
 export type RewardedPlacement = 'settings'
@@ -71,8 +69,6 @@ class RewardedAdServiceClass {
     }
   }
 
-  // A slot whose presentation failed is not trusted again: after a failure Android never
-  // reported, the library still counts its ad as loaded and refuses to reload it.
   private replaceSlot({ placement, slot }: { placement: RewardedPlacement; slot: RewardedSlot }) {
     slot.detach()
     this.slots.delete(slot.ad.adUnitId)
@@ -95,7 +91,6 @@ class RewardedAdServiceClass {
     placement: RewardedPlacement
     onRewarded: () => void
   }): Promise<RewardedOutcome> {
-    // Consent can change after the SDK started and preloaded: the privacy form stays reachable.
     if (!consentService.canRequestAds()) return 'failed'
     const slot = this.slotFor({ placement })
     if (!slot?.isLoaded) return 'failed'
@@ -109,8 +104,6 @@ class RewardedAdServiceClass {
       }
     )
 
-    // The reward listener outlives a deadline the video missed: one that opens late and is
-    // watched in full still earns its window.
     const outcome = await presentFullScreenAd({
       ad: slot.ad,
       source: 'rewarded_show',

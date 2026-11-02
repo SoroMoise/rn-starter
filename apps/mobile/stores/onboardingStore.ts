@@ -27,7 +27,6 @@ export const useOnboardingStore = create<OnboardingStore>()(
     {
       name: KEYS.ONBOARDING_SEEN,
       storage: createJSONStorage(() => mmkvStateStorage),
-      // The current step is not persisted: each step writes its answer into the store it owns.
       partialize: (state) => ({
         isCompleted: state.isCompleted,
         attemptedSkipTrial: state.attemptedSkipTrial,

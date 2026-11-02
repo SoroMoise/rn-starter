@@ -15,28 +15,13 @@ permissions:
 
 jobs:
   build-and-publish:
-    # Manual runs always proceed. PR runs only when the PR was actually merged
-    # into main AND carries the `release` label; merely closing a PR, or
-    # merging one without the label, never triggers a release.
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.pull_request.merged == true &&
        contains(github.event.pull_request.labels.*.name, 'release'))
-    # Pinned rather than `ubuntu-latest`: the label moves to a new image on GitHub's
-    # schedule, and a release is the wrong place to find out what the move broke.
-    # Change it here, in a PR whose release run proves the new image.
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      # A GitHub-hosted runner boots with roughly 20 GB free, and a release build
-      # spends a large part of it on node_modules, the Gradle caches and the native
-      # intermediates the new architecture produces for every ABI. `No space left on
-      # device` surfaces as an unrelated-looking IOException in whichever task happens
-      # to be writing when the disk fills, usually the last one, an hour in. None of
-      # the runtimes wiped here take part in an Expo/Android build; the Android SDK is
-      # deliberately left alone, since the NDK the build resolves is not knowable from
-      # this file. Everything is best-effort: a missing path on a future runner image
-      # must never fail a release.
       - name: Free disk space on the runner
         run: |
           echo "::group::Disk before cleanup"
@@ -93,8 +78,6 @@ jobs:
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "Release name: $name"
 
-      # app.config.js is the single source of the version: `versionCode` is derived
-      # from it there, and prebuild carries both into the generated build.gradle.
       - name: Apply version to app.config.js
         env:
           NEW_VERSION: ${{ steps.version.outputs.version }}
@@ -111,16 +94,6 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4.0.4
 
-      # Wraps every ./gradlew invocation below (they only happen after prebuild
-      # generates android/) with automatic caching of ~/.gradle: the dependency
-      # cache, the wrapper distribution, and, since org.gradle.caching=true
-      # (withGradleBuildCache), the build cache too. That last one is the
-      # point: each CI run starts on a fresh, empty runner, so without this step
-      # restoring ~/.gradle, org.gradle.caching would have nothing to hit and
-      # the CMake native builds (reanimated, worklets, mmkv, screens: the bulk
-      # of build time) would recompile from scratch every release regardless.
-      # No manual cache key needed: the action fingerprints the actual Gradle
-      # invocation, not files that don't exist yet at this point in the job.
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@0723195856401067f7a2779048b490ace7a47d7c # v5.0.2
 
@@ -139,17 +112,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Read from app.config.js rather than written into this file: the boilerplate's
-      # setup script renames the app in the config, and a package id duplicated here
-      # would keep pointing at the template's Play listing with nothing to warn you.
-      # Loading the config loads its plugins, and with them @expo/config-plugins, so this
-      # only works once dependencies are installed.
       - name: Resolve Play package name
         id: package
         working-directory: apps/mobile
         run: |
-          # Run from apps/mobile: app.config.js is ESM, so the `require('./plugins/…')`
-          # calls at its top resolve against the process cwd, not against the file.
           pkg="$(node -e "const c=require('./app.config.js').default();process.stdout.write(c.expo.android.package)")"
           if [ -z "$pkg" ]; then
             echo "error: could not read expo.android.package from apps/mobile/app.config.js" >&2
@@ -194,8 +160,6 @@ jobs:
           MOBILE_DOTENV: ${{ secrets.MOBILE_DOTENV }}
         run: printf '%s' "$MOBILE_DOTENV" > .env
 
-      # A forced tier or a consent test aid: the release build refuses them as well
-      # (withReleaseEnvGuard), and the same script run here fails the job before the prebuild.
       - name: Refuse development overrides
         working-directory: apps/mobile
         run: node scripts/check-release-env.js
@@ -211,10 +175,6 @@ jobs:
           fi
           printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
 
-      # android/ is not committed (Continuous Native Generation), so this step is
-      # what produces the native project at all, not a refresh of a checked-in one.
-      # --clean is still passed so a cached or partially restored tree can never be
-      # the thing that gets built.
       - name: Prebuild native Android project
         working-directory: apps/mobile
         run: pnpm exec expo prebuild --clean --platform android --no-install
@@ -230,8 +190,6 @@ jobs:
           sed -i "s/versionName \"[0-9.]\+\"/versionName \"$NEW_VERSION\"/" apps/mobile/android/app/build.gradle
           sed -i "s/versionCode [0-9]\+/versionCode $VERSION_CODE/" apps/mobile/android/app/build.gradle
 
-      # keystore.properties keys must match plugins/withAndroidSigning.js, and
-      # STORE_FILE is resolved relative to apps/mobile/.
       - name: Restore release keystore and signing config
         working-directory: apps/mobile
         env:
@@ -259,9 +217,6 @@ jobs:
             echo "KEY_PASSWORD=$KEY_PASSWORD"
           } > keystore.properties
 
-      # The licences screen ships the list this step writes, so it runs between the prebuild (it
-      # reads Gradle's resolved release classpath) and the bundle (which embeds the JSON). A failure
-      # fails the release: a build whose notices are stale or missing owes them all the same.
       - name: Generate the open-source licences list
         working-directory: apps/mobile
         run: node ../../scripts/generate-licences.mjs --android
@@ -270,26 +225,12 @@ jobs:
         working-directory: apps/mobile/android
         run: ./gradlew :app:bundleRelease --no-daemon
 
-      # Running this on failure too is what turns a disk that filled mid-task into
-      # a diagnosis rather than an IOException in an unrelated-looking place.
       - name: Report disk usage
         if: always()
         run: |
           df -h /
           du -sh ~/.gradle apps/mobile/android/app/build node_modules 2>/dev/null || true
 
-      # The Play Developer API occasionally answers a clean upload with a transient
-      # "The service is currently unavailable." on the edit commit, with the AAB itself
-      # already uploaded. Each attempt opens its own edit, so retrying is safe: the
-      # previous, never-committed edit is simply abandoned.
-      #
-      # The attempts stay unrolled here rather than looping inside the composite
-      # action: `continue-on-error` on a composite action's own steps is not a
-      # mechanism worth betting a release on, and three named top-level steps say
-      # which attempt carried the release straight from the step list, where nested
-      # composite steps would only show inside one collapsed entry. Each `if` chains
-      # on the attempt immediately before it: a skipped step's outcome is `skipped`,
-      # never `failure`, so the chain stops on its own as soon as one attempt lands.
       - name: Publish to Play Store (internal track)
         id: publish_attempt_1
         continue-on-error: true
@@ -317,8 +258,6 @@ jobs:
         if: steps.publish_attempt_2.outcome == 'failure'
         run: sleep 90
 
-      # The last attempt carries no continue-on-error: it is the one that fails the
-      # job, which is what keeps `Commit version bump back to main` from running.
       - name: Publish to Play Store (internal track, retry 2)
         id: publish_attempt_3
         if: steps.publish_attempt_2.outcome == 'failure'
@@ -365,22 +304,6 @@ jobs:
             echo "holds. Do not simply re-run."
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # The Play Console keeps every bundle it accepts, so a copy in Actions storage
-      # is pure duplication once the publish lands, and Actions storage on a private
-      # repo is billed against a 500 MB monthly allowance that a handful of AABs at
-      # the default 90-day retention will exhaust on their own. The copy only earns
-      # its keep when the publish never landed at all: the bundle is then built,
-      # signed and correct, and uploading it to the Play Console by hand is one way out.
-      #
-      # So this guards on the *last* attempt where the diagnosis above guards on
-      # the first: the two ask different questions. The diagnosis fires whenever
-      # the publish path was entered and the job failed, because its whole subject
-      # is which error to trust. This one fires only when no attempt landed:
-      # guarding it on attempt 1 would upload the whole bundle every time attempt 1
-      # flaked, a retry carried the release, and something later in the job failed,
-      # with the bundle already on Play. Reading a specific attempt rather than
-      # `failure()` alone also keeps a build that died before producing an AAB
-      # from tripping `if-no-files-found: error`.
       - name: Upload AAB for manual publishing (publish never landed)
         if: failure() && steps.publish_attempt_3.outcome == 'failure'
         uses: actions/upload-artifact@v6
@@ -390,13 +313,6 @@ jobs:
           if-no-files-found: error
           retention-days: 7
 
-      # Only two files are staged, by name. android/ is gitignored here, so the
-      # prebuild output has nothing to be excluded from, but the secrets restored
-      # above sit in the same working tree, and a `git add -A` is one edit away from
-      # committing a keystore. Everything the next run needs is in these two: the
-      # released version, and the commit the next range starts from. The regenerated
-      # licences list is a build input, not a release output: it is put back first,
-      # since the rebase below refuses to run over a modified tracked file.
       - name: Commit version bump back to main
         if: success()
         env:

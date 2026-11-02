@@ -32,8 +32,6 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
   const { selectedPlan, ctaLabel, legalNote, isLoadingPurchase, purchaseSelected } =
     usePaywallPlans(ONBOARDING_PREMIUM_ORIGIN)
 
-  // The frieze describes the trial the store actually reported, and only what happens on its
-  // own: nothing in the app sends a reminder before the trial ends, so no row promises one.
   const trialDays = selectedPlan?.hasTrial ? (selectedPlan.trialDays ?? null) : null
   const timeline =
     trialDays === null
@@ -132,8 +130,6 @@ export function PremiumValueStep({ onTriggerSkip }: PremiumValueStepProps) {
               <PriceRetryNotice />
             </View>
           ) : (
-            // With no plan loaded there is no price to state, so no button to press either: a
-            // disabled CTA reads as broken, a sentence with a retry reads as a network problem.
             <View className={OFFER_PANEL_CLASS}>
               <ThemedText variant="body" color="muted" align="center" className="mb-2">
                 {t('paywall.offerUnavailable')}

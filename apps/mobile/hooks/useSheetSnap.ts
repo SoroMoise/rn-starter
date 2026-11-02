@@ -55,7 +55,6 @@ export function useSheetSnap({
   const translateY = useSharedValue(height)
   const overlayOpacity = useSharedValue(0)
   const scrollY = useSharedValue(0)
-  // Distinguishes an actual drag from a pan that only fires because scrolled content moved.
   const sheetMoved = useSharedValue(false)
   const heldByContent = useSharedValue(false)
   const beganAtTop = useSharedValue(true)
@@ -138,8 +137,6 @@ export function useSheetSnap({
         }
       })
       .onEnd((e) => {
-        // While the content holds the drag, onUpdate stops moving the sheet but `e.translationY`
-        // keeps accumulating: judged on it, a reorder or a slider inside the sheet reads as a dismiss.
         if (heldByContent.value || dragLock?.value || !sheetMoved.value) {
           const base = hasSnapPoints ? (snapIndexSv.value === 1 ? 0 : partialYSv.value) : 0
           translateY.value = withSpring(base, SPRING_BOUNCE)

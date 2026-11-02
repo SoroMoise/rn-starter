@@ -43,8 +43,6 @@ const ALIGN_CLASSES = {
   right: 'text-right',
 } as const
 
-// A caller setting `fontSize` without a matching `lineHeight` gets clipped glyphs, so derive one here
-// unless a `leading-*` class already sets it, which the inline style would otherwise override.
 const LINE_HEIGHT_RATIOS = [
   { upTo: 20, ratio: 1.45 },
   { upTo: 30, ratio: 1.3 },

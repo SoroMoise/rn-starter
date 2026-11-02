@@ -1,27 +1,4 @@
 #!/usr/bin/env node
-/**
- * Writes apps/mobile/constants/licences.generated.json, the list the app's licences screen shows
- * (Settings › Legal & support › Open-source licences). Never edit that file by hand: run this.
- *
- *   node scripts/generate-licences.mjs              JS, native C/C++ and fonts; keeps the Android list
- *   node scripts/generate-licences.mjs --android    the same, plus Gradle's release runtime classpath
- *   node scripts/generate-licences.mjs --fetch      also downloads the texts it lacks
- *
- * Options:
- *   --sourcemap <file>        read the bundle's packages from this source map instead of exporting one
- *   --android-report <file>   read the Gradle list from this report instead of running Gradle
- *
- * Sources, and the rules CLAUDE.md (Legal links) gives them:
- * - App libraries: the npm packages in the Android JS bundle (the sources of `expo export`'s source
- *   map, never a licence checker over the node_modules apps/web shares) and the autolinked ones.
- * - Native libraries: what React Native and MMKV compile into their .so files, and every library
- *   vendored under a local module's `third_party/<lib>/`, read off its NOTICE.md.
- * - Fonts: every family under apps/mobile/assets/fonts, named off each file's name table (its
- *   folder when the file cannot be read, never its file stem), read off the licence text beside
- *   it, and every @expo/vector-icons family withAndroidFontFilter keeps.
- * - Android libraries (--android): every Maven artifact of `:app:releaseRuntimeClasspath`, with the
- *   licences its POM declares, through scripts/licences/android-licences.init.gradle.
- */
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import fs from 'node:fs'
@@ -889,9 +866,6 @@ function androidReport() {
   }
   const report = path.join(os.tmpdir(), `licences-android-${process.pid}.json`)
   console.log("resolving Gradle's release runtime classpath…")
-  // The release workflow builds with --no-daemon: a daemon left idle by this run would hold its
-  // 4 GiB heap beside the one R8 needs, on a runner already short of memory. Locally both runs
-  // share one daemon, which is why the flag follows CI.
   const result = spawnSync(
     './gradlew',
     [

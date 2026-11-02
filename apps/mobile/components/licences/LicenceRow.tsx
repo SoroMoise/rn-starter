@@ -24,8 +24,6 @@ const ORIGIN_KEYS: Partial<Record<LicenceTextOrigin, string>> = {
   pom: 'licences.origin.pom',
 }
 
-// NativeWind's `font-mono` names Android's "mono", which is no system family: the text would fall
-// back to the proportional face and lose the alignment licence texts are laid out in.
 const MONOSPACE = { fontFamily: Platform.select({ ios: 'Menlo', default: 'monospace' }) }
 
 function LinkLine({ label, url }: { label: string; url: string }) {

@@ -20,7 +20,6 @@ export type PurchaseFailure =
 
 const FAILURE_BY_CODE: Partial<Record<string, PurchaseFailure>> = {
   [PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR]: 'cancelled',
-  // RevenueCat rejects a purchase whose payment the store has not settled yet; it never resolves.
   [PURCHASES_ERROR_CODE.PAYMENT_PENDING_ERROR]: 'pending',
   [PURCHASES_ERROR_CODE.PRODUCT_ALREADY_PURCHASED_ERROR]: 'already_owned',
   [PURCHASES_ERROR_CODE.PURCHASE_NOT_ALLOWED_ERROR]: 'not_allowed',
@@ -54,7 +53,6 @@ export const purchaseService = {
     return Purchases.getAppUserID()
   },
 
-  // The store page for the subscription actually held; null when there is nothing to manage.
   managementUrl({ customerInfo }: { customerInfo: CustomerInfo }): string | null {
     return customerInfo.managementURL
   },
@@ -76,8 +74,6 @@ export const purchaseService = {
     return Purchases.restorePurchases()
   },
 
-  // A known condition (offline, a closed billing sheet, a store that is down) is a
-  // breadcrumb, not a non-fatal: recorded, it would bury the bugs Crashlytics is there to surface.
   reportFailure({ error, source }: { error: unknown; source: string }): PurchaseFailure {
     const reason = classifyError(error)
     if (reason === 'unknown') {

@@ -18,17 +18,11 @@ interface AdBannerProps {
 
 export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerProps) {
   const isPlacementActive = useAdPlacementActive({ unitId: adBannerId, enabled })
-  // A BannerAd left refreshing under the top of the stack, or rebuilt by an
-  // in-screen toggle, is impression inflation, the same offence as serving the
-  // pre-launch crawler. One mount per visit, unmounted the moment the screen is
-  // no longer the one in front of the user.
   const isStageActive = useStageActive()
   const reportBannerHeight = useAdBannerStore((s) => s.reportBannerHeight)
   const tabBarPadding = useTabBarPadding() + 8
   const { width } = useWindowDimensions()
   const insets = useSafeAreaInsets()
-  // An anchored banner is as wide as the device unless told otherwise. In ScreenContainer's column
-  // a wider ad hangs past its container, where Android delivers no touch: it gets the column's width.
   const bannerWidth = Math.min(UI_CONFIG.MAX_CONTENT_WIDTH, width - insets.left - insets.right)
 
   if (!isPlacementActive || !isStageActive || adBannerId === null) return null

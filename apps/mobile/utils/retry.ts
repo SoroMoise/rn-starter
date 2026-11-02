@@ -53,7 +53,6 @@ export async function withRetry<T>({
     try {
       return await request()
     } catch (error) {
-      // Abort errors must propagate immediately without retrying
       if (isAbortError(error)) throw error
 
       lastError = handleAxiosError(error)

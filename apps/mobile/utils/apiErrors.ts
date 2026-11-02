@@ -2,16 +2,10 @@ import i18n from '@/i18n/service'
 import type { ApiError } from '@/types'
 import { isAxiosError } from 'axios'
 
-// These errors indicate a client-side problem (bad request, unauthorized, forbidden, not found,
-// unprocessable). Retrying will never succeed and wastes quota / risks triggering rate-limit bans.
 const NON_RETRYABLE_STATUS_CODES = new Set([400, 401, 403, 404, 422])
 
-// Maps an error `code` the backend returns to the i18n key shown for it; unmapped codes fall back
-// to the server's message. Empty until the API defines codes of its own.
 const API_ERROR_I18N_KEYS: Record<string, string> = {}
 
-// What `withRetry` throws once it gives up: the message is ready to show, and the status and the
-// code say why it stopped, which a bare Error carrying only the message threw away.
 export class ApiRequestError extends Error {
   readonly code?: string
   readonly statusCode?: number

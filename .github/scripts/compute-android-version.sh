@@ -1,19 +1,4 @@
 #!/usr/bin/env bash
-#
-# Computes the next Android version from Conventional Commits since the commit
-# recorded in .last_release_commit, using the project's existing scheme:
-#
-#   feat            -> minor bump   (X.Y+1.0)
-#   fix / chore / … -> patch bump   (X.Y.Z+1)
-#   <type>! or a "BREAKING CHANGE" footer -> major bump (X+1.0.0)
-#   versionCode = major*1000000 + minor*1000 + patch  (same formula as app.config.js)
-#
-# Base version is the current `version` in app.config.js (the last released
-# version). The commit range excludes .last_release_commit itself, so a feat
-# that already shipped is never counted twice.
-#
-# Emits `bump`, `old_version`, `version`, `version_code` to stdout and, when
-# running in GitHub Actions, appends them to $GITHUB_OUTPUT.
 set -euo pipefail
 
 CONFIG="apps/mobile/app.config.js"

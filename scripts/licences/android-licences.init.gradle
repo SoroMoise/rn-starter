@@ -1,12 +1,3 @@
-// Lists every Maven artifact of :app's release runtime classpath with the licences its POM declares,
-// for scripts/generate-licences.mjs. An init script rather than a config plugin: it adds nothing to
-// the generated android/ and runs only when the generator asks for it.
-//
-//   ./gradlew -q -I ../../../scripts/licences/android-licences.init.gradle :app:licencesReport \
-//     -PlicencesOutput=/tmp/android-licences.json
-//
-// A POM without <licenses> inherits its parent's, so the parents are walked (up to eight levels),
-// and a platform (a BOM) is skipped: it constrains versions and ships no code.
 
 import groovy.json.JsonOutput
 import groovy.xml.XmlSlurper

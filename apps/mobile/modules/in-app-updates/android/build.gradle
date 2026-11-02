@@ -6,7 +6,6 @@ version = '1.0.0'
 
 android {
   namespace 'com.yourcompany.inappupdates'
-  // Expo SDK 54 compiles the app with compileSdk 36; keep the module aligned.
   compileSdk 36
   defaultConfig { minSdk 26 }
   kotlinOptions { jvmTarget = '17' }

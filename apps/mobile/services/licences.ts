@@ -16,8 +16,6 @@ export type LicenceListRow =
 
 let cached: LicencesFile | null = null
 
-// Required here, never imported at the top: a static import would evaluate the generated list
-// at launch.
 export function loadLicences(): LicencesFile {
   cached ??= require('@/constants/licences.generated.json') as LicencesFile
   return cached

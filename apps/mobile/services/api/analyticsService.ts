@@ -39,8 +39,6 @@ export type AnalyticsEventMap = {
   }
 
   onboarding_started: undefined
-  // The name travels with the event: a step list gated on the device's capabilities gives the
-  // same index to different steps, and a table resolving names from it would merge them.
   onboarding_step_viewed: {
     step_index: number
     step_name: OnboardingStepKind
@@ -77,8 +75,6 @@ export type AnalyticsEventMap = {
   rate_app_clicked: undefined
   ad_privacy_options_opened: undefined
   licences_opened: undefined
-  // A moment qualified, never that the user rated. Play reports neither whether
-  // the card appeared nor its outcome; store-side truth lives in the Play Console.
   rating_ask_shown: {
     moment: RatingMoment
     request_index: number
@@ -86,7 +82,6 @@ export type AnalyticsEventMap = {
     session_count: number
     days_since_install: number
   }
-  // Play is just as silent about an ask that never comes: this is the only record of why.
   rating_ask_suppressed: {
     moment: RatingMoment
     reason: ReviewSuppressionReason
@@ -102,15 +97,10 @@ export type AnalyticsEventMap = {
   app_update_answered: { result: FlexibleUpdateResult }
   app_update_downloaded: undefined
   app_update_restarted: undefined
-  // Emitted by nothing: the in-app pre-prompt they belong to is dormant (SENTIMENT_GATE_ENABLED).
   rating_sentiment_given: { stars: number; source: 'auto' | 'manual'; action_count: number }
   rating_later: { source: 'auto' | 'manual' }
   rating_declined: { source: 'auto' }
 
-  // `source` (what brought the sale up), `surface` (the screen the tap landed on) and
-  // `offering_id` (which RevenueCat experiment served it) ride on every step: several
-  // surfaces can sell Pro, and one unattributed conversion count cannot say which of them
-  // earns its place.
   paywall_shown: {
     source: PaywallSource
     offering_id: string
@@ -118,7 +108,6 @@ export type AnalyticsEventMap = {
     paywall_count: number
     has_trial_offer: boolean
     total_actions: number
-    // Absent when no plan has loaded; the price is in the store's own currency.
     default_plan?: PlanPeriod
     default_price?: number
     currency?: string
@@ -148,8 +137,6 @@ export type AnalyticsEventMap = {
     product_id: string
     offering_id: string
   }
-  // A payment the store has taken but not settled: RevenueCat rejects the purchase with
-  // PAYMENT_PENDING_ERROR, and the entitlement follows once the store settles it.
   purchase_pending: {
     plan: PlanPeriod
     source: PaywallSource
@@ -162,7 +149,6 @@ export type AnalyticsEventMap = {
     surface: PurchaseSurface
     product_id: string
     offering_id: string
-    // Money carries its own currency: logged as USD, a ₹3,499 plan reads as $3,499.
     revenue: number
     currency: string
     session_count: number
@@ -178,8 +164,6 @@ export type AnalyticsEventMap = {
     error_code: string
   }
   purchase_cancelled: { plan: PlanPeriod; source: PaywallSource; surface: PurchaseSurface }
-  // A restore has three outcomes; `restore_purchases_completed` carries which one,
-  // and `subscription_restored` fires only when something actually came back.
   restore_purchases_completed: {
     outcome: 'restored' | 'already_premium' | 'nothing_found'
     source: PaywallSource
@@ -204,9 +188,7 @@ export const analyticsService = {
     try {
       void analyticsLogEvent(analytics(), name, params as EventParams | undefined)
       crashlyticsService.log(`[Analytics] ${name}`)
-    } catch {
-      /* silent */
-    }
+    } catch {}
   },
 
   async logScreenView(screenName: string): Promise<void> {
@@ -221,9 +203,7 @@ export const analyticsService = {
         screen_class: screenName,
       })
       crashlyticsService.log(`[Analytics] screen_view: ${screenName}`)
-    } catch {
-      /* silent */
-    }
+    } catch {}
   },
 
   async init(context: AppContext): Promise<void> {
@@ -235,9 +215,7 @@ export const analyticsService = {
         this.setUserProperty({ name: 'app_version', value: appVersion }),
         this.setUserProperty({ name: 'is_premium', value: String(context.isPremium) }),
       ])
-    } catch {
-      /* silent */
-    }
+    } catch {}
   },
 
   updateContext(patch: Partial<AppContext>): void {
@@ -257,9 +235,7 @@ export const analyticsService = {
 
     try {
       await setAnalyticsUserProperty(analytics(), name, value)
-    } catch {
-      /* silent */
-    }
+    } catch {}
   },
 
   async setUserId(id: string | null): Promise<void> {
@@ -270,9 +246,7 @@ export const analyticsService = {
 
     try {
       await setAnalyticsUserId(analytics(), id)
-    } catch {
-      /* silent */
-    }
+    } catch {}
   },
 
   logOnboardingStepViewed(params: {

@@ -42,12 +42,10 @@ WHITE = (255, 255, 255, 255)
 TRANSPARENT = (255, 255, 255, 0)
 SUPERSAMPLE = 4
 
-# Width of the mark as a fraction of each canvas.
 ICON_EXTENT = 0.56
 ADAPTIVE_EXTENT = ICON_EXTENT * 72 / 108
 SPLASH_EXTENT = 0.5
 NOTIFICATION_EXTENT = 0.72
-
 
 def draw_mark(draw: ImageDraw.ImageDraw, size: int, extent: float) -> None:
     side = size * extent
@@ -66,13 +64,11 @@ def draw_mark(draw: ImageDraw.ImageDraw, size: int, extent: float) -> None:
         fill=WHITE,
     )
 
-
 def render(size: int, extent: float, background: tuple[int, int, int] | None = None) -> Image.Image:
     canvas = size * SUPERSAMPLE
     image = Image.new("RGBA", (canvas, canvas), (*background, 255) if background else TRANSPARENT)
     draw_mark(ImageDraw.Draw(image), canvas, extent)
     return image.resize((size, size), Image.LANCZOS)
-
 
 def main() -> None:
     outputs = {
@@ -89,7 +85,6 @@ def main() -> None:
             continue
         image.save(path, "PNG", optimize=True)
         print(f"wrote {path.relative_to(REPO_ROOT)} ({image.width}x{image.height} {image.mode})")
-
 
 if __name__ == "__main__":
     main()

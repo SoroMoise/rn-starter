@@ -1,10 +1,6 @@
 import { SITE, STORE_URL } from '@/lib/site'
 import type { LegalContent } from '../types'
 
-// A starting point, not legal advice. It describes what the starter itself does (Google AdMob with
-// Google's consent form, Firebase Analytics and Crashlytics without a user id, RevenueCat on an
-// anonymous id, notifications scheduled on the device) and every app built on it adds, removes
-// and has the result reviewed. Bracketed passages are choices the publisher makes.
 export const enLegal: LegalContent = {
   privacy: {
     title: 'Privacy policy',

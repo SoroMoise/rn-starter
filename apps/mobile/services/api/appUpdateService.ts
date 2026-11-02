@@ -6,7 +6,6 @@ import {
   type UpdateInfo,
 } from 'in-app-updates'
 
-// Play's answers where no update can come from it, a build not installed from Play among them.
 const PLAY_ERRORS_WITHOUT_UPDATE: ReadonlySet<string> = new Set(
   Object.values({
     API_NOT_AVAILABLE: -3,

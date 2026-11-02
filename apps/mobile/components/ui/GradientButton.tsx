@@ -48,11 +48,6 @@ export function GradientButton({
   const isInactive = disabled || isLoading
   const [isPressed, setPressed] = useState(false)
 
-  // The gradient is an absolute fill and the content sizes the button. A flexGrow chain under a
-  // minHeight, or a '100%' height, grows to the rest of the ScrollView's viewport under React
-  // Native's Yoga errata: the button then takes half the screen.
-  // The press state is React state, never a `style` function: NativeWind's Pressable interop merges
-  // `style` as an object and drops a function, which took the radius and the margins with it.
   return (
     <Pressable
       onPress={onPress}

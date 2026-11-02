@@ -4,10 +4,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Pressable, View } from 'react-native'
 
-/**
- * Says why there are no prices, and offers a way back. Without it a captive portal
- * leaves the sale looking broken with nothing the user can act on.
- */
 export function PriceRetryNotice() {
   const { t } = useTranslation()
   const { hasPrices, isLoadingPrices, retryPrices } = usePremium()

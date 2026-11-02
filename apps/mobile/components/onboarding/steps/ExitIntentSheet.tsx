@@ -27,8 +27,6 @@ export function ExitIntentSheet({
   const { selectedPlan, selectedPrice, legalNote, isLoadingPurchase, purchaseSelected } =
     usePaywallPlans(ONBOARDING_EXIT_INTENT_ORIGIN)
 
-  // The last word before the user leaves promises exactly what the default plan is: a trial,
-  // a subscription with none, or a one-time unlock.
   const copy = (() => {
     if (selectedPlan?.hasTrial) {
       return {

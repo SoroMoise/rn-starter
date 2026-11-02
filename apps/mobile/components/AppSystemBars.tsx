@@ -10,9 +10,6 @@ interface Props {
   navigationStyle?: BarStyle
 }
 
-// The status bar keeps a stack of its mounted props; expo-navigation-bar's `setStyle` is one global
-// value. Forced styles are stacked here the same way: the last one mounted wins, and when none is
-// left the theme's style comes back.
 const forcedNavigationStyles: { style: BarStyle }[] = []
 let themeNavigationStyle: BarStyle = 'light'
 

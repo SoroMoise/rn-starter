@@ -50,9 +50,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
     purchaseSelected,
   } = usePaywallPlans({ source, surface: 'paywall' })
 
-  // A short landscape window would hand most of the viewport to the illustration before the plans
-  // scroll into view. Gated on width, not height: below 600 dp the portrait lock still holds, and
-  // there the hero keeps the height it was drawn at.
   const heroHeight = isLargeScreen
     ? Math.min(PAYWALL_HERO_HEIGHT, screenHeight * HERO_MAX_VIEWPORT_RATIO)
     : PAYWALL_HERO_HEIGHT
@@ -61,7 +58,6 @@ export function PaywallModal({ visible, source, onClose }: PaywallModalProps) {
   const [isLifetimeOfferVisible, setLifetimeOfferVisible] = useState(false)
   const paywallA11y = isLifetimeOfferVisible ? 'no-hide-descendants' : 'auto'
 
-  // Auto-close once purchase is confirmed
   useEffect(() => {
     if (isPremium && visible) onClose()
   }, [isPremium, visible, onClose])
@@ -206,8 +202,6 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: CONTENT_HORIZONTAL_PADDING,
   },
-  // The modal is its own window, outside ScreenContainer's column, so it caps itself. Capping the
-  // scroll view rather than its content keeps the hero's full-bleed margin on the column's edge.
   scrollColumn: {
     maxWidth: UI_CONFIG.MAX_CONTENT_WIDTH,
   },

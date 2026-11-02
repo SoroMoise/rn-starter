@@ -16,7 +16,6 @@ export interface DailyReminder {
 export type DailyReminderSyncOutcome = 'scheduled' | 'cleared' | 'permission_missing' | 'failed'
 
 interface SyncParams {
-  // Names the set: a sync cancels every reminder of its group, and only those.
   group: string
   reminders: readonly DailyReminder[]
   // Resolved by the caller, in the current language, and frozen at scheduling.
@@ -52,8 +51,6 @@ const isValidTime = ({ hour, minute }: DailyReminder): boolean =>
   minute <= 59
 
 async function sync({ group, reminders, content }: SyncParams): Promise<DailyReminderSyncOutcome> {
-  // Checked before anything is cancelled: expo rejects an out-of-range time one trigger at a time,
-  // which would leave the group half scheduled.
   const invalid = reminders.find((reminder) => !isValidTime(reminder))
   if (invalid) {
     throw new RangeError(
@@ -61,7 +58,6 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
     )
   }
 
-  // The whole group goes first, so a changed or removed reminder leaves no trigger behind.
   await cancelGroup(group)
   if (reminders.length === 0) return 'cleared'
 
@@ -71,8 +67,6 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
     return 'permission_missing'
   }
 
-  // A trigger names its channel now; one that does not exist yet sends it to expo-notifications'
-  // fallback channel.
   await ensureNotificationChannels()
 
   await Promise.all(
@@ -81,7 +75,6 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
         content: {
           title: content.title,
           body: content.body,
-          // iOS plays nothing without it; on Android the channel decides.
           sound: 'default',
           data: { reminderGroup: group, reminderId: reminder.id },
         },
@@ -97,13 +90,8 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
   return 'scheduled'
 }
 
-// Two syncs left to overlap would both cancel, then both schedule: duplicates, or a reminder the
-// later list removed. Each one waits for the last, so the latest call is the one that holds.
 let queue: Promise<unknown> = Promise.resolve()
 
-// Never asks for the permission: it runs wherever the list changes, the app's exit included. Without
-// it the group is left empty, so the calling effect depends on the grant too. Never rejects either:
-// its callers are effects that do not wait for it.
 export function syncDailyReminders(params: SyncParams): Promise<DailyReminderSyncOutcome> {
   const run = queue
     .then(() => sync(params))

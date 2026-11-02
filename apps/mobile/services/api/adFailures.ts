@@ -12,9 +12,6 @@ const CONDITION_CODES: ReadonlySet<string> = new Set([
   'nil-vc',
 ])
 
-// The library hands listeners `googleMobileAds/<code>`, and an Android banner prefixes the code
-// with `error-code-` as well: matched as they come, no code would ever be a condition, and every
-// no-fill would land in Crashlytics as a non-fatal.
 const readCode = (error: unknown): string => {
   const code = (error as { code?: unknown } | null | undefined)?.code
   if (typeof code !== 'string') return 'none'

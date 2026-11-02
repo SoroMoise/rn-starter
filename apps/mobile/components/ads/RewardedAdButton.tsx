@@ -82,7 +82,6 @@ export function RewardedAdButton() {
         return
       }
 
-      // Only a declined video is the moment to sell its removal, never one just watched in full.
       promoTimeoutRef.current = setTimeout(() => maybeTrigger('rewarded_ad_dismissed'), 800)
     } catch {
       Alert.alert(t('settings.adErrorTitle'), t('settings.adErrorMessage'), undefined, {

@@ -28,9 +28,6 @@ class AdServiceClass {
   private isPremium = false
   private retryCount = 0
 
-  // SubscriptionProvider is the only writer: buying Pro mid-process must disarm an
-  // interstitial preloaded while the user was still free: dropped, not just left unshown, so
-  // no retry keeps requesting ads for a subscriber.
   setPremium(isPremium: boolean): void {
     this.isPremium = isPremium
     if (isPremium) this.discardInterstitial()
@@ -49,7 +46,6 @@ class AdServiceClass {
     this.initializeInterstitial(ADMOB_INTERSTITIAL_ID)
   }
 
-  // Call at app boot to start preloading before the first ad is shown.
   initialize(): void {
     this.ensureInitialized()
   }
@@ -94,8 +90,6 @@ class AdServiceClass {
     this.isInitialized = false
   }
 
-  // An instance whose presentation failed is not trusted again: after a failure Android never
-  // reported, the library still counts it as loaded and refuses to reload it.
   private replaceInterstitial() {
     this.discardInterstitial()
     this.ensureInitialized()
@@ -124,8 +118,6 @@ class AdServiceClass {
   async shouldShowInterstitialAd(): Promise<boolean> {
     if (this.isPremium) return false
     if (!AD_INTERSTITIAL_ENABLED) return false
-    // One automatic interruption per session, all types included: an ad never lands on top
-    // of a paywall, nor in a session that already had its promo.
     if (!promoCoordinator.canPresentAutoPromo()) return false
     if (!consentService.canRequestAds()) return false
     this.ensureInitialized()
@@ -155,7 +147,6 @@ class AdServiceClass {
   // down on every path: left up, it would freeze every automatic promo for the session.
   async showInterstitialAd(): Promise<boolean> {
     if (this.isPremium) return false
-    // Consent can change after the SDK started and preloaded: the privacy form stays reachable.
     if (!consentService.canRequestAds()) return false
     this.ensureInitialized()
     const ad = this.interstitialAd

@@ -1,8 +1,6 @@
 import { createMiddleware } from 'hono/factory'
 import type { Env } from '../types'
 
-// Byte-by-byte XOR comparison: runs in constant time relative to the key
-// contents so the check cannot be used as a timing oracle.
 function safeEqual(a: string, b: string): boolean {
   const encoder = new TextEncoder()
   const left = encoder.encode(a)

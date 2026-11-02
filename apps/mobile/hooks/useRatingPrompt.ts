@@ -19,8 +19,6 @@ export function useRatingPrompt() {
       try {
         const nativeReviewAvailable = await isNativeReviewAvailable()
         const now = Date.now()
-        // Read now rather than from the session's snapshot: a warm return can come days after the
-        // session started, and would be judged on the age the install had then.
         const installDate = engagementStorage.getInstallDate()
         const daysSinceInstall = installDate === null ? 0 : Math.floor((now - installDate) / DAY_MS)
         const sessionCount = engagementStorage.getSessionCount()
@@ -60,11 +58,8 @@ export function useRatingPrompt() {
           return decision
         }
 
-        // Play's card exposes no visibility to track, and its flow resolves only once the card is
-        // gone: the session's interruption and the attempt are spent before it is asked for.
         promoCoordinator.markAutoPromoShown()
         reviewStorage.recordRequest({ index: decision.requestIndex, at: now })
-        // Whichever moment asked, an armed ask is now answered: the cooldown would refuse it.
         reviewStorage.setArmed(false)
         analyticsService.track('rating_ask_shown', {
           ...context,

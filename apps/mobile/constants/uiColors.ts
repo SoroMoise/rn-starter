@@ -1,7 +1,5 @@
 import palette from './palette'
 
-// Raw values for props that cannot consume Tailwind classes (icon `color`). The roles are the
-// scales of `palette.js`, which tailwind.config.js reads too; the others copy Tailwind's own palette.
 export const UI_COLORS = {
   accent: palette.accent,
   pro: palette.pro,
@@ -11,8 +9,6 @@ export const UI_COLORS = {
   offlineDark: '#fdba74',
 } as const
 
-// Named by role, never by hue. The tuple is what expo-linear-gradient requires: a one-colour
-// token fails the build instead of rendering a flat block.
 export const GRADIENTS = {
   cta: ['#2563eb', '#4f46e5', '#7c3aed'],
   pro: [palette.pro[600], palette.pro[700]],

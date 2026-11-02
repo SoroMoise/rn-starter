@@ -1,8 +1,6 @@
 import type { Language } from '@/types'
 import type { Locale } from 'date-fns'
 
-// Module scope and cached: every formatter in utils/time.ts resolves the locale on each call, often
-// once per list row, and rebuilding twenty loaders to run one showed up in a render path.
 const localeLoaders: Record<Language, () => Locale> = {
   en: () => require('date-fns/locale/en-US').enUS,
   fr: () => require('date-fns/locale/fr').fr,

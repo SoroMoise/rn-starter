@@ -5,9 +5,6 @@ import { useSettingsStore } from '@/stores/settingsStore'
 import { usePathname, useSegments } from 'expo-router'
 import { useEffect } from 'react'
 
-// The route pattern, never the pathname: a dynamic segment's value (`/reading/<id>`, a kind or a
-// name in the URL) would reach Analytics and Crashlytics, where an id floods the reports and a
-// value can reveal what Google Analytics forbids collecting.
 function screenName(segments: readonly string[]): string {
   const path = segments.filter((segment) => !segment.startsWith('(')).join('/')
   return path === '' ? '/home' : `/${path}`

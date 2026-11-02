@@ -34,8 +34,6 @@ interface ModalBottomSheetProps {
   initialSnap?: number
   dragLock?: SharedValue<boolean>
   showCloseButton?: boolean
-  // Intercepts the Android hardware back press. Return true when the press was
-  // handled internally (e.g. navigating back a sub-view) so the sheet stays open.
   onHardwareBack?: () => boolean
 }
 

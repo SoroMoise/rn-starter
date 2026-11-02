@@ -5,8 +5,6 @@ import { reviewStorage } from '@/services/storage/domains/review'
 import { useEffect } from 'react'
 import { AppState } from 'react-native'
 
-// Raises the ask `recordAction()` armed, once the user is back. Mount it only once the session
-// has started: an ask made before `resetSession()` spends a budget the reset then hands back.
 export function RatingAskHost() {
   const { maybeAskForRating } = useRatingPrompt()
 
@@ -26,8 +24,6 @@ export function RatingAskHost() {
         settleTimer = null
         if (!reviewStorage.getArmed()) return
         void maybeAskForRating({ moment: 'action_completed' }).then((decision) => {
-          // A refusal left armed would be traced again at every return for as long as it lasts
-          // (a cooldown runs for months), so only a passing one keeps the ask for later.
           if (decision === null || (!decision.show && refusalOutlivesSession(decision.reason))) {
             reviewStorage.setArmed(false)
           }

@@ -36,9 +36,6 @@ export function evaluateContextualPaywall(
     return { show: false, reason: 'cooldown' }
   }
 
-  // Usage only: coming back a third time says nothing about value drawn from the app, and
-  // at three sessions against ten actions the session criterion always fired first: the
-  // action count never actually gated anything.
   if (state.totalActions < c.minActions) return { show: false, reason: 'below_threshold' }
   if (state.hadFriction) return { show: false, reason: 'friction' }
 

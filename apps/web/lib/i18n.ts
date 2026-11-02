@@ -1,5 +1,3 @@
-// EN and FR are the source of truth, as in the app: other languages come in a dedicated pass. Adding
-// one is a content folder, an entry here, and its paths in routes.ts.
 export const LOCALES = ['en', 'fr'] as const
 
 export type Locale = (typeof LOCALES)[number]

@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Starter premium",
-      "subtitle": "Rilis aplikasi React Native yang rapi dan siap menghasilkan — tema, i18n, paywall, dan iklan sudah terpasang."
+      "subtitle": "Rilis aplikasi React Native yang rapi dan siap menghasilkan, dengan tema, i18n, paywall, dan iklan yang sudah terpasang."
     },
     "features": {
       "title": "Yang disertakan dalam starter ini",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Iklan (AdMob)",
-        "desc": "Banner, interstitial, dan iklan berhadiah — dinonaktifkan untuk pengguna premium."
+        "desc": "Banner, interstitial, dan iklan berhadiah. Semuanya dinonaktifkan untuk pengguna premium."
       },
       "notifications": {
         "label": "Notifikasi",
-        "desc": "Permintaan izin di layar yang membutuhkannya, banner saat aplikasi di depan, kanal Android, dan pengingat harian — siap untuk notifikasi yang dikirim aplikasi Anda."
+        "desc": "Permintaan izin di layar yang membutuhkannya, banner saat aplikasi di depan, kanal Android, dan pengingat harian, siap untuk notifikasi yang dikirim aplikasi Anda."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "Melangkah lebih jauh dengan Pro",
       "timelineHeader": "Cara kerja uji coba Anda",
       "ctaSkip": "Lanjut gratis",
-      "dayUnlock": "Hari 0 — Pro langsung terbuka",
-      "dayBilling": "Hari {{day}} — Penagihan dimulai, batalkan kapan saja"
+      "dayUnlock": "Hari 0: Pro langsung terbuka",
+      "dayBilling": "Hari {{day}}: penagihan dimulai, batalkan kapan saja"
     },
     "exitIntent": {
-      "title": "Sebentar — coba Pro gratis",
+      "title": "Sebentar, coba Pro gratis",
       "ctaStart": "Ya, mulai uji coba gratis",
       "ctaSkip": "Tidak, lanjut gratis saja",
       "body": "{{days}} hari gratis, tidak ada yang dibayar hari ini.\nBatalkan sebelum uji coba berakhir dan Anda tidak akan ditagih.",
       "bodyNoDays": "Coba gratis dulu, tidak ada yang dibayar hari ini.\nBatalkan sebelum uji coba berakhir dan Anda tidak akan ditagih.",
-      "titleNoTrial": "Sebentar — buka Pro",
-      "bodyNoTrial": "Semua yang dibuka Pro, mulai sekarang.\nTanpa komitmen — batalkan kapan saja.",
-      "ctaStartNoTrial": "Ya, buka Pro — {{price}}",
-      "titleOneTime": "Sebentar — buka Pro selamanya",
+      "titleNoTrial": "Sebentar, buka Pro",
+      "bodyNoTrial": "Semua yang dibuka Pro, mulai sekarang.\nTanpa komitmen, batalkan kapan saja.",
+      "ctaStartNoTrial": "Ya, buka Pro · {{price}}",
+      "titleOneTime": "Sebentar, buka Pro selamanya",
       "bodyOneTime": "Sekali bayar, milik Anda selamanya.\nTanpa langganan.",
-      "ctaOneTime": "Ya, buka selamanya — {{price}}"
+      "ctaOneTime": "Ya, buka selamanya · {{price}}"
     },
     "proWelcome": {
       "title": "Selamat datang kembali!",
-      "body": "Kami menemukan langganan Pro Anda — sudah aktif di perangkat ini.",
+      "body": "Kami menemukan langganan Pro Anda. Langganan ini sudah aktif di perangkat ini.",
       "ctaSkip": "Lewati pengenalan",
       "ctaContinue": "Lanjut menjelajah"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "berulang",
     "trialBadgeNoDays": "Uji coba gratis",
     "ctaTrialNoDays": "Mulai uji coba gratis",
-    "ctaSubscribeWeekly": "Berlangganan — {{price}}/minggu",
+    "ctaSubscribeWeekly": "Berlangganan · {{price}}/minggu",
     "ctaBuyLifetime": "Buka seharga {{price}}",
-    "ctaSubscribe": "Berlangganan — {{price}}",
+    "ctaSubscribe": "Berlangganan · {{price}}",
     "legalNoteRecurring": "{{price}}, diperpanjang otomatis. Batalkan kapan saja.",
     "legalNoteOneTime": "{{price}}, sekali bayar. Milik Anda selamanya.",
     "offerUnavailable": "Paket sedang tidak tersedia. Periksa koneksi Anda, lalu coba lagi.",
-    "ctaSubscribeMonthly": "Berlangganan — {{price}}/bulan",
-    "ctaSubscribeAnnual": "Berlangganan — {{price}}/tahun",
+    "ctaSubscribeMonthly": "Berlangganan · {{price}}/bulan",
+    "ctaSubscribeAnnual": "Berlangganan · {{price}}/tahun",
     "pricesUnavailable": "Harga tidak tersedia.",
     "pricesRetry": "Coba lagi",
     "benefit": {

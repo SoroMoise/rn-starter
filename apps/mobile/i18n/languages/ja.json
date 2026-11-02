@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "プレミアムスターター",
-      "subtitle": "洗練された収益化済みのReact Nativeアプリをリリース — テーマ、i18n、ペイウォール、広告まで組み込み済み。"
+      "subtitle": "洗練された収益化済みのReact Nativeアプリをリリース。テーマ、i18n、ペイウォール、広告まで組み込み済み。"
     },
     "features": {
       "title": "このスターターに含まれるもの",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "広告（AdMob）",
-        "desc": "バナー、インタースティシャル、リワード広告 — Proユーザーには表示されません。"
+        "desc": "バナー、インタースティシャル、リワード広告。Proユーザーには表示されません。"
       },
       "notifications": {
         "label": "通知",
-        "desc": "必要な画面での権限リクエスト、フォアグラウンドのバナー、Androidの通知チャンネル、毎日のリマインダー — アプリが送る通知の土台が整っています。"
+        "desc": "必要な画面での権限リクエスト、フォアグラウンドのバナー、Androidの通知チャンネル、毎日のリマインダー。アプリが送る通知の土台が整っています。"
       }
     },
     "cta": {
@@ -106,21 +106,21 @@
       "headline": "Proでさらにその先へ",
       "timelineHeader": "無料トライアルの流れ",
       "ctaSkip": "無料版で続ける",
-      "dayUnlock": "0日目 — Proがすぐに使えます",
-      "dayBilling": "{{day}}日目 — 課金開始、いつでも解約できます"
+      "dayUnlock": "0日目：Proがすぐに使えます",
+      "dayBilling": "{{day}}日目：課金開始、いつでも解約できます"
     },
     "exitIntent": {
-      "title": "その前に — Proを無料で試せます",
+      "title": "その前に、Proを無料で試せます",
       "ctaStart": "はい、無料トライアルを始める",
       "ctaSkip": "いいえ、無料版で続ける",
       "body": "{{days}}日間無料、今日のお支払いはありません。\nトライアル終了前に解約すれば、料金はかかりません。",
       "bodyNoDays": "無料でお試しいただけます。今日のお支払いはありません。\nトライアル終了前に解約すれば、料金はかかりません。",
-      "titleNoTrial": "その前に — Proをアンロック",
+      "titleNoTrial": "その前に、Proをアンロック",
       "bodyNoTrial": "Proのすべての機能を、今すぐ。\n継続の義務はなく、いつでも解約できます。",
-      "ctaStartNoTrial": "はい、Proをアンロック — {{price}}",
-      "titleOneTime": "その前に — Proを買い切りでアンロック",
+      "ctaStartNoTrial": "はい、Proをアンロック（{{price}}）",
+      "titleOneTime": "その前に、Proを買い切りでアンロック",
       "bodyOneTime": "1回のお支払いで、ずっとお使いいただけます。\nサブスクリプションはありません。",
-      "ctaOneTime": "はい、買い切りでアンロック — {{price}}"
+      "ctaOneTime": "はい、買い切りでアンロック（{{price}}）"
     },
     "proWelcome": {
       "title": "おかえりなさい！",
@@ -190,14 +190,14 @@
     "billedRecurring": "自動更新",
     "trialBadgeNoDays": "無料トライアル",
     "ctaTrialNoDays": "無料トライアルを開始",
-    "ctaSubscribeWeekly": "登録する — {{price}}/週",
+    "ctaSubscribeWeekly": "登録する（{{price}}/週）",
     "ctaBuyLifetime": "{{price}}でアンロック",
-    "ctaSubscribe": "登録する — {{price}}",
+    "ctaSubscribe": "登録する（{{price}}）",
     "legalNoteRecurring": "{{price}}、自動更新されます。いつでも解約できます。",
     "legalNoteOneTime": "{{price}}、1回払い。ずっとお使いいただけます。",
     "offerUnavailable": "現在、プランを表示できません。接続を確認して、もう一度お試しください。",
-    "ctaSubscribeMonthly": "登録する — {{price}}/月",
-    "ctaSubscribeAnnual": "登録する — {{price}}/年",
+    "ctaSubscribeMonthly": "登録する（{{price}}/月）",
+    "ctaSubscribeAnnual": "登録する（{{price}}/年）",
     "pricesUnavailable": "価格を取得できません。",
     "pricesRetry": "再試行",
     "benefit": {

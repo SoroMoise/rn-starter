@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Premium starter",
-      "subtitle": "Özenli ve para kazandıran bir React Native uygulaması yayınlayın — tema, i18n, paywall ve reklamlar hazır kurulu."
+      "subtitle": "Özenli ve para kazandıran bir React Native uygulaması yayınlayın: tema, i18n, paywall ve reklamlar hazır kurulu."
     },
     "features": {
       "title": "Bu starter ile gelenler",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Reklamlar (AdMob)",
-        "desc": "Banner, geçiş ve ödüllü reklamlar — premium kullanıcılarda kapalı."
+        "desc": "Banner, geçiş ve ödüllü reklamlar premium kullanıcılarda kapalıdır."
       },
       "notifications": {
         "label": "Bildirimler",
-        "desc": "İhtiyaç duyan ekranda izin isteği, ön planda banner'lar, Android kanalı ve günlük hatırlatıcılar — uygulamanızın göndereceği bildirimler için hazır."
+        "desc": "İhtiyaç duyan ekranda izin isteği, ön planda banner'lar, Android kanalı ve günlük hatırlatıcılar: uygulamanızın göndereceği bildirimler için her şey hazır."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "Pro ile daha ileri gidin",
       "timelineHeader": "Deneme süreniz nasıl işler",
       "ctaSkip": "Ücretsiz devam edin",
-      "dayUnlock": "0. gün — Pro anında açılır",
-      "dayBilling": "{{day}}. gün — Ödeme başlar, istediğiniz zaman iptal edin"
+      "dayUnlock": "0. gün: Pro anında açılır",
+      "dayBilling": "{{day}}. gün: ödeme başlar, istediğiniz zaman iptal edin"
     },
     "exitIntent": {
-      "title": "Bir saniye — Pro'yu ücretsiz deneyin",
+      "title": "Bir saniye, Pro'yu ücretsiz deneyin",
       "ctaStart": "Evet, ücretsiz denememi başlat",
       "ctaSkip": "Hayır teşekkürler, ücretsiz devam edeceğim",
       "body": "{{days}} gün ücretsiz, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
       "bodyNoDays": "Ücretsiz deneyin, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
-      "titleNoTrial": "Bir saniye — Pro'nun kilidini açın",
-      "bodyNoTrial": "Pro'nun açtığı her şey, hemen şimdi.\nTaahhüt yok — istediğiniz zaman iptal edin.",
-      "ctaStartNoTrial": "Evet, Pro'yu aç — {{price}}",
-      "titleOneTime": "Bir saniye — Pro'yu kalıcı olarak açın",
+      "titleNoTrial": "Bir saniye, Pro'nun kilidini açın",
+      "bodyNoTrial": "Pro'nun açtığı her şey, hemen şimdi.\nTaahhüt yok, istediğiniz zaman iptal edin.",
+      "ctaStartNoTrial": "Evet, Pro'yu aç · {{price}}",
+      "titleOneTime": "Bir saniye, Pro'yu kalıcı olarak açın",
       "bodyOneTime": "Tek ödeme, sonsuza dek sizin.\nAbonelik yok.",
-      "ctaOneTime": "Evet, kalıcı olarak aç — {{price}}"
+      "ctaOneTime": "Evet, kalıcı olarak aç · {{price}}"
     },
     "proWelcome": {
       "title": "Tekrar hoş geldiniz!",
-      "body": "Pro aboneliğinizi bulduk — bu cihazda zaten etkin.",
+      "body": "Pro aboneliğinizi bulduk. Bu cihazda zaten etkin.",
       "ctaSkip": "Girişi atla",
       "ctaContinue": "Keşfetmeye devam"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "yenilenir",
     "trialBadgeNoDays": "Ücretsiz deneme",
     "ctaTrialNoDays": "Ücretsiz denemeyi başlat",
-    "ctaSubscribeWeekly": "Abone ol — {{price}}/hafta",
+    "ctaSubscribeWeekly": "Abone ol · {{price}}/hafta",
     "ctaBuyLifetime": "{{price}} ile kilidi aç",
-    "ctaSubscribe": "Abone ol — {{price}}",
+    "ctaSubscribe": "Abone ol · {{price}}",
     "legalNoteRecurring": "{{price}}, otomatik yenilenir. İstediğiniz zaman iptal edin.",
     "legalNoteOneTime": "{{price}}, tek seferlik ödeme. Sonsuza dek sizin.",
     "offerUnavailable": "Planlar şu anda kullanılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
-    "ctaSubscribeMonthly": "Abone ol — {{price}}/ay",
-    "ctaSubscribeAnnual": "Abone ol — {{price}}/yıl",
+    "ctaSubscribeMonthly": "Abone ol · {{price}}/ay",
+    "ctaSubscribeAnnual": "Abone ol · {{price}}/yıl",
     "pricesUnavailable": "Fiyatlar kullanılamıyor.",
     "pricesRetry": "Tekrar dene",
     "benefit": {

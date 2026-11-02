@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "الإعلانات (AdMob)",
-        "desc": "إعلانات بانر، وإعلانات بينية، وإعلانات بمكافأة — تُعطَّل جميعها للمشتركين."
+        "desc": "إعلانات بانر، وإعلانات بينية، وإعلانات بمكافأة، تُعطَّل جميعها للمشتركين."
       },
       "notifications": {
         "label": "الإشعارات",
-        "desc": "طلب الإذن من الشاشة التي تحتاجه، وبانرات في المقدمة، وقناة Android، وتذكيرات يومية — كل ذلك جاهز للإشعارات التي يرسلها تطبيقك."
+        "desc": "طلب الإذن من الشاشة التي تحتاجه، وبانرات في المقدمة، وقناة Android، وتذكيرات يومية: كل ذلك جاهز للإشعارات التي يرسلها تطبيقك."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "انطلق أبعد مع Pro",
       "timelineHeader": "كيف تعمل فترة التجربة",
       "ctaSkip": "المتابعة مجانًا",
-      "dayUnlock": "اليوم 0 — يُفتح Pro فورًا",
-      "dayBilling": "اليوم {{day}} — يبدأ الخصم، ويمكنك الإلغاء في أي وقت"
+      "dayUnlock": "اليوم 0: يُفتح Pro فورًا",
+      "dayBilling": "اليوم {{day}}: يبدأ الخصم، ويمكنك الإلغاء في أي وقت"
     },
     "exitIntent": {
-      "title": "لحظة — جرّب Pro مجانًا",
+      "title": "لحظة، جرّب Pro مجانًا",
       "ctaStart": "نعم، ابدأ تجربتي المجانية",
       "ctaSkip": "لا شكرًا، المتابعة مجانًا",
       "body": "مجانًا لمدة {{days}} يوم، ولا تدفع شيئًا اليوم.\nألغِ قبل انتهاء التجربة ولن يُخصم منك شيء.",
       "bodyNoDays": "جرّب مجانًا، ولا تدفع شيئًا اليوم.\nألغِ قبل انتهاء التجربة ولن يُخصم منك شيء.",
-      "titleNoTrial": "لحظة — افتح Pro",
+      "titleNoTrial": "لحظة، افتح Pro",
       "bodyNoTrial": "كل ما يفتحه Pro، من الآن.\nبلا التزام، ويمكنك الإلغاء في أي وقت.",
-      "ctaStartNoTrial": "نعم، افتح Pro — {{price}}",
-      "titleOneTime": "لحظة — افتح Pro للأبد",
+      "ctaStartNoTrial": "نعم، افتح Pro · {{price}}",
+      "titleOneTime": "لحظة، افتح Pro للأبد",
       "bodyOneTime": "دفعة واحدة، ولك للأبد.\nبلا اشتراك.",
-      "ctaOneTime": "نعم، افتحه للأبد — {{price}}"
+      "ctaOneTime": "نعم، افتحه للأبد · {{price}}"
     },
     "proWelcome": {
       "title": "مرحبًا بعودتك!",
-      "body": "وجدنا اشتراكك في Pro — وهو مفعّل بالفعل على هذا الجهاز.",
+      "body": "وجدنا اشتراكك في Pro، وهو مفعّل بالفعل على هذا الجهاز.",
       "ctaSkip": "تخطّي المقدمة",
       "ctaContinue": "مواصلة الاستكشاف"
     },
@@ -195,14 +195,14 @@
     "billedRecurring": "دفع متكرر",
     "trialBadgeNoDays": "تجربة مجانية",
     "ctaTrialNoDays": "ابدأ التجربة المجانية",
-    "ctaSubscribeWeekly": "اشترك — {{price}}/أسبوع",
+    "ctaSubscribeWeekly": "اشترك · {{price}}/أسبوع",
     "ctaBuyLifetime": "احصل عليه مقابل {{price}}",
-    "ctaSubscribe": "اشترك — {{price}}",
+    "ctaSubscribe": "اشترك · {{price}}",
     "legalNoteRecurring": "{{price}}، يتجدّد تلقائيًا. يمكنك الإلغاء في أي وقت.",
     "legalNoteOneTime": "{{price}}، دفعة واحدة. لك مدى الحياة.",
     "offerUnavailable": "الخطط غير متاحة حاليًا. تحقّق من اتصالك وحاول مرة أخرى.",
-    "ctaSubscribeMonthly": "اشترك — {{price}}/شهر",
-    "ctaSubscribeAnnual": "اشترك — {{price}}/سنة",
+    "ctaSubscribeMonthly": "اشترك · {{price}}/شهر",
+    "ctaSubscribeAnnual": "اشترك · {{price}}/سنة",
     "pricesUnavailable": "الأسعار غير متاحة.",
     "pricesRetry": "حاول مرة أخرى",
     "benefit": {

@@ -8,9 +8,9 @@ Also: `apps/mobile/ADS.md` (every ad placement's unit, cadence, gates and invari
 
 Monorepo boilerplate for a premium React Native / Expo app (pnpm workspaces + Turborepo). Identity placeholders: `RN Starter` / `rn-starter` / `com.yourcompany.rnstarter` / scheme `rnstarter`.
 
-- **`apps/mobile`** — Expo SDK 54 / RN 0.81.5 / React 19: AdMob, RevenueCat, contextual paywall on a generic action counter, Firebase Analytics + Crashlytics, local notifications (unwired), rating prompt, Play's flexible in-app update, 20 languages, light/dark + RTL, onboarding (welcome → premium), open-source licences screen.
-- **`apps/api`** — Cloudflare Worker (Hono), optional with `packages/shared`: `bash scripts/remove-api.sh` removes both (see Data fetching).
-- **`apps/web`** — Next.js 16 static site (EN root, FR under `/fr`): home, privacy, terms.
+- **`apps/mobile`** (Expo SDK 54 / RN 0.81.5 / React 19): AdMob, RevenueCat, contextual paywall on a generic action counter, Firebase Analytics + Crashlytics, local notifications (unwired), rating prompt, Play's flexible in-app update, 20 languages, light/dark + RTL, onboarding (welcome → premium), open-source licences screen.
+- **`apps/api`**, a Cloudflare Worker (Hono), optional with `packages/shared`: `bash scripts/remove-api.sh` removes both (see Data fetching).
+- **`apps/web`**, a Next.js 16 static site (EN root, FR under `/fr`): home, privacy, terms.
 
 **`scripts/setup.sh` sweeps the identity everywhere it is written and must stay exhaustive**: `app.config.js`, `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, the 20 translation files, `google-services.json.example`, `apps/web/lib/site.ts`, `apps/api/wrangler.toml`, the root `package.json`, and every local module's Android package (`com.yourcompany.appenvironment`, `com.yourcompany.inappupdates`: Gradle `group`/`namespace`, Kotlin `package` and directory, the class `expo-module.config.json` registers, all moved together; the sweep walks every folder under `modules/`, so a new module takes the `com.yourcompany.<name>` prefix and needs nothing more). It also writes the site and support address into `constants/legal.ts` and starts `.last_release_commit` at the current commit. Anything new that hardcodes the name, slug, bundle id, site or support address joins the sweep in the same change.
 
@@ -180,7 +180,7 @@ NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Reanimate
 - **Readable colour is chosen by step**: meaningful text/icons take 700+ in light, 400− in dark (a step further on tinted surfaces), never 500; a fill under white text takes 600+ in both themes (emerald from 700), and so does every gradient stop under white text; non-text state (switch track, radio ring, progress fill, selected border) reaches 3:1 against its surface. Gray text is 500+ on white/gray-50, 400− on gray-800/900; `muted` is gray-600 (gray-500 is 4.63:1 on gray-50 and falls under 4.5 on tints), `subtle` its alias. No text under 4.5:1 on its background; a decorative icon may stay at 500 where it holds 3:1.
 - **Every tab shares one gutter and heading line**: `paddingHorizontal: UI_CONFIG.SCREEN_GUTTER` (12) on the `ScrollView`'s content container, stack routes included (never a margin on the scroll view, nor per block) and `ScreenHeading` at `mt-3.5`.
 - **A screen that forces the system bars hands them back**: mount a second `AppSystemBars` with explicit styles; it stacks forced navigation styles itself (last mounted wins).
-- **A font size raised from `style` takes its line height with it**: `ThemedText` derives one; a plain `Text` doesn't — set both.
+- **A font size raised from `style` takes its line height with it**: `ThemedText` derives one; a plain `Text` doesn't, so set both.
 - **Silent traps:**
   - Inside a vertical scroll, nothing grows to fill a parent with only a minimum height and no height is a percentage (Yoga measures against the rest of the viewport: a `GradientButton` becomes half a screen). `GradientButton` draws its gradient as an absolute fill behind sizing content; its `gradientStyle` never carries a height.
   - **A `Pressable` never takes a `style` function** (NativeWind drops it: radius, margins and press feedback vanish). Use a class variant (`active:scale-[0.98]`) or `onPressIn`/`onPressOut` state.
@@ -267,7 +267,7 @@ Providers, outer to inner (`app/_layout.tsx`): `SafeAreaProvider > GestureHandle
 - Config plugins (`apps/mobile/plugins/`): `withAndroidSigning`, `withReleaseEnvGuard`, `withGradleMemory`, `withGradleBuildCache`, `withCrashlyticsMapping`, `withAndroidFontFilter`, `withBackupRules`, `withAndroidConfigChanges`; local modules (Android) `modules/app-environment` (reads `firebase.test.lab`) and `modules/in-app-updates` (Play's In-App Updates).
 - `PRO_BENEFITS` holds one entry (the ads); `ENTITLEMENT_PREMIUM = 'premium'`; `PurchaseSurface`: `paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`.
 
-## Known gaps — do not "fix" blindly
+## Known gaps: do not "fix" blindly
 
 Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
 

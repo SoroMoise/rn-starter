@@ -11,16 +11,16 @@ The shipped versions of an app built from this template are not written here by 
 `chore(release): vX.Y.Z`, so **the git history is the changelog**. What users read about a release
 is written in the Play Console, beside it: the workflow uploads no release notes.
 
-The entry below is the template itself, kept for provenance — it describes the scaffold, not an
+The entry below is the template itself, kept for provenance: it describes the scaffold, not an
 app shipped from it.
 
-## [0.1.0] — Initial template
+## [0.1.0] · Initial template
 
 ### Added
 
 - Expo SDK 54 + Expo Router monorepo (pnpm + Turborepo): `apps/mobile`, `apps/api`, `packages/shared`.
 - Theme system (light/dark + RTL) with NativeWind v4 and a design-system component set.
-- Internationalization with i18next — 20 languages, lazy-loaded, EN/FR as source of truth.
+- Internationalization with i18next: 20 languages, lazy-loaded, EN/FR as source of truth.
 - Monetization: RevenueCat paywall with a contextual paywall driven by a generic action counter, AdMob (banner/interstitial/rewarded), and an app-store rating prompt.
 - Local notification system (`expo-notifications`): the grant read off the OS and a request for the screen that needs it, foreground presentation, the Android channel and a daily reminder scheduler, ready to wire up. Nothing asks or schedules until an app does, and remote push is not wired on the device.
 - Onboarding flow (welcome, with a language picker → premium) and a premium demo home screen.

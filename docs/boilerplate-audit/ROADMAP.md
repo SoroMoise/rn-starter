@@ -1,16 +1,16 @@
-# Boilerplate audit — roadmap and working context
+# Boilerplate audit: roadmap and working context
 
 **This folder is scaffolding for the template itself, not for an app built from it. Delete
 `docs/boilerplate-audit/` in any app derived from rn-starter.**
 
 `rn-starter` was extracted from `all-currency-converter`. Three apps then grew from that
-extraction — **all-currency-converter**, **deep-focus** and **bg-remover** — and each accumulated
+extraction: **all-currency-converter**, **deep-focus** and **bg-remover**, and each accumulated
 generic improvements, components and hard-won rules that never flowed back. This folder holds the
 audit of that gap and the plan to close it.
 
-- `audit-items.json` — all 345 audited items, with the decision and current status of each.
-- `audit-console.html` — the same data as a browsable page. Open it in a browser; it needs no server.
-- This file — what has shipped, what is left, and the decisions a new session must not re-litigate.
+- `audit-items.json`: all 345 audited items, with the decision and current status of each.
+- `audit-console.html`: the same data as a browsable page. Open it in a browser; it needs no server.
+- This file: what has shipped, what is left, and the decisions a new session must not re-litigate.
 
 ---
 
@@ -27,22 +27,22 @@ audit of that gap and the plan to close it.
 | 7 | Subscription: encrypted entitlements, backup rules, FORCE_PRO, billing issue, failures by code, purchase surface | 14 | **merged into `main`** |
 | 8 | Selling surfaces and onboarding: one benefit list, the offer through one hook, what a buy button charges stated beside it, steps by name, the back key | 18 | **merged into `main`** |
 | 9 | UI library and layout: the sheet split and its drag lock, `ModalDialog` and the keyboard, settings rows, the wheel, RTL-safe sliders, the centred column, the back key and the stack reset for routes, limits applied on read, and the network layer held back from lot 4 wired in | 34 | **merged into `main`** |
-| — | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
+| - | Off-audit fixes: the price spinner a failed configure left, `withRetry`'s status, the sheet's close labels, the push notifications the home screen sold, `PremiumGate`'s dead prop | 5 | **merged into `main`** |
 | 10 | Notifications: the channel frozen and the sound settings it ignored dropped, the grant read off the OS, expo's record of asked permissions kept out of backups, a daily reminder scheduler that refuses out loud | 12 | **merged into `main`** |
 | 11 | Plugins and Android build: the font filter's guard, RevenueCat's web SDK stubbed out, the permissions nothing uses blocked, the dead `privacy` block, why `android/` stays uncommitted, the changelog doctrine, the release documented, `setup.sh`'s sweep completed | 8 | **merged into `main`** |
 | 12 | Assets, legal, api and monorepo: every brand image from one script, the legal links as constants, a static bilingual site with a privacy policy and terms written for the starter's SDKs, the entitlement checked on the server, the backend removable in one command, day one and `./gradlew clean` documented | 9 | **merged into `main`** |
 | 13 | Documentation and conventions: the voice charter and the parity a translation owes, the traps that break without an error, the theme's stored intent, a bundle-size section over an `analyze` that runs, zero comments by default and three layers, a store-policy section, remembered settings, `PROJECT_CONTEXT.md`'s hooks and known gaps | 12 | **merged into `main`** |
-| 14 | Ads: nothing offered that cannot be served — the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
+| 14 | Ads: nothing offered that cannot be served, the rewarded section's gates, one rewarded ad per unit, the home banner, ad failures reported | 4 | **merged into `main`** |
 | 15 | Session signals: friction, connectivity, the settle before the review card, the offline banner | 6 | **merged into `main`** |
-| — | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
-| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert — ported from noise-remover's pass | 3 | **merged into `main`** |
-| — | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register — 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **merged into `main`** |
+| - | Off-audit, from app-factory's review of an app's design: a root stack over the tabs, 16 dp to the rem | 2 | **in review** |
+| 16 | Accessibility: roles, states and labels on the UI library, the RTL banner held for a screen reader and placed off the onboarding's bottom inset, the tab bar and the buttons at the largest font, the toast as an alert, ported from noise-remover's pass | 3 | **merged into `main`** |
+| - | Translation session: the 18 other languages at parity with `en.json`, key for key and per plural category, in the voice charter's register; 124 keys reused from noise-remover's reviewed files where the English is the same, 43 translated here | 4 | **merged into `main`** |
 | 17 | Colour tokens and the onboarding: brand colours and the last gradients, the lazy onboarding, the welcome CTA's reserve, a showcase step | 1 | colour tokens **in review**, the onboarding planned (§3) |
-| 18 | Primitives for a first caller, and the render path | — | planned (§3) |
-| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | — | deferred to the Firebase migration (§3) |
-| 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | — | planned (§3) |
-| 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | — | planned (§3) |
-| 22 | The store listing: the listing's limits, release notes — and the open-source licences, shipped ahead as an in-app screen ported from noise-remover | 1 | the licences screen **in review**, the listing and release notes planned (§3) |
+| 18 | Primitives for a first caller, and the render path | - | planned (§3) |
+| 19 | The Worker's recurring patterns: a KV cache, a cron, dead FCM tokens | - | deferred to the Firebase migration (§3) |
+| 20 | Day one and the build: the Firebase example, `buildArchs`, `preb`, troubleshooting | - | planned (§3) |
+| 21 | The offer's record and its prices: `docs/MONETIZATION.md`, the reference and plan documents, the price script | - | planned (§3) |
+| 22 | The store listing: the listing's limits, release notes, and the open-source licences, shipped ahead as an in-app screen ported from noise-remover | 1 | the licences screen **in review**, the listing and release notes planned (§3) |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
 **all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
@@ -63,19 +63,19 @@ Lot 6's six include two the audit had filed under other lots: `review-storage` (
 `rating-storage-keys`, shipped with them, bar the `retryAfter` only the dormant sentiment path
 would read.
 
-Lot 7's 19 include nine the audit had filed under other lots — two under lot 8, one under lot 9,
-three under lot 10, one under lot 11, two under lot 13 — marked in every copy with a note naming
+Lot 7's 19 include nine the audit had filed under other lots: two under lot 8, one under lot 9,
+three under lot 10, one under lot 11, two under lot 13, marked in every copy with a note naming
 the lot-7 item that covered them. Six "later" items shipped with them (`entitlement-secure-storage`,
 `ads-adfree-encrypted-store`, `subscription-provider-lecture-disque-par-rendu`, `env-force-pro`,
 `cles-billing-issue`, `cles-settings-generiques`). Two items it touched stay open, each with a note
 saying what is left: `exit-intent-entitlement-keyed` (lot 8, the sheet's copy) and
 `claude-storage-security` (lot 13, the rule on remembered settings). Checking the lot also found
-two items that had shipped unrecorded — `analytics-has-trial-offer` with lots 1–3,
-`adfree-stacking-cap` with lot 5 (c59f846) — now counted there, which is why those two figures
+two items that had shipped unrecorded: `analytics-has-trial-offer` with lots 1–3,
+`adfree-stacking-cap` with lot 5 (c59f846), now counted there, which is why those two figures
 moved by one.
 
-Lot 8's 16 include three the audit had filed under other lots — `onboarding-store-trim` (lot 9),
-`analytics-step-name` (lot 10) and `paywall-cles-offre` (lot 13) — marked in every copy with a note
+Lot 8's 16 include three the audit had filed under other lots: `onboarding-store-trim` (lot 9),
+`analytics-step-name` (lot 10) and `paywall-cles-offre` (lot 13), marked in every copy with a note
 naming what covered them. Seven "later" items shipped with them: `paywall-analytics-service` and
 `use-paywall-plans-hook` (the lot-7 copies), `premiumgate-blur`, `analytics-paywall-helper`,
 `onboarding-offer-driven-copy`, `onboarding-pro-benefits-single-list`, `onboarding-gradient-tokens`.
@@ -84,28 +84,28 @@ the route-scoped hook), `claude-navigation-back` (lot 13, resetting the stack wh
 `gradients-tokens` (lot 13, two files still literal) and `brand-color-tokens` (later, the literal
 violets and greens).
 
-Lot 9's 33 include the three held back out of lot 4 — the network layer: `util-retry-dedupe`,
+Lot 9's 33 include the three held back out of lot 4, the network layer: `util-retry-dedupe`,
 `doc-keep-network-api-utils`, and `drop-netinfo-from-entitlement`, closed with its deletion decided
-against (§4) — and seven the audit had filed under lot 13: `datefns-imports-par-fonction`,
+against (§4), and seven the audit had filed under lot 13: `datefns-imports-par-fonction`,
 `datefns-locale-map-hoist`, `themedtext-lineheight-derive`, `claude-caps-on-read`,
 `claude-large-screens`, `claude-safe-area-contract` and `claude-navigation-back`, each marked in
 every copy with a note naming what covered it. Seven "later" items shipped with them:
 `sheet-usesheetsnap`, `use-responsive-layout`, `hook-keyboard-height`, `util-date-locale-cache` and
 `claude-persist-rehydrate` (copies of lot-9 items), `modal-self-cap-large-screen` (the paywall caps
-itself) and `pro-badge-component`. One lot-9 item had shipped unrecorded — `hook-ad-visible` is
-lot 5's `useAdPlacementActive` (29d7640) — and is counted there now, which is why lot 5's figure
+itself) and `pro-badge-component`. One lot-9 item had shipped unrecorded: `hook-ad-visible` is
+lot 5's `useAdPlacementActive` (29d7640), and is counted there now, which is why lot 5's figure
 moved by one. Three lot-13 items it touched stay open, each with a note saying what is left:
 `claude-nativewind-footguns` (three of its four traps), `claude-android-modal-keyboard` (the
 measured-height echo) and `claude-bundle-size` (the Metro stub and the `analyze` discipline).
 
 Three lot-13 items had shipped unrecorded, found when the remaining lots were planned against the
 code: `claude-build-release` and `claude-ci-release` with lot 2's plugins and workflow (5f72702,
-79cc993) — bar the first one's `./gradlew clean` rule, which stays with `doc-gradlew-clean-interdit`
-— and `claude-ads-consent`, whose rule came with lot 1's consent gate and whose show-time re-read with
+79cc993), bar the first one's `./gradlew clean` rule, which stays with `doc-gradlew-clean-interdit`,
+and `claude-ads-consent`, whose rule came with lot 1's consent gate and whose show-time re-read with
 lot 5 (0d989e4). They are counted there now, which is why those two figures moved.
 
 Lot 10's five include one the audit had filed under lot 13, `claude-notification-permission`: its
-rules went into CLAUDE.md with the code they describe. One item shipped otherwise than proposed —
+rules went into CLAUDE.md with the code they describe. One item shipped otherwise than proposed:
 `notif-channel-immutable`, whose delete-and-recreate changes nothing on Android (§11): the channel
 is frozen and the two settings it ignored are gone. No "later" item shipped with them;
 `notif-channels-table` stays later, since one channel needs no table. The lot's onboarding step did
@@ -151,13 +151,13 @@ onboarding's large-screen cap (a design pass) and bg-remover's `slotOf` (another
 blamed Expo Go for the configure that throws: react-native-purchases 10 runs in browser mode there
 (`shouldUseBrowserMode`), so what reaches that catch is a build without the native module, or a key
 that is not a string. Whoever stubs `@revenuecat/purchases-js-hybrid-mappings` in lot 11 should
-know that browser mode is what the stub removes — harmless while MMKV, Firebase and AdMob already
+know that browser mode is what the stub removes, harmless while MMKV, Firebase and AdMob already
 keep the app out of Expo Go.
 
 The 84 "later" items were judged useful but never blocking. Until 2026-09-26 none was scheduled;
 the 42 then open became planned work, lots 14 to 22 (lot 19's three deferred to the Firebase
 migration), each carrying its lot in `plannedLot` and a note saying what verification found left
-of it (§3) — or, once shipped, how it shipped. The audit's judgement stays as it was: their
+of it (§3), or, once shipped, how it shipped. The audit's judgement stays as it was: their
 `decision` is still `later`.
 
 ---
@@ -179,15 +179,15 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
 - **Verify, then refute.** Each lot is investigated by a workflow of two stages: one agent per
   family of items establishes the facts and writes a plan, then a second, adversarial agent tries
   to find the reference it missed. On lot 4 that second stage returned two fatal verdicts and six
-  corrections — see §5. Run it on Sonnet with `effort: 'high'`, and group items into families of
+  corrections (see §5). Run it on Sonnet with `effort: 'high'`, and group items into families of
   related files rather than one agent per item: a grouped agent catches the cross-references an
   isolated one cannot see, and costs a third as much.
 
 ### Pushing
 
 Pushes to `SoroMoise/rn-starter` work from this environment since lot 5: a lot is pushed to its
-`claude/*` branch, opened as a pull request, reviewed, fixed and merged — bar lot 12, merged with no
-review (§13). Lots 1–4 predate that — the session identity had no write access then, so they were
+`claude/*` branch, opened as a pull request, reviewed, fixed and merged, bar lot 12, merged with no
+review (§13). Lots 1–4 predate that: the session identity had no write access then, so they were
 handed over as git bundles and merged by hand, which is why the remote long carried a stale
 `claude/rn-starter-boilerplate-improvements-nst9w1` at `0b311c8`, since deleted. The real gap is
 always `git rev-list --count origin/main..HEAD`.
@@ -197,7 +197,7 @@ always `git rev-list --count origin/main..HEAD`.
 ## 3. After the audit
 
 Every kept item has shipped. What is left is the "later" items, scheduled below into lots 17 and 18
-and 20 to 22 — lots 14, 15 and 16 have shipped (§1), lot 19 waits for the Firebase migration — and
+and 20 to 22 (lots 14, 15 and 16 have shipped, §1; lot 19 waits for the Firebase migration), and
 one translation session, which is next.
 
 ### The "later" items, scheduled
@@ -213,27 +213,27 @@ was checked against the code before it was given a lot, and eight left the list 
 - **Five are closed without shipping** (`status: 'closed'`, a note saying why):
   `telemetry-effects-ras` is itself the finding and has nothing to ship; `a11y-namespace`'s key and
   button left with lot 4; `turbo-web-outputs-env`'s remaining mobile half keys nothing, since no
-  Turborepo task builds the app — Gradle does, outside Turbo's cache; and
+  Turborepo task builds the app: Gradle does, outside Turbo's cache; and
   `onboarding-transition-view-drop-moti` and `moti-chemin-de-boot` would re-open "Moti stays,
   measured" (§4).
 
 The other 42 make 36 subjects: six are copies the audit filed twice, carried in the lot of the item
 that covers them. The order puts first what a user or the AdMob account meets, then what a derived
 app builds on, then documentation and store tooling; nothing in a later lot is a prerequisite of an
-earlier one. Each lot still runs as §2 and §19 say — verify, then refute, before anything ships —
+earlier one. Each lot still runs as §2 and §19 say: verify, then refute, before anything ships,
 and the notes below are where that verification starts, not its result.
 
 | Lot | Subject | Items | i18n |
 |---|---|---|---|
-| 14 | Ads: nothing offered that cannot be served — shipped (§1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
-| 15 | Session signals: friction, connectivity, settle — shipped (§1, §16) | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
-| 16 | Accessibility — shipped (§1, §18) | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | four keys, EN and FR |
-| 17 | Colour tokens and the onboarding — the colour tokens shipped (§1, §17) | `brand-color-tokens` and `gradients-tokens` (shipped), `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
+| 14 | Ads: nothing offered that cannot be served (shipped, §1, §15) | `ads-rewarded-button-gates`, `ads-rewarded-multi-placement`, `banniere-absente-ecran-accueil`, `ads-crashlytics-instead-of-console` | none |
+| 15 | Session signals: friction, connectivity, settle (shipped, §1, §16) | `session-signals-friction` (+ `rating-friction-signal`), `rating-settle-delay`, `rating-offline-guard`, `offline-banner` | none (`common.offline` exists) |
+| 16 | Accessibility (shipped, §1, §18) | `a11y-pass-ui` (+ `rtl-banner-a11y`, `rtlbanner-a11y`, `languagepicker-a11y`), `rtl-banner-offset-tabbar` | four keys, EN and FR |
+| 17 | Colour tokens and the onboarding (the colour tokens shipped, §1, §17) | `brand-color-tokens` and `gradients-tokens` (shipped), `onboarding-lazy-suspense`, `onboarding-footer-inset` (+ `hook-onboarding-footer-inset` and its lot-9 copy), `onboarding-feature-step` | none |
 | 18 | Primitives for a first caller, and the render path | `reveal`, `skeleton-primitive`, `hooks-react-primitives`, `util-intl-cache`, `list-windowing-constants`, `hints-storage-domain`, `notif-channels-table`, `claude-render-path` | none |
-| 19 | The Worker's recurring patterns — deferred to the Firebase migration | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
+| 19 | The Worker's recurring patterns (deferred to the Firebase migration) | `api-kv-cache-helper`, `api-cron-scheduled`, `api-fcm-dead-token` | none |
 | 20 | Day one and the build | `google-services-example`, `buildarchs-two-abis`, `root-scripts-preb`, `readme-troubleshooting` | none |
 | 21 | The offer's record and its prices | `doc-monetization-template`, `doc-living-documentation`, `play-price-sync` | none |
-| 22 | The store listing — the licences shipped ahead (§1) | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` (shipped) | `settings.openSourceLicences` and `licences.*`, EN and FR, waiting for a translation session |
+| 22 | The store listing (the licences shipped ahead, §1) | `aso-store-listing`, `play-release-notes-template`, `licenses-registry` (shipped) | `settings.openSourceLicences` and `licences.*`, EN and FR, waiting for a translation session |
 
 **A helper with no caller is judged, not assumed.** Lot 18 holds most of them, but lot 15's
 `sessionSignals`, lot 17's `FeatureStep` and lot 19's cron raise the same question, and the
@@ -249,25 +249,25 @@ down, not shipped anyway.
 lacked 76 of `en.json`'s 167 keys and kept lot 13's old wording on part of the 91 it held; `id.json`
 and the two `zh-*` files mixed registers. The session reused noise-remover's files, reviewed in its
 own translation session a day earlier, for every key whose English is the same (124 of 167, the app
-name swapped back), translated the 43 the starter alone has — the demo home screen, the premium
-step and the exit sheet, the errors — in the voice charter's register, and checked the result by
+name swapped back), translated the 43 the starter alone has (the demo home screen, the premium
+step and the exit sheet, the errors) in the voice charter's register, and checked the result by
 script: key for key against `en.json`, `rtlRestart.message` in every plural form of `ar`, `ru` and
 `pl`, placeholders and line breaks preserved, no `你` and no `kamu` left. Nothing was heard on a
 device. The licences screen, shipped ahead of lot 22, added `settings.openSourceLicences` and the
 `licences.*` keys in EN and FR only; they wait for the next session, as do the lifetime offer's
 `paywall.lifetimeOffer.*` (d3539ef) and every key a feature adds in EN and FR from now on.
 
-**Lot 17 — Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
+**Lot 17: Colour tokens and the onboarding.** The colour half shipped ahead of the lot (§1, §17):
 the brand colours are `palette`'s three roles and every gradient is a token. `InitialLoadingScreen`,
 the fallback the lazy import was to use, left with lot 4, so the lot writes a light one; with Moti
 still reached from the home screen (§4), the gain is counted with `analyze` in modules evaluated at
 launch, not in bytes. Only the welcome step keeps its CTA as an overlay (`insets.bottom + 16`, 58
 high): the lot settles whether that CTA moves into the step, as `OnboardingStepLayout`'s steps carry
-theirs — and the reserve hook has no reader — or the hook ships for the overlay, checked at the
+theirs (and the reserve hook has no reader), or the hook ships for the overlay, checked at the
 largest font scale either way. `FeatureStep`'s kicker colours read the role scales.
 
-**Lot 18 — Primitives for a first caller, and the render path.** All but one are shapes the starter
-would ship without a caller — lot 10 left the channel table "later" for exactly that reason — so
+**Lot 18: Primitives for a first caller, and the render path.** All but one are shapes the starter
+would ship without a caller (lot 10 left the channel table "later" for exactly that reason), so
 this lot is where the line above is drawn, one item at a time. `util-intl-cache` is the exception:
 `utils/time.ts` builds a formatter per call in three functions and `utils/pricing.ts` one per price.
 `Reveal` and `useMeasuredHeight` size themselves from their own content, so they are the first
@@ -275,21 +275,21 @@ components that owe CLAUDE.md's one-pixel echo guard (Styling). Of `claude-rende
 rules, the memo one shipped with lot 13 (Code Style) and the banner's unmount on blur covers part of
 the fifth; the windowing preset is the fourth rule's constant.
 
-**Lot 19 — The Worker's recurring patterns, deferred to the Firebase migration.** The user deferred
+**Lot 19: The Worker's recurring patterns, deferred to the Firebase migration.** The user deferred
 it on 2026-09-26: the Worker is leaving, and a scheduled function, dead-token cleanup and a cache
 will be rebuilt natively on Firebase rather than written for a backend on its way out. Its three
-items keep `plannedLot: 19` with `status: deferred`, and the migration session picks them up — the
+items keep `plannedLot: 19` with `status: deferred`, and the migration session picks them up: the
 KV cache and the entitlement check it serves, the cron, FCM's dead tokens.
 
-**Lot 20 — Day one and the build.** The Firebase example still carries plausible values and no
+**Lot 20: Day one and the build.** The Firebase example still carries plausible values and no
 instructions; `setup.sh` rewrites its `package_name`, and the new shape must stay sweepable.
-`buildArchs` stays off — an emulator is x86_64 — and becomes a release decision written in CLAUDE.md
+`buildArchs` stays off (an emulator is x86_64) and becomes a release decision written in CLAUDE.md
 (Build & Release) and the README, not a commented block in `app.config.js`. The root has `dev:web`
 and `build:web` but no `preb`. The README's Troubleshooting section is all that is left of its item.
 
-**Lot 21 — The offer's record and its prices.** Most of what the monetization template proposed as
+**Lot 21: The offer's record and its prices.** Most of what the monetization template proposed as
 the code contract is CLAUDE.md's Monetization section now (lots 3, 7 and 8), and nothing lives in
-two places. What is left is the record an app fills in — prices, plans, what was rejected and why —,
+two places. What is left is the record an app fills in (prices, plans, what was rejected and why),
 the Play Console, App Store Connect and RevenueCat checklists, and the commercial traps: a lifetime
 priced under about 2.5 times the annual, dropping the monthly anchor, an A/B test without the users
 to read it. Living Documentation gains the general rule for a reference document, which
@@ -297,15 +297,15 @@ to read it. Living Documentation gains the general rule for a reference document
 all-currency-converter's version, in the root `scripts/` beside the brand script, dry-run by default,
 reading the price matrix the record decides.
 
-**Lot 22 — The store listing.** Nothing in the starter says what a Play listing takes: the limits
+**Lot 22: The store listing.** Nothing in the starter says what a Play listing takes: the limits
 (30, 80 and 4,000 characters) and the twenty listings that twenty languages imply. Release notes are
 written in the Play Console (CHANGELOG, lot 11) and the workflow uploads none, so the template is a
-paste-ready reference — Play's locale codes in one order — not an `artifacts/` folder nobody reads.
+paste-ready reference (Play's locale codes in one order), not an `artifacts/` folder nobody reads.
 The licences registry shipped ahead of the lot, otherwise than this plan proposed: an in-app screen
 ported from noise-remover, `app/licences.tsx` opened from Settings, over a list that
-`scripts/generate-licences.mjs` writes from what the build holds — the bundle's source map, the
+`scripts/generate-licences.mjs` writes from what the build holds: the bundle's source map, the
 autolinked packages, the C/C++ React Native and MMKV compile in, vendored `third_party/` libraries,
-embedded fonts and, with `--android`, Gradle's release classpath — and that `build:aab`,
+embedded fonts and, with `--android`, Gradle's release classpath, and that `build:aab`,
 `build:install` and the release workflow regenerate (CLAUDE.md, Legal links). There is no `apps/web`
 page and no `/licenses` path contract: a page on the site would hand an old build a list it does not
 match, and a list kept by hand lies without failing. Hono, the Worker's, is not in the bundle and
@@ -313,23 +313,23 @@ never enters it.
 
 ---
 
-## 4. Decisions already taken — do not re-open
+## 4. Decisions already taken: do not re-open
 
 **Keep Continuous Native Generation.** `android/` and `ios/` stay uncommitted. bg-remover commits
 `android/` (45 files, 2.3 MB, touched by 12 of its last 60 commits) and pays for it: it must
 `prebuild --clean` and restore the tree in CI. A committed `android/` would also bake
 the app's identity into 7 of its ~50 files, two of them under a package path, that `setup.sh` would
-then have to sweep and move — counted on a fresh prebuild in lot 11; the "~45 files" first written
+then have to sweep and move, counted on a fresh prebuild in lot 11; the "~45 files" first written
 here was the size of bg-remover's whole tree.
 
 **The HTTP layer stays while `apps/api` ships.** Lot 4's audit contained two contradictory
 families: one wanted `utils/retry.ts`, `utils/apiErrors.ts` and `hooks/useNetworkStatus.ts`
 deleted as dead; the other wanted them kept and wired. They are kept. They are not converter
-vestiges — they are generic infrastructure for a backend this repo ships, wired in lot 9:
+vestiges: they are generic infrastructure for a backend this repo ships, wired in lot 9:
 `onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
 React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
 An app without a backend removes all of it together, with `scripts/remove-api.sh` (below, and
-CLAUDE.md, Data Fetching) — all but connectivity: since 2026-09-26, the user's decision,
+CLAUDE.md, Data Fetching), all but connectivity: since 2026-09-26, the user's decision,
 `@react-native-community/netinfo` and `useNetworkStatus` are the app's own, for lot 15's offline
 guard on the rating ask and its offline banner as much as for the query client, and they stay when
 the script takes the rest.
@@ -343,20 +343,20 @@ default, so that anchor starts on the right (§10).
 
 **The column caps content, not chrome.** `ScreenContainer`'s column holds what a screen draws; the
 tab bar and the bottom sheets span the window, and a native modal with content of its own caps
-itself (`PaywallModal`, `ModalDialog`). The onboarding is not capped yet — a design pass, not a
+itself (`PaywallModal`, `ModalDialog`). The onboarding is not capped yet: a design pass, not a
 structural one.
 
 **The persist flush is documented, not shipped as a helper.** No starter store has a `merge` that
 changes what was on disk; a helper would have no caller, and the four lines are in CLAUDE.md.
 
-**`common.*` keeps keys with no reader.** It is UI vocabulary — *Cancel*, *Save*, *Retry* — already
+**`common.*` keeps keys with no reader.** It is UI vocabulary (*Cancel*, *Save*, *Retry*) already
 translated into all twenty languages. Deleting it would bill the next app a translation session for
 words it certainly needs. This is the one namespace exempt from "a key with no reader is dead";
 the rule is written into CLAUDE.md so the next sweep does not read it as an oversight.
 
 **`aps-environment` stays declared in `app.config.js`.** `expo-notifications` writes that
 entitlement unconditionally from its iOS plugin, whatever `mode` says and even with
-`ios.entitlements` removed — `mode` merely defaults to `'development'`. Removing the block would
+`ios.entitlements` removed: `mode` merely defaults to `'development'`. Removing the block would
 hide the entitlement without removing it. Making it actually disappear needs a dedicated config
 plugin running after `expo-notifications` and calling `withEntitlementsPlist`; that is a real
 option, not yet taken.
@@ -368,7 +368,7 @@ Drive backup, coach-marks. A boilerplate ships the coordinator, not the campaign
 
 **Only the entitlement store stays out of backups, of what the app itself writes.** bg-remover
 takes the whole of `mmkv/` out of cloud backup, and the audit's lot-13 storage item proposed writing
-that down as the rule. It is that app's product choice — a photo library a day-stale snapshot
+that down as the rule. It is that app's product choice: a photo library a day-stale snapshot
 resurrected. Here the main instance holds preferences, the onboarding, the review and paywall
 spacing, which a reinstall should keep; excluding more is a decision an app takes for itself, and
 CLAUDE.md says so. The one other exclusion, since lot 10, holds no user data: expo-modules-core's
@@ -383,11 +383,11 @@ what an app porting the change onto a released build owes its users instead.
 **The onboarding sells the default plan; choosing a plan is the paywall's job.** The audit had two
 items on the premium step: bg-remover's, which lists every plan like its paywall, and deep-focus's,
 one CTA over the offering's default plan with the trial frieze. The step keeps the second and
-shares everything else with the paywall — `usePaywallPlans`, the perks, the trust lines, the legal
-note, the links — so it cannot describe the plan differently.
+shares everything else with the paywall: `usePaywallPlans`, the perks, the trust lines, the legal
+note, the links, so it cannot describe the plan differently.
 
 **`PRO_BENEFITS` names only what the starter gates, which is its ads.** Every other line the two old
-lists sold — reminders, priority support, push notifications, "every premium feature", a widget —
+lists sold (reminders, priority support, push notifications, "every premium feature", a widget)
 had nothing behind it, and a benefit written into the template is one every derived app ships on
 day one. An app adds a benefit in the change that adds its gate.
 
@@ -399,8 +399,8 @@ shows on day one, asking nothing.
 apps built on it.** Decided on 2026-09-26, against the lot-10 plan to make an onboarding step the
 first caller of the ask. The starter sends no notification, so a step asking for the permission
 would be the demo step above. But removing `POST_NOTIFICATIONS` would leave a derived app failing
-without knowing why — on Android 13+ a notification from an app that never asked is dropped with no
-error — when the fix is only ever the ask. So the permission stays declared, the ask and the grant's
+without knowing why (on Android 13+ a notification from an app that never asked is dropped with no
+error), when the fix is only ever the ask. So the permission stays declared, the ask and the grant's
 readback ship as ready helpers, and a missing grant is loud: the scheduler refuses, and says so.
 `blockedPermissions` (lot 11) never lists `POST_NOTIFICATIONS`, nor `RECEIVE_BOOT_COMPLETED`,
 which expo-notifications declares to re-arm scheduled triggers after a reboot.
@@ -416,7 +416,7 @@ starter's hero is the converter's illustration with its currencies removed, draw
 Replacing it is a design decision, not a structural one.
 
 **The site is a static export, and holds only what the app links to.** Home, privacy policy, terms:
-the pages Play and the app need, and nothing a derived app would have to delete on day one — no
+the pages Play and the app need, and nothing a derived app would have to delete on day one: no
 features, pricing or blog. English sits at the root because bg-remover's `Accept-Language` redirect
 needs a server runtime. The open-source licences are an in-app screen (`licenses-registry`, shipped
 ahead of lot 22), not a page of the site, and `/licenses` is no part of the paths contract.
@@ -435,13 +435,13 @@ impression. Here `paywall_count` rides on every `purchase_completed`, and the st
 sheet already have their impressions (`onboarding_step_viewed`, `onboarding_exit_intent_shown`).
 
 **Moti stays, measured.** It costs ~250 KB of the starter's 4.0 MB bundle for six entrance
-animations — the case where all-currency-converter's Reanimated-only replacement pays. The starter
+animations: the case where all-currency-converter's Reanimated-only replacement pays. The starter
 keeps it anyway: it is where convenience wins, and deep-focus and bg-remover use it beyond entrances.
 CLAUDE.md (Bundle size) states the figure and the criterion, and `analyze` decides for an app.
 
 **The comment rule has no one-line cap.** bg-remover caps even a justified comment at one line; here
-the comments that qualify say what breaks — why the entitlement and the prices are two calls, why a
-resolved purchase is not a granted one — and a cap would keep the claim and drop the reason.
+the comments that qualify say what breaks: why the entitlement and the prices are two calls, why a
+resolved purchase is not a granted one, and a cap would keep the claim and drop the reason.
 
 **CLAUDE.md holds the rules, their reasons and a short map of what exists** (the separate
 `PROJECT_CONTEXT.md` was folded into it). It stays in English.
@@ -476,15 +476,15 @@ Both stages found something the audit's proposals would have shipped. Stage 1 ca
 proposals assumed about the library; stage 2 caught what stage 1's plan still left open.
 
 - **A presentation Android never reports (stage 1, fatal to the audit's proposal).** The reference
-  — bg-remover's `showInterstitialAd`, settling on `CLOSED`/`ERROR` — assumes one of the two always
+  (bg-remover's `showInterstitialAd`, settling on `CLOSED`/`ERROR`) assumes one of the two always
   fires. In react-native-google-mobile-ads 15.8.3 the Android `FullScreenContentCallback` leaves
   `onAdFailedToShowFullScreenContent` unhandled: a failed presentation emits nothing, the promise
   hangs, and the coordinator's new visibility flag would have frozen every automatic promo for the
   session. Hence the `OPENED` timeout in `presentFullScreenAd`, cleared the moment the ad opens.
 - **A timed-out instance is dead, not unloaded (stage 2, fatal to the plan).** The plan only marked
   it unloaded. The library keeps its own `_loaded` flag up until `CLOSED`/`ERROR` and ignores
-  `load()` meanwhile, so one silent failure would have ended interstitials — and the ad-free reward
-  — for the life of the process. The instance is replaced instead.
+  `load()` meanwhile, so one silent failure would have ended interstitials (and the ad-free reward)
+  for the life of the process. The instance is replaced instead.
 - **Google's sample app id silences the only warning (stage 2).** The config plugin warns only when
   the app id is `undefined`; a literal sample id keeps the template launchable but would let a
   release pair real units with Google's test app unnoticed. The release workflow now refuses it.
@@ -492,7 +492,7 @@ proposals assumed about the library; stage 2 caught what stage 1's plan still le
   the show-time re-read the item asked for had never landed. It has now, for both formats.
 - **A failed rewarded video is not a refusal (stage 1, confirmed by stage 2).** A boolean
   `showRewardedAd` filed failures under `dismissed` and sold the paywall to someone who had declined
-  nothing — deep-focus, the proposal's reference, has the same conflation.
+  nothing; deep-focus, the proposal's reference, has the same conflation.
 - **A choke point that refuses leaves dead buttons behind (stage 1).** The Home CTA was the one
   surface that did not hide its offer from a subscriber.
 - **"ACC claims the budget before showing" was false (stage 2).** ACC's interstitial never touches
@@ -503,7 +503,7 @@ proposals assumed about the library; stage 2 caught what stage 1's plan still le
   `/success` screen, inline banners and per-feature unlocks do not exist here; the starter's file
   was written from this code, keeping only the platform invariants word for word.
 
-The code review on the pull request then found five more, all fixed before the merge — a third
+The code review on the pull request then found five more, all fixed before the merge, a third
 stage worth keeping:
 
 - an ad that opened after the deadline still owed something, a reward or a spent slot, and every
@@ -516,14 +516,14 @@ stage worth keeping:
 - the contextual impression was recorded before the choke point could still refuse.
 
 Checking the new release gate also exposed a lot-2 bug: the workflow required `app.config.js`
-before `pnpm install`, when loading it needs `@expo/config-plugins` — no release could have left.
+before `pnpm install`, when loading it needs `@expo/config-plugins`: no release could have left.
 
 ---
 
 ## 7. What verification caught on lot 6
 
 Four items in one family of files, so both stages ran in the session itself rather than as
-sub-agents — the second one read ACC's host and bg-remover's policy against the starter's own
+sub-agents; the second one read ACC's host and bg-remover's policy against the starter's own
 lifecycle, and that is where most of this came from.
 
 - **A foreground on Android is not a return (stage 2, fatal to the audit's host).** React Native
@@ -534,7 +534,7 @@ lifecycle, and that is where most of this came from.
   have followed either 1.2 s later. A return now needs `RATING_ASK_MIN_AWAY_MS` (5 min) away.
 - **Traced refusals and a flag kept until launch do not mix (stage 2).** ACC disarms only on a
   launch, which costs nothing while its refusals are silent. Traced, the flag would log one
-  `rating_ask_suppressed` at every return for as long as a cooldown lasts — up to 126 days. Stage
+  `rating_ask_suppressed` at every return for as long as a cooldown lasts, up to 126 days. Stage
   2's answer, one evaluation per arming, went a step too far; the review corrected it (below).
 - **The host's first check raced the session reset (stage 2).** ACC mounts the host in
   `SubscriptionProvider`, so it checks at launch, while `contextualPaywallService.resetSession()`
@@ -561,10 +561,10 @@ lifecycle, and that is where most of this came from.
 - **An item filed under another lot.** `review-storage`, which the plan for this lot named, sits
   under lot 9; `lot == 6` alone would have missed it (§19, step 3).
 
-The branch was then reviewed before it was pushed — once by the session reading the whole diff,
-once with the code-review skill — and each pass found what the stages had not:
+The branch was then reviewed before it was pushed (once by the session reading the whole diff,
+once with the code-review skill) and each pass found what the stages had not:
 
-- **The automatic ask sent the user to the store when Play's card could not come** — no Play app,
+- **The automatic ask sent the user to the store when Play's card could not come**: no Play app,
   or a flow that threw. Google's in-app review guide says an error in the flow must neither be
   reported to the user nor change the app's flow, and with the ask now raised at a launch it would
   have opened the Play Store, or a browser, seconds after the app did. A lots 1–3 decision, reversed
@@ -583,11 +583,11 @@ once with the code-review skill — and each pass found what the stages had not:
   falls due and where UMP collects consent again; the form is drawn inside the activity, so
   nothing kept Play's card off it. The form is now a `PromoSurface`, visibility only.
 - **The living docs had drifted.** CLAUDE.md's provider tree lacked the host, and the one case
-  where the rating goes before the paywall — an ask at a launch takes that session's interruption
-  — was nowhere written down as the trade it is.
+  where the rating goes before the paywall (an ask at a launch takes that session's interruption)
+  was nowhere written down as the trade it is.
 
 Declined, each with its reason on the record: migrating the old `@rating_*` counters (the starter
-has no installs — `rating-no-legacy-migration`); an expiry on the arm (it stands for an engaged
+has no installs, `rating-no-legacy-migration`); an expiry on the arm (it stands for an engaged
 user not yet asked, and the policy judges the moment it is raised at); stamping the rewarded video
 as the last ad for `ad_collision` (it would also move the interstitial's own 90 s interval, an
 ad-cadence change for a lot of its own).
@@ -599,16 +599,16 @@ where the store URLs come from.
 
 ## 8. What verification caught on lot 7
 
-Both stages were launched as sub-agents on Sonnet, one per family — storage and backup, subscription
-and funnel — and both died on the account's usage limit before reporting. They ran in the session
+Both stages were launched as sub-agents on Sonnet, one per family (storage and backup, subscription
+and funnel) and both died on the account's usage limit before reporting. They ran in the session
 instead, against the SDKs' own sources: react-native-mmkv's C++ core in `node_modules`, and
-RevenueCat's Android SDK checked out at its tag — purchases-android 10.2.0, the version
+RevenueCat's Android SDK checked out at its tag: purchases-android 10.2.0, the version
 purchases-hybrid-common 18.1.0 pins under react-native-purchases 10.0.1.
 
 - **A pending payment rejects; it never resolves (fatal to the audit's table).** `PostReceiptHelper`
   ends a PENDING purchase in `onError(PaymentPendingError)`. bg-remover's `FAILURE_BY_CODE`, the
   reference, files code 20 under `unknown`: a Crashlytics non-fatal and "Something went wrong" for a
-  purchase the store has taken. Here it is `pending` — `purchase_pending`, and nothing shown.
+  purchase the store has taken. Here it is `pending`: `purchase_pending`, and nothing shown.
 - **The same fact refuted the living docs.** CLAUDE.md, the provider and `analyticsService` all said
   a deferred transaction resolves with no entitlement, and the provider traced that path as
   `purchase_pending`. A purchase that resolves without `ENTITLEMENT_PREMIUM` is a sale the dashboard
@@ -641,7 +641,7 @@ purchases-hybrid-common 18.1.0 pins under react-native-purchases 10.0.1.
   watching the tier returned early on the premium step: a purchase from `PremiumValueStep` itself
   left the subscriber on the pitch, whose skip link then offered them the exit sheet's trial.
 
-Reading the whole branch before the push — once in the session, once with the code-review skill —
+Reading the whole branch before the push (once in the session, once with the code-review skill)
 found:
 
 - `ADS.md` still filed `@ad_free_until` under "plain MMKV", and CLAUDE.md said the encrypted file
@@ -658,8 +658,8 @@ its value, and one regenerated after a release would drop every offline cache); 
 pending payment (the store's own flow has told the user); and hiding a billing-issue date already
 past (the store's next answer clears it).
 
-Found along the way and left out of this lot: when `purchaseService.initialize()` throws — Expo Go,
-where the native module is missing — the provider returns before `loadOfferings` and
+Found along the way and left out of this lot: when `purchaseService.initialize()` throws (Expo Go,
+where the native module is missing), the provider returns before `loadOfferings` and
 `isLoadingPrices` stays true, so the price notice spins for good (the retry of lots 1–3 covers a
 failed fetch, not a failed configure); and `NOTIFICATION_PERMISSION_REQUESTED` rides the backups
 (lot 10, above). Fixed on the way instead: `utils/trialOffer.ts`, dead since lot 3
@@ -674,9 +674,9 @@ entitlement id and product ids among the env variables.
 Both stages ran in the session, as on lots 6 and 7, against the three apps' sources and expo-blur's
 Android implementation in `node_modules`.
 
-- **The frieze promised a reminder nothing sends (not in the audit).** Its middle row, "Day N —
+- **The frieze promised a reminder nothing sends (not in the audit).** Its middle row, "Day N ·
   Reminder before your trial ends", was derived from the store's trial length since lots 1–3, which
-  is why the audit item read as half done. Nothing in the app schedules that reminder — nor in
+  is why the audit item read as half done. Nothing in the app schedules that reminder, nor in
   deep-focus, the reference, which carries the same row. It is gone; the frieze keeps unlock today
   and billing on the last day.
 - **The onboarding sold with no price (not in the audit).** The premium step's CTA read "Start my
@@ -704,7 +704,7 @@ Android implementation in `node_modules`.
   handler only at runtime; the tint is an opacity layer and the pair is one `secondary` prop.
 
 Reading the whole branch before the push found the README still describing a three-step flow
-ending on a language picker, and the flow's arrows unmirrored in Arabic — the back chevron pointed
+ending on a language picker, and the flow's arrows unmirrored in Arabic: the back chevron pointed
 forward. Both fixed in their own commits; the code-review skill, run after them, found nothing
 further.
 
@@ -718,7 +718,7 @@ the priceless onboarding CTAs this lot removed here.
 ## 10. What verification caught on lot 9
 
 Both stages ran in the session, as on lots 6 to 8, against the three apps' sources and the
-libraries in `node_modules` — React Native 0.81's Android sources and Fabric's C++, zustand 5.0.8,
+libraries in `node_modules`: React Native 0.81's Android sources and Fabric's C++, zustand 5.0.8,
 TanStack Query 5, react-native-google-mobile-ads 15.8.3.
 
 - **`slotOf` is wrong under React Native's defaults (stage 1, fatal to the audit's proposal).**
@@ -727,7 +727,7 @@ TanStack Query 5, react-native-google-mobile-ads 15.8.3.
   starts on the right, and its reversed index sends the indicator off the other end. The
   selector keeps its position logical and flips only its travel; `AppSwitch`'s knob, which had the
   same bare `translateX`, does the same. bg-remover's `DockRail` and `DockSegments` carry the
-  pattern — left there, since it is another repository.
+  pattern, left there, since it is another repository.
 - **The drag-lock fix left a sheet where the finger did (stage 2).** bg-remover returns from
   `onEnd` while the lock is up: a sheet that moved before the content took the pan stayed
   displaced, and the fix depended on the lock still being up when the sheet's `onEnd` ran. The
@@ -748,7 +748,7 @@ TanStack Query 5, react-native-google-mobile-ads 15.8.3.
 - **The query client read the app as always online (stage 1).** React Native has no `online`
   event and nothing fed `onlineManager`: retries burned through offline and `refetchOnReconnect`
   never fired. It also retried a 401 three times. `useNetworkStatus` had had no consumer since
-  lots 1–3, and it tracked `offline_banner_shown` for a banner the starter does not have — the
+  lots 1–3, and it tracked `offline_banner_shown` for a banner the starter does not have; the
   event is gone.
 - **zustand's hydration writes only after a `migrate` (stage 1).** Read in `persistImpl`, which is
   what the documented flush rests on, with the reason its microtask is required: MMKV hydrates
@@ -765,7 +765,7 @@ Reading the whole branch before the push, then the code-review skill, found ten 
 - **`flex: 1` on the wheel overrode its height in a column**, collapsing it in a dialog or a sheet;
   `minHeight`/`maxHeight` hold it. `WHEEL_VISIBLE_ITEMS` was exported as 7 while short screens get
   5, and is private now; the wheel reads the sheet's pan from `modalSheet/contexts` directly.
-- **NetInfo's unknown state read as offline** in the listener — harmless until it drove
+- **NetInfo's unknown state read as offline** in the listener, harmless until it drove
   `onlineManager`, where it would pause every query on a connection that works.
 - **A `leading-*` class lost to the derived line height**; it now wins.
 - **A keyboard already up when a dialog opens was never counted**; the hook seeds from
@@ -781,7 +781,7 @@ effect runs first.
 Found along the way and left out of this lot: React Native reports the Android keyboard's height
 above the navigation bar (`ReactRootView`: `ime.bottom − systemBars.bottom`) while an edge-to-edge
 dialog window spans under it, so a dialog at its height cap can reach under the keyboard by up to a
-navigation bar — not verifiable without a device; `withRetry` throws a new `Error` carrying only the
+navigation bar (not verifiable without a device); `withRetry` throws a new `Error` carrying only the
 message, so a caller cannot read the status it gave up on; the onboarding is not capped on large
 screens; `ModalBottomSheet`'s close button has no accessibility label (the later a11y pass); and
 bg-remover's `slotOf`, above.
@@ -797,13 +797,13 @@ sibling apps that schedule notifications.
 - **Delete-and-recreate changes nothing (fatal to the audit's proposal).**
   `PreferencesHelper.createNotificationChannel` un-deletes a channel re-created under its old id,
   with the settings it had, and on a channel that exists applies only the name, the description,
-  a group where there was none and a lower importance while the user has not touched it — never the
+  a group where there was none and a lower importance while the user has not touched it, never the
   sound or the vibration. all-currency-converter's `recreateRateAlertsChannel`, the reference, has
   therefore never changed anything; its switches only reach the foreground handler. Left there,
   since it is another repository.
 - **The two settings had no writer.** Nothing in the starter wrote `notificationSound` or
   `notificationVibration`. Making them work takes a new channel id per change, the old one deleted
-  and every trigger scheduled again — a migration, not a setting — so they went, with
+  and every trigger scheduled again (a migration, not a setting), so they went, with
   `domains/userSettings.ts`, their only reader. `shouldPlaySound: false` would also have dropped the
   heads-up banner on Android, by expo's own documentation.
 - **A trigger on a missing channel is not dropped (correction to deep-focus's comment).**
@@ -819,14 +819,14 @@ sibling apps that schedule notifications.
 - **Removing the app's flag left expo's (not in the audit).** `PermissionsService` records every
   permission it asks for in the `expo.modules.permissions.asked` shared preferences, which Auto
   Backup carries by default; recorded but not granted, a permission reads as `denied` with
-  `canAskAgain` taken from `shouldShowRequestPermissionRationale` — false where nothing was ever
+  `canAskAgain` taken from `shouldShowRequestPermissionRationale`, false where nothing was ever
   asked. On a restored phone every runtime permission would have sent the user to the settings
   instead of the dialog. The file is out of the backup rules.
 - **Two overlapping syncs duplicated the reminders (not in the audit).** deep-focus's sync cancels,
   then schedules, with nothing ordering two calls; an effect firing twice cancels twice and
   schedules twice. The starter's calls are queued.
 - **deep-focus's session-alert ask is guarded by the backed-up flag.** `requestSessionAlertPermission`
-  asks only while `NOTIFICATION_PERMISSION_REQUESTED` is unset — on a restored phone, never. Left
+  asks only while `NOTIFICATION_PERMISSION_REQUESTED` is unset, on a restored phone, never. Left
   there.
 - **An item filed under another lot.** `claude-notification-permission` sits under lot 13.
 
@@ -880,8 +880,8 @@ Android bundle, a scratch prebuild with a debug manifest merge, and `setup.sh` r
 - **The web SDK was the largest package in the bundle.** 743 KiB of 4.9 MB, ahead of reanimated and
   react-native; the stub takes the bundle to 4,172,648 bytes. Every access to it sits inside a
   browser-mode function, so `{ type: 'empty' }` replaces the stub file. The audit's ordering risk
-  does not hold — NativeWind's resolver calls the one it found for everything but `global.css`, so
-  either order works — and its claim that the starter keeps a web script is false; the web gate stays
+  does not hold (NativeWind's resolver calls the one it found for everything but `global.css`, so
+  either order works), and its claim that the starter keeps a web script is false; the web gate stays
   anyway.
 - **expo-file-system declares the two storage permissions too.** Removing them from the template's
   manifest alone would have left them in the merge; `blockedPermissions` removes them from it.
@@ -913,7 +913,7 @@ all fixed:
 It also claimed that `blockedPermissions` strips `SYSTEM_ALERT_WINDOW` from the debug build too,
 reading it as a library's permission; the debug merge measured in the first stage keeps it, from the
 app's own `src/debug` manifest, so CLAUDE.md is unchanged. And it found `com.yourcompany.appenvironment`
-in the local module's namespace and Kotlin package — left as it is: it is neither the name, the slug
+in the local module's namespace and Kotlin package, left as it is: it is neither the name, the slug
 nor the bundle id, nothing outside the APK's classes shows it, and renaming it would have `setup.sh`
 move sources.
 
@@ -930,14 +930,14 @@ holds the mechanics, and a third copy is one more to keep in step).
 The lot ran over two sessions. The first shipped the brand assets, the legal links, the site and its
 legal content; its commit messages record a first stage only. The second shipped the entitlement
 check, the backend's removal and the two pieces of documentation, checking its own work in the
-session against the libraries in `node_modules` — `@react-native-firebase/app`'s config plugins,
-wrangler 4.76's source — and a local `wrangler dev`, then read the first session's commits against
+session against the libraries in `node_modules` (`@react-native-firebase/app`'s config plugins,
+wrangler 4.76's source) and a local `wrangler dev`, then read the first session's commits against
 the code before recording the lot.
 
 **Less ran than on the lots before it.** No adversarial second stage is recorded for either
 session's work, and the review did not run: nobody read the whole branch before the merge, the
 code-review skill was never run on it, and the pull request was merged less than a minute after it
-left draft. Lots 5 to 11 each record what reading the whole branch found — from two things to ten.
+left draft. Lots 5 to 11 each record what reading the whole branch found, from two things to ten.
 Nothing below comes from such a read, and whoever next touches these files reads them knowing that.
 
 - **deep-focus's splash comment is wrong on SDK 54.** The splash is not padded so `contain` does not
@@ -961,7 +961,7 @@ Nothing below comes from such a read, and whoever next touches these files reads
   script takes all of it, and was run on a clone: typecheck and lint green, a second run changes
   nothing. It also found that `setup.sh` copied `.dev.vars.example` unconditionally under `set -e`,
   and would have failed once `apps/api` was gone.
-- **A KV namespace needs no id any more — read in wrangler's source, not deployed.** wrangler 4.76
+- **A KV namespace needs no id any more (read in wrangler's source, not deployed).** wrangler 4.76
   creates one declared without an id at the first deploy and inherits it at the next
   (`provisionBindings`, `experimental-auto-create` defaulting to true), so the template declares its
   entitlement cache and should deploy with nothing created by hand. No deploy was run: the session
@@ -976,10 +976,10 @@ Nothing below comes from such a read, and whoever next touches these files reads
   upload before RevenueCat in the order of accounts.
 - **The privacy policy was checked against the code**: no analytics user id is ever set, Crashlytics
   carries the language and the theme, RevenueCat runs on its anonymous id, and the entitlement copy is
-  kept out of backups — as the policy says.
+  kept out of backups, as the policy says.
 
 Found along the way and left out of this lot: every build opens `/privacy` and `/terms` in English,
-whatever its language, though the site serves `/fr/privacy` — a static export cannot redirect on
+whatever its language, though the site serves `/fr/privacy`: a static export cannot redirect on
 `Accept-Language`, and the app choosing the French path for a French user is a change to the paths
 contract, to be decided rather than slipped in.
 
@@ -994,7 +994,7 @@ before it was pushed.
 
 - **`pnpm analyze` had never run on the starter (not in the audit).** It looked for
   `entry-*.js`, and `expo export` names the bundle after the entry file, `index.js` here: the export
-  finished and the copy failed. Fixed, and run — which is where the figures below come from.
+  finished and the copy failed. Fixed, and run, which is where the figures below come from.
 - **The 18 other languages lag `en.json` by 72 keys each (not in the audit).** The parity rule's
   case, in the starter itself: a German user reads the paywall's legal note in English. Left to the
   translation session (§3), as the policy requires. `settings.premiumDescription`, removed here,
@@ -1017,7 +1017,7 @@ before it was pushed.
   removal to lot 6, another miscounted the violations it fixed.
 
 The code-review skill then ran on the pushed branch, at medium, and found no bug. Its one factual
-claim — that the 18 other language files still carry `settings.premiumDescription` — was wrong: none
+claim, that the 18 other language files still carry `settings.premiumDescription`, was wrong: none
 ever did.
 
 ---
@@ -1032,7 +1032,7 @@ the whole diff before the push.
 - **The rename would have left CLAUDE.md naming a method that no longer exists.** The plan listed
   the API Layer line; Monetization's contextual-paywall bullet named `showRewardedAd` too. Every old
   method name was grepped across the repository before the commit.
-- **iOS has its own benign failures.** Android's `null-activity` — nothing to present into — was a
+- **iOS has its own benign failures.** Android's `null-activity` (nothing to present into) was a
   condition in the plan; iOS says the same as `nil-vc`, from the show path rather than the file the
   plan cited. `nil-vc` joined the conditions; iOS's `not-ready` stays a non-fatal, since the service
   checks `isLoaded` before it shows.
@@ -1050,11 +1050,11 @@ the whole diff before the push.
   "stays commented in wrangler.toml"; the file declares none, commented or not. Corrected with the
   deferral.
 - **The review found nothing to fix.** It re-read the library's sources for each error shape
-  `readCode` normalises — a banner's `googleMobileAds/error-code-no-fill`, a rejected `show()`'s bare
-  code — and the keys of the slot map. Two limits stay, written down rather than fixed: iOS reports a
+  `readCode` normalises (a banner's `googleMobileAds/error-code-no-fill`, a rejected `show()`'s bare
+  code) and the keys of the slot map. Two limits stay, written down rather than fixed: iOS reports a
   failed presentation on the load channel, so it is filed under `interstitial_load` or
   `rewarded_load` (worth a line in `ADS.md` when iOS ships); and Android maps only four banner codes,
-  so any other reaches JS as `unknown` and becomes a non-fatal — a mediation no-fill would, and the
+  so any other reaches JS as `unknown` and becomes a non-fatal: a mediation no-fill would, and the
   starter has no mediation.
 
 Not checked on a device: the machine that ran the lot has the Android SDK but no emulator image, so
@@ -1091,13 +1091,13 @@ a review of the whole diff before the push.
   as `^55.0.13`, the SDK 55 line, and expo-notifications as "latest", where the app pins the exact
   version its patch is tied to. Both rows read `package.json` now.
 - **The review found nothing to fix.** It re-read the three places a friction is marked, the order
-  of the refusals — none of `friction`, `offline` or `promo_collision` disarms the ask for good —
+  of the refusals (none of `friction`, `offline` or `promo_collision` disarms the ask for good)
   and the docs at each intermediate commit, which name each reader of connectivity only once it
   exists.
 
 Two questions only a device answers. TalkBack may not announce a live region that mounts already
 filled, which is how the banner appears; if it stays silent, the banner keeps a mounted wrapper and
-changes its content instead. And the banner's icon is not yet hidden from screen readers — lot 16's
+changes its content instead. And the banner's icon is not yet hidden from screen readers; lot 16's
 pass over the UI library takes it.
 
 ---
@@ -1118,7 +1118,7 @@ it.
   sparkles) that join it.
 - **Violet meant two things.** `UI_COLORS.brand` drew both Pro and the language row's icon; an app
   whose Pro is gold would have turned its language icon gold. Pro is a role of its own, and the
-  language row takes `SettingsRow`'s accent defaults like any other row — it was their only caller.
+  language row takes `SettingsRow`'s accent defaults like any other row: it was their only caller.
 - **A class that drew nothing.** The About section's `dark:border-violet-500/30` set a border colour
   on a view with no border width; it went rather than being renamed.
 - **The palette stays CommonJS.** `tailwind.config.js` `require`s it, and Expo's TypeScript base
@@ -1127,14 +1127,14 @@ it.
   and compiles `bg-accent-500` to `#3b82f6`.
 - **NativeWind's default rem is 14, by its own source** (`withNativeWind`'s `inlineRem = 14`), and
   the starter never set it: with 16 the export compiles `text-base` to 16/24 and `p-4` to 16. Sizes in
-  a `StyleSheet` — `WHEEL_ITEM_HEIGHT` 44, the tab bar's label, the buttons' 58 — do not move, and
+  a `StyleSheet` (`WHEEL_ITEM_HEIGHT` 44, the tab bar's label, the buttons' 58) do not move, and
   each holds what grows inside it (a wheel row's `heading` is 18/28).
 - **Moving the tabs into a group moved nothing else.** URLs stay `/` and `/settings`, no route was
   typed (`typedRoutes` is off), `remove-api.sh`'s edit of the root layout matches lines the change did
   not touch, and `ADS.md` and the context file follow the two files.
 
 Two questions only a device answers. Whether every screen built from classes reads well an eighth
-larger — the onboarding, the paywall's perks and the settings rows at the largest font scale. And
+larger: the onboarding, the paywall's perks and the settings rows at the largest font scale. And
 whether the tab bar's blur costs the same inside the stack's `(tabs)` screen as it did over the
 whole content view.
 
@@ -1149,22 +1149,22 @@ items proposed, and refuted where the app's version carried the app rather than 
 
 - **The plan's roles were the wrong ones.** It proposed `tablist` / `tab` for `SlidingSelector`, as
   deep-focus had it; a theme selector is a choice of one, so it is a `radiogroup` of `radio`s with
-  `checked`, like the language rows and the paywall's plans — a `tab` announces a pane that does
+  `checked`, like the language rows and the paywall's plans; a `tab` announces a pane that does
   not exist. And `SettingsLinkRow` is a `link`, not the `button` proposed: three of its four rows
   leave the app, and the one that opens something in it passes `role="button"`.
 - **A labelled backdrop was the first stop.** The sheet's and the dialog's backdrop were buttons
-  named *Close*, so TalkBack landed on *Close* before the title. They are no longer controls — the
-  close button, the footer and the back key stay — and a sheet with no title, whose header the
+  named *Close*, so TalkBack landed on *Close* before the title. They are no longer controls (the
+  close button, the footer and the back key stay), and a sheet with no title, whose header the
   close button used to force, gets a floating one.
 - **One helper did not pass the line of §3.** noise-remover's `useAnnouncement` wraps one effect
   around `announceForAccessibility` and carries no trap: the rule names the call instead.
-  `useProgressAnnouncement` ships with no caller because it does carry one — a live region on a
-  value that moves many times a second reads nothing else — and CLAUDE.md names it as the
+  `useProgressAnnouncement` ships with no caller because it does carry one: a live region on a
+  value that moves many times a second reads nothing else, and CLAUDE.md names it as the
   integration point; `useScreenReaderEnabled` has its caller, the banner.
 - **What was the app's stayed in the app.** `SettingsRowIcon` and the optional icon plate serve
   noise-remover's own settings; its light-mode move from 500 to 700 on fills and text is a
   contrast decision taken on its teal, which the starter's blue scale was not measured against
-  here — a question for the colour pass, not this lot.
+  here, a question for the colour pass, not this lot.
 - **`TAB_BAR_HEIGHT` is gone, on purpose.** A constant height let a label scaled to 200 % overrun
   the bar, and the banner and `useTabBarPadding` measured against it. `tabBarHeight(fontScale)`
   replaces it, and an app importing the constant fails at typecheck rather than at 200 %.
@@ -1183,9 +1183,9 @@ release.
 ## 19. Resuming in a new session
 
 1. Read this file, then `CLAUDE.md` at the repo root.
-2. `git log --oneline origin/main..HEAD` — that is the real unpushed gap.
-3. Pick the lot, in §3's order. Pull its items — a planned lot is read off `plannedLot`, which
-   also carries the copies the audit filed twice — then search the other lots for items on the same
+2. `git log --oneline origin/main..HEAD`: that is the real unpushed gap.
+3. Pick the lot, in §3's order. Pull its items (a planned lot is read off `plannedLot`, which
+   also carries the copies the audit filed twice), then search the other lots for items on the same
    files:
    ```bash
    python3 -c "import json;d=json.load(open('docs/boilerplate-audit/audit-items.json'));\
@@ -1195,7 +1195,7 @@ release.
 5. Apply, one commit per subject, `pnpm typecheck` and `pnpm lint` green each time.
 6. Update `status` in `audit-items.json` for what shipped (`done-lotN`, in every copy of an item the
    audit filed twice), or `closed` with a note for an item the lot closes without shipping; then
-   the `ITEMS` line of `audit-console.html`, which embeds its own copy of the data — its
+   the `ITEMS` line of `audit-console.html`, which embeds its own copy of the data: its
    `SHIPPED_LOT` map already knows `done-lot14` to `done-lot22`; then this file's §1 table, and the
    lot's paragraph in §3, which is a plan and goes once the lot has shipped.
 7. Push the branch, open the pull request, review it, fix what the review finds, and merge.

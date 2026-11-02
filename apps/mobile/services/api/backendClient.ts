@@ -9,7 +9,7 @@ const client = axios.create({
   headers: { 'x-api-key': BACKEND_CONFIG.API_KEY },
 })
 
-// An incomplete `.env` would send every call to a relative URL with no key — a network error with
+// An incomplete `.env` would send every call to a relative URL with no key: a network error with
 // no status, which `withRetry` takes for an outage and retries. It fails here instead, by name.
 export function getBackendClient() {
   if (!BACKEND_CONFIG.URL || !BACKEND_CONFIG.API_KEY) {

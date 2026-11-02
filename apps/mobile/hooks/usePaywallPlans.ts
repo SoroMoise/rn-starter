@@ -50,7 +50,7 @@ export function planCtaLabel({ plan, t }: { plan: OfferingPlan; t: TFunction }):
   }
 }
 
-// The price with the period it buys — a one-time purchase has none, and a cycle the store
+// The price with the period it buys: a one-time purchase has none, and a cycle the store
 // reports in no nameable unit keeps the bare price.
 function planPrice({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
   const price = plan.pkg.product.priceString
@@ -103,7 +103,7 @@ export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
 
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
 
-  // Keyed on id, not object identity — a foreground refetch rebuilds every plan object.
+  // Keyed on id, not object identity: a foreground refetch rebuilds every plan object.
   const defaultPlanId = defaultPlan?.id ?? null
   useEffect(() => {
     setSelectedPlanId(defaultPlanId)

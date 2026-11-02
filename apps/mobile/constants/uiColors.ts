@@ -11,7 +11,7 @@ export const UI_COLORS = {
   offlineDark: '#fdba74',
 } as const
 
-// Named by role, never by hue. The tuple is what expo-linear-gradient requires — a one-colour
+// Named by role, never by hue. The tuple is what expo-linear-gradient requires: a one-colour
 // token fails the build instead of rendering a flat block.
 export const GRADIENTS = {
   cta: ['#2563eb', '#4f46e5', '#7c3aed'],

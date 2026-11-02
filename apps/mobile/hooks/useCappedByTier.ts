@@ -3,7 +3,7 @@ import { useMemo, useRef } from 'react'
 
 // The store keeps everything the user chose; the free tier's limit is applied here, on read, so a
 // lapsed subscription caps the list again and a renewal hands all of it back. The tier is the one
-// seeded from the cached entitlement — waiting on `isInitialized` gave a free user Pro's list for
+// seeded from the cached entitlement: waiting on `isInitialized` gave a free user Pro's list for
 // the first frames.
 export function useCappedByTier<T>({
   items,

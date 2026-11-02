@@ -2,7 +2,7 @@ import { notificationService, type NotificationPermission } from '@/services/not
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AppState } from 'react-native'
 
-// The grant changes outside the app — in the system settings, or a dialog drawn over it — so it is
+// The grant changes outside the app (in the system settings, or a dialog drawn over it), so it is
 // read again every time the app comes back, rather than trusted from the mount.
 export function useNotificationPermission() {
   const [permission, setPermission] = useState<NotificationPermission | null>(null)

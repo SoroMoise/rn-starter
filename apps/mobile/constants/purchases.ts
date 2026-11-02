@@ -10,7 +10,7 @@ const purchasesConfig = Constants.expoConfig?.extra?.purchases ?? {}
 export const REVENUECAT_API_KEY: string =
   Platform.OS === 'ios' ? (purchasesConfig.iosApiKey ?? '') : (purchasesConfig.androidApiKey ?? '')
 
-// RevenueCat entitlement identifier — set this to match your RevenueCat dashboard.
+// RevenueCat entitlement identifier: set this to match your RevenueCat dashboard.
 export const ENTITLEMENT_PREMIUM = 'premium'
 
 export type PurchaseSurface =

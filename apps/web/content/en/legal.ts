@@ -1,9 +1,9 @@
 import { SITE, STORE_URL } from '@/lib/site'
 import type { LegalContent } from '../types'
 
-// A starting point, not legal advice. It describes what the starter itself does — Google AdMob with
+// A starting point, not legal advice. It describes what the starter itself does (Google AdMob with
 // Google's consent form, Firebase Analytics and Crashlytics without a user id, RevenueCat on an
-// anonymous id, notifications scheduled on the device — and every app built on it adds, removes
+// anonymous id, notifications scheduled on the device) and every app built on it adds, removes
 // and has the result reviewed. Bracketed passages are choices the publisher makes.
 export const enLegal: LegalContent = {
   privacy: {
@@ -38,8 +38,8 @@ export const enLegal: LegalContent = {
         ],
         list: [
           'Device or other identifiers: the advertising identifier of your device, read by Google AdMob; a Firebase installation identifier that groups events and crash reports by installation; and an anonymous identifier generated on your device for RevenueCat. None of them is your name or your e-mail address, and the advertising identifier can be reset.',
-          'App activity: the screens you open, the features you use, the offers shown to you and the plan you buy with its price — never a payment identifier — collected by Firebase Analytics.',
-          'App information and performance: crash logs and diagnostics — the state of the app and of the device when something failed — collected by Firebase Crashlytics, with your app language and theme.',
+          'App activity: the screens you open, the features you use, the offers shown to you and the plan you buy with its price (never a payment identifier), collected by Firebase Analytics.',
+          'App information and performance: crash logs and diagnostics (the state of the app and of the device when something failed), collected by Firebase Crashlytics, with your app language and theme.',
           'Technical information: device model, operating system and app version, system language, and an approximate location inferred from your IP address, which AdMob uses to select ads.',
           'Purchase history: if you buy Pro, the product bought and the receipt issued by the store, received by RevenueCat.',
         ],
@@ -62,7 +62,7 @@ export const enLegal: LegalContent = {
         title: 'Advertising through Google AdMob',
         paragraphs: [
           'The free version of the app shows ads supplied by Google AdMob; that is how it stays free. This website shows none.',
-          'Where the law requires consent before personalised advertising — in the European Economic Area, the United Kingdom and Switzerland — the app presents Google’s consent form, and no ad is requested before you have answered it. Where your region requires the choice to stay open, it can be changed later from the app’s settings.',
+          'Where the law requires consent before personalised advertising (in the European Economic Area, the United Kingdom and Switzerland), the app presents Google’s consent form, and no ad is requested before you have answered it. Where your region requires the choice to stay open, it can be changed later from the app’s settings.',
           'To select and measure ads, the AdMob SDK reads your advertising identifier and the technical information listed above. Google acts as an independent controller for the ads it serves, under its own privacy policy (policies.google.com/privacy). We do not receive the profile Google builds, and we do not sell or share your data with advertisers ourselves.',
         ],
         list: [
@@ -149,7 +149,7 @@ export const enLegal: LegalContent = {
         paragraphs: [
           `You can ask us for access to your personal data, its correction or deletion, a copy in a portable format, or a restriction of its use; you can object to processing based on our legitimate interest, and withdraw a consent at any time. Write to ${SITE.supportEmail}: we answer within one month. The app holds no account, so we may ask for details that identify your installation.`,
           'Deleting what the app holds on your phone is immediate and in your hands: clear its data or uninstall it. For the data processed by Google and RevenueCat, you can also use the tools those providers offer, and your device’s advertising and privacy settings.',
-          'You also have the right to lodge a complaint with a data protection authority — [the authority of the country where the publisher is established], or the one where you live.',
+          'You also have the right to lodge a complaint with a data protection authority, [the authority of the country where the publisher is established], or the one where you live.',
         ],
       },
       {
@@ -207,7 +207,7 @@ export const enLegal: LegalContent = {
         paragraphs: [
           'Pro unlocks the features reserved for it, starting with the removal of every ad. [List the other Pro features.]',
           'The plans on offer, their prices, billing periods and any free trial are those shown in the app at the moment you buy, in your currency, and confirmed by your store before you pay. The store charges the payment method on your account.',
-          'A subscription renews automatically at the end of each period, at the price then in force, unless you cancel before that period ends — on the App Store, at least 24 hours before. If a price changes, your store tells you beforehand and, where required, asks for your agreement. A one-time purchase unlocks Pro with no recurring charge, for as long as the app remains available.',
+          'A subscription renews automatically at the end of each period, at the price then in force, unless you cancel before that period ends (on the App Store, at least 24 hours before). If a price changes, your store tells you beforehand and, where required, asks for your agreement. A one-time purchase unlocks Pro with no recurring charge, for as long as the app remains available.',
         ],
       },
       {
@@ -246,7 +246,7 @@ export const enLegal: LegalContent = {
       {
         title: 'Third-party services',
         paragraphs: [
-          'The app relies on third parties — among them Google for distribution, advertising, analytics and crash reports, your app store for payments, and RevenueCat for purchases. We are not responsible for their availability or their failures, and their own terms apply to your use of them.',
+          'The app relies on third parties, among them Google for distribution, advertising, analytics and crash reports, your app store for payments, and RevenueCat for purchases. We are not responsible for their availability or their failures, and their own terms apply to your use of them.',
         ],
       },
       {

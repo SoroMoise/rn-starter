@@ -98,7 +98,7 @@ function readTierOverride(): { isPremium: boolean } | null {
 
 const TIER_OVERRIDE = readTierOverride()
 
-// Read before the store has answered, and when it could not be asked at all — a
+// Read before the store has answered, and when it could not be asked at all: a
 // subscriber on a plane keeps their Pro until the last expiry the store reported.
 // A response that reports no active entitlement is a verified answer and never lands here.
 function unverifiedIsPremium(): boolean {
@@ -126,7 +126,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const isConfiguredRef = useRef(false)
   const paywallSourceRef = useRef<PaywallSource>('settings')
   // Read inside applyCustomerInfo, which must not re-create itself when the offer
-  // reloads — the init effect depends on it.
+  // reloads; the init effect depends on it.
   const plansRef = useRef<OfferingPlan[]>([])
 
   const plans = useMemo(() => buildOfferingPlans(offering), [offering])
@@ -195,7 +195,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     setIsLoadingPrices(true)
     try {
       const offerings = await purchaseService.getOfferings()
-      // Only `current` — falling back to another offering would misprice the screen
+      // Only `current`: falling back to another offering would misprice the screen
       // and detach the purchase from the experiment measuring it.
       setOffering(offerings.current)
     } catch (err) {
@@ -383,7 +383,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   )
 
   // The one gate every source passes, so a source that does not exist yet cannot sell to a
-  // subscriber or ahead of the onboarding's own pitch — and `paywall_shown` only counts
+  // subscriber or ahead of the onboarding's own pitch, and `paywall_shown` only counts
   // impressions that could convert.
   const openPaywall = useCallback(
     async ({ source }: { source: PaywallSource }): Promise<boolean> => {

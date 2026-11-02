@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# remove-api.sh — Takes the backend out of an app that has none: apps/api, packages/shared,
+# remove-api.sh takes the backend out of an app that has none: apps/api, packages/shared,
 # the Worker's workflow and scripts, and the network layer the mobile app keeps only to talk to it.
 #
 # Usage:
@@ -7,7 +7,7 @@
 #   bash scripts/remove-api.sh --yes   # no question
 #
 # Idempotent. It refuses a working tree with uncommitted changes, so that everything it removes is
-# one diff git can take back — nothing else can.
+# one diff git can take back; nothing else can.
 
 set -euo pipefail
 

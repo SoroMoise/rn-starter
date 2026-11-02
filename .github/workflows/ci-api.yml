@@ -13,7 +13,7 @@ concurrency:
 jobs:
   build-and-deploy:
     # Manual runs always proceed. PR runs only when the PR was actually merged
-    # into main AND carries the `release-api` label — merely closing a PR, or
+    # into main AND carries the `release-api` label; merely closing a PR, or
     # merging one without the label, never triggers this check.
     if: >-
       github.event_name == 'workflow_dispatch' ||

@@ -43,7 +43,7 @@ export function legalMetadata({ locale, route }: { locale: Locale; route: LegalR
   return buildMetadata({
     locale,
     route,
-    title: `${document.title} — ${SITE.name}`,
+    title: `${document.title} · ${SITE.name}`,
     description: document.description,
   })
 }

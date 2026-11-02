@@ -76,7 +76,7 @@ export function LegalSupportSection() {
           void openStoreListing({ reason: 'settings' })
         },
       },
-      // Rendered only where Google requires the choice to be reopenable — absent
+      // Rendered only where Google requires the choice to be reopenable, absent
       // rather than opening nothing.
       ...(arePrivacyOptionsRequired
         ? [

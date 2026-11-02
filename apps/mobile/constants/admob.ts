@@ -2,7 +2,7 @@ import { Platform } from 'react-native'
 import { TestIds, type RequestOptions } from 'react-native-google-mobile-ads'
 
 // Literals, never `.env`: the app id ships in the manifest and every unit id in the bundle's
-// string table, so an env protected nothing — and an incomplete one shipped a sibling app's
+// string table, so an env protected nothing, and an incomplete one shipped a sibling app's
 // release with empty ids: no ad, no error, no revenue.
 const UNIT_PENDING = null
 

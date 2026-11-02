@@ -1,6 +1,6 @@
 # Cloudflare Workers local dev secrets
 # Copy this file to .dev.vars and fill in the values.
-# .dev.vars is gitignored — never commit real secrets.
+# .dev.vars is gitignored; never commit real secrets.
 
 # API authentication key (used by the mobile app to authenticate requests)
 API_KEY=

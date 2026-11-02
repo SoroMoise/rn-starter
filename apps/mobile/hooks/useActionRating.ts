@@ -19,11 +19,11 @@ type UseActionRatingProps = {
  *   2. offers the moment to the contextual paywall (`after_n_actions` trigger),
  *   3. then to an interstitial ad when due (unless an ad-free window is open),
  *   4. and a moment neither took arms the rating ask, which `RatingAskHost` raises once the
- *      user is back — the instant an action completes, they are reading its result.
+ *      user is back: the instant an action completes, they are reading its result.
  * The first surface to take the moment ends the chain, and all three draw on the session's
  * single automatic interruption (`promoCoordinator`).
  *
- * `recordAction({ allowPromos: false })` moves the counter and nothing else — for the user's
+ * `recordAction({ allowPromos: false })` moves the counter and nothing else: for the user's
  * first success, which decides whether they come back tomorrow, and for an action abandoned
  * or failed, which has nothing to celebrate.
  *

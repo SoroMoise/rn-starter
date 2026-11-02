@@ -34,8 +34,8 @@ export const frLegal: LegalContent = {
         ],
         list: [
           'Identifiants de l’appareil ou autres : l’identifiant publicitaire de votre appareil, lu par Google AdMob ; un identifiant d’installation Firebase, qui regroupe les événements et les rapports de plantage par installation ; et un identifiant anonyme généré sur votre appareil pour RevenueCat. Aucun n’est votre nom ni votre adresse e-mail, et l’identifiant publicitaire peut être réinitialisé.',
-          'Activité dans l’application : les écrans ouverts, les fonctionnalités utilisées, les offres qui vous sont présentées et la formule achetée avec son prix — jamais un identifiant de paiement —, collectés par Firebase Analytics.',
-          'Informations sur l’application et performances : journaux de plantage et diagnostics — l’état de l’application et de l’appareil au moment d’une erreur —, collectés par Firebase Crashlytics, avec la langue et le thème de l’application.',
+          'Activité dans l’application : les écrans ouverts, les fonctionnalités utilisées, les offres qui vous sont présentées et la formule achetée avec son prix (jamais un identifiant de paiement), collectés par Firebase Analytics.',
+          'Informations sur l’application et performances : journaux de plantage et diagnostics (l’état de l’application et de l’appareil au moment d’une erreur), collectés par Firebase Crashlytics, avec la langue et le thème de l’application.',
           'Informations techniques : modèle de l’appareil, versions du système et de l’application, langue du système, et une localisation approximative déduite de votre adresse IP, qu’AdMob utilise pour choisir les publicités.',
           'Historique d’achats : si vous achetez Pro, le produit acheté et le reçu émis par la boutique, reçus par RevenueCat.',
         ],
@@ -58,7 +58,7 @@ export const frLegal: LegalContent = {
         title: 'Publicité Google AdMob',
         paragraphs: [
           'La version gratuite de l’application affiche des publicités fournies par Google AdMob ; c’est ce qui la rend gratuite. Ce site n’en affiche aucune.',
-          'Là où la loi exige un consentement avant toute publicité personnalisée — dans l’Espace économique européen, au Royaume-Uni et en Suisse —, l’application présente le formulaire de consentement de Google, et aucune publicité n’est demandée avant votre réponse. Lorsque votre région impose que ce choix reste modifiable, vous pouvez le changer ensuite depuis les réglages de l’application.',
+          'Là où la loi exige un consentement avant toute publicité personnalisée (dans l’Espace économique européen, au Royaume-Uni et en Suisse), l’application présente le formulaire de consentement de Google, et aucune publicité n’est demandée avant votre réponse. Lorsque votre région impose que ce choix reste modifiable, vous pouvez le changer ensuite depuis les réglages de l’application.',
           'Pour choisir et mesurer les publicités, le SDK AdMob lit votre identifiant publicitaire et les informations techniques décrites plus haut. Google agit en responsable de traitement indépendant pour les publicités qu’il diffuse, selon sa propre politique de confidentialité (policies.google.com/privacy). Nous ne recevons pas le profil que Google constitue, et nous ne vendons ni ne partageons nous-mêmes vos données avec des annonceurs.',
         ],
         list: [
@@ -147,7 +147,7 @@ export const frLegal: LegalContent = {
         paragraphs: [
           `Vous pouvez nous demander l’accès à vos données personnelles, leur rectification ou leur effacement, une copie dans un format portable, ou la limitation de leur usage ; vous pouvez vous opposer à un traitement fondé sur notre intérêt légitime, et retirer un consentement à tout moment. Écrivez à ${SITE.supportEmail} : nous répondons sous un mois. L’application ne comporte pas de compte ; nous pourrons donc vous demander des précisions qui identifient votre installation.`,
           'Effacer ce que l’application conserve sur votre téléphone est immédiat et ne dépend que de vous : videz ses données ou désinstallez-la. Pour les données traitées par Google et RevenueCat, vous pouvez aussi utiliser les outils que ces prestataires proposent, et les réglages de publicité et de confidentialité de votre appareil.',
-          'Vous avez également le droit d’introduire une réclamation auprès d’une autorité de protection des données — [l’autorité du pays où l’éditeur est établi, par exemple la CNIL en France], ou celle de votre lieu de résidence.',
+          'Vous avez également le droit d’introduire une réclamation auprès d’une autorité de protection des données, [l’autorité du pays où l’éditeur est établi, par exemple la CNIL en France], ou celle de votre lieu de résidence.',
         ],
       },
       {
@@ -209,7 +209,7 @@ export const frLegal: LegalContent = {
         paragraphs: [
           'Pro débloque les fonctionnalités qui lui sont réservées, à commencer par la suppression de toute publicité. [Listez les autres fonctionnalités Pro.]',
           'Les formules proposées, leurs prix, leurs périodes de facturation et l’éventuel essai gratuit sont ceux qu’affiche l’application au moment de l’achat, dans votre devise, et que votre boutique confirme avant le paiement. La boutique débite le moyen de paiement associé à votre compte.',
-          'Un abonnement se renouvelle automatiquement à la fin de chaque période, au prix alors en vigueur, sauf résiliation avant la fin de cette période — sur l’App Store, au moins 24 heures avant. Si un prix change, votre boutique vous en informe à l’avance et, lorsque c’est requis, demande votre accord. Un achat unique débloque Pro sans paiement récurrent, tant que l’application reste disponible.',
+          'Un abonnement se renouvelle automatiquement à la fin de chaque période, au prix alors en vigueur, sauf résiliation avant la fin de cette période (sur l’App Store, au moins 24 heures avant). Si un prix change, votre boutique vous en informe à l’avance et, lorsque c’est requis, demande votre accord. Un achat unique débloque Pro sans paiement récurrent, tant que l’application reste disponible.',
         ],
       },
       {
@@ -248,7 +248,7 @@ export const frLegal: LegalContent = {
       {
         title: 'Services tiers',
         paragraphs: [
-          'L’application s’appuie sur des tiers — notamment Google pour la distribution, la publicité, la mesure d’audience et les rapports de plantage, votre boutique pour les paiements, et RevenueCat pour les achats. Nous ne sommes pas responsables de leur disponibilité ni de leurs défaillances, et leurs propres conditions s’appliquent à votre utilisation de leurs services.',
+          'L’application s’appuie sur des tiers, notamment Google pour la distribution, la publicité, la mesure d’audience et les rapports de plantage, votre boutique pour les paiements, et RevenueCat pour les achats. Nous ne sommes pas responsables de leur disponibilité ni de leurs défaillances, et leurs propres conditions s’appliquent à votre utilisation de leurs services.',
         ],
       },
       {

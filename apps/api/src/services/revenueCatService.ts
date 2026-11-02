@@ -46,7 +46,7 @@ async function rcGet<T>({
 
 // The store owns the grace period after a failed payment: Play and Apple keep the subscription
 // giving access through it, so RevenueCat still lists the entitlement as active. The active list is
-// the whole answer — no window of our own, no fallback on the subscriptions. Times are epoch ms.
+// the whole answer: no window of our own, no fallback on the subscriptions. Times are epoch ms.
 async function resolvePremium({
   rcCustomerId,
   env,

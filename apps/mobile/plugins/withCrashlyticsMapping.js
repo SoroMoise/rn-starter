@@ -8,7 +8,7 @@ const { withAppBuildGradle } = require('@expo/config-plugins')
 // Wrapped in `plugins.withId` rather than written into the top-level `android { }` block: the
 // @react-native-firebase/crashlytics config plugin appends its `apply plugin:` at the *end* of
 // app/build.gradle, so the firebaseCrashlytics DSL does not exist yet when Gradle evaluates the
-// initial android block — putting it there fails configuration for every variant.
+// initial android block; putting it there fails configuration for every variant.
 const MARKER = 'Crashlytics mapping upload'
 
 const GRADLE_BLOCK = `

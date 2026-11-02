@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# setup.sh — Personalizes the rn-starter template.
+# setup.sh personalizes the rn-starter template.
 #
 # Usage:
 #   bash scripts/setup.sh                        # interactive
@@ -55,7 +55,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ─── Interactive prompts (only for missing values) ────────────────────────────
-header "RN Starter — Setup"
+header "RN Starter · Setup"
 info "This script personalizes the template and copies example secret files."
 echo ""
 
@@ -283,9 +283,9 @@ fi
 header "Release marker"
 
 if ! git -C "$REPO_ROOT" rev-parse --verify -q HEAD > /dev/null 2>&1; then
-  warn "No commit yet — after the first one, run: git rev-parse HEAD > .last_release_commit"
+  warn "No commit yet; after the first one, run: git rev-parse HEAD > .last_release_commit"
 elif [[ -n "$(git -C "$REPO_ROOT" log -1 --format=%H --grep='^chore(release): v')" ]]; then
-  warn ".last_release_commit left as it is — this repository has already released."
+  warn ".last_release_commit left as it is: this repository has already released."
 else
   git -C "$REPO_ROOT" rev-parse HEAD > "$REPO_ROOT/.last_release_commit"
   success ".last_release_commit now starts at $(git -C "$REPO_ROOT" rev-parse --short HEAD)."
@@ -296,18 +296,18 @@ header "Copying example secret files (if absent)"
 
 if [[ ! -f "$MOBILE_ENV" ]]; then
   cp "$MOBILE_ENV_EXAMPLE" "$MOBILE_ENV"
-  success "Created apps/mobile/.env from .env.example — fill in your real values."
+  success "Created apps/mobile/.env from .env.example; fill in your real values."
 else
-  warn "apps/mobile/.env already exists — skipped."
+  warn "apps/mobile/.env already exists, skipped."
 fi
 
 if [[ ! -f "$API_VARS_EXAMPLE" ]]; then
-  info "apps/api is gone — no .dev.vars to create."
+  info "apps/api is gone: no .dev.vars to create."
 elif [[ ! -f "$API_VARS" ]]; then
   cp "$API_VARS_EXAMPLE" "$API_VARS"
-  success "Created apps/api/.dev.vars from .dev.vars.example — fill in your real values."
+  success "Created apps/api/.dev.vars from .dev.vars.example; fill in your real values."
 else
-  warn "apps/api/.dev.vars already exists — skipped."
+  warn "apps/api/.dev.vars already exists, skipped."
 fi
 
 # ─── Next steps ───────────────────────────────────────────────────────────────
@@ -318,11 +318,11 @@ echo ""
 echo "  2. Edit apps/mobile/.env with your RevenueCat and other keys."
 echo "     See apps/mobile/.env.example for all variables and comments."
 echo "     AdMob ids are not env vars: app ids in apps/mobile/app.config.js,"
-echo "     unit ids in apps/mobile/constants/admob.ts — see apps/mobile/ADS.md."
+echo "     unit ids in apps/mobile/constants/admob.ts; see apps/mobile/ADS.md."
 echo ""
 echo "  3. Add Firebase config files:"
-echo "     - apps/mobile/google-services.json  (Android — use google-services.json.example as template)"
-echo "     - apps/mobile/GoogleService-Info.plist  (iOS — download from Firebase Console)"
+echo "     - apps/mobile/google-services.json  (Android: use google-services.json.example as template)"
+echo "     - apps/mobile/GoogleService-Info.plist  (iOS: download from Firebase Console)"
 echo ""
 if [[ -d "$REPO_ROOT/apps/api" ]]; then
   echo "  4. Edit apps/api/.dev.vars with your API_KEY, Firebase and RevenueCat credentials."

@@ -9,7 +9,8 @@ export const appUpdateStorage = {
     return Number.isFinite(versionCode) ? versionCode : null
   },
 
-  setOfferedVersionCode(versionCode: number): void {
-    mmkv.set(KEYS.APP_UPDATE_OFFERED_VERSION, versionCode.toString())
+  setOfferedVersionCode(versionCode: number | null): void {
+    if (versionCode === null) mmkv.delete(KEYS.APP_UPDATE_OFFERED_VERSION)
+    else mmkv.set(KEYS.APP_UPDATE_OFFERED_VERSION, versionCode.toString())
   },
 }

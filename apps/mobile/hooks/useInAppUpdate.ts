@@ -48,10 +48,8 @@ export function useInAppUpdate() {
       const info = await appUpdateService.info()
       if (!isCurrent) return
       if (info?.installStatus === 'downloaded') setDownloaded(true)
-      if (
-        !info ||
-        !shouldOfferUpdate({ info, offeredVersionCode: appUpdateStorage.getOfferedVersionCode() })
-      ) {
+      const offeredVersionCode = appUpdateStorage.getOfferedVersionCode()
+      if (!info || !shouldOfferUpdate({ info, offeredVersionCode })) {
         checkedThisVisit.current = true
         return
       }
@@ -64,6 +62,7 @@ export function useInAppUpdate() {
         appUpdateStorage.setOfferedVersionCode(info.availableVersionCode)
         analyticsService.track('app_update_offered')
         const result = await appUpdateService.startFlexible()
+        if (result === 'unavailable') appUpdateStorage.setOfferedVersionCode(offeredVersionCode)
         analyticsService.track('app_update_answered', { result })
       }
       await openSheet()

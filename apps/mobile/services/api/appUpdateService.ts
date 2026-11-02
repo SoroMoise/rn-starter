@@ -47,7 +47,7 @@ export const appUpdateService = {
       return await inAppUpdatesModule.startFlexibleUpdateAsync()
     } catch (error) {
       report({ error, source: 'app_update_start' })
-      return 'failed'
+      return 'unavailable'
     }
   },
 

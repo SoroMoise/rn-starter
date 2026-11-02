@@ -45,8 +45,6 @@ export function AppUpdateCard() {
 
   if (!isReadyToRestart) return null
 
-  const restartLabel = t('appUpdate.ready.restart')
-
   return (
     <Animated.View
       entering={SlideInDown.duration(260)}
@@ -64,13 +62,9 @@ export function AppUpdateCard() {
             {t('appUpdate.ready.body')}
           </ThemedText>
         </View>
-        <GradientButton
-          onPress={restart}
-          accessibilityLabel={restartLabel}
-          colors={GRADIENTS.cta}
-          style={styles.restartButton}>
+        <GradientButton onPress={restart} colors={GRADIENTS.cta} style={styles.restartButton}>
           <ThemedText variant="button" color="inverse" align="center">
-            {restartLabel}
+            {t('appUpdate.ready.restart')}
           </ThemedText>
         </GradientButton>
         <Pressable

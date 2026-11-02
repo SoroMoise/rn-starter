@@ -45,6 +45,10 @@ class InAppUpdatesModule : Module() {
       manager?.unregisterListener(installStateListener)
     }
 
+    OnDestroy {
+      manager?.unregisterListener(installStateListener)
+    }
+
     AsyncFunction("getUpdateInfoAsync") { promise: Promise ->
       val updates = managerOrNull() ?: return@AsyncFunction promise.reject(NO_CONTEXT, null, null)
       updates.appUpdateInfo

@@ -21,8 +21,9 @@ const codeOf = (error: unknown): string =>
   typeof error === 'object' && error !== null && 'code' in error ? String(error.code) : 'unknown'
 
 const report = ({ error, source }: { error: unknown; source: string }): void => {
-  if (PLAY_ERRORS_WITHOUT_UPDATE.has(codeOf(error))) return
-  void crashlyticsService.recordError(error, { source, code: codeOf(error) })
+  const code = codeOf(error)
+  if (PLAY_ERRORS_WITHOUT_UPDATE.has(code)) return
+  void crashlyticsService.recordError(error, { source, code })
 }
 
 export const appUpdateService = {

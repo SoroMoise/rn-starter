@@ -20,8 +20,6 @@ export function useInAppUpdate() {
   const [isDownloaded, setDownloaded] = useState(false)
   const [isDismissed, setDismissed] = useState(false)
   const checkedThisVisit = useRef(false)
-  const isOnTabsRef = useRef(isOnTabs)
-  isOnTabsRef.current = isOnTabs
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (state) => {
@@ -34,12 +32,8 @@ export function useInAppUpdate() {
   useEffect(
     () =>
       appUpdateService.subscribe((status) => {
-        if (status === 'downloaded') {
-          setDownloaded(true)
-          analyticsService.track('app_update_downloaded')
-        } else if (status === 'failed' || status === 'canceled' || status === 'installed') {
-          setDownloaded(false)
-        }
+        setDownloaded(status === 'downloaded')
+        if (status === 'downloaded') analyticsService.track('app_update_downloaded')
       }),
     []
   )
@@ -48,39 +42,34 @@ export function useInAppUpdate() {
     if (!IN_APP_UPDATE_ENABLED || !appUpdateService.isSupported()) return
     if (!isOnTabs || !isForeground || checkedThisVisit.current) return
     let isCurrent = true
-    let timer: ReturnType<typeof setTimeout>
+    let timer: ReturnType<typeof setTimeout> | undefined
 
-    const check = async () => {
+    const offer = async () => {
       const info = await appUpdateService.info()
-      if (!info) return
-      if (info.installStatus === 'downloaded') {
-        setDownloaded(true)
-        return
-      }
+      if (!isCurrent) return
+      if (info?.installStatus === 'downloaded') setDownloaded(true)
       if (
+        !info ||
         !shouldOfferUpdate({ info, offeredVersionCode: appUpdateStorage.getOfferedVersionCode() })
-      )
-        return
-      if (!isCurrent || !isOnTabsRef.current || !isOpenToTheSheet()) {
-        checkedThisVisit.current = false
+      ) {
+        checkedThisVisit.current = true
         return
       }
-      appUpdateStorage.setOfferedVersionCode(info.availableVersionCode)
-      analyticsService.track('app_update_offered')
-      const result = await appUpdateService.startFlexible()
-      analyticsService.track('app_update_answered', { result })
-    }
-
-    const attempt = () => {
-      if (!isOpenToTheSheet()) {
-        timer = setTimeout(attempt, SETTLE_MS)
-        return
+      const openSheet = async () => {
+        if (!isOpenToTheSheet()) {
+          timer = setTimeout(openSheet, SETTLE_MS)
+          return
+        }
+        checkedThisVisit.current = true
+        appUpdateStorage.setOfferedVersionCode(info.availableVersionCode)
+        analyticsService.track('app_update_offered')
+        const result = await appUpdateService.startFlexible()
+        analyticsService.track('app_update_answered', { result })
       }
-      checkedThisVisit.current = true
-      void check()
+      await openSheet()
     }
 
-    timer = setTimeout(attempt, SETTLE_MS)
+    timer = setTimeout(offer, SETTLE_MS)
     return () => {
       isCurrent = false
       clearTimeout(timer)

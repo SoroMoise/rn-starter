@@ -89,6 +89,7 @@
     "legalAndSupport": "Rechtliches & Support",
     "privacyPolicy": "Datenschutzerklärung",
     "termsOfService": "Nutzungsbedingungen",
+    "openSourceLicences": "Open-Source-Lizenzen",
     "support": "Support",
     "rateApp": "Diese App bewerten",
     "languageChanged": "Sprache aktualisiert",
@@ -152,6 +153,14 @@
     "messageManual": "Starte die App neu, um sie anzuwenden.",
     "announcement": "Leserichtung wird geändert. Starte die App neu, um sie anzuwenden."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Update bereit",
+      "body": "Starte die App neu, um die Installation der neuen Version abzuschließen.",
+      "restart": "Neu starten",
+      "later": "Später"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Alle Funktionen freischalten",
@@ -203,7 +212,12 @@
     "trustStore": "Sichere Zahlung über {{store}}",
     "trustTrial": "Während der Testphase zahlst du nichts",
     "trustCancel": "Jederzeit kündbar, ohne Bindung",
-    "trustOneTime": "Eine Zahlung, kein Abonnement"
+    "trustOneTime": "Eine Zahlung, kein Abonnement",
+    "lifetimeOffer": {
+      "title": "Kein Fan von Abos?",
+      "body": "Einmal zahlen und Pro für immer behalten. Nichts zu verlängern, nichts zu kündigen.",
+      "decline": "Nein danke"
+    }
   },
   "premiumGate": {
     "unlock": "Freischalten",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Erinnerungen",
     "channelDescription": "Geplante lokale Erinnerungen"
+  },
+  "licences": {
+    "title": "Open-Source-Lizenzen",
+    "intro": "Die App ist mit der unten aufgeführten Software gebaut. Tippe auf einen Eintrag, um die Lizenz so zu lesen, wie ihre Autoren sie verfasst haben.",
+    "sections": {
+      "app": "App-Bibliotheken",
+      "native": "Native Bibliotheken",
+      "fonts": "Schriften",
+      "android": "Android-Bibliotheken"
+    },
+    "androidPending": "Dieser Build enthält die Liste seiner Android-Bibliotheken nicht: Der Release-Build schreibt sie.",
+    "origin": {
+      "repository": "Das Paket enthält keine Lizenzdatei: Dieser Text stammt aus seinem Repository.",
+      "spdx": "Das Paket enthält keinen Lizenztext: Dies ist der Standardtext der Lizenz, die es angibt; als Inhaber der Urheberrechte ist sein Autor genannt, sofern das Paket einen nennt. Der eigene Urheberrechtsvermerk des Projekts steht in seinem Quellcode.",
+      "spdxTemplate": "Der Standardtext der Lizenz, die sein Maven POM angibt; als Inhaber der Urheberrechte ist sein Herausgeber genannt, sofern das POM einen nennt. Der eigene Urheberrechtsvermerk des Projekts steht in seinem Quellcode.",
+      "pom": "Sein Maven POM nennt diese Lizenz, ohne ihren Text beizufügen."
+    },
+    "readTerms": "Bedingungen lesen",
+    "projectPage": "Projektseite",
+    "a11y": {
+      "toggle": "Zeigt die Lizenz an oder blendet sie aus"
+    }
   }
 }

@@ -281,7 +281,7 @@ Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
 - Every build opens `/privacy` and `/terms` in English whatever its language (choosing `/fr/privacy` would change the paths contract). `APP_STORE_APP_ID` is `null` until iOS.
 - The committed licences list says `pending` for Android libraries until a local `build:aab` (or `licences:android` on a prebuilt tree) writes them; never fill it by hand.
 - The starter ships no data migration (no installs): an app porting a storage change onto a released build owes its users one.
-- In-app updates were verified by `expo prebuild` only (the module autolinks, the manifest gains no permission): its Kotlin has not been compiled in the starter and nothing has run on a phone. Play answers only a build it installed (internal app sharing or a track): a sideloaded or debug build never sees the sheet. `appUpdate.ready.*` exists in EN and FR only until a translation session.
+- In-app updates were verified by `expo prebuild` only (the module autolinks, the manifest gains no permission): its Kotlin has not been compiled in the starter and nothing has run on a phone. Play answers only a build it installed (internal app sharing or a track): a sideloaded or debug build never sees the sheet.
 
 ## Testing
 

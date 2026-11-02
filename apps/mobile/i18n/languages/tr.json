@@ -89,6 +89,7 @@
     "legalAndSupport": "Yasal ve destek",
     "privacyPolicy": "Gizlilik Politikası",
     "termsOfService": "Hizmet Şartları",
+    "openSourceLicences": "Açık kaynak lisansları",
     "support": "Destek",
     "rateApp": "Uygulamayı değerlendir",
     "languageChanged": "Dil güncellendi",
@@ -152,6 +153,14 @@
     "messageManual": "Değişikliğin geçerli olması için uygulamayı yeniden başlatın.",
     "announcement": "Okuma yönü değiştiriliyor. Değişikliğin geçerli olması için uygulamayı yeniden başlatın."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Güncelleme hazır",
+      "body": "Yeni sürümün kurulumunu tamamlamak için uygulamayı yeniden başlatın.",
+      "restart": "Yeniden başlat",
+      "later": "Sonra"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Tüm özelliklerin kilidini açın",
@@ -203,7 +212,12 @@
     "trustStore": "Ödemeniz {{store}} ile güvende",
     "trustTrial": "Ücretsiz deneme süresince ödeme yok",
     "trustCancel": "İstediğiniz zaman iptal edin, taahhüt yok",
-    "trustOneTime": "Tek ödeme, abonelik yok"
+    "trustOneTime": "Tek ödeme, abonelik yok",
+    "lifetimeOffer": {
+      "title": "Abonelikleri sevmiyor musunuz?",
+      "body": "Bir kez ödeyin, Pro'yu kalıcı olarak edinin. Yenilenecek ya da iptal edilecek bir şey yok.",
+      "decline": "Hayır, teşekkürler"
+    }
   },
   "premiumGate": {
     "unlock": "Kilidi aç",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Hatırlatıcılar",
     "channelDescription": "Zamanlanmış yerel hatırlatıcılar"
+  },
+  "licences": {
+    "title": "Açık kaynak lisansları",
+    "intro": "Uygulama aşağıdaki yazılımlarla geliştirildi. Yazarlarının yazdığı haliyle lisansını okumak için birine dokunun.",
+    "sections": {
+      "app": "Uygulama kütüphaneleri",
+      "native": "Yerel kütüphaneler",
+      "fonts": "Yazı tipleri",
+      "android": "Android kütüphaneleri"
+    },
+    "androidPending": "Bu derleme, Android kütüphanelerinin listesini içermiyor: listeyi yayın derlemesi yazar.",
+    "origin": {
+      "repository": "Paket bir lisans dosyası içermiyor: bu metin, deposundaki metindir.",
+      "spdx": "Paket lisans metni içermiyor: bu, paketin beyan ettiği lisansın standart metnidir; paket bir yazar belirtiyorsa telif hakkı sahibi olarak o yazar gösterilir. Projenin kendi telif hakkı bildirimi kaynak kodundadır.",
+      "spdxTemplate": "Maven POM dosyasının beyan ettiği lisansın standart metni; POM bir yayıncı belirtiyorsa telif hakkı sahibi olarak o yayıncı gösterilir. Projenin kendi telif hakkı bildirimi kaynak kodundadır.",
+      "pom": "Maven POM dosyası bu lisansın adını veriyor, metnini vermiyor."
+    },
+    "readTerms": "Koşulları oku",
+    "projectPage": "Proje sayfası",
+    "a11y": {
+      "toggle": "Lisansı gösterir veya gizler"
+    }
   }
 }

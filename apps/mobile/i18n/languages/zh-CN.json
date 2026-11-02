@@ -89,6 +89,7 @@
     "legalAndSupport": "法律与支持",
     "privacyPolicy": "隐私政策",
     "termsOfService": "服务条款",
+    "openSourceLicences": "开源许可证",
     "support": "支持",
     "rateApp": "为应用评分",
     "languageChanged": "语言已更新",
@@ -152,6 +153,14 @@
     "messageManual": "重启应用以生效。",
     "announcement": "正在切换阅读方向。重启应用以生效。"
   },
+  "appUpdate": {
+    "ready": {
+      "title": "更新已就绪",
+      "body": "重启应用，即可完成新版本的安装。",
+      "restart": "重启",
+      "later": "稍后"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "解锁所有功能",
@@ -203,7 +212,12 @@
     "trustStore": "由 {{store}} 保障支付安全",
     "trustTrial": "免费试用期间无需付款",
     "trustCancel": "可随时取消，无需长期绑定",
-    "trustOneTime": "一次付款，无需订阅"
+    "trustOneTime": "一次付款，无需订阅",
+    "lifetimeOffer": {
+      "title": "不喜欢订阅？",
+      "body": "一次付费，永久拥有 Pro。无需续订，也无需取消。",
+      "decline": "不用了"
+    }
   },
   "premiumGate": {
     "unlock": "解锁",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "提醒",
     "channelDescription": "定时本地提醒"
+  },
+  "licences": {
+    "title": "开源许可证",
+    "intro": "本应用基于下列软件构建。点按任意一项，即可阅读其作者撰写的许可证原文。",
+    "sections": {
+      "app": "应用库",
+      "native": "原生库",
+      "fonts": "字体",
+      "android": "Android 库"
+    },
+    "androidPending": "此版本不含其 Android 库的列表：该列表由发布构建写入。",
+    "origin": {
+      "repository": "该软件包不含许可证文件：此文本取自其代码仓库。",
+      "spdx": "该软件包不含许可证文本：此为其所声明许可证的标准文本；若软件包注明了作者，则以作者为版权持有人。项目自身的版权声明见其源代码。",
+      "spdxTemplate": "其 Maven POM 所声明许可证的标准文本；若 POM 注明了发布者，则以发布者为版权持有人。项目自身的版权声明见其源代码。",
+      "pom": "其 Maven POM 只写明了该许可证的名称，未附文本。"
+    },
+    "readTerms": "阅读条款",
+    "projectPage": "项目主页",
+    "a11y": {
+      "toggle": "显示或隐藏许可证"
+    }
   }
 }

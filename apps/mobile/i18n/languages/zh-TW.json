@@ -89,6 +89,7 @@
     "legalAndSupport": "法律與支援",
     "privacyPolicy": "隱私權政策",
     "termsOfService": "服務條款",
+    "openSourceLicences": "開放原始碼授權",
     "support": "支援",
     "rateApp": "為這個 App 評分",
     "languageChanged": "語言已更新",
@@ -152,6 +153,14 @@
     "messageManual": "重新啟動 App 以套用。",
     "announcement": "正在切換閱讀方向。重新啟動 App 以套用。"
   },
+  "appUpdate": {
+    "ready": {
+      "title": "更新已就緒",
+      "body": "重新啟動 App，即可完成新版本的安裝。",
+      "restart": "重新啟動",
+      "later": "稍後"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "解鎖所有功能",
@@ -203,7 +212,12 @@
     "trustStore": "由 {{store}} 保障付款安全",
     "trustTrial": "免費試用期間無須付款",
     "trustCancel": "隨時可取消，無須綁約",
-    "trustOneTime": "一次付款，無須訂閱"
+    "trustOneTime": "一次付款，無須訂閱",
+    "lifetimeOffer": {
+      "title": "不喜歡訂閱？",
+      "body": "一次付費，永久擁有 Pro。無須續訂，也無須取消。",
+      "decline": "不用了"
+    }
   },
   "premiumGate": {
     "unlock": "解鎖",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "提醒",
     "channelDescription": "排定的本機提醒"
+  },
+  "licences": {
+    "title": "開放原始碼授權",
+    "intro": "本 App 以下列軟體建置。點一下任一項目，即可閱讀作者撰寫的授權原文。",
+    "sections": {
+      "app": "App 函式庫",
+      "native": "原生函式庫",
+      "fonts": "字型",
+      "android": "Android 函式庫"
+    },
+    "androidPending": "此版本不含其 Android 函式庫的清單：該清單由發行版建置寫入。",
+    "origin": {
+      "repository": "該套件不含授權檔案：此文字取自其程式碼儲存庫。",
+      "spdx": "該套件不含授權文字：此為其所宣告授權的標準文字；若套件註明了作者，則以作者為著作權人。專案本身的著作權聲明見其原始碼。",
+      "spdxTemplate": "其 Maven POM 所宣告授權的標準文字；若 POM 註明了發行者，則以發行者為著作權人。專案本身的著作權聲明見其原始碼。",
+      "pom": "其 Maven POM 只寫明了該授權的名稱，未附文字。"
+    },
+    "readTerms": "閱讀條款",
+    "projectPage": "專案頁面",
+    "a11y": {
+      "toggle": "顯示或隱藏授權"
+    }
   }
 }

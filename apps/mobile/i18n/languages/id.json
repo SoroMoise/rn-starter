@@ -89,6 +89,7 @@
     "legalAndSupport": "Legal & dukungan",
     "privacyPolicy": "Kebijakan Privasi",
     "termsOfService": "Ketentuan Layanan",
+    "openSourceLicences": "Lisensi sumber terbuka",
     "support": "Dukungan",
     "rateApp": "Beri nilai aplikasi ini",
     "languageChanged": "Bahasa diperbarui",
@@ -152,6 +153,14 @@
     "messageManual": "Mulai ulang aplikasi untuk menerapkannya.",
     "announcement": "Mengubah arah baca. Mulai ulang aplikasi untuk menerapkannya."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Pembaruan siap",
+      "body": "Mulai ulang aplikasi untuk menyelesaikan pemasangan versi baru.",
+      "restart": "Mulai ulang",
+      "later": "Nanti"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Buka semua fitur",
@@ -203,7 +212,12 @@
     "trustStore": "Pembayaran diamankan oleh {{store}}",
     "trustTrial": "Tidak ada yang perlu dibayar selama uji coba gratis",
     "trustCancel": "Batalkan kapan saja, tanpa komitmen",
-    "trustOneTime": "Sekali bayar, tanpa langganan"
+    "trustOneTime": "Sekali bayar, tanpa langganan",
+    "lifetimeOffer": {
+      "title": "Tidak suka berlangganan?",
+      "body": "Bayar sekali dan miliki Pro selamanya. Tidak ada yang perlu diperpanjang atau dibatalkan.",
+      "decline": "Tidak, terima kasih"
+    }
   },
   "premiumGate": {
     "unlock": "Buka kunci",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Pengingat",
     "channelDescription": "Pengingat lokal terjadwal"
+  },
+  "licences": {
+    "title": "Lisensi sumber terbuka",
+    "intro": "Aplikasi ini dibuat dengan perangkat lunak di bawah ini. Ketuk salah satunya untuk membaca lisensinya sebagaimana ditulis para pembuatnya.",
+    "sections": {
+      "app": "Pustaka aplikasi",
+      "native": "Pustaka native",
+      "fonts": "Font",
+      "android": "Pustaka Android"
+    },
+    "androidPending": "Build ini tidak menyertakan daftar pustaka Android-nya: daftar tersebut ditulis oleh build rilis.",
+    "origin": {
+      "repository": "Paket ini tidak menyertakan berkas lisensi: teks ini diambil dari repositorinya.",
+      "spdx": "Paket ini tidak menyertakan teks lisensi: ini adalah teks standar lisensi yang dinyatakannya, dengan penulisnya disebut sebagai pemegang hak cipta bila paket menyebutkannya. Pemberitahuan hak cipta milik proyek itu sendiri ada di kode sumbernya.",
+      "spdxTemplate": "Teks standar lisensi yang dinyatakan oleh Maven POM-nya, dengan penerbitnya disebut sebagai pemegang hak cipta bila POM menyebutkannya. Pemberitahuan hak cipta milik proyek itu sendiri ada di kode sumbernya.",
+      "pom": "Maven POM-nya menyebut lisensi ini tanpa menyertakan teksnya."
+    },
+    "readTerms": "Baca ketentuan",
+    "projectPage": "Halaman proyek",
+    "a11y": {
+      "toggle": "Menampilkan atau menyembunyikan lisensi"
+    }
   }
 }

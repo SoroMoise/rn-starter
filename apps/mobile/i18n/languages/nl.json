@@ -89,6 +89,7 @@
     "legalAndSupport": "Juridisch en support",
     "privacyPolicy": "Privacybeleid",
     "termsOfService": "Gebruiksvoorwaarden",
+    "openSourceLicences": "Open-sourcelicenties",
     "support": "Support",
     "rateApp": "Deze app beoordelen",
     "languageChanged": "Taal bijgewerkt",
@@ -152,6 +153,14 @@
     "messageManual": "Start de app opnieuw op om dit toe te passen.",
     "announcement": "Leesrichting wordt gewijzigd. Start de app opnieuw op om dit toe te passen."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Update klaar",
+      "body": "Start de app opnieuw op om de installatie van de nieuwe versie af te ronden.",
+      "restart": "Opnieuw opstarten",
+      "later": "Later"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Ontgrendel alle functies",
@@ -203,7 +212,12 @@
     "trustStore": "Betaling beveiligd door {{store}}",
     "trustTrial": "Niets te betalen tijdens de gratis proefperiode",
     "trustCancel": "Op elk moment opzegbaar, geen verplichtingen",
-    "trustOneTime": "Eén betaling, geen abonnement"
+    "trustOneTime": "Eén betaling, geen abonnement",
+    "lifetimeOffer": {
+      "title": "Geen fan van abonnementen?",
+      "body": "Betaal één keer en houd Pro voorgoed. Niets te verlengen, niets op te zeggen.",
+      "decline": "Nee, bedankt"
+    }
   },
   "premiumGate": {
     "unlock": "Ontgrendelen",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Herinneringen",
     "channelDescription": "Geplande lokale herinneringen"
+  },
+  "licences": {
+    "title": "Open-sourcelicenties",
+    "intro": "De app is gebouwd met de software hieronder. Tik op een item om de licentie te lezen zoals de makers die hebben geschreven.",
+    "sections": {
+      "app": "App-bibliotheken",
+      "native": "Native bibliotheken",
+      "fonts": "Lettertypen",
+      "android": "Android-bibliotheken"
+    },
+    "androidPending": "Deze build bevat de lijst met Android-bibliotheken niet: de releasebuild schrijft die.",
+    "origin": {
+      "repository": "Het pakket bevat geen licentiebestand: deze tekst komt uit de repository.",
+      "spdx": "Het pakket bevat geen licentietekst: dit is de standaardtekst van de licentie die het opgeeft, met de auteur als rechthebbende als het pakket er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
+      "spdxTemplate": "De standaardtekst van de licentie die de Maven POM opgeeft, met de uitgever als rechthebbende als de POM er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
+      "pom": "De Maven POM noemt deze licentie zonder de tekst ervan."
+    },
+    "readTerms": "Voorwaarden lezen",
+    "projectPage": "Projectpagina",
+    "a11y": {
+      "toggle": "Toont of verbergt de licentie"
+    }
   }
 }

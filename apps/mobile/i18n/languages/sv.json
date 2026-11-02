@@ -89,6 +89,7 @@
     "legalAndSupport": "Juridik och support",
     "privacyPolicy": "Integritetspolicy",
     "termsOfService": "Användarvillkor",
+    "openSourceLicences": "Licenser för öppen källkod",
     "support": "Support",
     "rateApp": "Betygsätt appen",
     "languageChanged": "Språket har ändrats",
@@ -152,6 +153,14 @@
     "messageManual": "Starta om appen för att tillämpa den.",
     "announcement": "Läsriktningen ändras. Starta om appen för att tillämpa den."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Uppdateringen är klar",
+      "body": "Starta om appen för att slutföra installationen av den nya versionen.",
+      "restart": "Starta om",
+      "later": "Senare"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Lås upp alla funktioner",
@@ -203,7 +212,12 @@
     "trustStore": "Betalning skyddad av {{store}}",
     "trustTrial": "Inget att betala under den gratis provperioden",
     "trustCancel": "Avsluta när du vill, utan bindning",
-    "trustOneTime": "En betalning, ingen prenumeration"
+    "trustOneTime": "En betalning, ingen prenumeration",
+    "lifetimeOffer": {
+      "title": "Inte förtjust i prenumerationer?",
+      "body": "Betala en gång och behåll Pro för alltid. Inget att förnya, inget att avsluta.",
+      "decline": "Nej tack"
+    }
   },
   "premiumGate": {
     "unlock": "Lås upp",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Påminnelser",
     "channelDescription": "Schemalagda lokala påminnelser"
+  },
+  "licences": {
+    "title": "Licenser för öppen källkod",
+    "intro": "Appen är byggd med programvaran nedan. Tryck på en för att läsa dess licens precis som upphovspersonerna skrev den.",
+    "sections": {
+      "app": "Appbibliotek",
+      "native": "Inbyggda bibliotek",
+      "fonts": "Typsnitt",
+      "android": "Android-bibliotek"
+    },
+    "androidPending": "Den här versionen innehåller inte listan över sina Android-bibliotek: den skrivs av releasebygget.",
+    "origin": {
+      "repository": "Paketet levereras utan licensfil: den här texten är den som finns i dess repository.",
+      "spdx": "Paketet levereras utan licenstext: det här är standardtexten för den licens det anger, med upphovspersonen som rättighetsinnehavare där paketet nämner en. Projektets eget upphovsrättsmeddelande finns i dess källkod.",
+      "spdxTemplate": "Standardtexten för den licens som dess Maven POM anger, med utgivaren som rättighetsinnehavare där POM:en nämner en. Projektets eget upphovsrättsmeddelande finns i dess källkod.",
+      "pom": "Dess Maven POM nämner den här licensen utan dess text."
+    },
+    "readTerms": "Läs villkoren",
+    "projectPage": "Projektsida",
+    "a11y": {
+      "toggle": "Visar eller döljer licensen"
+    }
   }
 }

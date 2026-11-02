@@ -120,7 +120,7 @@ export const frLegal: LegalContent = {
       {
         title: 'Où vos données sont traitées',
         paragraphs: [
-          'Google et RevenueCat opèrent dans plusieurs pays, dont les États-Unis : une partie de ces données est donc traitée hors de l’Espace économique européen. Ces transferts reposent sur les garanties que ces prestataires documentent, comme les clauses contractuelles types de la Commission européenne ou le cadre de protection des données UE–États-Unis lorsque le prestataire y est certifié.',
+          'Google et RevenueCat opèrent dans plusieurs pays, dont les États-Unis : une partie de ces données est donc traitée hors de l’Espace économique européen. Ces transferts reposent sur les garanties que ces prestataires documentent, comme les clauses contractuelles types de la Commission européenne ou le cadre de protection des données UE-États-Unis lorsque le prestataire y est certifié.',
         ],
       },
       {

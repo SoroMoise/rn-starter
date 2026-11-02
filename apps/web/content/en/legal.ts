@@ -124,7 +124,7 @@ export const enLegal: LegalContent = {
       {
         title: 'Where your data is processed',
         paragraphs: [
-          'Google and RevenueCat operate in several countries, including the United States, so some of this data is processed outside the European Economic Area. Those transfers rely on the safeguards these providers document, such as the European Commission’s standard contractual clauses or the EU–US Data Privacy Framework where the provider is certified under it.',
+          'Google and RevenueCat operate in several countries, including the United States, so some of this data is processed outside the European Economic Area. Those transfers rely on the safeguards these providers document, such as the European Commission’s standard contractual clauses or the EU-US Data Privacy Framework where the provider is certified under it.',
         ],
       },
       {

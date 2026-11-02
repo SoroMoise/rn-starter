@@ -45,18 +45,18 @@ audit of that gap and the plan to close it.
 | 22 | The store listing: the listing's limits, release notes, and the open-source licences, shipped ahead as an in-app screen ported from noise-remover | 1 | the licences screen **in review**, the listing and release notes planned (§3) |
 
 **Counts.** 345 items audited · 235 kept · 84 deferred ("later") · 26 dropped. Of the 235 kept,
-**all 235 have shipped** (65 in lots 1–3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
+**all 235 have shipped** (65 in lots 1-3, 29 in lot 4, 31 in lot 5, 6 in lot 6, 19 in lot 7, 16
 in lot 8, 33 in lot 9, 5 in lot 10, 9 in lot 11, 9 in lot 12, 13 in lot 13) and **none remain**.
 The three held back out of lot 4 (§4) closed with lot 9, so nothing was deferred at the end, and §3
-says what comes after the audit. Of the 84 "later" items, 54 have shipped (twelve with lots 1–3,
+says what comes after the audit. Of the 84 "later" items, 54 have shipped (twelve with lots 1-3,
 three of them recorded only when the rest were scheduled, four with lot 14, five with lot 15, two
 with lot 17's colour tokens, five with lot 16 and one, the licences screen, ahead of lot 22), 5 are
-closed without shipping, and of the other 25, 22 are scheduled into lots 17–18 and 20–22 and 3
+closed without shipping, and of the other 25, 22 are scheduled into lots 17-18 and 20-22 and 3
 wait, with lot 19, for the Firebase migration (§3).
 
 Lot 5's 28 include nine items the audit had filed twice, under lots 7, 8 and 13 as well; they
 are marked shipped in all their copies, with a note naming the lot-5 item that covered them. One
-"later" item (`ad-banner-reserved-height`) shipped with them, as eight did in lots 1–3.
+"later" item (`ad-banner-reserved-height`) shipped with them, as eight did in lots 1-3.
 
 Lot 6's six include two the audit had filed under other lots: `review-storage` (lot 9) and
 `claude-rating-play-policy` (lot 13), whose last point needed lot 6. One "later" item,
@@ -70,7 +70,7 @@ the lot-7 item that covered them. Six "later" items shipped with them (`entitlem
 `cles-billing-issue`, `cles-settings-generiques`). Two items it touched stay open, each with a note
 saying what is left: `exit-intent-entitlement-keyed` (lot 8, the sheet's copy) and
 `claude-storage-security` (lot 13, the rule on remembered settings). Checking the lot also found
-two items that had shipped unrecorded: `analytics-has-trial-offer` with lots 1–3,
+two items that had shipped unrecorded: `analytics-has-trial-offer` with lots 1-3,
 `adfree-stacking-cap` with lot 5 (c59f846), now counted there, which is why those two figures
 moved by one.
 
@@ -174,7 +174,7 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
   key is not translating: it is removed from all 20 files at once.
 - **Living documentation.** `CLAUDE.md` is updated in the
   same commit as the code they describe, surgically.
-- **Commit author is `Claude <noreply@anthropic.com>`**, matching lots 1–3 already in `main`. One
+- **Commit author is `Claude <noreply@anthropic.com>`**, matching lots 1-3 already in `main`. One
   commit breaks it, `03eba63` in lot 12 (§1).
 - **Verify, then refute.** Each lot is investigated by a workflow of two stages: one agent per
   family of items establishes the facts and writes a plan, then a second, adversarial agent tries
@@ -187,7 +187,7 @@ These conventions come from the user and from the three CLAUDE.md files. They ar
 
 Pushes to `SoroMoise/rn-starter` work from this environment since lot 5: a lot is pushed to its
 `claude/*` branch, opened as a pull request, reviewed, fixed and merged, bar lot 12, merged with no
-review (§13). Lots 1–4 predate that: the session identity had no write access then, so they were
+review (§13). Lots 1-4 predate that: the session identity had no write access then, so they were
 handed over as git bundles and merged by hand, which is why the remote long carried a stale
 `claude/rn-starter-boilerplate-improvements-nst9w1` at `0b311c8`, since deleted. The real gap is
 always `git rev-list --count origin/main..HEAD`.
@@ -202,10 +202,10 @@ one translation session, which is next.
 
 ### The "later" items, scheduled
 
-Scheduled on 2026-09-26. Of the 84, 34 had shipped with lots 1–13 and 50 were open. Each open item
+Scheduled on 2026-09-26. Of the 84, 34 had shipped with lots 1-13 and 50 were open. Each open item
 was checked against the code before it was given a lot, and eight left the list that way:
 
-- **Three had shipped unrecorded**, all with lots 1–3, and are counted there now:
+- **Three had shipped unrecorded**, all with lots 1-3, and are counted there now:
   `expo-nav-bar-blur-versions` (d38a0a0 pinned both packages to the SDK 54 line),
   `analytics-restore-outcome` (8886c68, lot 3's three restore outcomes) and
   `crashlytics-context-source` (its two `reason` calls left with lot 1's rating rewrite, 5247058;
@@ -567,7 +567,7 @@ once with the code-review skill) and each pass found what the stages had not:
 - **The automatic ask sent the user to the store when Play's card could not come**: no Play app,
   or a flow that threw. Google's in-app review guide says an error in the flow must neither be
   reported to the user nor change the app's flow, and with the ask now raised at a launch it would
-  have opened the Play Store, or a browser, seconds after the app did. A lots 1–3 decision, reversed
+  have opened the Play Store, or a browser, seconds after the app did. A lots 1-3 decision, reversed
   in its own commit: a failure is traced, and a device with no card is refused before anything is
   spent.
 - **The flag's own comment still said the sentiment path was wired** and that flipping it would
@@ -592,7 +592,7 @@ user not yet asked, and the policy judges the moment it is raised at); stamping 
 as the last ad for `ad_collision` (it would also move the interstitial's own 90 s interval, an
 ad-cadence change for a lot of its own).
 
-The README also still documented `STORE_URL_*` variables that lots 1–3 had removed; it now says
+The README also still documented `STORE_URL_*` variables that lots 1-3 had removed; it now says
 where the store URLs come from.
 
 ---
@@ -660,7 +660,7 @@ past (the store's next answer clears it).
 
 Found along the way and left out of this lot: when `purchaseService.initialize()` throws (Expo Go,
 where the native module is missing), the provider returns before `loadOfferings` and
-`isLoadingPrices` stays true, so the price notice spins for good (the retry of lots 1–3 covers a
+`isLoadingPrices` stays true, so the price notice spins for good (the retry of lots 1-3 covers a
 failed fetch, not a failed configure); and `NOTIFICATION_PERMISSION_REQUESTED` rides the backups
 (lot 10, above). Fixed on the way instead: `utils/trialOffer.ts`, dead since lot 3
 while CLAUDE.md still cited it; a `PostPurchaseModal` PROJECT_CONTEXT.md credited the provider with;
@@ -675,7 +675,7 @@ Both stages ran in the session, as on lots 6 and 7, against the three apps' sour
 Android implementation in `node_modules`.
 
 - **The frieze promised a reminder nothing sends (not in the audit).** Its middle row, "Day N ·
-  Reminder before your trial ends", was derived from the store's trial length since lots 1–3, which
+  Reminder before your trial ends", was derived from the store's trial length since lots 1-3, which
   is why the audit item read as half done. Nothing in the app schedules that reminder, nor in
   deep-focus, the reference, which carries the same row. It is gone; the frieze keeps unlock today
   and billing on the last day.
@@ -748,7 +748,7 @@ TanStack Query 5, react-native-google-mobile-ads 15.8.3.
 - **The query client read the app as always online (stage 1).** React Native has no `online`
   event and nothing fed `onlineManager`: retries burned through offline and `refetchOnReconnect`
   never fired. It also retried a 401 three times. `useNetworkStatus` had had no consumer since
-  lots 1–3, and it tracked `offline_banner_shown` for a banner the starter does not have; the
+  lots 1-3, and it tracked `offline_banner_shown` for a banner the starter does not have; the
   event is gone.
 - **zustand's hydration writes only after a `migrate` (stage 1).** Read in `persistImpl`, which is
   what the documented flush rests on, with the reason its microtask is required: MMKV hydrates

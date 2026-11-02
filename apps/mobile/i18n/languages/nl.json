@@ -155,7 +155,7 @@
   },
   "appUpdate": {
     "ready": {
-      "title": "Update klaar",
+      "title": "Update staat klaar",
       "body": "Start de app opnieuw op om de installatie van de nieuwe versie af te ronden.",
       "restart": "Opnieuw opstarten",
       "later": "Later"

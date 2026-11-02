@@ -155,7 +155,7 @@
   },
   "appUpdate": {
     "ready": {
-      "title": "Bản cập nhật đã sẵn sàng",
+      "title": "Cập nhật đã sẵn sàng",
       "body": "Khởi động lại ứng dụng để hoàn tất việc cài đặt phiên bản mới.",
       "restart": "Khởi động lại",
       "later": "Để sau"
@@ -242,7 +242,7 @@
     },
     "androidPending": "Bản dựng này không chứa danh sách thư viện Android của nó: bản dựng phát hành sẽ ghi danh sách này.",
     "origin": {
-      "repository": "Gói không kèm tệp giấy phép: văn bản này là văn bản trong kho mã của gói.",
+      "repository": "Gói không kèm tệp giấy phép nên đây là văn bản lấy từ kho mã của gói.",
       "spdx": "Gói không kèm văn bản giấy phép: đây là văn bản chuẩn của giấy phép mà gói khai báo, ghi tác giả là chủ sở hữu bản quyền nếu gói có nêu tên. Thông báo bản quyền riêng của dự án nằm trong mã nguồn.",
       "spdxTemplate": "Văn bản chuẩn của giấy phép mà Maven POM của gói khai báo, ghi nhà phát hành là chủ sở hữu bản quyền nếu POM có nêu tên. Thông báo bản quyền riêng của dự án nằm trong mã nguồn.",
       "pom": "Maven POM của gói nêu tên giấy phép này nhưng không kèm văn bản."

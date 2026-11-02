@@ -240,7 +240,7 @@
       "fonts": "Fontes",
       "android": "Bibliotecas do Android"
     },
-    "androidPending": "Esta versão não inclui a lista de suas bibliotecas do Android: quem a escreve é a compilação de lançamento.",
+    "androidPending": "Este build não inclui a lista de bibliotecas do Android: ela é gerada no build de lançamento.",
     "origin": {
       "repository": "O pacote não traz arquivo de licença: este texto é o do repositório dele.",
       "spdx": "O pacote não traz o texto da licença: este é o texto padrão da licença que ele declara, com o autor como titular dos direitos quando o pacote indica um. O aviso de direitos autorais do próprio projeto está no código-fonte.",

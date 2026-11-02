@@ -236,14 +236,14 @@
   },
   "licences": {
     "title": "Licencje open source",
-    "intro": "Aplikacja powstała z użyciem poniższego oprogramowania. Dotknij pozycji, aby przeczytać jej licencję w brzmieniu autorów.",
+    "intro": "Aplikacja powstała z użyciem poniższego oprogramowania. Dotknij pozycji, aby przeczytać jej licencję w oryginalnym brzmieniu autorów.",
     "sections": {
       "app": "Biblioteki aplikacji",
       "native": "Biblioteki natywne",
       "fonts": "Czcionki",
       "android": "Biblioteki Androida"
     },
-    "androidPending": "Ta wersja nie zawiera listy swoich bibliotek Androida: zapisuje ją kompilacja wydania.",
+    "androidPending": "W tej wersji brakuje listy bibliotek Androida: tworzy ją dopiero kompilacja wydania.",
     "origin": {
       "repository": "Pakiet nie zawiera pliku licencji: ten tekst pochodzi z jego repozytorium.",
       "spdx": "Pakiet nie zawiera tekstu licencji: to standardowy tekst licencji, którą deklaruje, z jego autorem jako właścicielem praw, jeśli pakiet go wskazuje. Własna informacja o prawach autorskich projektu znajduje się w jego kodzie źródłowym.",

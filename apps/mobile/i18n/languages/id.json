@@ -155,7 +155,7 @@
   },
   "appUpdate": {
     "ready": {
-      "title": "Pembaruan siap",
+      "title": "Pembaruan siap dipasang",
       "body": "Mulai ulang aplikasi untuk menyelesaikan pemasangan versi baru.",
       "restart": "Mulai ulang",
       "later": "Nanti"

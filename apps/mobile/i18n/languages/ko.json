@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "프리미엄 스타터",
-      "subtitle": "세련되고 수익화까지 갖춘 React Native 앱을 바로 출시하세요 — 테마, i18n, 페이월, 광고가 이미 연결되어 있어요."
+      "subtitle": "세련되고 수익화까지 갖춘 React Native 앱을 바로 출시하세요. 테마, i18n, 페이월, 광고가 이미 연결되어 있어요."
     },
     "features": {
       "title": "이 스타터에 들어 있는 것",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "광고 (AdMob)",
-        "desc": "배너, 전면, 보상형 광고 — Pro 사용자에게는 표시되지 않아요."
+        "desc": "배너, 전면, 보상형 광고는 Pro 사용자에게 표시되지 않아요."
       },
       "notifications": {
         "label": "알림",
-        "desc": "필요한 화면에서의 권한 요청, 포그라운드 배너, Android 채널, 매일 리마인더 — 앱이 보낼 알림을 위한 준비가 끝나 있어요."
+        "desc": "필요한 화면에서의 권한 요청, 포그라운드 배너, Android 채널, 매일 리마인더까지, 앱이 보낼 알림을 위한 준비가 끝나 있어요."
       }
     },
     "cta": {
@@ -106,21 +106,21 @@
       "headline": "Pro로 한 걸음 더",
       "timelineHeader": "무료 체험은 이렇게 진행돼요",
       "ctaSkip": "무료로 계속하기",
-      "dayUnlock": "0일차 — Pro 바로 잠금 해제",
-      "dayBilling": "{{day}}일차 — 결제 시작, 언제든 취소 가능"
+      "dayUnlock": "0일차: Pro 바로 잠금 해제",
+      "dayBilling": "{{day}}일차: 결제 시작, 언제든 취소 가능"
     },
     "exitIntent": {
-      "title": "잠깐만요 — Pro를 무료로 체험해 보세요",
+      "title": "잠깐만요, Pro를 무료로 체험해 보세요",
       "ctaStart": "네, 무료 체험 시작할게요",
       "ctaSkip": "괜찮아요, 무료로 계속할게요",
       "body": "{{days}}일 무료, 오늘은 결제되지 않아요.\n체험 종료 전에 취소하면 요금이 청구되지 않아요.",
       "bodyNoDays": "무료로 체험해 보세요. 오늘은 결제되지 않아요.\n체험 종료 전에 취소하면 요금이 청구되지 않아요.",
-      "titleNoTrial": "잠깐만요 — Pro를 잠금 해제하세요",
+      "titleNoTrial": "잠깐만요, Pro를 잠금 해제하세요",
       "bodyNoTrial": "Pro의 모든 기능을 지금 바로.\n약정 없이, 언제든 취소할 수 있어요.",
-      "ctaStartNoTrial": "네, Pro 잠금 해제할게요 — {{price}}",
-      "titleOneTime": "잠깐만요 — Pro를 평생 소장하세요",
+      "ctaStartNoTrial": "네, Pro 잠금 해제할게요 ({{price}})",
+      "titleOneTime": "잠깐만요, Pro를 평생 소장하세요",
       "bodyOneTime": "한 번만 결제하면 평생 내 것.\n구독은 없어요.",
-      "ctaOneTime": "네, 평생 잠금 해제할게요 — {{price}}"
+      "ctaOneTime": "네, 평생 잠금 해제할게요 ({{price}})"
     },
     "proWelcome": {
       "title": "다시 오신 것을 환영해요!",
@@ -190,14 +190,14 @@
     "billedRecurring": "자동 갱신",
     "trialBadgeNoDays": "무료 체험",
     "ctaTrialNoDays": "무료 체험 시작",
-    "ctaSubscribeWeekly": "구독하기 — {{price}}/주",
+    "ctaSubscribeWeekly": "구독하기 ({{price}}/주)",
     "ctaBuyLifetime": "{{price}}에 잠금 해제",
-    "ctaSubscribe": "구독하기 — {{price}}",
+    "ctaSubscribe": "구독하기 ({{price}})",
     "legalNoteRecurring": "{{price}}, 자동으로 갱신돼요. 언제든 취소할 수 있어요.",
     "legalNoteOneTime": "{{price}}, 한 번만 결제해요. 평생 사용할 수 있어요.",
     "offerUnavailable": "지금은 플랜을 불러올 수 없어요. 연결을 확인하고 다시 시도해 주세요.",
-    "ctaSubscribeMonthly": "구독하기 — {{price}}/월",
-    "ctaSubscribeAnnual": "구독하기 — {{price}}/년",
+    "ctaSubscribeMonthly": "구독하기 ({{price}}/월)",
+    "ctaSubscribeAnnual": "구독하기 ({{price}}/년)",
     "pricesUnavailable": "가격을 불러올 수 없어요.",
     "pricesRetry": "다시 시도",
     "benefit": {

@@ -9,7 +9,7 @@ export const frSite: SiteContent = {
     support: 'Assistance',
   },
   home: {
-    title: `${SITE.name} — [une ligne qui dit ce que fait l’app]`,
+    title: `${SITE.name} · [une ligne qui dit ce que fait l’app]`,
     description:
       '[Une ou deux phrases pour les résultats de recherche : ce que fait l’app, et pour qui.]',
     tagline: '[Ce que fait l’app, en une phrase.]',

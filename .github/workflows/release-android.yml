@@ -16,7 +16,7 @@ permissions:
 jobs:
   build-and-publish:
     # Manual runs always proceed. PR runs only when the PR was actually merged
-    # into main AND carries the `release` label — merely closing a PR, or
+    # into main AND carries the `release` label; merely closing a PR, or
     # merging one without the label, never triggers a release.
     if: >-
       github.event_name == 'workflow_dispatch' ||
@@ -32,7 +32,7 @@ jobs:
       # spends a large part of it on node_modules, the Gradle caches and the native
       # intermediates the new architecture produces for every ABI. `No space left on
       # device` surfaces as an unrelated-looking IOException in whichever task happens
-      # to be writing when the disk fills — usually the last one, an hour in. None of
+      # to be writing when the disk fills, usually the last one, an hour in. None of
       # the runtimes wiped here take part in an Expo/Android build; the Android SDK is
       # deliberately left alone, since the NDK the build resolves is not knowable from
       # this file. Everything is best-effort: a missing path on a future runner image
@@ -113,11 +113,11 @@ jobs:
 
       # Wraps every ./gradlew invocation below (they only happen after prebuild
       # generates android/) with automatic caching of ~/.gradle: the dependency
-      # cache, the wrapper distribution, and — since org.gradle.caching=true
-      # (withGradleBuildCache) — the build cache too. That last one is the
+      # cache, the wrapper distribution, and, since org.gradle.caching=true
+      # (withGradleBuildCache), the build cache too. That last one is the
       # point: each CI run starts on a fresh, empty runner, so without this step
       # restoring ~/.gradle, org.gradle.caching would have nothing to hit and
-      # the CMake native builds (reanimated, worklets, mmkv, screens — the bulk
+      # the CMake native builds (reanimated, worklets, mmkv, screens: the bulk
       # of build time) would recompile from scratch every release regardless.
       # No manual cache key needed: the action fingerprints the actual Gradle
       # invocation, not files that don't exist yet at this point in the job.
@@ -142,7 +142,7 @@ jobs:
       # Read from app.config.js rather than written into this file: the boilerplate's
       # setup script renames the app in the config, and a package id duplicated here
       # would keep pointing at the template's Play listing with nothing to warn you.
-      # Loading the config loads its plugins, and with them @expo/config-plugins — so this
+      # Loading the config loads its plugins, and with them @expo/config-plugins, so this
       # only works once dependencies are installed.
       - name: Resolve Play package name
         id: package
@@ -160,7 +160,7 @@ jobs:
 
       # The template ships Google's sample AdMob app id because the SDK crashes at launch
       # without one. A release carrying it pairs the app's own units with Google's test app,
-      # and nothing on the device would say so — so the release refuses it here. A release
+      # and nothing on the device would say so; the release refuses it here. A release
       # whose units are all still pending is legitimate (an app can launch ad-free) but
       # requests no ad at all, so it is flagged rather than refused.
       - name: Check the AdMob configuration
@@ -206,7 +206,7 @@ jobs:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
         run: |
           if [ -z "$GOOGLE_SERVICES_JSON" ]; then
-            echo "error: GOOGLE_SERVICES_JSON secret is empty — the Firebase plugins need it at prebuild time" >&2
+            echo "error: GOOGLE_SERVICES_JSON secret is empty; the Firebase plugins need it at prebuild time" >&2
             exit 1
           fi
           printf '%s' "$GOOGLE_SERVICES_JSON" > google-services.json
@@ -244,12 +244,12 @@ jobs:
           # otherwise produces a 0-byte keystore, and the run dies much later in
           # :app:signReleaseBundle on an error that names the keystore, not the secret.
           if [ -z "$KEYSTORE_B64" ]; then
-            echo "error: ANDROID_KEYSTORE_BASE64 secret is empty — the release cannot be signed" >&2
+            echo "error: ANDROID_KEYSTORE_BASE64 secret is empty; the release cannot be signed" >&2
             exit 1
           fi
           echo "$KEYSTORE_B64" | base64 -d > release.keystore
           if [ ! -s release.keystore ]; then
-            echo "error: ANDROID_KEYSTORE_BASE64 did not decode to a keystore — check the base64 encoding" >&2
+            echo "error: ANDROID_KEYSTORE_BASE64 did not decode to a keystore; check the base64 encoding" >&2
             exit 1
           fi
           {
@@ -288,7 +288,7 @@ jobs:
       # mechanism worth betting a release on, and three named top-level steps say
       # which attempt carried the release straight from the step list, where nested
       # composite steps would only show inside one collapsed entry. Each `if` chains
-      # on the attempt immediately before it — a skipped step's outcome is `skipped`,
+      # on the attempt immediately before it: a skipped step's outcome is `skipped`,
       # never `failure`, so the chain stops on its own as soon as one attempt lands.
       - name: Publish to Play Store (internal track)
         id: publish_attempt_1
@@ -331,7 +331,7 @@ jobs:
       # A publish that failed every attempt has two very different causes, and the
       # run's last error names the wrong one. If Google committed the edit and only
       # lost the response, the retries re-upload the same versionCode and die on
-      # `apkUpgradeVersionConflict` — so the annotation reads "version code already
+      # `apkUpgradeVersionConflict`, so the annotation reads "version code already
       # used" while the real fault was attempt 1's outage, demoted to a warning by
       # continue-on-error. The release is then live on internal with `main` never
       # bumped, and every later run recomputes the same version into the same wall.
@@ -343,13 +343,13 @@ jobs:
           NEW_VERSION: ${{ steps.version.outputs.version }}
           VERSION_CODE: ${{ steps.version.outputs.version_code }}
         run: |
-          echo "::warning::Every publish attempt failed — read the job summary before re-running."
+          echo "::warning::Every publish attempt failed; read the job summary before re-running."
           {
             echo "## Play Store publish failed on all three attempts"
             echo
             echo "Target: **v$NEW_VERSION** (versionCode \`$VERSION_CODE\`), internal track."
             echo
-            echo "Read the error on **Publish to Play Store (internal track)** — the first"
+            echo "Read the error on **Publish to Play Store (internal track)**: the first"
             echo "attempt. It is the only one that met the Play Console in its original"
             echo "state; the retries may be reporting a consequence of it."
             echo
@@ -366,18 +366,18 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       # The Play Console keeps every bundle it accepts, so a copy in Actions storage
-      # is pure duplication once the publish lands — and Actions storage on a private
+      # is pure duplication once the publish lands, and Actions storage on a private
       # repo is billed against a 500 MB monthly allowance that a handful of AABs at
       # the default 90-day retention will exhaust on their own. The copy only earns
       # its keep when the publish never landed at all: the bundle is then built,
       # signed and correct, and uploading it to the Play Console by hand is one way out.
       #
       # So this guards on the *last* attempt where the diagnosis above guards on
-      # the first — the two ask different questions. The diagnosis fires whenever
+      # the first: the two ask different questions. The diagnosis fires whenever
       # the publish path was entered and the job failed, because its whole subject
       # is which error to trust. This one fires only when no attempt landed:
       # guarding it on attempt 1 would upload the whole bundle every time attempt 1
-      # flaked, a retry carried the release, and something later in the job failed —
+      # flaked, a retry carried the release, and something later in the job failed,
       # with the bundle already on Play. Reading a specific attempt rather than
       # `failure()` alone also keeps a build that died before producing an AAB
       # from tripping `if-no-files-found: error`.
@@ -391,7 +391,7 @@ jobs:
           retention-days: 7
 
       # Only two files are staged, by name. android/ is gitignored here, so the
-      # prebuild output has nothing to be excluded from — but the secrets restored
+      # prebuild output has nothing to be excluded from, but the secrets restored
       # above sit in the same working tree, and a `git add -A` is one edit away from
       # committing a keystore. Everything the next run needs is in these two: the
       # released version, and the commit the next range starts from. The regenerated

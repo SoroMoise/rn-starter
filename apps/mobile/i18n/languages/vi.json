@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Starter cao cấp",
-      "subtitle": "Phát hành một ứng dụng React Native chỉn chu, có kiếm tiền — theme, i18n, paywall và quảng cáo đã sẵn sàng."
+      "subtitle": "Phát hành một ứng dụng React Native chỉn chu, có kiếm tiền, với theme, i18n, paywall và quảng cáo đã sẵn sàng."
     },
     "features": {
       "title": "Starter này có sẵn những gì",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Quảng cáo (AdMob)",
-        "desc": "Banner, interstitial và quảng cáo có thưởng — tắt với người dùng premium."
+        "desc": "Banner, interstitial và quảng cáo có thưởng, đều được tắt với người dùng premium."
       },
       "notifications": {
         "label": "Thông báo",
-        "desc": "Hỏi quyền ngay ở màn hình cần đến, banner khi app đang mở, kênh Android và lời nhắc hằng ngày — sẵn sàng cho các thông báo app của bạn gửi đi."
+        "desc": "Hỏi quyền ngay ở màn hình cần đến, banner khi app đang mở, kênh Android và lời nhắc hằng ngày, sẵn sàng cho các thông báo app của bạn gửi đi."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "Tiến xa hơn với Pro",
       "timelineHeader": "Bản dùng thử hoạt động thế nào",
       "ctaSkip": "Tiếp tục miễn phí",
-      "dayUnlock": "Ngày 0 — Mở khóa Pro ngay lập tức",
-      "dayBilling": "Ngày {{day}} — Bắt đầu tính phí, hủy bất cứ lúc nào"
+      "dayUnlock": "Ngày 0: mở khóa Pro ngay lập tức",
+      "dayBilling": "Ngày {{day}}: bắt đầu tính phí, hủy bất cứ lúc nào"
     },
     "exitIntent": {
-      "title": "Khoan đã — dùng thử Pro miễn phí",
+      "title": "Khoan đã, dùng thử Pro miễn phí",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
       "ctaSkip": "Không cảm ơn, tiếp tục bản miễn phí",
       "body": "{{days}} ngày miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
       "bodyNoDays": "Dùng thử miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
-      "titleNoTrial": "Khoan đã — mở khóa Pro",
-      "bodyNoTrial": "Mọi thứ Pro mở khóa, ngay từ bây giờ.\nKhông ràng buộc — hủy bất cứ lúc nào.",
-      "ctaStartNoTrial": "Có, mở khóa Pro — {{price}}",
-      "titleOneTime": "Khoan đã — mở khóa Pro vĩnh viễn",
+      "titleNoTrial": "Khoan đã, mở khóa Pro",
+      "bodyNoTrial": "Mọi thứ Pro mở khóa, ngay từ bây giờ.\nKhông ràng buộc, hủy bất cứ lúc nào.",
+      "ctaStartNoTrial": "Có, mở khóa Pro · {{price}}",
+      "titleOneTime": "Khoan đã, mở khóa Pro vĩnh viễn",
       "bodyOneTime": "Trả một lần, của bạn mãi mãi.\nKhông cần đăng ký.",
-      "ctaOneTime": "Có, mở khóa vĩnh viễn — {{price}}"
+      "ctaOneTime": "Có, mở khóa vĩnh viễn · {{price}}"
     },
     "proWelcome": {
       "title": "Chào mừng trở lại!",
-      "body": "Chúng tôi đã tìm thấy gói đăng ký Pro của bạn — gói đã hoạt động trên thiết bị này.",
+      "body": "Chúng tôi đã tìm thấy gói đăng ký Pro của bạn. Gói này đã hoạt động trên thiết bị này.",
       "ctaSkip": "Bỏ qua phần giới thiệu",
       "ctaContinue": "Tiếp tục khám phá"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "định kỳ",
     "trialBadgeNoDays": "Dùng thử miễn phí",
     "ctaTrialNoDays": "Bắt đầu dùng thử miễn phí",
-    "ctaSubscribeWeekly": "Đăng ký — {{price}}/tuần",
+    "ctaSubscribeWeekly": "Đăng ký · {{price}}/tuần",
     "ctaBuyLifetime": "Mở khóa với giá {{price}}",
-    "ctaSubscribe": "Đăng ký — {{price}}",
+    "ctaSubscribe": "Đăng ký · {{price}}",
     "legalNoteRecurring": "{{price}}, tự động gia hạn. Hủy bất cứ lúc nào.",
     "legalNoteOneTime": "{{price}}, thanh toán một lần. Của bạn mãi mãi.",
     "offerUnavailable": "Hiện chưa có gói nào. Kiểm tra kết nối của bạn rồi thử lại.",
-    "ctaSubscribeMonthly": "Đăng ký — {{price}}/tháng",
-    "ctaSubscribeAnnual": "Đăng ký — {{price}}/năm",
+    "ctaSubscribeMonthly": "Đăng ký · {{price}}/tháng",
+    "ctaSubscribeAnnual": "Đăng ký · {{price}}/năm",
     "pricesUnavailable": "Chưa có giá.",
     "pricesRetry": "Thử lại",
     "benefit": {

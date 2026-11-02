@@ -106,21 +106,21 @@
       "headline": "Llega más lejos con Pro",
       "timelineHeader": "Cómo funciona tu prueba",
       "ctaSkip": "Seguir gratis",
-      "dayUnlock": "Día 0 — Pro desbloqueado al instante",
-      "dayBilling": "Día {{day}} — Empieza el cobro, cancela cuando quieras"
+      "dayUnlock": "Día 0: Pro desbloqueado al instante",
+      "dayBilling": "Día {{day}}: empieza el cobro, cancela cuando quieras"
     },
     "exitIntent": {
-      "title": "Espera — prueba Pro gratis",
+      "title": "Espera, prueba Pro gratis",
       "ctaStart": "Sí, empezar mi prueba gratis",
       "ctaSkip": "No, gracias, seguir gratis",
       "body": "{{days}} días gratis, nada que pagar hoy.\nCancela antes de que termine la prueba y no se te cobrará nada.",
       "bodyNoDays": "Prueba gratis, nada que pagar hoy.\nCancela antes de que termine la prueba y no se te cobrará nada.",
-      "titleNoTrial": "Espera — desbloquea Pro",
+      "titleNoTrial": "Espera, desbloquea Pro",
       "bodyNoTrial": "Todo lo que Pro desbloquea, desde ahora.\nSin compromiso: cancela cuando quieras.",
-      "ctaStartNoTrial": "Sí, desbloquear Pro — {{price}}",
-      "titleOneTime": "Espera — desbloquea Pro para siempre",
+      "ctaStartNoTrial": "Sí, desbloquear Pro · {{price}}",
+      "titleOneTime": "Espera, desbloquea Pro para siempre",
       "bodyOneTime": "Un solo pago, tuyo para siempre.\nSin suscripción.",
-      "ctaOneTime": "Sí, desbloquear para siempre — {{price}}"
+      "ctaOneTime": "Sí, desbloquear para siempre · {{price}}"
     },
     "proWelcome": {
       "title": "¡Te damos la bienvenida de nuevo!",
@@ -190,14 +190,14 @@
     "billedRecurring": "recurrente",
     "trialBadgeNoDays": "Prueba gratis",
     "ctaTrialNoDays": "Empezar prueba gratuita",
-    "ctaSubscribeWeekly": "Suscribirse — {{price}}/semana",
+    "ctaSubscribeWeekly": "Suscribirse · {{price}}/semana",
     "ctaBuyLifetime": "Desbloquear por {{price}}",
-    "ctaSubscribe": "Suscribirse — {{price}}",
+    "ctaSubscribe": "Suscribirse · {{price}}",
     "legalNoteRecurring": "{{price}}, se renueva automáticamente. Cancela cuando quieras.",
     "legalNoteOneTime": "{{price}}, pago único. Tuyo para siempre.",
     "offerUnavailable": "Los planes no están disponibles ahora mismo. Revisa tu conexión e inténtalo de nuevo.",
-    "ctaSubscribeMonthly": "Suscribirse — {{price}}/mes",
-    "ctaSubscribeAnnual": "Suscribirse — {{price}}/año",
+    "ctaSubscribeMonthly": "Suscribirse · {{price}}/mes",
+    "ctaSubscribeAnnual": "Suscribirse · {{price}}/año",
     "pricesUnavailable": "Precios no disponibles.",
     "pricesRetry": "Reintentar",
     "benefit": {

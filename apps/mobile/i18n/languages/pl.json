@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Starter premium",
-      "subtitle": "Wypuść dopracowaną, zarabiającą aplikację React Native — motyw, i18n, paywall i reklamy już podpięte."
+      "subtitle": "Wypuść dopracowaną, zarabiającą aplikację React Native: motyw, i18n, paywall i reklamy są już podpięte."
     },
     "features": {
       "title": "Co znajdziesz w tym starterze",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Reklamy (AdMob)",
-        "desc": "Banery, reklamy pełnoekranowe i z nagrodą — wyłączone dla użytkowników premium."
+        "desc": "Banery, reklamy pełnoekranowe i z nagrodą, wyłączane dla użytkowników premium."
       },
       "notifications": {
         "label": "Powiadomienia",
-        "desc": "Prośba o zgodę na ekranie, który jej potrzebuje, banery na pierwszym planie, kanał Androida i codzienne przypomnienia — gotowe na powiadomienia, które wysyła Twoja aplikacja."
+        "desc": "Prośba o zgodę na ekranie, który jej potrzebuje, banery na pierwszym planie, kanał Androida i codzienne przypomnienia — wszystko gotowe na powiadomienia, które wysyła Twoja aplikacja."
       }
     },
     "cta": {
@@ -98,7 +98,7 @@
   "onboarding": {
     "previous": "Wstecz",
     "welcome": {
-      "subtitle": "Wszystko, czego potrzebujesz — dopracowane i gotowe do wydania.",
+      "subtitle": "Wszystko, czego potrzebujesz, dopracowane i gotowe do wydania.",
       "cta": "Zaczynamy",
       "reassurance": "Za darmo · Bez konta"
     },
@@ -106,25 +106,25 @@
       "headline": "Idź dalej z Pro",
       "timelineHeader": "Jak działa Twój okres próbny",
       "ctaSkip": "Kontynuuj za darmo",
-      "dayUnlock": "Dzień 0 — Pro odblokowane od razu",
-      "dayBilling": "Dzień {{day}} — Zaczyna się płatność, anulujesz kiedy chcesz"
+      "dayUnlock": "Dzień 0: Pro odblokowane od razu",
+      "dayBilling": "Dzień {{day}}: zaczyna się płatność, anulujesz kiedy chcesz"
     },
     "exitIntent": {
-      "title": "Chwila — wypróbuj Pro za darmo",
+      "title": "Chwila, wypróbuj Pro za darmo",
       "ctaStart": "Tak, zacznij bezpłatny okres próbny",
       "ctaSkip": "Nie, dziękuję, zostaję przy darmowej wersji",
       "body": "{{days}} dni za darmo, dziś nic nie płacisz.\nAnuluj przed końcem okresu próbnego i nic nie zapłacisz.",
       "bodyNoDays": "Wypróbuj za darmo, dziś nic nie płacisz.\nAnuluj przed końcem okresu próbnego i nic nie zapłacisz.",
-      "titleNoTrial": "Chwila — odblokuj Pro",
-      "bodyNoTrial": "Wszystko, co daje Pro, od zaraz.\nBez zobowiązań — anuluj w dowolnej chwili.",
-      "ctaStartNoTrial": "Tak, odblokuj Pro — {{price}}",
-      "titleOneTime": "Chwila — odblokuj Pro na zawsze",
+      "titleNoTrial": "Chwila, odblokuj Pro",
+      "bodyNoTrial": "Wszystko, co daje Pro, od zaraz.\nBez zobowiązań, anuluj w dowolnej chwili.",
+      "ctaStartNoTrial": "Tak, odblokuj Pro · {{price}}",
+      "titleOneTime": "Chwila, odblokuj Pro na zawsze",
       "bodyOneTime": "Jedna płatność, na zawsze Twoje.\nBez subskrypcji.",
-      "ctaOneTime": "Tak, odblokuj na zawsze — {{price}}"
+      "ctaOneTime": "Tak, odblokuj na zawsze · {{price}}"
     },
     "proWelcome": {
       "title": "Witaj z powrotem!",
-      "body": "Znaleźliśmy Twoją subskrypcję Pro — jest już aktywna na tym urządzeniu.",
+      "body": "Znaleźliśmy Twoją subskrypcję Pro. Jest już aktywna na tym urządzeniu.",
       "ctaSkip": "Pomiń wprowadzenie",
       "ctaContinue": "Odkrywaj dalej"
     },
@@ -193,14 +193,14 @@
     "billedRecurring": "cykliczne",
     "trialBadgeNoDays": "Okres próbny gratis",
     "ctaTrialNoDays": "Zacznij bezpłatny okres próbny",
-    "ctaSubscribeWeekly": "Subskrybuj — {{price}}/tydzień",
+    "ctaSubscribeWeekly": "Subskrybuj · {{price}}/tydzień",
     "ctaBuyLifetime": "Odblokuj za {{price}}",
-    "ctaSubscribe": "Subskrybuj — {{price}}",
+    "ctaSubscribe": "Subskrybuj · {{price}}",
     "legalNoteRecurring": "{{price}}, odnawiane automatycznie. Anuluj w dowolnej chwili.",
     "legalNoteOneTime": "{{price}}, płatność jednorazowa. Na zawsze Twoje.",
     "offerUnavailable": "Plany są teraz niedostępne. Sprawdź połączenie i spróbuj ponownie.",
-    "ctaSubscribeMonthly": "Subskrybuj — {{price}}/miesiąc",
-    "ctaSubscribeAnnual": "Subskrybuj — {{price}}/rok",
+    "ctaSubscribeMonthly": "Subskrybuj · {{price}}/miesiąc",
+    "ctaSubscribeAnnual": "Subskrybuj · {{price}}/rok",
     "pricesUnavailable": "Ceny są niedostępne.",
     "pricesRetry": "Spróbuj ponownie",
     "benefit": {

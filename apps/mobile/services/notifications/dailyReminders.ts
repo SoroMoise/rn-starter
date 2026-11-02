@@ -38,7 +38,7 @@ function reportMissingPermission(group: string): void {
     console.warn(
       `[notifications] "${group}" reminders were not scheduled: the notification permission is not ` +
         'granted. Ask for it with notificationService.requestPermission() from the screen that ' +
-        'shows what it is for — the scheduler never asks.'
+        'shows what it is for; the scheduler never asks.'
     )
   }
 }
@@ -102,7 +102,7 @@ async function sync({ group, reminders, content }: SyncParams): Promise<DailyRem
 let queue: Promise<unknown> = Promise.resolve()
 
 // Never asks for the permission: it runs wherever the list changes, the app's exit included. Without
-// it the group is left empty, so the calling effect depends on the grant too. Never rejects either —
+// it the group is left empty, so the calling effect depends on the grant too. Never rejects either:
 // its callers are effects that do not wait for it.
 export function syncDailyReminders(params: SyncParams): Promise<DailyReminderSyncOutcome> {
   const run = queue

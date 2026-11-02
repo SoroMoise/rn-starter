@@ -29,7 +29,7 @@ class AdServiceClass {
   private retryCount = 0
 
   // SubscriptionProvider is the only writer: buying Pro mid-process must disarm an
-  // interstitial preloaded while the user was still free — dropped, not just left unshown, so
+  // interstitial preloaded while the user was still free: dropped, not just left unshown, so
   // no retry keeps requesting ads for a subscriber.
   setPremium(isPremium: boolean): void {
     this.isPremium = isPremium
@@ -151,7 +151,7 @@ class AdServiceClass {
 
   // Resolves once the ad is gone, true only if it was on screen: whatever follows an ad must
   // not open over it. Only an ad actually shown spends the cadence and the session's
-  // interruption — even one that opened past the deadline — and the coordinator's flag comes
+  // interruption (even one that opened past the deadline), and the coordinator's flag comes
   // down on every path: left up, it would freeze every automatic promo for the session.
   async showInterstitialAd(): Promise<boolean> {
     if (this.isPremium) return false

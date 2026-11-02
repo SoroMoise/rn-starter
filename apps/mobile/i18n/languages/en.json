@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Premium starter",
-      "subtitle": "Ship a polished, monetized React Native app — theme, i18n, paywall and ads already wired."
+      "subtitle": "Ship a polished, monetized React Native app with theme, i18n, paywall and ads already wired."
     },
     "features": {
       "title": "What ships with this starter",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Ads (AdMob)",
-        "desc": "Banners, interstitials, and rewarded ads — disabled for premium users."
+        "desc": "Banners, interstitials, and rewarded ads, all disabled for premium users."
       },
       "notifications": {
         "label": "Notifications",
-        "desc": "A permission request for the screen that needs it, foreground banners, the Android channel and daily reminders — ready for the notifications your app sends."
+        "desc": "A permission request for the screen that needs it, foreground banners, the Android channel and daily reminders, ready for the notifications your app sends."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "Go further with Pro",
       "timelineHeader": "How your trial works",
       "ctaSkip": "Continue for free",
-      "dayUnlock": "Day 0 — Pro unlocked instantly",
-      "dayBilling": "Day {{day}} — Billing starts, cancel anytime"
+      "dayUnlock": "Day 0: Pro unlocked instantly",
+      "dayBilling": "Day {{day}}: billing starts, cancel anytime"
     },
     "exitIntent": {
-      "title": "Hold on — try Pro free",
+      "title": "Hold on, try Pro free",
       "ctaStart": "Yes, start my free trial",
       "ctaSkip": "No thanks, continue free",
       "body": "{{days}} days free, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
       "bodyNoDays": "Free to try, nothing to pay today.\nCancel before the trial ends and you won't be charged.",
-      "titleNoTrial": "Hold on — unlock Pro",
-      "bodyNoTrial": "Everything Pro unlocks, starting now.\nNo commitment — cancel anytime.",
-      "ctaStartNoTrial": "Yes, unlock Pro — {{price}}",
-      "titleOneTime": "Hold on — unlock Pro for good",
+      "titleNoTrial": "Hold on, unlock Pro",
+      "bodyNoTrial": "Everything Pro unlocks, starting now.\nNo commitment, cancel anytime.",
+      "ctaStartNoTrial": "Yes, unlock Pro · {{price}}",
+      "titleOneTime": "Hold on, unlock Pro for good",
       "bodyOneTime": "One payment, yours for good.\nNo subscription.",
-      "ctaOneTime": "Yes, unlock for good — {{price}}"
+      "ctaOneTime": "Yes, unlock for good · {{price}}"
     },
     "proWelcome": {
       "title": "Welcome back!",
-      "body": "We found your Pro subscription — it's already active on this device.",
+      "body": "We found your Pro subscription. It's already active on this device.",
       "ctaSkip": "Skip the intro",
       "ctaContinue": "Keep exploring"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "recurring",
     "trialBadgeNoDays": "Free trial",
     "ctaTrialNoDays": "Start free trial",
-    "ctaSubscribeWeekly": "Subscribe — {{price}}/week",
+    "ctaSubscribeWeekly": "Subscribe · {{price}}/week",
     "ctaBuyLifetime": "Unlock for {{price}}",
-    "ctaSubscribe": "Subscribe — {{price}}",
+    "ctaSubscribe": "Subscribe · {{price}}",
     "legalNoteRecurring": "{{price}}, renews automatically. Cancel anytime.",
     "legalNoteOneTime": "{{price}}, one-time payment. Yours forever.",
     "offerUnavailable": "Plans are unavailable right now. Check your connection and try again.",
-    "ctaSubscribeMonthly": "Subscribe — {{price}}/month",
-    "ctaSubscribeAnnual": "Subscribe — {{price}}/year",
+    "ctaSubscribeMonthly": "Subscribe · {{price}}/month",
+    "ctaSubscribeAnnual": "Subscribe · {{price}}/year",
     "pricesUnavailable": "Prices unavailable.",
     "pricesRetry": "Try again",
     "benefit": {

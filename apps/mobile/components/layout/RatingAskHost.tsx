@@ -26,8 +26,8 @@ export function RatingAskHost() {
         settleTimer = null
         if (!reviewStorage.getArmed()) return
         void maybeAskForRating({ moment: 'action_completed' }).then((decision) => {
-          // A refusal left armed would be traced again at every return for as long as it lasts —
-          // a cooldown runs for months — so only a passing one keeps the ask for later.
+          // A refusal left armed would be traced again at every return for as long as it lasts
+          // (a cooldown runs for months), so only a passing one keeps the ask for later.
           if (decision === null || (!decision.show && refusalOutlivesSession(decision.reason))) {
             reviewStorage.setArmed(false)
           }

@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Starter premium",
-      "subtitle": "Publiez une app React Native soignée et monétisée — thème, i18n, paywall et pubs déjà configurés."
+      "subtitle": "Publiez une app React Native soignée et monétisée, avec thème, i18n, paywall et pubs déjà configurés."
     },
     "features": {
       "title": "Ce qui est inclus",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "Pubs (AdMob)",
-        "desc": "Bannières, interstitiels et pubs récompensées — désactivées pour les abonnés."
+        "desc": "Bannières, interstitiels et pubs récompensées, désactivées pour les abonnés."
       },
       "notifications": {
         "label": "Notifications",
-        "desc": "Une demande de permission pour l'écran qui en a besoin, les bannières au premier plan, le canal Android et des rappels quotidiens — prêts pour les notifications de votre app."
+        "desc": "Une demande de permission pour l'écran qui en a besoin, les bannières au premier plan, le canal Android et des rappels quotidiens, prêts pour les notifications de votre app."
       }
     },
     "cta": {
@@ -106,25 +106,25 @@
       "headline": "Allez plus loin avec Pro",
       "timelineHeader": "Comment fonctionne l'essai",
       "ctaSkip": "Continuer gratuitement",
-      "dayUnlock": "Jour 0 — Pro débloqué immédiatement",
-      "dayBilling": "Jour {{day}} — Début du prélèvement, résiliable à tout moment"
+      "dayUnlock": "Jour 0 : Pro débloqué immédiatement",
+      "dayBilling": "Jour {{day}} : début du prélèvement, résiliable à tout moment"
     },
     "exitIntent": {
-      "title": "Un instant — essayez Pro gratuitement",
+      "title": "Un instant, essayez Pro gratuitement",
       "ctaStart": "Oui, démarrer mon essai gratuit",
       "ctaSkip": "Non merci, continuer gratuitement",
       "body": "{{days}} jours gratuits, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
       "bodyNoDays": "Essai gratuit, rien à payer aujourd'hui.\nRésiliez avant la fin de l'essai : rien ne sera prélevé.",
-      "titleNoTrial": "Un instant — débloquez Pro",
+      "titleNoTrial": "Un instant, débloquez Pro",
       "bodyNoTrial": "Tout ce que Pro débloque, dès maintenant.\nSans engagement, résiliable à tout moment.",
-      "ctaStartNoTrial": "Oui, débloquer Pro — {{price}}",
-      "titleOneTime": "Un instant — débloquez Pro pour de bon",
+      "ctaStartNoTrial": "Oui, débloquer Pro · {{price}}",
+      "titleOneTime": "Un instant, débloquez Pro pour de bon",
       "bodyOneTime": "Un seul paiement, acquis pour toujours.\nAucun abonnement.",
-      "ctaOneTime": "Oui, débloquer pour de bon — {{price}}"
+      "ctaOneTime": "Oui, débloquer pour de bon · {{price}}"
     },
     "proWelcome": {
       "title": "Bon retour !",
-      "body": "Nous avons retrouvé votre abonnement Pro — il est déjà actif sur cet appareil.",
+      "body": "Nous avons retrouvé votre abonnement Pro : il est déjà actif sur cet appareil.",
       "ctaSkip": "Passer l'intro",
       "ctaContinue": "Continuer la visite"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "renouvelable",
     "trialBadgeNoDays": "Essai offert",
     "ctaTrialNoDays": "Démarrer l'essai gratuit",
-    "ctaSubscribeWeekly": "S'abonner — {{price}}/semaine",
+    "ctaSubscribeWeekly": "S'abonner · {{price}}/semaine",
     "ctaBuyLifetime": "Débloquer pour {{price}}",
-    "ctaSubscribe": "S'abonner — {{price}}",
+    "ctaSubscribe": "S'abonner · {{price}}",
     "legalNoteRecurring": "{{price}}, renouvellement automatique. Annulez à tout moment.",
     "legalNoteOneTime": "{{price}}, paiement unique. Acquis définitivement.",
     "offerUnavailable": "Les formules sont indisponibles. Vérifiez votre connexion et réessayez.",
-    "ctaSubscribeMonthly": "S'abonner — {{price}}/mois",
-    "ctaSubscribeAnnual": "S'abonner — {{price}}/an",
+    "ctaSubscribeMonthly": "S'abonner · {{price}}/mois",
+    "ctaSubscribeAnnual": "S'abonner · {{price}}/an",
     "pricesUnavailable": "Prix indisponibles.",
     "pricesRetry": "Réessayer",
     "benefit": {

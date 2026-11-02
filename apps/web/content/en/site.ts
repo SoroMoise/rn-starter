@@ -9,7 +9,7 @@ export const enSite: SiteContent = {
     support: 'Support',
   },
   home: {
-    title: `${SITE.name} — [one line saying what the app does]`,
+    title: `${SITE.name} · [one line saying what the app does]`,
     description: '[One or two sentences for search results: what the app does, and for whom.]',
     tagline: '[What the app does, in one sentence.]',
     body: '[A short paragraph on who the app is for and what it changes for them.]',

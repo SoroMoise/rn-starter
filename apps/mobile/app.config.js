@@ -71,7 +71,7 @@ export default () => {
         // ones again, so they are removed from the whole merge rather than from the template's
         // manifest alone; nothing here calls for any of them. A blocked permission fails at
         // runtime, never at build time: a feature that needs one takes it off this list in the same
-        // change — a media picker needs READ_EXTERNAL_STORAGE up to Android 12, beside the
+        // change: a media picker needs READ_EXTERNAL_STORAGE up to Android 12, beside the
         // READ_MEDIA_* its library declares. Never block POST_NOTIFICATIONS or
         // RECEIVE_BOOT_COMPLETED: the notification system needs both (CLAUDE.md, Notifications).
         blockedPermissions: [
@@ -109,7 +109,7 @@ export default () => {
           'react-native-google-mobile-ads',
           {
             // Google's sample app ids: the SDK crashes at launch without one. Replace both with
-            // the app's own before the first release — unit ids live in constants/admob.ts.
+            // the app's own before the first release; unit ids live in constants/admob.ts.
             androidAppId: 'ca-app-pub-3940256099942544~3347511713',
             iosAppId: 'ca-app-pub-3940256099942544~1458002511',
           },

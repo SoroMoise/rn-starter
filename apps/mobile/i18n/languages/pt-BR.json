@@ -106,25 +106,25 @@
       "headline": "Vá mais longe com o Pro",
       "timelineHeader": "Como funciona o teste",
       "ctaSkip": "Continuar grátis",
-      "dayUnlock": "Dia 0 — Pro desbloqueado na hora",
-      "dayBilling": "Dia {{day}} — A cobrança começa, cancele quando quiser"
+      "dayUnlock": "Dia 0: Pro desbloqueado na hora",
+      "dayBilling": "Dia {{day}}: a cobrança começa, cancele quando quiser"
     },
     "exitIntent": {
-      "title": "Só um instante — experimente o Pro grátis",
+      "title": "Só um instante, experimente o Pro grátis",
       "ctaStart": "Sim, começar meu teste grátis",
       "ctaSkip": "Não, obrigado, continuar grátis",
       "body": "{{days}} dias grátis, nada a pagar hoje.\nCancele antes do fim do teste e nada será cobrado.",
       "bodyNoDays": "Teste grátis, nada a pagar hoje.\nCancele antes do fim do teste e nada será cobrado.",
-      "titleNoTrial": "Só um instante — desbloqueie o Pro",
+      "titleNoTrial": "Só um instante, desbloqueie o Pro",
       "bodyNoTrial": "Tudo o que o Pro desbloqueia, a partir de agora.\nSem compromisso: cancele quando quiser.",
-      "ctaStartNoTrial": "Sim, desbloquear o Pro — {{price}}",
-      "titleOneTime": "Só um instante — desbloqueie o Pro para sempre",
+      "ctaStartNoTrial": "Sim, desbloquear o Pro · {{price}}",
+      "titleOneTime": "Só um instante, desbloqueie o Pro para sempre",
       "bodyOneTime": "Um único pagamento, seu para sempre.\nSem assinatura.",
-      "ctaOneTime": "Sim, desbloquear para sempre — {{price}}"
+      "ctaOneTime": "Sim, desbloquear para sempre · {{price}}"
     },
     "proWelcome": {
       "title": "Que bom ter você de volta!",
-      "body": "Encontramos sua assinatura Pro — ela já está ativa neste dispositivo.",
+      "body": "Encontramos sua assinatura Pro, e ela já está ativa neste dispositivo.",
       "ctaSkip": "Pular a introdução",
       "ctaContinue": "Continuar explorando"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "recorrente",
     "trialBadgeNoDays": "Teste grátis",
     "ctaTrialNoDays": "Começar teste grátis",
-    "ctaSubscribeWeekly": "Assinar — {{price}}/semana",
+    "ctaSubscribeWeekly": "Assinar · {{price}}/semana",
     "ctaBuyLifetime": "Desbloquear por {{price}}",
-    "ctaSubscribe": "Assinar — {{price}}",
+    "ctaSubscribe": "Assinar · {{price}}",
     "legalNoteRecurring": "{{price}}, renova automaticamente. Cancele quando quiser.",
     "legalNoteOneTime": "{{price}}, pagamento único. Seu para sempre.",
     "offerUnavailable": "Os planos não estão disponíveis no momento. Verifique sua conexão e tente de novo.",
-    "ctaSubscribeMonthly": "Assinar — {{price}}/mês",
-    "ctaSubscribeAnnual": "Assinar — {{price}}/ano",
+    "ctaSubscribeMonthly": "Assinar · {{price}}/mês",
+    "ctaSubscribeAnnual": "Assinar · {{price}}/ano",
     "pricesUnavailable": "Preços indisponíveis.",
     "pricesRetry": "Tentar de novo",
     "benefit": {

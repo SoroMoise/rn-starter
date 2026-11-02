@@ -50,7 +50,7 @@ export const subscriptionStorage = {
     this.setIsLifetime(true)
   },
 
-  // The offline allowance — read only when the store could not be reached at all.
+  // The offline allowance, read only when the store could not be reached at all.
   derive(nowMs: number): boolean {
     if (this.getIsLifetime()) return true
     const expiresAtMs = this.getExpiresAt()

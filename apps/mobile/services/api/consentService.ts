@@ -74,7 +74,7 @@ class ConsentServiceClass {
       info = await this.presentForm(() => AdsConsent.gatherConsent(readDebugConsentOptions()))
     } catch (err) {
       void crashlyticsService.recordError(err, { source: 'ads_consent_gather' })
-      // A network failure shouldn't cost a decision already made — fall back to the cached one.
+      // A network failure shouldn't cost a decision already made: fall back to the cached one.
       try {
         info = await AdsConsent.getConsentInfo()
       } catch (readErr) {
@@ -83,7 +83,7 @@ class ConsentServiceClass {
     }
 
     this.apply(info)
-    // Neither form nor cache reached — let a later launch retry rather than latch forever.
+    // Neither form nor cache reached: let a later launch retry rather than latch forever.
     if (info === null) this.gathering = null
 
     await this.startSdk()

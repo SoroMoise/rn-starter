@@ -3,11 +3,11 @@ const fs = require('fs')
 const path = require('path')
 
 // The encrypted entitlement store (services/storage/secure.ts). MMKV writes `<id>` and `<id>.crc`
-// under files/mmkv/, so both are named — rename them with the instance id. A copy that leaves the
+// under files/mmkv/, so both are named; rename them with the instance id. A copy that leaves the
 // device can be edited into Pro and restored.
 const ENTITLEMENT_STORE = ['mmkv/entitlements', 'mmkv/entitlements.crc']
 
-// expo-modules-core's record of the runtime permissions it has asked for on this device — the only
+// expo-modules-core's record of the runtime permissions it has asked for on this device: the only
 // thing that tells one never asked from one denied. Restored onto a phone where nothing was asked,
 // it reports `denied` with `canAskAgain: false`, and the app sends the user to the system settings
 // instead of showing the dialog.
@@ -19,7 +19,7 @@ const excludeAll = ({ indent }) =>
     `${indent}<exclude domain="sharedpref" path="${ASKED_PERMISSIONS}" />`,
   ].join('\n')
 
-// Out of every copy that leaves the device. The rest still rides along — preferences, the
+// Out of every copy that leaves the device. The rest still rides along: preferences, the
 // onboarding, the review and paywall spacing follow the user.
 const DATA_EXTRACTION_RULES = `<?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>

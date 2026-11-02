@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "精品 Starter 樣板",
-      "subtitle": "推出一款精緻、可營利的 React Native App — 主題、i18n、付費牆與廣告都已接好。"
+      "subtitle": "推出一款精緻、可營利的 React Native App：主題、i18n、付費牆與廣告都已接好。"
     },
     "features": {
       "title": "樣板內建功能",
@@ -42,11 +42,11 @@
       },
       "ads": {
         "label": "廣告（AdMob）",
-        "desc": "橫幅、插頁與獎勵廣告 — Pro 用戶不會看到。"
+        "desc": "橫幅、插頁與獎勵廣告，Pro 用戶不會看到。"
       },
       "notifications": {
         "label": "通知",
-        "desc": "在需要的畫面請求權限、前景橫幅、Android 通知頻道與每日提醒 — 您的 App 要發送的通知，這裡都已備妥。"
+        "desc": "在需要的畫面請求權限、前景橫幅、Android 通知頻道與每日提醒：您的 App 要發送的通知，這裡都已備妥。"
       }
     },
     "cta": {
@@ -106,21 +106,21 @@
       "headline": "Pro 帶您更進一步",
       "timelineHeader": "試用流程",
       "ctaSkip": "繼續使用免費版",
-      "dayUnlock": "第 0 天 — Pro 立即解鎖",
-      "dayBilling": "第 {{day}} 天 — 開始收費，隨時可取消"
+      "dayUnlock": "第 0 天：Pro 立即解鎖",
+      "dayBilling": "第 {{day}} 天：開始收費，隨時可取消"
     },
     "exitIntent": {
-      "title": "等一下 — 免費試用 Pro",
+      "title": "等一下，免費試用 Pro",
       "ctaStart": "好，開始免費試用",
       "ctaSkip": "不用了，繼續使用免費版",
       "body": "{{days}} 天免費，今天不必付款。\n在試用結束前取消，就不會收費。",
       "bodyNoDays": "免費試用，今天不必付款。\n在試用結束前取消，就不會收費。",
-      "titleNoTrial": "等一下 — 解鎖 Pro",
+      "titleNoTrial": "等一下，解鎖 Pro",
       "bodyNoTrial": "Pro 的所有功能，現在就能用。\n無須綁約，隨時可取消。",
-      "ctaStartNoTrial": "好，解鎖 Pro — {{price}}",
-      "titleOneTime": "等一下 — 永久解鎖 Pro",
+      "ctaStartNoTrial": "好，解鎖 Pro（{{price}}）",
+      "titleOneTime": "等一下，永久解鎖 Pro",
       "bodyOneTime": "付款一次，永久擁有。\n無須訂閱。",
-      "ctaOneTime": "好，永久解鎖 — {{price}}"
+      "ctaOneTime": "好，永久解鎖（{{price}}）"
     },
     "proWelcome": {
       "title": "歡迎回來！",
@@ -190,14 +190,14 @@
     "billedRecurring": "自動續訂",
     "trialBadgeNoDays": "免費試用",
     "ctaTrialNoDays": "開始免費試用",
-    "ctaSubscribeWeekly": "訂閱 — {{price}}/週",
+    "ctaSubscribeWeekly": "訂閱（{{price}}/週）",
     "ctaBuyLifetime": "以 {{price}} 解鎖",
-    "ctaSubscribe": "訂閱 — {{price}}",
+    "ctaSubscribe": "訂閱（{{price}}）",
     "legalNoteRecurring": "{{price}}，自動續訂，隨時可取消。",
     "legalNoteOneTime": "{{price}}，一次性付款，永久擁有。",
     "offerUnavailable": "暫時無法取得訂閱方案。檢查網路後再試一次。",
-    "ctaSubscribeMonthly": "訂閱 — {{price}}/月",
-    "ctaSubscribeAnnual": "訂閱 — {{price}}/年",
+    "ctaSubscribeMonthly": "訂閱（{{price}}/月）",
+    "ctaSubscribeAnnual": "訂閱（{{price}}/年）",
     "pricesUnavailable": "暫時無法取得價格。",
     "pricesRetry": "重試",
     "benefit": {

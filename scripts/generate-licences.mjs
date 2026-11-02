@@ -1034,7 +1034,7 @@ async function main() {
   fs.writeFileSync(OUTPUT, `${JSON.stringify(file, null, 2)}\n`)
   const count = Object.values(sections).reduce((total, entries) => total + entries.length, 0)
   console.log(
-    `wrote ${relative(OUTPUT)}: ${sections.app.length} app, ${sections.native.length} native, ${sections.fonts.length} fonts, ${sections.android.length} Android (${android.status}) — ${count} entries, ${Object.keys(texts).length} texts`
+    `wrote ${relative(OUTPUT)}: ${sections.app.length} app, ${sections.native.length} native, ${sections.fonts.length} fonts, ${sections.android.length} Android (${android.status}), ${count} entries, ${Object.keys(texts).length} texts`
   )
   if (warnings.length > 0) console.warn(`${warnings.length} warning(s) above`)
 }

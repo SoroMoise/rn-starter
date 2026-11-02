@@ -90,7 +90,7 @@ export function SlidingSelector<T extends string | number>({
     (width: number) => {
       const iw = width / options.length
       itemWidthRef.current = iw
-      // Jump (no spring) on layout — avoids sliding from 0 on first render
+      // Jump (no spring) on layout: avoids sliding from 0 on first render
       indicatorX.value = selectedIndexRef.current * iw
       indicatorWidth.value = iw
       layoutReady.value = 1
@@ -153,7 +153,7 @@ export function SlidingSelector<T extends string | number>({
   // Animate indicator when value changes externally (e.g. after a backup restore)
   useEffect(() => {
     const iw = itemWidthRef.current
-    if (iw === 0) return // layout not ready yet — handleLayout will set the initial position
+    if (iw === 0) return // layout not ready yet: handleLayout will set the initial position
     indicatorX.value = withSpring(selectedIndex * iw, SNAP_SPRING)
     indicatorWidth.value = withSpring(iw, SNAP_SPRING)
   }, [selectedIndex, indicatorX, indicatorWidth])

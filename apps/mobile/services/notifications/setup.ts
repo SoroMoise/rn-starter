@@ -1,7 +1,7 @@
 import * as Notifications from 'expo-notifications'
 
 // Notifications delivered while the app is in the foreground are presented as
-// system banners with sound — no badge increment. On Android, `shouldPlaySound: false`
+// system banners with sound, no badge increment. On Android, `shouldPlaySound: false`
 // would also drop the heads-up banner, whatever the channel says.
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -41,7 +41,7 @@ export const notificationService = {
     return toPermission(await Notifications.getPermissionsAsync())
   },
 
-  // Only from the screen that shows what the permission is for — never at launch, and never from a
+  // Only from the screen that shows what the permission is for: never at launch, and never from a
   // scheduling path, which runs as the app is left.
   async requestPermission(): Promise<NotificationPermission> {
     const current = await notificationService.readPermission()

@@ -7,25 +7,25 @@ A maintainer's tool, not a build step: the PNGs are committed, and this script i
 the only way they change. Each output carries a constraint that stays invisible
 until a store or a launcher enforces it:
 
-- images/icon.png — the store icon, 1024 px, full bleed, flattened to RGB. Both
+- images/icon.png: the store icon, 1024 px, full bleed, flattened to RGB. Both
   stores cut their own corners, so a rounded plate drawn here fights their mask,
   and Expo flattens any transparency onto white for iOS anyway.
-- images/adaptive-icon.png — Android's foreground layer, over transparency. The
+- images/adaptive-icon.png: Android's foreground layer, over transparency. The
   launcher shows the central 72 dp of a 108 dp layer and only guarantees a 66 dp
   circle, so the mark is drawn at two thirds of its size on the store icon; the
   layer behind it is `android.adaptiveIcon.backgroundColor`.
-- images/splash-icon.png — over transparency. Android 12+ draws the splash image
+- images/splash-icon.png: over transparency. Android 12+ draws the splash image
   200 dp wide in a 288 dp canvas and cuts it to a 192 dp circle, so a plate would
   show as a disc; `splash.backgroundColor` fills the screen behind the mark.
-- notification-icon.png — a silhouette: Android paints every non-transparent pixel
+- notification-icon.png: a silhouette. Android paints every non-transparent pixel
   with the system tint and discards the colours, so it is pure white.
-- apps/web/app/icon.png and apple-icon.png — the site's favicon and home-screen
+- apps/web/app/icon.png and apple-icon.png: the site's favicon and home-screen
   icon, the store icon at their sizes. Skipped once apps/web is gone.
 
 BACKGROUND must equal `splash.backgroundColor` and
 `android.adaptiveIcon.backgroundColor` in apps/mobile/app.config.js.
 
-The mark is a deliberate placeholder. Replace draw_mark() and re-run — never
+The mark is a deliberate placeholder. Replace draw_mark() and re-run; never
 hand-patch a PNG.
 """
 

@@ -111,7 +111,7 @@ const IGNORED_DIRECTORIES = new Set([
 
 // One import or export statement from @expo/vector-icons: `type`, the bindings, the subpath. The
 // bindings cannot contain a quote, which keeps a match from reaching back into the statement
-// before it — the code has no semicolons to stop at.
+// before it: the code has no semicolons to stop at.
 const ICON_IMPORT =
   /\b(?:import|export)\s+(type\s+)?([^'"`;]*?)\s*from\s*['"]@expo\/vector-icons(?:\/([A-Za-z0-9_]+))?['"]/g
 // A require() or a dynamic import(): Metro bundles the family either way.
@@ -135,8 +135,8 @@ function collectSourceFiles(directory, files = []) {
   return files
 }
 
-// A type-only import ships no font, and a name that is not a family — createIconSet, a build/
-// path — draws nothing.
+// A type-only import ships no font, and a name that is not a family (createIconSet, a build/
+// path) draws nothing.
 function collectImportedFamilies({ projectRoot, families }) {
   const imported = new Set()
 

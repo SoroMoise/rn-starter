@@ -10,7 +10,7 @@ type ScreenContainerProps = {
 
 // `PremiumTabBar` is absolute and already pads itself by the bottom inset, so the
 // scene must not add it again: padding both pushed everything anchored to the
-// bottom — the ad banner, a keypad — a whole navigation bar clear of the tab bar.
+// bottom (the ad banner, a keypad) a whole navigation bar clear of the tab bar.
 // Anything anchored down there measures from the window and adds the inset
 // itself, through `useTabBarPadding`.
 const EDGES = ['top', 'left', 'right'] as const

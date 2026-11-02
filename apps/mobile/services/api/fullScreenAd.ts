@@ -14,8 +14,8 @@ type FullScreenAd = {
 export type PresentationEnding = 'closed' | 'failed'
 export type PresentationOutcome = PresentationEnding | 'never_opened'
 
-// Resolves once the ad is gone — the native show() resolves the moment the ad is handed to the
-// activity, so it says nothing about when the screen is free again — or as `never_opened` past
+// Resolves once the ad is gone (the native show() resolves the moment the ad is handed to the
+// activity, so it says nothing about when the screen is free again), or as `never_opened` past
 // the deadline. An ad given up on can still open late: `onEnd` runs whenever its presentation
 // really ends, so what a shown ad owes (a reward, a spent slot) is paid late rather than never.
 export function presentFullScreenAd({

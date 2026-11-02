@@ -76,7 +76,7 @@ export const purchaseService = {
     return Purchases.restorePurchases()
   },
 
-  // A known condition — offline, a closed billing sheet, a store that is down — is a
+  // A known condition (offline, a closed billing sheet, a store that is down) is a
   // breadcrumb, not a non-fatal: recorded, it would bury the bugs Crashlytics is there to surface.
   reportFailure({ error, source }: { error: unknown; source: string }): PurchaseFailure {
     const reason = classifyError(error)

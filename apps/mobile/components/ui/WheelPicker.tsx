@@ -44,7 +44,7 @@ interface Props<T extends string | number> {
   unitWidth?: number
   // What the wheel looks like, centred inside a column that is deliberately much wider than it.
   contentWidth?: number
-  // Omit to let the column share its row, or fill a column's width — the widest target it can get.
+  // Omit to let the column share its row, or fill a column's width, the widest target it can get.
   width?: number
   maxWidth?: number
 }

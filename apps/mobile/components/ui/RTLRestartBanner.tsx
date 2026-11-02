@@ -153,11 +153,11 @@ export function RTLRestartBanner() {
 
   return (
     <Animated.View className="absolute inset-x-4 z-[9998]" style={[{ bottom }, animatedStyle]}>
-      {/* Shadow layer — separate from clip layer so shadow bleeds out */}
+      {/* Shadow layer: separate from clip layer so shadow bleeds out */}
       <View
         className="rounded-3xl"
         style={[styles.shadowLayer, { shadowColor: primary, shadowOpacity: isDark ? 0.45 : 0.22 }]}>
-        {/* Clip layer — overflow hidden for border radius on BlurView */}
+        {/* Clip layer: overflow hidden for border radius on BlurView */}
         <View className="overflow-hidden rounded-3xl border border-[#b8b3b3]/40 dark:border-[#b4b4b4]/40">
           <BlurView
             intensity={85}

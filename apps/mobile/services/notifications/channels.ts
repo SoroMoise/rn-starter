@@ -7,7 +7,7 @@ export const NOTIFICATION_CHANNEL_ID = 'reminders'
 
 const VIBRATION_PATTERN = [0, 250, 250, 250]
 
-// Android applies only the name and description to a channel that exists — sound, vibration and
+// Android applies only the name and description to a channel that exists: sound, vibration and
 // importance are frozen at creation, and a channel deleted then re-created under the same id comes
 // back with the settings it had. A channel that must sound differently needs a new id.
 export async function ensureNotificationChannels(): Promise<void> {

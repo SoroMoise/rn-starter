@@ -77,7 +77,7 @@ export type AnalyticsEventMap = {
   rate_app_clicked: undefined
   ad_privacy_options_opened: undefined
   licences_opened: undefined
-  // A moment qualified — never that the user rated. Play reports neither whether
+  // A moment qualified, never that the user rated. Play reports neither whether
   // the card appeared nor its outcome; store-side truth lives in the Play Console.
   rating_ask_shown: {
     moment: RatingMoment

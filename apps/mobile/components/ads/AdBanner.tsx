@@ -19,7 +19,7 @@ interface AdBannerProps {
 export function AdBanner({ adBannerId, screenName, enabled = true }: AdBannerProps) {
   const isPlacementActive = useAdPlacementActive({ unitId: adBannerId, enabled })
   // A BannerAd left refreshing under the top of the stack, or rebuilt by an
-  // in-screen toggle, is impression inflation — the same offence as serving the
+  // in-screen toggle, is impression inflation, the same offence as serving the
   // pre-launch crawler. One mount per visit, unmounted the moment the screen is
   // no longer the one in front of the user.
   const isStageActive = useStageActive()

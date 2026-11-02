@@ -106,25 +106,25 @@
       "headline": "Vai oltre con Pro",
       "timelineHeader": "Come funziona la prova",
       "ctaSkip": "Continua gratis",
-      "dayUnlock": "Giorno 0 — Pro sbloccato subito",
-      "dayBilling": "Giorno {{day}} — Parte l'addebito, annulla quando vuoi"
+      "dayUnlock": "Giorno 0: Pro sbloccato subito",
+      "dayBilling": "Giorno {{day}}: parte l'addebito, annulla quando vuoi"
     },
     "exitIntent": {
-      "title": "Un attimo — prova Pro gratis",
+      "title": "Un attimo, prova Pro gratis",
       "ctaStart": "Sì, inizio la prova gratuita",
       "ctaSkip": "No grazie, continuo gratis",
       "body": "{{days}} giorni gratis, niente da pagare oggi.\nAnnulla prima della fine della prova e non ti verrà addebitato nulla.",
       "bodyNoDays": "Prova gratuita, niente da pagare oggi.\nAnnulla prima della fine della prova e non ti verrà addebitato nulla.",
-      "titleNoTrial": "Un attimo — sblocca Pro",
+      "titleNoTrial": "Un attimo, sblocca Pro",
       "bodyNoTrial": "Tutto ciò che Pro sblocca, da subito.\nSenza impegno: annulla quando vuoi.",
-      "ctaStartNoTrial": "Sì, sblocca Pro — {{price}}",
-      "titleOneTime": "Un attimo — sblocca Pro per sempre",
+      "ctaStartNoTrial": "Sì, sblocca Pro · {{price}}",
+      "titleOneTime": "Un attimo, sblocca Pro per sempre",
       "bodyOneTime": "Un solo pagamento, tuo per sempre.\nNessun abbonamento.",
-      "ctaOneTime": "Sì, sblocca per sempre — {{price}}"
+      "ctaOneTime": "Sì, sblocca per sempre · {{price}}"
     },
     "proWelcome": {
       "title": "Che bello rivederti!",
-      "body": "Abbiamo trovato il tuo abbonamento Pro — è già attivo su questo dispositivo.",
+      "body": "Abbiamo trovato il tuo abbonamento Pro: è già attivo su questo dispositivo.",
       "ctaSkip": "Salta l'introduzione",
       "ctaContinue": "Continua a esplorare"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "ricorrente",
     "trialBadgeNoDays": "Prova gratuita",
     "ctaTrialNoDays": "Inizia la prova gratuita",
-    "ctaSubscribeWeekly": "Abbonati — {{price}}/settimana",
+    "ctaSubscribeWeekly": "Abbonati · {{price}}/settimana",
     "ctaBuyLifetime": "Sblocca per {{price}}",
-    "ctaSubscribe": "Abbonati — {{price}}",
+    "ctaSubscribe": "Abbonati · {{price}}",
     "legalNoteRecurring": "{{price}}, si rinnova automaticamente. Annulla quando vuoi.",
     "legalNoteOneTime": "{{price}}, pagamento unico. Tuo per sempre.",
     "offerUnavailable": "Al momento i piani non sono disponibili. Controlla la connessione e riprova.",
-    "ctaSubscribeMonthly": "Abbonati — {{price}}/mese",
-    "ctaSubscribeAnnual": "Abbonati — {{price}}/anno",
+    "ctaSubscribeMonthly": "Abbonati · {{price}}/mese",
+    "ctaSubscribeAnnual": "Abbonati · {{price}}/anno",
     "pricesUnavailable": "Prezzi non disponibili.",
     "pricesRetry": "Riprova",
     "benefit": {

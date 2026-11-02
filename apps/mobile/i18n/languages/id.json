@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Langganan mungkin sudah berakhir",
-    "graceBannerMessage": "Hubungkan ke internet sebelum {{date}} untuk memverifikasi langganan Anda.",
-    "graceBannerCta": "Verifikasi langganan",
     "billingIssueTitle": "Masalah pembayaran",
     "billingIssueMessage": "Langganan Anda tidak dapat diperpanjang. Perbarui metode pembayaran sebelum {{date}} agar tetap memakai Pro."
   },

@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Gói đăng ký có thể đã hết hạn",
-    "graceBannerMessage": "Kết nối internet trước {{date}} để xác minh gói đăng ký của bạn.",
-    "graceBannerCta": "Xác minh gói đăng ký",
     "billingIssueTitle": "Sự cố thanh toán",
     "billingIssueMessage": "Không thể gia hạn gói đăng ký của bạn. Cập nhật phương thức thanh toán trước {{date}} để giữ Pro."
   },

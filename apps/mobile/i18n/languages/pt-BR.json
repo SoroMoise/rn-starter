@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Sua assinatura pode ter expirado",
-    "graceBannerMessage": "Conecte-se à internet antes de {{date}} para verificar sua assinatura.",
-    "graceBannerCta": "Verificar assinatura",
     "billingIssueTitle": "Problema no pagamento",
     "billingIssueMessage": "Não foi possível renovar sua assinatura. Atualize a forma de pagamento antes de {{date}} para manter o Pro."
   },

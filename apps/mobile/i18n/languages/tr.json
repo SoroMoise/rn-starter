@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Aboneliğinizin süresi dolmuş olabilir",
-    "graceBannerMessage": "Aboneliğinizi doğrulamak için {{date}} tarihinden önce internete bağlanın.",
-    "graceBannerCta": "Aboneliği doğrula",
     "billingIssueTitle": "Ödeme sorunu",
     "billingIssueMessage": "Aboneliğiniz yenilenemedi. Pro'yu kaybetmemek için {{date}} tarihinden önce ödeme yönteminizi güncelleyin."
   },

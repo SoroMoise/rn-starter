@@ -213,9 +213,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Subskrypcja mogła wygasnąć",
-    "graceBannerMessage": "Połącz się z internetem przed {{date}}, aby zweryfikować subskrypcję.",
-    "graceBannerCta": "Zweryfikuj subskrypcję",
     "billingIssueTitle": "Problem z płatnością",
     "billingIssueMessage": "Nie udało się odnowić Twojej subskrypcji. Zaktualizuj metodę płatności przed {{date}}, aby zachować Pro."
   },

@@ -213,9 +213,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Возможно, подписка истекла",
-    "graceBannerMessage": "Подключитесь к интернету до {{date}}, чтобы проверить подписку.",
-    "graceBannerCta": "Проверить подписку",
     "billingIssueTitle": "Проблема с оплатой",
     "billingIssueMessage": "Не удалось продлить подписку. Обновите способ оплаты до {{date}}, чтобы сохранить Pro."
   },

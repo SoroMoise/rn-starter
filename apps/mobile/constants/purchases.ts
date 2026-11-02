@@ -53,12 +53,3 @@ export type ProBenefit = {
 export const PRO_BENEFITS: readonly ProBenefit[] = [
   { key: 'noAds', i18nKey: 'paywall.benefit.noAds', icon: 'ban-outline' },
 ]
-
-const gracePeriodConfig = Constants.expoConfig?.extra?.purchases as
-  | { gracePeriodDays?: number }
-  | undefined
-
-export const SUBSCRIPTION_GRACE_PERIOD_DAYS: number = gracePeriodConfig?.gracePeriodDays ?? 7
-
-export const SUBSCRIPTION_GRACE_PERIOD_MS: number =
-  SUBSCRIPTION_GRACE_PERIOD_DAYS * 24 * 60 * 60 * 1000

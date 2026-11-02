@@ -224,9 +224,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Subscription may have expired",
-    "graceBannerMessage": "Connect to the internet before {{date}} to verify your subscription.",
-    "graceBannerCta": "Verify subscription",
     "billingIssueTitle": "Payment problem",
     "billingIssueMessage": "Your subscription couldn't be renewed. Update your payment method before {{date}} to keep Pro."
   },

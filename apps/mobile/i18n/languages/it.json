@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "L'abbonamento potrebbe essere scaduto",
-    "graceBannerMessage": "Connettiti a internet prima del {{date}} per verificare il tuo abbonamento.",
-    "graceBannerCta": "Verifica abbonamento",
     "billingIssueTitle": "Problema di pagamento",
     "billingIssueMessage": "Non è stato possibile rinnovare il tuo abbonamento. Aggiorna il metodo di pagamento prima del {{date}} per mantenere Pro."
   },

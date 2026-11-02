@@ -1,10 +1,5 @@
 import { PaywallModal } from '@/components/paywall/PaywallModal'
-import {
-  ENTITLEMENT_PREMIUM,
-  SUBSCRIPTION_GRACE_PERIOD_MS,
-  type PaywallSource,
-  type PurchaseOrigin,
-} from '@/constants/purchases'
+import { ENTITLEMENT_PREMIUM, type PaywallSource, type PurchaseOrigin } from '@/constants/purchases'
 import {
   SubscriptionContext,
   type BillingIssue,
@@ -91,37 +86,33 @@ function readBillingIssue(customerInfo: CustomerInfo): BillingIssue | null {
   return { accessEndsAtMs: entitlement.expirationDateMillis }
 }
 
-type PremiumFlags = { isPremium: boolean; isInGracePeriod: boolean }
-
 // Development overrides, read once. They replace the store's answer inside
 // applyCustomerInfo and never reach subscriptionStorage, so dropping the variable
 // brings the real tier back with nothing to undo. FORCE_FREE wins over FORCE_PRO.
-function readTierOverride(): PremiumFlags | null {
+function readTierOverride(): { isPremium: boolean } | null {
   const purchases = Constants.expoConfig?.extra?.purchases
-  if (purchases?.forceFree === true) return { isPremium: false, isInGracePeriod: false }
-  if (purchases?.forcePro === true) return { isPremium: true, isInGracePeriod: false }
+  if (purchases?.forceFree === true) return { isPremium: false }
+  if (purchases?.forcePro === true) return { isPremium: true }
   return null
 }
 
 const TIER_OVERRIDE = readTierOverride()
 
 // Read before the store has answered, and when it could not be asked at all — a
-// subscriber on a plane keeps their Pro while the banner says the clock is running.
+// subscriber on a plane keeps their Pro until the last expiry the store reported.
 // A response that reports no active entitlement is a verified answer and never lands here.
-function unverifiedFlags(): PremiumFlags {
-  const derived = subscriptionStorage.derive(Date.now(), SUBSCRIPTION_GRACE_PERIOD_MS)
-  return { isPremium: derived.isPremium, isInGracePeriod: derived.isInGracePeriod }
+function unverifiedIsPremium(): boolean {
+  return subscriptionStorage.derive(Date.now())
 }
 
 export function SubscriptionProvider({ children }: { children: React.ReactNode }) {
   const { showToast } = useToast()
   const { t } = useTranslation()
 
-  // Read once: it only seeds the two states below, and it goes to disk to do it.
-  const cached = useMemo(() => TIER_OVERRIDE ?? unverifiedFlags(), [])
+  // Read once: it only seeds the state below, and it goes to disk to do it.
+  const cachedIsPremium = useMemo(() => TIER_OVERRIDE?.isPremium ?? unverifiedIsPremium(), [])
 
-  const [isPremium, setIsPremium] = useState(cached.isPremium)
-  const [isInGracePeriod, setIsInGracePeriod] = useState(cached.isInGracePeriod)
+  const [isPremium, setIsPremium] = useState(cachedIsPremium)
   const [billingIssue, setBillingIssue] = useState<BillingIssue | null>(null)
   const [managementUrl, setManagementUrl] = useState<string | null>(null)
   const [isInitialized, setIsInitialized] = useState(false)
@@ -159,7 +150,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanPeriod | null } => {
       if (TIER_OVERRIDE) {
         setIsPremium(TIER_OVERRIDE.isPremium)
-        setIsInGracePeriod(false)
         setBillingIssue(null)
         setManagementUrl(null)
         setActiveSubscription(null)
@@ -177,7 +167,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       })
 
       setIsPremium(isActive)
-      setIsInGracePeriod(false)
       setBillingIssue(readBillingIssue(customerInfo))
       setManagementUrl(purchaseService.managementUrl({ customerInfo }))
       setActiveSubscription(plan)
@@ -197,11 +186,7 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         plan: applied.plan ?? 'none',
       })
     } catch (err) {
-      if (!TIER_OVERRIDE) {
-        const flags = unverifiedFlags()
-        setIsPremium(flags.isPremium)
-        setIsInGracePeriod(flags.isInGracePeriod)
-      }
+      if (!TIER_OVERRIDE) setIsPremium(unverifiedIsPremium())
       purchaseService.reportFailure({ error: err, source: 'subscription_sync' })
     }
   }, [applyCustomerInfo])
@@ -429,7 +414,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isPremium,
       isInitialized,
       isLoadingPurchase,
-      isInGracePeriod,
       billingIssue,
       managementUrl,
       isPaywallVisible: paywallVisible,
@@ -449,7 +433,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       isPremium,
       isInitialized,
       isLoadingPurchase,
-      isInGracePeriod,
       billingIssue,
       managementUrl,
       paywallVisible,

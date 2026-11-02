@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "Je abonnement is mogelijk verlopen",
-    "graceBannerMessage": "Maak vóór {{date}} verbinding met internet om je abonnement te controleren.",
-    "graceBannerCta": "Abonnement controleren",
     "billingIssueTitle": "Betalingsprobleem",
     "billingIssueMessage": "Je abonnement kon niet worden verlengd. Werk je betaalmethode bij vóór {{date}} om Pro te behouden."
   },

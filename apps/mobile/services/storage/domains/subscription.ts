@@ -51,24 +51,10 @@ export const subscriptionStorage = {
   },
 
   // The offline allowance — read only when the store could not be reached at all.
-  derive(
-    nowMs: number,
-    gracePeriodMs: number
-  ): { isPremium: boolean; isInGracePeriod: boolean; expiresAtMs: number | null } {
-    if (this.getIsLifetime()) {
-      return { isPremium: true, isInGracePeriod: false, expiresAtMs: null }
-    }
+  derive(nowMs: number): boolean {
+    if (this.getIsLifetime()) return true
     const expiresAtMs = this.getExpiresAt()
-    if (expiresAtMs === null) {
-      return { isPremium: false, isInGracePeriod: false, expiresAtMs: null }
-    }
-    if (nowMs < expiresAtMs) {
-      return { isPremium: true, isInGracePeriod: false, expiresAtMs }
-    }
-    if (nowMs < expiresAtMs + gracePeriodMs) {
-      return { isPremium: true, isInGracePeriod: true, expiresAtMs }
-    }
-    return { isPremium: false, isInGracePeriod: false, expiresAtMs }
+    return expiresAtMs !== null && nowMs < expiresAtMs
   },
 
   clear(): void {

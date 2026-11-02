@@ -4,7 +4,6 @@ import { BillingIssueBanner } from '@/components/settings/BillingIssueBanner'
 import { DisplaySection } from '@/components/settings/DisplaySection'
 import { LegalSupportSection } from '@/components/settings/LegalSupportSection'
 import { PremiumBanner } from '@/components/settings/PremiumBanner'
-import { SubscriptionGraceBanner } from '@/components/settings/SubscriptionGraceBanner'
 import { Section, SectionContent, SectionHeader } from '@/components/settings/SettingsSection'
 import { ScreenContainer } from '@/components/ui/ScreenContainer'
 import { ThemedText } from '@/components/ui/ThemedText'
@@ -102,7 +101,6 @@ export default function SettingsScreen() {
         />
 
         <PremiumBanner />
-        <SubscriptionGraceBanner />
         <BillingIssueBanner />
 
         <Section>

@@ -215,9 +215,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "ربما انتهى اشتراكك",
-    "graceBannerMessage": "اتصل بالإنترنت قبل {{date}} للتحقق من اشتراكك.",
-    "graceBannerCta": "التحقق من الاشتراك",
     "billingIssueTitle": "مشكلة في الدفع",
     "billingIssueMessage": "تعذّر تجديد اشتراكك. حدّث وسيلة الدفع قبل {{date}} لتحتفظ بـ Pro."
   },

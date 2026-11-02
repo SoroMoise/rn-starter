@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "구독이 만료되었을 수 있어요",
-    "graceBannerMessage": "{{date}} 전에 인터넷에 연결해서 구독을 확인해 주세요.",
-    "graceBannerCta": "구독 확인",
     "billingIssueTitle": "결제에 문제가 있어요",
     "billingIssueMessage": "구독을 갱신하지 못했어요. Pro를 계속 사용하려면 {{date}} 전에 결제 수단을 업데이트해 주세요."
   },

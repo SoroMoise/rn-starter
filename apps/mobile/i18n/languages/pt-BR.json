@@ -89,6 +89,7 @@
     "legalAndSupport": "Legal e suporte",
     "privacyPolicy": "Política de privacidade",
     "termsOfService": "Termos de serviço",
+    "openSourceLicences": "Licenças de código aberto",
     "support": "Suporte",
     "rateApp": "Avaliar este app",
     "languageChanged": "Idioma atualizado",
@@ -152,6 +153,14 @@
     "messageManual": "Reinicie o app para aplicar.",
     "announcement": "Mudando o sentido de leitura. Reinicie o app para aplicar."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Atualização pronta",
+      "body": "Reinicie o app para terminar de instalar a nova versão.",
+      "restart": "Reiniciar",
+      "later": "Mais tarde"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Desbloqueie todos os recursos",
@@ -203,7 +212,12 @@
     "trustStore": "Pagamento protegido por {{store}}",
     "trustTrial": "Nada a pagar durante o teste grátis",
     "trustCancel": "Cancele quando quiser, sem compromisso",
-    "trustOneTime": "Um único pagamento, sem assinatura"
+    "trustOneTime": "Um único pagamento, sem assinatura",
+    "lifetimeOffer": {
+      "title": "Não curte assinaturas?",
+      "body": "Pague uma vez e fique com o Pro para sempre. Nada para renovar, nada para cancelar.",
+      "decline": "Não, obrigado"
+    }
   },
   "premiumGate": {
     "unlock": "Desbloquear",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Lembretes",
     "channelDescription": "Lembretes locais programados"
+  },
+  "licences": {
+    "title": "Licenças de código aberto",
+    "intro": "O app é feito com os softwares abaixo. Toque em um deles para ler a licença como seus autores a escreveram.",
+    "sections": {
+      "app": "Bibliotecas do app",
+      "native": "Bibliotecas nativas",
+      "fonts": "Fontes",
+      "android": "Bibliotecas do Android"
+    },
+    "androidPending": "Este build não inclui a lista de bibliotecas do Android: ela é gerada no build de lançamento.",
+    "origin": {
+      "repository": "O pacote não traz arquivo de licença: este texto é o do repositório dele.",
+      "spdx": "O pacote não traz o texto da licença: este é o texto padrão da licença que ele declara, com o autor como titular dos direitos quando o pacote indica um. O aviso de direitos autorais do próprio projeto está no código-fonte.",
+      "spdxTemplate": "O texto padrão da licença que o POM do Maven declara, com o publicador como titular dos direitos quando o POM indica um. O aviso de direitos autorais do próprio projeto está no código-fonte.",
+      "pom": "O POM do Maven cita esta licença sem o texto dela."
+    },
+    "readTerms": "Ler os termos",
+    "projectPage": "Página do projeto",
+    "a11y": {
+      "toggle": "Mostra ou oculta a licença"
+    }
   }
 }

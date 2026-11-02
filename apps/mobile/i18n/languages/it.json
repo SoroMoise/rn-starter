@@ -89,6 +89,7 @@
     "legalAndSupport": "Legale e supporto",
     "privacyPolicy": "Informativa sulla privacy",
     "termsOfService": "Termini di servizio",
+    "openSourceLicences": "Licenze open source",
     "support": "Supporto",
     "rateApp": "Valuta questa app",
     "languageChanged": "Lingua aggiornata",
@@ -152,6 +153,14 @@
     "messageManual": "Riavvia l'app per applicarlo.",
     "announcement": "Cambio della direzione di lettura. Riavvia l'app per applicarlo."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Aggiornamento pronto",
+      "body": "Riavvia l'app per terminare l'installazione della nuova versione.",
+      "restart": "Riavvia",
+      "later": "Più tardi"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Sblocca tutte le funzionalità",
@@ -203,7 +212,12 @@
     "trustStore": "Pagamento protetto da {{store}}",
     "trustTrial": "Nulla da pagare durante la prova gratuita",
     "trustCancel": "Annulla quando vuoi, senza impegno",
-    "trustOneTime": "Un solo pagamento, nessun abbonamento"
+    "trustOneTime": "Un solo pagamento, nessun abbonamento",
+    "lifetimeOffer": {
+      "title": "Non ami gli abbonamenti?",
+      "body": "Paga una volta sola e tieni Pro per sempre. Niente da rinnovare, niente da annullare.",
+      "decline": "No, grazie"
+    }
   },
   "premiumGate": {
     "unlock": "Sblocca",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Promemoria",
     "channelDescription": "Promemoria locali programmati"
+  },
+  "licences": {
+    "title": "Licenze open source",
+    "intro": "L'app è costruita con il software qui sotto. Tocca una voce per leggere la sua licenza così come l'hanno scritta i suoi autori.",
+    "sections": {
+      "app": "Librerie dell'app",
+      "native": "Librerie native",
+      "fonts": "Font",
+      "android": "Librerie Android"
+    },
+    "androidPending": "Questa versione non include l'elenco delle sue librerie Android: lo scrive la build di rilascio.",
+    "origin": {
+      "repository": "Il pacchetto non include alcun file di licenza: questo testo è quello del suo repository.",
+      "spdx": "Il pacchetto non include il testo della licenza: questo è il testo standard della licenza che dichiara, con il suo autore indicato come titolare dei diritti quando il pacchetto ne indica uno. L'avviso di copyright del progetto è nel suo codice sorgente.",
+      "spdxTemplate": "Il testo standard della licenza dichiarata dal suo POM Maven, con il suo editore indicato come titolare dei diritti quando il POM ne indica uno. L'avviso di copyright del progetto è nel suo codice sorgente.",
+      "pom": "Il suo POM Maven nomina questa licenza senza includerne il testo."
+    },
+    "readTerms": "Leggi le condizioni",
+    "projectPage": "Pagina del progetto",
+    "a11y": {
+      "toggle": "Mostra o nasconde la licenza"
+    }
   }
 }

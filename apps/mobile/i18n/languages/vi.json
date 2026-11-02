@@ -89,6 +89,7 @@
     "legalAndSupport": "Pháp lý & hỗ trợ",
     "privacyPolicy": "Chính sách quyền riêng tư",
     "termsOfService": "Điều khoản dịch vụ",
+    "openSourceLicences": "Giấy phép nguồn mở",
     "support": "Hỗ trợ",
     "rateApp": "Đánh giá ứng dụng này",
     "languageChanged": "Đã cập nhật ngôn ngữ",
@@ -152,6 +153,14 @@
     "messageManual": "Khởi động lại ứng dụng để áp dụng.",
     "announcement": "Đang đổi chiều đọc. Khởi động lại ứng dụng để áp dụng."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Cập nhật đã sẵn sàng",
+      "body": "Khởi động lại ứng dụng để hoàn tất việc cài đặt phiên bản mới.",
+      "restart": "Khởi động lại",
+      "later": "Để sau"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Mở khóa toàn bộ tính năng",
@@ -203,7 +212,12 @@
     "trustStore": "Thanh toán được bảo mật bởi {{store}}",
     "trustTrial": "Không phải trả gì trong thời gian dùng thử miễn phí",
     "trustCancel": "Hủy bất cứ lúc nào, không ràng buộc",
-    "trustOneTime": "Trả một lần, không đăng ký"
+    "trustOneTime": "Trả một lần, không đăng ký",
+    "lifetimeOffer": {
+      "title": "Không thích gói đăng ký?",
+      "body": "Trả một lần và dùng Pro mãi mãi. Không phải gia hạn, không phải hủy.",
+      "decline": "Không, cảm ơn"
+    }
   },
   "premiumGate": {
     "unlock": "Mở khóa",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "Lời nhắc",
     "channelDescription": "Lời nhắc cục bộ theo lịch"
+  },
+  "licences": {
+    "title": "Giấy phép nguồn mở",
+    "intro": "Ứng dụng được xây dựng bằng các phần mềm bên dưới. Chạm vào một mục để đọc giấy phép đúng như tác giả đã viết.",
+    "sections": {
+      "app": "Thư viện của ứng dụng",
+      "native": "Thư viện native",
+      "fonts": "Phông chữ",
+      "android": "Thư viện Android"
+    },
+    "androidPending": "Bản dựng này không chứa danh sách thư viện Android của nó: bản dựng phát hành sẽ ghi danh sách này.",
+    "origin": {
+      "repository": "Gói không kèm tệp giấy phép nên đây là văn bản lấy từ kho mã của gói.",
+      "spdx": "Gói không kèm văn bản giấy phép: đây là văn bản chuẩn của giấy phép mà gói khai báo, ghi tác giả là chủ sở hữu bản quyền nếu gói có nêu tên. Thông báo bản quyền riêng của dự án nằm trong mã nguồn.",
+      "spdxTemplate": "Văn bản chuẩn của giấy phép mà Maven POM của gói khai báo, ghi nhà phát hành là chủ sở hữu bản quyền nếu POM có nêu tên. Thông báo bản quyền riêng của dự án nằm trong mã nguồn.",
+      "pom": "Maven POM của gói nêu tên giấy phép này nhưng không kèm văn bản."
+    },
+    "readTerms": "Đọc điều khoản",
+    "projectPage": "Trang dự án",
+    "a11y": {
+      "toggle": "Hiện hoặc ẩn giấy phép"
+    }
   }
 }

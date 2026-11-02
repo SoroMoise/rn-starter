@@ -89,6 +89,7 @@
     "legalAndSupport": "Informacje prawne i pomoc",
     "privacyPolicy": "Polityka prywatności",
     "termsOfService": "Regulamin",
+    "openSourceLicences": "Licencje open source",
     "support": "Pomoc",
     "rateApp": "Oceń tę aplikację",
     "languageChanged": "Język zaktualizowany",
@@ -155,6 +156,14 @@
     "messageManual": "Uruchom aplikację ponownie, aby zastosować zmianę.",
     "announcement": "Zmiana kierunku czytania. Uruchom aplikację ponownie, aby zastosować zmianę."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Aktualizacja gotowa",
+      "body": "Uruchom aplikację ponownie, aby dokończyć instalację nowej wersji.",
+      "restart": "Uruchom ponownie",
+      "later": "Później"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Odblokuj wszystkie funkcje",
@@ -206,7 +215,12 @@
     "trustStore": "Płatność zabezpiecza {{store}}",
     "trustTrial": "Nic nie płacisz w okresie próbnym",
     "trustCancel": "Anuluj w dowolnej chwili, bez zobowiązań",
-    "trustOneTime": "Jedna płatność, bez subskrypcji"
+    "trustOneTime": "Jedna płatność, bez subskrypcji",
+    "lifetimeOffer": {
+      "title": "Nie przepadasz za subskrypcjami?",
+      "body": "Zapłać raz i zachowaj Pro na stałe. Nic do odnawiania, nic do anulowania.",
+      "decline": "Nie, dziękuję"
+    }
   },
   "premiumGate": {
     "unlock": "Odblokuj",
@@ -219,5 +233,27 @@
   "notifications": {
     "channelName": "Przypomnienia",
     "channelDescription": "Zaplanowane przypomnienia lokalne"
+  },
+  "licences": {
+    "title": "Licencje open source",
+    "intro": "Aplikacja powstała z użyciem poniższego oprogramowania. Dotknij pozycji, aby przeczytać jej licencję w oryginalnym brzmieniu autorów.",
+    "sections": {
+      "app": "Biblioteki aplikacji",
+      "native": "Biblioteki natywne",
+      "fonts": "Czcionki",
+      "android": "Biblioteki Androida"
+    },
+    "androidPending": "W tej wersji brakuje listy bibliotek Androida: tworzy ją dopiero kompilacja wydania.",
+    "origin": {
+      "repository": "Pakiet nie zawiera pliku licencji: ten tekst pochodzi z jego repozytorium.",
+      "spdx": "Pakiet nie zawiera tekstu licencji: to standardowy tekst licencji, którą deklaruje, z jego autorem jako właścicielem praw, jeśli pakiet go wskazuje. Własna informacja o prawach autorskich projektu znajduje się w jego kodzie źródłowym.",
+      "spdxTemplate": "Standardowy tekst licencji, którą deklaruje jego Maven POM, z jego wydawcą jako właścicielem praw, jeśli POM go wskazuje. Własna informacja o prawach autorskich projektu znajduje się w jego kodzie źródłowym.",
+      "pom": "Jego Maven POM wymienia tę licencję bez jej tekstu."
+    },
+    "readTerms": "Przeczytaj warunki",
+    "projectPage": "Strona projektu",
+    "a11y": {
+      "toggle": "Pokazuje lub ukrywa licencję"
+    }
   }
 }

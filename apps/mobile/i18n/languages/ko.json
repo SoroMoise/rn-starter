@@ -89,6 +89,7 @@
     "legalAndSupport": "법적 고지 및 지원",
     "privacyPolicy": "개인정보 처리방침",
     "termsOfService": "서비스 이용약관",
+    "openSourceLicences": "오픈소스 라이선스",
     "support": "지원",
     "rateApp": "앱 평가하기",
     "languageChanged": "언어를 변경했어요",
@@ -152,6 +153,14 @@
     "messageManual": "앱을 다시 시작하면 적용돼요.",
     "announcement": "읽기 방향을 바꾸는 중이에요. 앱을 다시 시작하면 적용돼요."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "업데이트 준비 완료",
+      "body": "새 버전 설치를 마치려면 앱을 다시 시작해 주세요.",
+      "restart": "다시 시작",
+      "later": "나중에"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "모든 기능 잠금 해제",
@@ -203,7 +212,12 @@
     "trustStore": "{{store}}의 안전한 결제",
     "trustTrial": "무료 체험 중에는 결제되지 않아요",
     "trustCancel": "언제든 취소 가능, 약정 없음",
-    "trustOneTime": "한 번만 결제, 구독 없음"
+    "trustOneTime": "한 번만 결제, 구독 없음",
+    "lifetimeOffer": {
+      "title": "구독이 부담스러우세요?",
+      "body": "한 번만 결제하면 Pro를 평생 쓸 수 있어요. 갱신할 것도, 해지할 것도 없어요.",
+      "decline": "괜찮아요"
+    }
   },
   "premiumGate": {
     "unlock": "잠금 해제",
@@ -216,5 +230,27 @@
   "notifications": {
     "channelName": "리마인더",
     "channelDescription": "예약된 로컬 리마인더"
+  },
+  "licences": {
+    "title": "오픈소스 라이선스",
+    "intro": "이 앱은 아래 소프트웨어로 만들었어요. 항목을 누르면 저작자가 쓴 그대로의 라이선스를 읽을 수 있어요.",
+    "sections": {
+      "app": "앱 라이브러리",
+      "native": "네이티브 라이브러리",
+      "fonts": "글꼴",
+      "android": "Android 라이브러리"
+    },
+    "androidPending": "이 빌드에는 Android 라이브러리 목록이 없어요. 릴리스 빌드가 목록을 만들어요.",
+    "origin": {
+      "repository": "패키지에 라이선스 파일이 없어서, 저장소에 있는 텍스트를 보여드려요.",
+      "spdx": "패키지에 라이선스 본문이 없어요. 패키지가 선언한 라이선스의 표준 본문이며, 패키지에 저작자 이름이 있으면 그 저작자를 저작권자로 적었어요. 프로젝트 자체의 저작권 표시는 소스 코드에 있어요.",
+      "spdxTemplate": "Maven POM이 선언한 라이선스의 표준 본문이며, POM에 게시자 이름이 있으면 그 게시자를 저작권자로 적었어요. 프로젝트 자체의 저작권 표시는 소스 코드에 있어요.",
+      "pom": "Maven POM에 이 라이선스의 이름만 있고 본문은 없어요."
+    },
+    "readTerms": "약관 읽기",
+    "projectPage": "프로젝트 페이지",
+    "a11y": {
+      "toggle": "라이선스를 표시하거나 숨겨요"
+    }
   }
 }

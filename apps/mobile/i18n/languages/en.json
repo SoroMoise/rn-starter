@@ -153,6 +153,14 @@
     "messageManual": "Restart the app to apply it.",
     "announcement": "Switching reading direction. Restart the app to apply it."
   },
+  "appUpdate": {
+    "ready": {
+      "title": "Update ready",
+      "body": "Restart the app to finish installing the new version.",
+      "restart": "Restart",
+      "later": "Later"
+    }
+  },
   "paywall": {
     "title": "RN Starter Pro",
     "subtitle": "Unlock every feature",

@@ -1,4 +1,5 @@
 import { useThemeColor } from '@/components/Themed'
+import { AppUpdateCard } from '@/components/layout/AppUpdateCard'
 import { RatingAskHost } from '@/components/layout/RatingAskHost'
 import { TelemetryEffects } from '@/components/layout/TelemetryEffects'
 import { OnboardingScreen } from '@/components/onboarding/OnboardingScreen'
@@ -109,6 +110,7 @@ function AppContent() {
   return (
     <>
       <RootStack />
+      <AppUpdateCard />
       {isSessionStarted && <RatingAskHost />}
     </>
   )

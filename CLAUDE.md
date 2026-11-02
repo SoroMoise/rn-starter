@@ -8,11 +8,11 @@ Also: `apps/mobile/ADS.md` (every ad placement's unit, cadence, gates and invari
 
 Monorepo boilerplate for a premium React Native / Expo app (pnpm workspaces + Turborepo). Identity placeholders: `RN Starter` / `rn-starter` / `com.yourcompany.rnstarter` / scheme `rnstarter`.
 
-- **`apps/mobile`** — Expo SDK 54 / RN 0.81.5 / React 19: AdMob, RevenueCat, contextual paywall on a generic action counter, Firebase Analytics + Crashlytics, local notifications (unwired), rating prompt, 20 languages, light/dark + RTL, onboarding (welcome → premium), open-source licences screen.
+- **`apps/mobile`** — Expo SDK 54 / RN 0.81.5 / React 19: AdMob, RevenueCat, contextual paywall on a generic action counter, Firebase Analytics + Crashlytics, local notifications (unwired), rating prompt, Play's flexible in-app update, 20 languages, light/dark + RTL, onboarding (welcome → premium), open-source licences screen.
 - **`apps/api`** — Cloudflare Worker (Hono), optional with `packages/shared`: `bash scripts/remove-api.sh` removes both (see Data fetching).
 - **`apps/web`** — Next.js 16 static site (EN root, FR under `/fr`): home, privacy, terms.
 
-**`scripts/setup.sh` sweeps the identity everywhere it is written and must stay exhaustive**: `app.config.js`, `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, the 20 translation files, `google-services.json.example`, `apps/web/lib/site.ts`, `apps/api/wrangler.toml`, the root `package.json`, and the local modules' Android package (`com.yourcompany.appenvironment`: Gradle `group`/`namespace`, Kotlin `package` and directory, the class `expo-module.config.json` registers, all moved together). It also writes the site and support address into `constants/legal.ts` and starts `.last_release_commit` at the current commit. Anything new that hardcodes the name, slug, bundle id, site or support address joins the sweep in the same change.
+**`scripts/setup.sh` sweeps the identity everywhere it is written and must stay exhaustive**: `app.config.js`, `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, the 20 translation files, `google-services.json.example`, `apps/web/lib/site.ts`, `apps/api/wrangler.toml`, the root `package.json`, and every local module's Android package (`com.yourcompany.appenvironment`, `com.yourcompany.inappupdates`: Gradle `group`/`namespace`, Kotlin `package` and directory, the class `expo-module.config.json` registers, all moved together; the sweep walks every folder under `modules/`, so a new module takes the `com.yourcompany.<name>` prefix and needs nothing more). It also writes the site and support address into `constants/legal.ts` and starts `.last_release_commit` at the current commit. Anything new that hardcodes the name, slug, bundle id, site or support address joins the sweep in the same change.
 
 ## Commands
 
@@ -97,8 +97,17 @@ The starter asks for nothing and schedules nothing.
 
 ### Promo coordination (`services/promo/`)
 
-- **`promoCoordinator` is the single authority over interruptive surfaces** (`PromoSurface`): no stacking (`isSurfaceVisible`) and **one automatic interruption per session, all types** (`canPresentAutoPromo` / `markAutoPromoShown`). User-opened paywalls and the consent form register visibility but spend no budget. A new surface is a `PromoSurface` member and its setter.
+- **`promoCoordinator` is the single authority over interruptive surfaces** (`PromoSurface`): no stacking (`isSurfaceVisible`) and **one automatic interruption per session, all types** (`canPresentAutoPromo` / `markAutoPromoShown`). User-opened paywalls and the consent form register visibility but spend no budget. A new surface is a `PromoSurface` member and its setter. Play's in-app update sheet is no promo: it is not a `PromoSurface`, spends no budget, and only reads `isSurfaceVisible()` to wait (In-app updates).
 - **A failure the user just met mutes automatic promos**: `sessionSignals` holds one friction for `FRICTION_TTL_MS` (10 min); the contextual paywall and rating ask refuse as `friction`. Mark a purchase/restore that failed for a reason other than the user's own (cancelled sheet, pending payment) where the failure is shown; not a failed price load, boot sync or `configure`. An app marks its own failures with a `FrictionReason` and `markFriction(reason)`. No `resetSession()`: the process is the session.
+
+### In-app updates (`modules/in-app-updates`, Android)
+
+Play's In-App Updates, **flexible flow only**: Play's own sheet, the download runs while the app stays usable. The local module (`com.google.android.play:app-update` 2.1.0, no permission, no config plugin) exposes the update info, the flexible flow, its install states and `completeUpdate`; `appUpdateService` wraps it, `shouldOfferUpdate` (`appUpdatePolicy.ts`) decides.
+
+- **Nothing installs on its own**: `completeUpdate` restarts the app and would drop whatever the user had not saved, so only the card's *Restart* calls it. Once downloaded, `AppUpdateCard` ("Update ready", above the tab bar and the tab's banner): *Restart* → `completeUpdate`, *Later* hides it for the launch.
+- **Offered at once, once per version**: no staleness delay. `useInAppUpdate` asks Play 2 s after a launch or a return settles on the tabs and opens the sheet for a version code not yet offered; `@app_update_offered_version` is written as the sheet opens, accepted or declined, so that version never comes back and a later one does.
+- **Never during the onboarding, off the tabs or over a promo surface**: mounted after the onboarding gate; stack routes are where an app's work happens, so the sheet and the card wait for `(tabs)`; a check that finds `promoCoordinator.isSurfaceVisible()` (paywall, interstitial, consent form) waits for it to close. **It is not a promo and spends no budget**: an update is no sale, and it must not eat the session's one interruption. An app whose tabs hold unsaved work, or a full-screen surface of its own, adds that to `isOpenToTheSheet` and to the card's visibility.
+- Play's codes meaning no update can come from it (`-3`, `-5`, `-6`, `-9`, `-10`: a sideloaded or debug build, no Play Store) are silent; others go to Crashlytics with their code. Kill switch `IN_APP_UPDATE_ENABLED` (`constants/config.ts`). Events `app_update_offered`, `app_update_answered` (`result`), `app_update_downloaded`, `app_update_restarted`: no version, nothing of the user's.
 
 ## Data fetching
 
@@ -247,15 +256,15 @@ What costs a rejected release or suspended account. Most sits beside its code (p
 
 ## Map
 
-Providers, outer to inner (`app/_layout.tsx`): `SafeAreaProvider > GestureHandlerRootView` (`TelemetryEffects`, `RTLRestartBanner` beside) `> QueryProvider > ThemeProvider` (mounts `AppSystemBars`) `> ToastProvider > SubscriptionProvider` (RevenueCat, `PaywallModal`) `> AdFreeProvider > AppContent` (onboarding gate, then the root Stack, `RatingAskHost` once the session started).
+Providers, outer to inner (`app/_layout.tsx`): `SafeAreaProvider > GestureHandlerRootView` (`TelemetryEffects`, `RTLRestartBanner` beside) `> QueryProvider > ThemeProvider` (mounts `AppSystemBars`) `> ToastProvider > SubscriptionProvider` (RevenueCat, `PaywallModal`) `> AdFreeProvider > AppContent` (onboarding gate, then the root Stack, `AppUpdateCard`, `RatingAskHost` once the session started).
 
 - Routes: `(tabs)` = `index` (premium showcase) and `settings` (lazy; `LegalSupportSection`), stack route `licences` (from Settings), `OnboardingScreen` (welcome → premium value) until `onboardingStore.isCompleted`.
 - Stores: `settingsStore` (theme `'auto'|'light'|'dark'`, language, RTL restart) and `onboardingStore` (`isCompleted`, `attemptedSkipTrial`, `hasSeenProWelcome`) persist; `adBannerStore` is in memory.
-- Storage: main MMKV instance id `rn-starter` (a literal `setup.sh` sweeps); `secure.ts` instance `entitlements` (subscription cache, ad-free window), excluded from backup; `keys.ts` lists every key; `domains/` has `adFree`, `ads`, `engagement`, `review`, `subscription`.
+- Storage: main MMKV instance id `rn-starter` (a literal `setup.sh` sweeps); `secure.ts` instance `entitlements` (subscription cache, ad-free window), excluded from backup; `keys.ts` lists every key; `domains/` has `adFree`, `ads`, `appUpdate` (`@app_update_offered_version`), `engagement`, `review`, `subscription`.
 - `versionCode` in `app.config.js` is `major*1000000 + minor*1000 + patch`.
 - Rating numbers (`REVIEW_REQUEST_CONFIG`, `constants/rating.ts`): 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `RatingAskHost`: `RATING_ASK_MIN_AWAY_MS` 5 min, `RATING_ASK_SETTLE_MS` 1.2 s. Contextual paywall limits: `CONTEXTUAL_PAYWALL_CONFIG` (lifetime-capped impressions, each arming a cooldown).
 - `reportAdFailure({ error, source })` sorts by the library's code: no fill, network, server, timeout, internal error, OS too old, `null-activity`/`nil-vc` are breadcrumbs; anything else is a non-fatal. `adsAllowedInEnvironment()` gates the banner, both ad services and consent.
-- Config plugins (`apps/mobile/plugins/`): `withAndroidSigning`, `withReleaseEnvGuard`, `withGradleMemory`, `withGradleBuildCache`, `withCrashlyticsMapping`, `withAndroidFontFilter`, `withBackupRules`, `withAndroidConfigChanges`; local module `modules/app-environment` (Android, reads `firebase.test.lab`).
+- Config plugins (`apps/mobile/plugins/`): `withAndroidSigning`, `withReleaseEnvGuard`, `withGradleMemory`, `withGradleBuildCache`, `withCrashlyticsMapping`, `withAndroidFontFilter`, `withBackupRules`, `withAndroidConfigChanges`; local modules (Android) `modules/app-environment` (reads `firebase.test.lab`) and `modules/in-app-updates` (Play's In-App Updates).
 - `PRO_BENEFITS` holds one entry (the ads); `ENTITLEMENT_PREMIUM = 'premium'`; `PurchaseSurface`: `paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`.
 
 ## Known gaps — do not "fix" blindly
@@ -272,6 +281,7 @@ Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
 - Every build opens `/privacy` and `/terms` in English whatever its language (choosing `/fr/privacy` would change the paths contract). `APP_STORE_APP_ID` is `null` until iOS.
 - The committed licences list says `pending` for Android libraries until a local `build:aab` (or `licences:android` on a prebuilt tree) writes them; never fill it by hand.
 - The starter ships no data migration (no installs): an app porting a storage change onto a released build owes its users one.
+- In-app updates were verified by `expo prebuild` only (the module autolinks, the manifest gains no permission): its Kotlin has not been compiled in the starter and nothing has run on a phone. Play answers only a build it installed (internal app sharing or a track): a sideloaded or debug build never sees the sheet. `appUpdate.ready.*` exists in EN and FR only until a translation session.
 
 ## Testing
 

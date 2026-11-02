@@ -25,6 +25,9 @@ export const KEYS = {
   CONTEXTUAL_PAYWALL_SHOWN_COUNT: '@contextual_paywall_shown_count',
   ENGAGEMENT_ACTION_COUNT: '@engagement_action_count',
 
+  // In-app update: the Play version code the update sheet was last offered for
+  APP_UPDATE_OFFERED_VERSION: '@app_update_offered_version',
+
   // Zustand-persisted stores
   USER_SETTINGS: 'user_settings',
   ONBOARDING_SEEN: 'onboarding_seen',

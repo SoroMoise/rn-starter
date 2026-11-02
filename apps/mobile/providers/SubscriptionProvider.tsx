@@ -51,8 +51,6 @@ function failureMessageKey(reason: PurchaseFailure): string {
 
 export type RestoreOutcome = 'restored' | 'already_premium' | 'nothing_found'
 
-// Play reports a subscription and its base plan apart, while the store product carries them
-// joined (`subId:basePlanId`): compared on the subscription id alone, no Play plan ever matches.
 function entitlementProductIds(entitlement: PurchasesEntitlementInfo): string[] {
   const { productIdentifier, productPlanIdentifier } = entitlement
   return productPlanIdentifier
@@ -60,9 +58,6 @@ function entitlementProductIds(entitlement: PurchasesEntitlementInfo): string[] 
     : [productIdentifier]
 }
 
-// Matched against the offer the store actually returned, never against a product id
-// written here: a renamed product, a third plan or a one-time purchase must not be
-// reported as something it is not.
 function deriveActiveSubscription({
   customerInfo,
   plans,
@@ -77,8 +72,6 @@ function deriveActiveSubscription({
   return plan?.period ?? 'other'
 }
 
-// The store keeps a subscription whose payment failed active through its own grace period, and
-// RevenueCat flags that period; the date is when access ends if the payment is never fixed.
 function readBillingIssue(customerInfo: CustomerInfo): BillingIssue | null {
   const entitlement = customerInfo.entitlements.active[ENTITLEMENT_PREMIUM]
   if (!entitlement?.billingIssueDetectedAtMillis) return null
@@ -86,9 +79,6 @@ function readBillingIssue(customerInfo: CustomerInfo): BillingIssue | null {
   return { accessEndsAtMs: entitlement.expirationDateMillis }
 }
 
-// Development overrides, read once. They replace the store's answer inside
-// applyCustomerInfo and never reach subscriptionStorage, so dropping the variable
-// brings the real tier back with nothing to undo. FORCE_FREE wins over FORCE_PRO.
 function readTierOverride(): { isPremium: boolean } | null {
   const purchases = Constants.expoConfig?.extra?.purchases
   if (purchases?.forceFree === true) return { isPremium: false }
@@ -98,9 +88,6 @@ function readTierOverride(): { isPremium: boolean } | null {
 
 const TIER_OVERRIDE = readTierOverride()
 
-// Read before the store has answered, and when it could not be asked at all: a
-// subscriber on a plane keeps their Pro until the last expiry the store reported.
-// A response that reports no active entitlement is a verified answer and never lands here.
 function unverifiedIsPremium(): boolean {
   return subscriptionStorage.derive(Date.now())
 }
@@ -109,7 +96,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const { showToast } = useToast()
   const { t } = useTranslation()
 
-  // Read once: it only seeds the state below, and it goes to disk to do it.
   const cachedIsPremium = useMemo(() => TIER_OVERRIDE?.isPremium ?? unverifiedIsPremium(), [])
 
   const [isPremium, setIsPremium] = useState(cachedIsPremium)
@@ -125,8 +111,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
   const appState = useRef(AppState.currentState)
   const isConfiguredRef = useRef(false)
   const paywallSourceRef = useRef<PaywallSource>('settings')
-  // Read inside applyCustomerInfo, which must not re-create itself when the offer
-  // reloads; the init effect depends on it.
   const plansRef = useRef<OfferingPlan[]>([])
 
   const plans = useMemo(() => buildOfferingPlans(offering), [offering])
@@ -144,8 +128,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     AdService.setPremium(isPremium)
   }, [isPremium])
 
-  // The single place a CustomerInfo becomes the app's tier, so the boot read, the
-  // foreground sync, a purchase and a restore cannot disagree.
   const applyCustomerInfo = useCallback(
     (customerInfo: CustomerInfo): { isPremium: boolean; plan: PlanPeriod | null } => {
       if (TIER_OVERRIDE) {
@@ -195,8 +177,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     setIsLoadingPrices(true)
     try {
       const offerings = await purchaseService.getOfferings()
-      // Only `current`: falling back to another offering would misprice the screen
-      // and detach the purchase from the experiment measuring it.
       setOffering(offerings.current)
     } catch (err) {
       purchaseService.reportFailure({ error: err, source: 'offerings_load' })
@@ -210,20 +190,14 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
       await purchaseService.initialize()
     } catch (err) {
       purchaseService.reportFailure({ error: err, source: 'subscription_init' })
-      // Nothing will quote a price: the notice offers its retry instead of spinning for good.
       setIsLoadingPrices(false)
       return
     }
     isConfiguredRef.current = true
 
-    // Entitlement and prices are two independent calls, each with its own error
-    // boundary: a store that will not quote a price must not cost the subscriber
-    // their tier, which is what a single try around Promise.all did.
     await Promise.all([syncPremiumState(), loadOfferings()])
   }, [loadOfferings, syncPremiumState])
 
-  // What the user retries starts the store again when configure failed: an SDK that was never
-  // configured can only fail the same way.
   const retryPrices = useCallback(
     () => (isConfiguredRef.current ? loadOfferings() : startStore()),
     [loadOfferings, startStore]
@@ -271,10 +245,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         const customerInfo = await purchaseService.purchasePackage({ pkg: plan.pkg })
         const applied = applyCustomerInfo(customerInfo)
 
-        // The purchase's own answer is the answer. A pending payment rejects instead of
-        // resolving, so a purchase that resolves without the entitlement is a sale the
-        // dashboard never attached to ENTITLEMENT_PREMIUM: the user paid, and "Welcome to
-        // Pro!" would be a lie.
         if (!purchaseService.isPremiumActive({ customerInfo })) {
           const active = Object.keys(customerInfo.entitlements.active).join(', ') || 'none'
           const message = `${product.identifier} granted no "${ENTITLEMENT_PREMIUM}" (active: ${active})`
@@ -297,8 +267,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           surface,
           product_id: product.identifier,
           offering_id: offeringId,
-          // The store quotes its own currency: logged as USD, a ₹3,499 annual plan
-          // reads as $3,499.
           revenue: product.price,
           currency: product.currencyCode,
           ...conversionContext,
@@ -312,7 +280,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
           analyticsService.track('purchase_cancelled', { plan: plan.period, source, surface })
           return
         }
-        // The store's sheet has told the user; the entitlement follows once the store settles it.
         if (reason === 'pending') {
           analyticsService.track('purchase_pending', {
             plan: plan.period,
@@ -348,9 +315,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
         const customerInfo = await purchaseService.restorePurchases()
         const { isPremium: nowPremium, plan } = applyCustomerInfo(customerInfo)
 
-        // Three outcomes, not a boolean: a restore that found nothing and one that
-        // genuinely brought a subscription back are the same event otherwise, and the
-        // difference is the only thing the funnel is asked about here.
         const outcome: RestoreOutcome = !nowPremium
           ? 'nothing_found'
           : wasAlreadyPremium
@@ -382,9 +346,6 @@ export function SubscriptionProvider({ children }: { children: React.ReactNode }
     [applyCustomerInfo, isPremium, showToast, t]
   )
 
-  // The one gate every source passes, so a source that does not exist yet cannot sell to a
-  // subscriber or ahead of the onboarding's own pitch, and `paywall_shown` only counts
-  // impressions that could convert.
   const openPaywall = useCallback(
     async ({ source }: { source: PaywallSource }): Promise<boolean> => {
       if (isPremium) return false

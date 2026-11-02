@@ -7,9 +7,6 @@ export function absoluteUrl(path: string): string {
   return path === '/' ? SITE.url : `${SITE.url}${path}`
 }
 
-// hreflang only counts when it is reciprocal and self-referencing: every locale's page lists all of
-// them, itself included, plus the x-default a crawler falls back to. The head tags and the sitemap
-// both read this, so the two declarations cannot contradict each other.
 export function languageAlternates(route: RouteKey): Record<string, string> {
   const alternates: Record<string, string> = {}
   for (const locale of LOCALES) alternates[HTML_LANG[locale]] = absoluteUrl(ROUTES[route][locale])

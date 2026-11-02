@@ -2,7 +2,6 @@ import i18n, { ensureLanguageLoaded, getActiveLanguageFromStorage } from '@/i18n
 import * as Notifications from 'expo-notifications'
 import { Platform } from 'react-native'
 
-// `defaultChannel` in app.config.js names the same id.
 export const NOTIFICATION_CHANNEL_ID = 'reminders'
 
 const VIBRATION_PATTERN = [0, 250, 250, 250]

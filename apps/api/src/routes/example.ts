@@ -4,7 +4,6 @@ import type { Env } from '../types'
 
 export const example = new Hono<{ Bindings: Env }>()
 
-// Rate limit and API key are applied to the whole group in index.ts.
 example.get('/', (c) => c.json({ message: 'authenticated', at: Date.now() }))
 
 example.get('/premium', entitlementContext, (c) => {

@@ -45,8 +45,6 @@ export default {
   },
 }
 
-// Two fixed sets rather than a fresh object per call: consumers spread these into
-// style arrays, where a new identity on every render defeats every memo downstream.
 const SHADOWS = {
   light: {
     small: {

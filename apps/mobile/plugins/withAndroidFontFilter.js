@@ -2,30 +2,12 @@ const fs = require('fs')
 const path = require('path')
 const { withAppBuildGradle } = require('@expo/config-plugins')
 
-// Strips the @expo/vector-icons fonts the app does not use from the Android build. Metro ships the
-// font of every family a module imports, and an import from the package index imports all fifteen:
-// nineteen files, 4 MB, where Ionicons alone is 384 KB. They reach the build from three places,
-// and all three are cleaned because mergeReleaseResources aggregates them:
-// 1. createBundleReleaseJsAndAssets → generated/res/.../raw/ (the Metro task)
-// 2. mergeReleaseResources → merged-not-compiled-resources/.../raw/
-// 3. packageReleaseResources → packaged_res/.../raw/ (AAB only)
-//
-// The list is written by hand rather than inferred from the imports, since a family can be drawn
-// by a dependency the app never imports. The guard below refuses the prebuild instead when a
-// family the app imports is missing from it: without the guard, the omission only shows in a
-// release build, as empty squares where the icons should be.
 const KEEP_FONTS = ['Ionicons']
 
-// The block is replaced at every prebuild rather than skipped once present: a prebuild without
-// --clean re-runs this on the existing build.gradle, and a family added to KEEP_FONTS after the
-// guard asked for it must reach the build then.
 const BLOCK_BEGIN = '// @generated begin withAndroidFontFilter'
 const BLOCK_END = '// @generated end withAndroidFontFilter'
 const GENERATED_BLOCK = new RegExp(`\\n?${BLOCK_BEGIN}[\\s\\S]*?${BLOCK_END}\\n?`)
 
-// A family is a module of @expo/vector-icons that requires a font file, and some require several:
-// FontAwesome5 draws from FontAwesome5_Regular, _Solid and _Brands. Read off the package itself,
-// so a kept family keeps every file it loads.
 function readFamilyFonts(projectRoot) {
   const packageJson = require.resolve('@expo/vector-icons/package.json', { paths: [projectRoot] })
   const buildDirectory = path.join(path.dirname(packageJson), 'build')
@@ -41,9 +23,6 @@ function readFamilyFonts(projectRoot) {
   return families
 }
 
-// Metro names an Android resource after the asset's path, lowercased with every character outside
-// [a-z0-9_] dropped (@react-native/assets-registry): …_fonts_fontawesome5_solid.ttf. Anchoring on
-// `_<file>.ttf` keeps a kept family from sparing a neighbour whose name contains its own.
 function keptSuffixes(families) {
   return KEEP_FONTS.flatMap((family) => {
     const fonts = families.get(family)
@@ -109,16 +88,10 @@ const IGNORED_DIRECTORIES = new Set([
   'build',
 ])
 
-// One import or export statement from @expo/vector-icons: `type`, the bindings, the subpath. The
-// bindings cannot contain a quote, which keeps a match from reaching back into the statement
-// before it: the code has no semicolons to stop at.
 const ICON_IMPORT =
   /\b(?:import|export)\s+(type\s+)?([^'"`;]*?)\s*from\s*['"]@expo\/vector-icons(?:\/([A-Za-z0-9_]+))?['"]/g
-// A require() or a dynamic import(): Metro bundles the family either way.
 const ICON_CALL = /\b(?:require|import)\(\s*['"]@expo\/vector-icons\/([A-Za-z0-9_]+)['"]\s*\)/g
 
-// A commented-out import or an example in a doc comment draws nothing. `//` after a colon is a
-// URL inside a string, not a comment.
 const stripComments = (source) =>
   source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:])\/\/.*$/gm, '$1')
 
@@ -135,8 +108,6 @@ function collectSourceFiles(directory, files = []) {
   return files
 }
 
-// A type-only import ships no font, and a name that is not a family (createIconSet, a build/
-// path) draws nothing.
 function collectImportedFamilies({ projectRoot, families }) {
   const imported = new Set()
 

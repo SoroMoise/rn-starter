@@ -12,8 +12,6 @@ export function OfflineBanner() {
   const { isOnline } = useNetworkStatus()
   const isDark = useThemedColor()
 
-  // `accessibilityLiveRegion` is Android only (`BaseViewConfig.android.js`): VoiceOver hears the
-  // banner appear only through this announcement.
   useEffect(() => {
     if (!isOnline && Platform.OS === 'ios') {
       AccessibilityInfo.announceForAccessibility(t('common.offline'))

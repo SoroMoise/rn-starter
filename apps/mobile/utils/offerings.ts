@@ -37,7 +37,6 @@ function monthsInPeriod(iso: string | null | undefined): number | null {
   return total > 0 ? total : null
 }
 
-// `productCategory` is the authority; the rest is fallback for a store that didn't report one.
 function isOneTimePurchase(pkg: PurchasesPackage): boolean {
   const category = pkg.product.productCategory
   if (category === PRODUCT_CATEGORY.NON_SUBSCRIPTION) return true
@@ -62,7 +61,6 @@ function resolvePeriod({
 
 const DAYS_PER_UNIT: Record<string, number> = { DAY: 1, WEEK: 7, MONTH: 30, YEAR: 365 }
 
-// Only a zero intro price counts as a trial; a paid intro price is an offer.
 function readFreeTrial(pkg: PurchasesPackage): { hasTrial: boolean; trialDays: number | null } {
   const intro = pkg.product.introPrice
   if (!intro || intro.price !== 0) return { hasTrial: false, trialDays: null }
@@ -123,7 +121,6 @@ export function pickLifetimeOffer({
   return plans.find((plan) => plan.period === 'lifetime') ?? null
 }
 
-/** The shortest cycle in the offer: what a savings badge is measured against. */
 export function findSavingsReference(plans: OfferingPlan[]): OfferingPlan | null {
   return plans.reduce<OfferingPlan | null>((best, plan) => {
     if (plan.monthsPerCycle === null) return best

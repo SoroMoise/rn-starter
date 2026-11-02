@@ -2,7 +2,6 @@ import { createContext, useContext, useMemo } from 'react'
 import { Gesture } from 'react-native-gesture-handler'
 import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 
-// Children with a FlatList should use ModalBottomSheetFlatList, which attaches the scroll handler.
 export const ModalScrollContext = createContext<ReturnType<typeof useSharedValue<number>> | null>(
   null
 )
@@ -16,8 +15,6 @@ export function useIsSheetAtFullSnap(): boolean {
   return useContext(ModalSnapContext) === 1
 }
 
-// What a scrollable child that is not a list (a wheel, a carousel) blocks to keep a flick for
-// itself; the sheet's pan wins it otherwise. Null outside a sheet.
 export function useModalSheetPanGesture(): PanGestureType | null {
   return useContext(ModalDraggableContext)
 }

@@ -10,8 +10,6 @@ type TrustItem = { icon: ComponentProps<typeof Ionicons>['name']; text: string }
 
 const STORE_NAME = Platform.OS === 'ios' ? 'App Store' : 'Google Play'
 
-// Each line holds for the plan it sits under: a one-time purchase has nothing to cancel, and
-// only a free trial is free during its trial.
 export function PaywallTrustRow({ plan }: { plan: OfferingPlan | null }) {
   const { t } = useTranslation()
   const isDark = useThemedColor()

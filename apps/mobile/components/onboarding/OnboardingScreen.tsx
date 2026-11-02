@@ -20,9 +20,6 @@ import { BackHandler, View } from 'react-native'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
-// A step that depends on the device (a permission, a platform, a feature flag) is added here
-// from what that capability reports. The answer can arrive after the first frame and change the
-// list under the user, which is why every move below goes by step name, never by index.
 function buildSteps(): OnboardingStepKind[] {
   return ['welcome', 'premium']
 }
@@ -98,8 +95,6 @@ export function OnboardingScreen() {
     triggerSuccess()
   }, [markCompleted])
 
-  // Keyed on the entitlement, not on a purchase call: a promise resolves before React
-  // commits the new tier, and a restore or a purchase from the pitch itself calls nothing.
   useEffect(() => {
     if (!isSubscriptionInitialized || !isPremium) return
 
@@ -178,8 +173,6 @@ export function OnboardingScreen() {
     goToStep(previous)
   }, [currentStep, goToStep, stepKind, steps])
 
-  // Not a route: nothing below takes the back key but the app's exit, which would throw the whole
-  // flow away. The first step lets that default through: there is nothing behind it.
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
       if (currentStep === 0) return false

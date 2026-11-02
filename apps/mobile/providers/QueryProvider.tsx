@@ -11,8 +11,6 @@ import { isNonRetryableError } from '@/utils/apiErrors'
 const APP_VERSION = Constants.expoConfig?.version ?? 'dev'
 const QUERY_RETRIES = 3
 
-// React Native has no browser `online` event, so without a source the app always reads as online:
-// retries burn through while the device is offline, and `refetchOnReconnect` never fires.
 onlineManager.setEventListener((setOnline) => {
   setOnline(getIsOnline())
   return subscribeToNetworkStatus(setOnline)
@@ -58,9 +56,6 @@ const mmkvPersister = createAsyncStoragePersister({
   throttleTime: 1000,
 })
 
-// The query keys whose successful results survive a cold start. Empty by design:
-// which data is worth restoring is a per-app call, and a cache rehydrated under a
-// key the app no longer serves costs more than the refetch it saves.
 const PERSISTED_QUERY_KEYS: readonly string[] = []
 
 const persistOptions = {

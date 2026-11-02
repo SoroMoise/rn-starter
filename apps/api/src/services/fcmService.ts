@@ -80,7 +80,6 @@ export interface FCMPayloadParams {
   token: string
   title: string
   body: string
-  /** Optional key/value data delivered alongside the notification. */
   data?: Record<string, string>
 }
 

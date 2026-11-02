@@ -12,11 +12,6 @@ export default () => {
 
   const [major, minor, patch] = version.split('.').map(Number)
 
-  // Play only ever accepts a strictly higher versionCode, so the formula must be
-  // monotonic for every version this app will ever reach. Base 1000 per field
-  // keeps 1.99.999 below 2.0.0; the older base-100 form overflowed as soon as a
-  // minor or a patch hit 100 and made the next major a *lower* code, which Play
-  // rejects with no way back but a hand-picked bump.
   const versionCode = major * 1000000 + minor * 1000 + patch
 
   return {
@@ -32,11 +27,7 @@ export default () => {
       },
 
       orientation: 'portrait',
-      // The icon, the splash image and the adaptive foreground are drawn by
-      // scripts/generate-brand-assets.py, and the two background colours below match its BACKGROUND.
       icon: './assets/images/icon.png',
-
-      // userInterfaceStyle: 'automatic', For IOS
 
       splash: {
         image: './assets/images/splash-icon.png',
@@ -47,7 +38,6 @@ export default () => {
       ios: {
         supportsTablet: true,
         bundleIdentifier: 'com.yourcompany.rnstarter',
-        // @react-native-firebase/app refuses an iOS prebuild without this path, or without the file.
         googleServicesFile: './GoogleService-Info.plist',
         infoPlist: {
           NSUserTrackingUsageDescription:
@@ -80,9 +70,6 @@ export default () => {
           'android.permission.WRITE_EXTERNAL_STORAGE',
         ],
       },
-      // No `privacy` block: that key was expo.dev's project visibility, never a place for legal
-      // URLs, and SDK 54's config schema no longer has it. The links the app opens are constants
-      // (constants/legal.ts); the ones the stores show are entered in their consoles.
 
       plugins: [
         withAndroidConfigChanges,

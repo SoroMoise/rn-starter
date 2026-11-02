@@ -16,8 +16,6 @@ export type PaywallPlanOption = {
   trialBadge: string | null
 }
 
-// A cycle expressed in whole months reads as "every N months"; anything else
-// (a 10-day plan, a 3-week one) falls back to a generic label.
 const WHOLE_MONTH_TOLERANCE = 0.01
 
 function wholeMonths(plan: OfferingPlan): number | null {
@@ -50,8 +48,6 @@ export function planCtaLabel({ plan, t }: { plan: OfferingPlan; t: TFunction }):
   }
 }
 
-// The price with the period it buys: a one-time purchase has none, and a cycle the store
-// reports in no nameable unit keeps the bare price.
 function planPrice({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
   const price = plan.pkg.product.priceString
   switch (plan.period) {
@@ -72,9 +68,6 @@ function planPrice({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
   }
 }
 
-// What the store will charge and how often, stated beside the button that buys it: a surface
-// may show no plan card to carry the period, and a trial must say what it turns into. A
-// one-time purchase never "renews automatically".
 export function planLegalNote({ plan, t }: { plan: OfferingPlan; t: TFunction }): string {
   const price = planPrice({ plan, t })
   if (plan.period === 'lifetime') return t('paywall.legalNoteOneTime', { price })
@@ -86,11 +79,6 @@ export function planLegalNote({ plan, t }: { plan: OfferingPlan; t: TFunction })
   return t('paywall.legalNoteRecurring', { price })
 }
 
-/**
- * Everything a surface says about the offer and how it buys it, so that no two surfaces can
- * describe the same plan differently. The selection starts on the offering's default plan;
- * a surface that shows no plan list simply never changes it.
- */
 export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
   const { t } = useTranslation()
   const { plans, defaultPlan, lifetimeOffer, hasPrices, isLoadingPurchase, purchasePlan } =
@@ -103,13 +91,11 @@ export function usePaywallPlans({ source, surface }: PurchaseOrigin) {
 
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null)
 
-  // Keyed on id, not object identity: a foreground refetch rebuilds every plan object.
   const defaultPlanId = defaultPlan?.id ?? null
   useEffect(() => {
     setSelectedPlanId(defaultPlanId)
   }, [defaultPlanId])
 
-  // A plan the store stopped offering falls back to the default rather than selling nothing.
   const selectedPlan = useMemo(
     () => listedPlans.find((plan) => plan.id === selectedPlanId) ?? defaultPlan,
     [listedPlans, selectedPlanId, defaultPlan]

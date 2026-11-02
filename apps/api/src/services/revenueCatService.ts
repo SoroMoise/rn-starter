@@ -5,11 +5,8 @@ const RC_API_BASE = 'https://api.revenuecat.com/v2'
 const CACHE_PREFIX = 'premium:'
 const POSITIVE_CACHE_MAX_S = 6 * 60 * 60
 const NEGATIVE_CACHE_S = 60
-// Cloudflare KV refuses an expirationTtl below 60 seconds.
 const MIN_CACHE_S = 60
 
-// RevenueCat did not answer: the tier is unknown, which is not "not premium". The caller refuses
-// without undoing anything, and the next request asks again.
 export class EntitlementUnavailableError extends Error {
   constructor(message: string) {
     super(message)
@@ -44,9 +41,6 @@ async function rcGet<T>({
   return { status: res.status, body: (await res.json()) as T }
 }
 
-// The store owns the grace period after a failed payment: Play and Apple keep the subscription
-// giving access through it, so RevenueCat still lists the entitlement as active. The active list is
-// the whole answer: no window of our own, no fallback on the subscriptions. Times are epoch ms.
 async function resolvePremium({
   rcCustomerId,
   env,
@@ -61,10 +55,6 @@ async function resolvePremium({
   })
   if (active.status === 404) return { isPremium: false, expiresAtMs: null }
 
-  // v2 names an entitlement by its internal id (entl…), never by the lookup key the app reads
-  // (`ENTITLEMENT_PREMIUM`), so nothing here matches a name. The starter sells one entitlement and
-  // any active one is it, lifetime and promotional grants included. An app that adds a second one
-  // keeps only the premium one's `entitlement_id` here, or this says yes for the wrong purchase.
   const items = active.body?.items ?? []
   if (items.length === 0) return { isPremium: false, expiresAtMs: null }
 
@@ -84,8 +74,6 @@ function positiveTtl({ expiresAtMs, nowMs }: { expiresAtMs: number | null; nowMs
 
 let warnedUnconfigured = false
 
-// Inert until both RevenueCat settings are set: a Worker deployed before them lets every caller
-// through rather than refusing the subscribers too. It says so once per isolate, in the logs.
 export async function isPremiumCustomer({
   rcCustomerId,
   env,

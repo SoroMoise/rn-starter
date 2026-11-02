@@ -49,8 +49,6 @@ export const AdFreeProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const isAdFreeActive = adFreeUntil !== null
 
-  // A video watched while a window is still open adds to what is left: overwriting took
-  // back minutes already earned. The ceiling keeps stacked videos from becoming Pro.
   const activateAdFreeReward = useCallback(async () => {
     const now = Date.now()
     const base = Math.max(adFreeStorage.getUntil() ?? 0, now)

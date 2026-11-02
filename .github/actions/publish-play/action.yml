@@ -22,12 +22,6 @@ inputs:
 runs:
   using: composite
   steps:
-    # Every input the publish needs lives here and nowhere else. The workflow calls
-    # this action three times to ride out a transient Play API outage, and three
-    # inline copies of `track` / `packageName` / the AAB and mapping paths would let
-    # a later edit reach the first attempt alone: a divergence that surfaces only
-    # on a day the first attempt has already failed, which is the least-watched path
-    # in the whole release.
     - uses: r0adkll/upload-google-play@e738b9dd8f2476ea806d921b64aacd24f34515a5 # v1.1.5
       with:
         serviceAccountJsonPlainText: ${{ inputs.service-account-json }}

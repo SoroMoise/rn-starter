@@ -15,7 +15,6 @@ type SettingsRowProps = {
   description?: string
   value?: string
   pro?: boolean
-  // Makes the whole row the switch: it draws an AppSwitch and carries the switch role and state.
   toggle?: boolean
   chevron?: boolean
   accessory?: ReactNode

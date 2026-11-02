@@ -1,4 +1,3 @@
-/* The system's own fonts and colour scheme: no web font to download, no script to pick a theme. */
 :root {
   color-scheme: light dark;
   --bg: light-dark(#ffffff, #0b0b12);

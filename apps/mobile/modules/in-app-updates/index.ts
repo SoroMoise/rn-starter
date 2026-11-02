@@ -31,5 +31,4 @@ type InAppUpdatesModule = {
   ): EventSubscription
 }
 
-// Null where the module is absent (iOS, Expo Go, web): no store update flow exists there.
 export const inAppUpdatesModule = requireOptionalNativeModule<InAppUpdatesModule>('InAppUpdates')

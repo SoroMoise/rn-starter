@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { Modal, Pressable, TouchableOpacity, View, useWindowDimensions } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 
-// A dialog is sized by its content, so the cap is what keeps a long body on screen rather than off it.
 const MAX_HEIGHT_RATIO = 0.86
 
 interface ModalDialogProps {
@@ -17,9 +16,7 @@ interface ModalDialogProps {
   title: string
   subtitle?: string
   children: React.ReactNode
-  // Sits outside the body, so the actions that end the dialog never scroll away.
   footer?: React.ReactNode
-  // Leave it off where the footer already carries the way out: two identical exits are noise.
   showCloseButton?: boolean
 }
 
@@ -36,8 +33,6 @@ export function ModalDialog({
   const { height } = useWindowDimensions()
   const keyboardHeight = useKeyboardHeight({ enabled: visible })
 
-  // The card centres in what the keyboard leaves of the screen, and shrinks into it, rather than
-  // staying centred on a screen half of which is covered.
   const availableHeight = height - keyboardHeight
 
   const handleClose = useCallback(() => {

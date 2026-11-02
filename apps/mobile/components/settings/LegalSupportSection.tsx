@@ -69,15 +69,11 @@ export function LegalSupportSection() {
         id: 'rate',
         icon: 'star-outline',
         label: t('settings.rateApp'),
-        // An explicit tap opens the listing, never the native card: Play enforces
-        // an undocumented quota on it and forbids wiring it to a button.
         onPress: () => {
           analyticsService.track('rate_app_clicked')
           void openStoreListing({ reason: 'settings' })
         },
       },
-      // Rendered only where Google requires the choice to be reopenable, absent
-      // rather than opening nothing.
       ...(arePrivacyOptionsRequired
         ? [
             {

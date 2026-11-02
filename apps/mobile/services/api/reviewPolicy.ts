@@ -36,9 +36,6 @@ export type ReviewRequestDecision =
   | { show: true; requestIndex: number }
   | { show: false; reason: ReviewSuppressionReason }
 
-// A collision or a friction ends with its session, if not sooner, and a lost connection may be back
-// by the next return; every other refusal holds past the session, and the next action arms a fresh
-// ask anyway.
 export function refusalOutlivesSession(reason: ReviewSuppressionReason): boolean {
   return (
     reason !== 'ad_collision' &&

@@ -26,9 +26,6 @@ const DEVELOPMENT_OVERRIDES = [
   },
 ]
 
-// Loaded exactly as expo-constants loads it for the config a release embeds
-// (scripts/getAppConfig.js): a grep of .env missed `.env.local`, a variable exported in the shell
-// and a `KEY: value` line, all three of which reach the build.
 require('@expo/env').load(projectRoot, { silent: true })
 process.chdir(projectRoot)
 const { exp } = getConfig(projectRoot, { isPublicConfig: true, skipSDKVersionRequirement: true })

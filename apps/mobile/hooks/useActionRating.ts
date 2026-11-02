@@ -11,24 +11,6 @@ type UseActionRatingProps = {
   isAdFreeActive: boolean
 }
 
-/**
- * Premium engagement loop driven by a GENERIC action counter.
- *
- * Call `recordAction()` from any meaningful user interaction. Each call:
- *   1. increments the persistent action counter (`engagementStorage`), whatever follows,
- *   2. offers the moment to the contextual paywall (`after_n_actions` trigger),
- *   3. then to an interstitial ad when due (unless an ad-free window is open),
- *   4. and a moment neither took arms the rating ask, which `RatingAskHost` raises once the
- *      user is back: the instant an action completes, they are reading its result.
- * The first surface to take the moment ends the chain, and all three draw on the session's
- * single automatic interruption (`promoCoordinator`).
- *
- * `recordAction({ allowPromos: false })` moves the counter and nothing else: for the user's
- * first success, which decides whether they come back tomorrow, and for an action abandoned
- * or failed, which has nothing to celebrate.
- *
- * This is the integration point a new app wires into its own value moments.
- */
 export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
   const { maybeTrigger } = useContextualPaywall()
 
@@ -52,8 +34,6 @@ export function useActionRating({ isAdFreeActive }: UseActionRatingProps) {
 
       if (maybeTrigger('after_n_actions')) return
 
-      // The ad's counter only moves on actions that could have gone to an ad: counted through a
-      // session whose interruption is spent, it would open the next session on an ad at once.
       if (allowInterstitial && !isAdFreeActive && promoCoordinator.canPresentAutoPromo()) {
         try {
           await AdService.recordExecution()

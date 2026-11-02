@@ -19,7 +19,6 @@ export const adFreeStorage = {
     }
     listeners.forEach((fn) => fn())
   },
-  // Lets AdFreeProvider follow writes done outside React (backup restore).
   subscribe(fn: AdFreeListener): () => void {
     listeners.add(fn)
     return () => {

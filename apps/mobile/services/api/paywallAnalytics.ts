@@ -11,8 +11,6 @@ export type ConversionContext = {
   total_actions: number
 }
 
-// One place composes the funnel's paywall events, so a field added to one cannot miss the
-// others: two events of the same funnel that stop carrying the same keys cannot be joined.
 export const paywallAnalytics = {
   async trackShown({
     source,

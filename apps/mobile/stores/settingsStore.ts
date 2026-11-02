@@ -47,8 +47,6 @@ export const useSettingsStore = create<SettingsStore>()(
               rtlRestartTrigger: get().rtlRestartTrigger + 1,
             })
           } else {
-            // forceRTL only takes effect after a restart: without the banner,
-            // the app would stay in a half-flipped layout until a manual kill.
             RNRestart.restart()
           }
         }

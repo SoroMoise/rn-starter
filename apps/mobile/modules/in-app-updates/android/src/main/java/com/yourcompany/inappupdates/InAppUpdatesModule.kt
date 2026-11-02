@@ -16,9 +16,6 @@ import expo.modules.kotlin.modules.ModuleDefinition
 
 private const val INSTALL_STATE_EVENT = "onInstallStateChange"
 
-// Flexible updates only, and nothing installs without the app asking: the restart that
-// `completeUpdate` causes kills the process and whatever the user had not saved, so the app
-// decides when it runs.
 class InAppUpdatesModule : Module() {
   private var manager: AppUpdateManager? = null
 

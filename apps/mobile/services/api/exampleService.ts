@@ -26,14 +26,10 @@ function fetchWithRetry({
   })
 }
 
-// `withRetry` is for a call made outside TanStack Query. A query's `queryFn` calls the client
-// directly: the query client already retries, and each of its attempts would retry again.
 export const exampleService = {
   fetchExample: async ({ signal }: { signal?: AbortSignal } = {}) =>
     fetchWithRetry({ path: '/example', signal }),
 
-  // The Worker asks RevenueCat itself: a free caller gets a 403 (`premium_required`), which
-  // `withRetry` does not retry, and `FORCE_PRO` does not reach it.
   fetchPremiumExample: async ({ signal }: { signal?: AbortSignal } = {}) =>
     fetchWithRetry({
       path: '/example/premium',

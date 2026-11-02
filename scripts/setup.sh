@@ -1,17 +1,4 @@
 #!/usr/bin/env bash
-# setup.sh personalizes the rn-starter template.
-#
-# Usage:
-#   bash scripts/setup.sh                        # interactive
-#   bash scripts/setup.sh \
-#     --name "My App" \
-#     --slug "my-app" \
-#     --bundle "com.acme.myapp" \
-#     --scheme "myapp" \
-#     --website "https://myapp.acme.com" \
-#     --support-email "support@acme.com"         # non-interactive
-#
-# Idempotent: safe to run multiple times.
 
 set -euo pipefail
 
@@ -22,7 +9,6 @@ MOBILE_ENV_EXAMPLE="$REPO_ROOT/apps/mobile/.env.example"
 API_VARS="$REPO_ROOT/apps/api/.dev.vars"
 API_VARS_EXAMPLE="$REPO_ROOT/apps/api/.dev.vars.example"
 
-# ─── Color helpers ────────────────────────────────────────────────────────────
 BOLD=$'\033[1m'
 GREEN=$'\033[0;32m'
 YELLOW=$'\033[0;33m'
@@ -34,7 +20,6 @@ success() { printf "%s%s%s\n"    "$GREEN"  "$*" "$RESET"; }
 warn()    { printf "%s%s%s\n"    "$YELLOW" "$*" "$RESET"; }
 header()  { printf "\n%s%s%s\n" "$BOLD"   "$*" "$RESET"; }
 
-# ─── Parse CLI args ───────────────────────────────────────────────────────────
 APP_NAME=""
 APP_SLUG=""
 BUNDLE_ID=""
@@ -54,7 +39,6 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-# ─── Interactive prompts (only for missing values) ────────────────────────────
 header "RN Starter · Setup"
 info "This script personalizes the template and copies example secret files."
 echo ""
@@ -87,7 +71,6 @@ prompt SUPPORT_EMAIL "Support e-mail address"                "support@example.co
 
 WEBSITE_URL="${WEBSITE_URL%/}"
 
-# Basic validation
 if [[ -z "$APP_NAME" || -z "$APP_SLUG" || -z "$BUNDLE_ID" || -z "$SCHEME" ]]; then
   echo "Error: name, slug, bundle ID and scheme are all required." >&2
   exit 1
@@ -101,7 +84,6 @@ if [[ ! "$SUPPORT_EMAIL" =~ ^[^[:space:]@:]+@[^[:space:]@]+$ ]]; then
   exit 1
 fi
 
-# ─── Patch app.config.js ──────────────────────────────────────────────────────
 header "Patching apps/mobile/app.config.js"
 
 if [[ ! -f "$APP_CONFIG" ]]; then
@@ -109,7 +91,6 @@ if [[ ! -f "$APP_CONFIG" ]]; then
   exit 1
 fi
 
-# Use node for reliable multi-line-safe replacements
 node - "$APP_CONFIG" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" "$SCHEME" <<'NODE_SCRIPT'
 const fs = require('fs')
 const [, , configPath, appName, appSlug, bundleId, scheme] = process.argv
@@ -145,12 +126,6 @@ info "  scheme   = $SCHEME"
 info "  website  = $WEBSITE_URL"
 info "  support  = $SUPPORT_EMAIL"
 
-# ─── Sweep the template identity out of the rest of the tree ──────────────────
-# app.config.js is only where the identity is DECLARED. It is also written into
-# code, into all twenty translation files, the Firebase config example and the
-# Worker's name, and a new app that skips them ships "RN Starter" strings in twenty
-# languages, an MMKV store named after the template and a Worker that replaces the
-# template's. Everything below is driven by the same four answers.
 header "Sweeping the template identity"
 
 node - "$REPO_ROOT" "$APP_NAME" "$APP_SLUG" "$BUNDLE_ID" "$WEBSITE_URL" "$SUPPORT_EMAIL" <<'NODE_SCRIPT'
@@ -274,12 +249,6 @@ if [[ "$WEBSITE_URL" == "https://yourapp.example.com" || "$SUPPORT_EMAIL" == "su
   warn "release, which refuses them."
 fi
 
-# ─── Start the release history here ───────────────────────────────────────────
-# The release workflow versions the app from the commits since .last_release_commit,
-# and the template's marker points into the template's own history: left there, the
-# first release is judged on the template's commits, or on the last commit alone once
-# that history is gone. Moved only while nothing has been released, so running this
-# script again never rewinds a real release.
 header "Release marker"
 
 if ! git -C "$REPO_ROOT" rev-parse --verify -q HEAD > /dev/null 2>&1; then
@@ -291,7 +260,6 @@ else
   success ".last_release_commit now starts at $(git -C "$REPO_ROOT" rev-parse --short HEAD)."
 fi
 
-# ─── Copy example files if absent ─────────────────────────────────────────────
 header "Copying example secret files (if absent)"
 
 if [[ ! -f "$MOBILE_ENV" ]]; then
@@ -310,7 +278,6 @@ else
   warn "apps/api/.dev.vars already exists, skipped."
 fi
 
-# ─── Next steps ───────────────────────────────────────────────────────────────
 header "Next steps"
 echo ""
 echo "  1. pnpm install"

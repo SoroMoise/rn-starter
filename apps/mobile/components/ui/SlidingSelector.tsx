@@ -28,8 +28,6 @@ const SNAP_SPRING = { damping: 50, stiffness: 250 }
 const PULL_SPRING = { damping: 15, stiffness: 150 }
 const STRETCH_RATIO = 7
 
-// The indicator is placed from the row's start edge, but a transform is never mirrored in RTL:
-// positions are kept logical and only the travel is flipped, leftwards in Arabic.
 const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 
 const STYLES = {
@@ -72,7 +70,6 @@ export function SlidingSelector<T extends string | number>({
 
   const pressHandledRef = useRef(false)
   const pressOutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  // Refs so timeout callbacks always read the latest values without stale closures
   const selectedIndexRef = useRef(selectedIndex)
   selectedIndexRef.current = selectedIndex
   const itemWidthRef = useRef(0)
@@ -90,7 +87,6 @@ export function SlidingSelector<T extends string | number>({
     (width: number) => {
       const iw = width / options.length
       itemWidthRef.current = iw
-      // Jump (no spring) on layout: avoids sliding from 0 on first render
       indicatorX.value = selectedIndexRef.current * iw
       indicatorWidth.value = iw
       layoutReady.value = 1
@@ -150,10 +146,9 @@ export function SlidingSelector<T extends string | number>({
     [indicatorX, indicatorWidth, indicatorScale]
   )
 
-  // Animate indicator when value changes externally (e.g. after a backup restore)
   useEffect(() => {
     const iw = itemWidthRef.current
-    if (iw === 0) return // layout not ready yet: handleLayout will set the initial position
+    if (iw === 0) return
     indicatorX.value = withSpring(selectedIndex * iw, SNAP_SPRING)
     indicatorWidth.value = withSpring(iw, SNAP_SPRING)
   }, [selectedIndex, indicatorX, indicatorWidth])

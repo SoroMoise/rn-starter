@@ -1,8 +1,5 @@
 import * as Notifications from 'expo-notifications'
 
-// Notifications delivered while the app is in the foreground are presented as
-// system banners with sound, no badge increment. On Android, `shouldPlaySound: false`
-// would also drop the heads-up banner, whatever the channel says.
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -15,12 +12,9 @@ Notifications.setNotificationHandler({
 
 export interface NotificationPermission {
   isGranted: boolean
-  // False once the OS shows no dialog any more: the request then resolves at once, and the system
-  // settings are the only way left to grant it.
   canAskAgain: boolean
 }
 
-// iOS reports a provisional or ephemeral authorisation as `undetermined`, though it delivers.
 const DELIVERING_IOS_STATUSES: readonly Notifications.IosAuthorizationStatus[] = [
   Notifications.IosAuthorizationStatus.PROVISIONAL,
   Notifications.IosAuthorizationStatus.EPHEMERAL,
@@ -41,8 +35,6 @@ export const notificationService = {
     return toPermission(await Notifications.getPermissionsAsync())
   },
 
-  // Only from the screen that shows what the permission is for: never at launch, and never from a
-  // scheduling path, which runs as the app is left.
   async requestPermission(): Promise<NotificationPermission> {
     const current = await notificationService.readPermission()
     if (current.isGranted) return current

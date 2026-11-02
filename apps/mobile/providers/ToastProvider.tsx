@@ -29,11 +29,6 @@ interface ToastStateContextType {
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
 const ToastStateContext = createContext<ToastStateContextType | undefined>(undefined)
 
-// Native modals render in a separate window above the app, so a toast mounted in
-// the root tree is hidden behind them. Each modal that wants toasts on top mounts
-// a ModalToastViewport, which registers itself as a host. Only the topmost host
-// (last registered) renders the toast, so it always sits above the frontmost
-// surface and never fires twice.
 const ROOT_HOST_ID = 0
 let nextHostId = ROOT_HOST_ID + 1
 
@@ -97,9 +92,6 @@ function ToastViewport({ hostId }: { hostId: number }) {
   )
 }
 
-// Mount inside a native modal (under a GestureHandlerRootView) to surface toasts
-// above it with working swipe-to-dismiss. `active` should track the modal's
-// visibility so a mounted-but-hidden modal never claims the toast.
 export function ModalToastViewport({ active = true }: { active?: boolean }) {
   const { registerHost, unregisterHost } = useToast()
   const [hostId] = useState(() => nextHostId++)

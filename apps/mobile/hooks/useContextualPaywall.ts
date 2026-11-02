@@ -12,8 +12,6 @@ export function useContextualPaywall() {
   const maybeTrigger = useCallback(
     (trigger: ContextualTrigger): boolean => {
       if (!isInitialized) return false
-      // Initialised is not offered: a failed getOfferings() still ends the boot, and an
-      // impression spent on a paywall with nothing to buy is one of a lifetime few.
       if (!defaultPlan) return false
       if (promoCoordinator.isSurfaceVisible()) return false
       const now = Date.now()
@@ -23,7 +21,6 @@ export function useContextualPaywall() {
         now,
       })
       if (!decision.show) return false
-      // Recorded once the paywall is really up: the choke point can still refuse it.
       void openPaywall({ source: contextualSource(trigger) }).then((opened) => {
         if (opened) contextualPaywallService.recordShown(now)
       })

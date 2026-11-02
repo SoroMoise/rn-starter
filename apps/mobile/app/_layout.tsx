@@ -88,12 +88,8 @@ function AppContent() {
     }
     void run()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSubscriptionInitialized]) // intentional: snapshot at session start
+  }, [isSubscriptionInitialized])
 
-  // Consent first, always: starting the SDK is what makes a request possible, so
-  // it must not happen where the consent state is unknown. The form is gathered
-  // at the frame the onboarding ends on, where the first ad can appear, never
-  // earlier, and never for a subscriber who will not be shown one.
   useEffect(() => {
     if (!isOnboardingCompleted || isPremium) return
     if (!adsAllowedInEnvironment()) return

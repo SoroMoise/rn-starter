@@ -8,13 +8,10 @@ const KNOB_SIZE = 16
 const KNOB_INSET = 3
 const KNOB_TRAVEL = TRACK_WIDTH - KNOB_SIZE - KNOB_INSET * 2
 
-// The knob sits at the track's start edge, and a transform is never mirrored in RTL.
 const INLINE_DIRECTION = I18nManager.isRTL ? -1 : 1
 
 const SPRING = { damping: 20, stiffness: 400, mass: 0.55 }
 
-// Decoration only: the row that hosts it is the touch target and carries the switch role, so the
-// two can never disagree about what a tap does.
 export function AppSwitch({ value }: { value: boolean }) {
   const offset = useSharedValue(value ? KNOB_TRAVEL : 0)
 

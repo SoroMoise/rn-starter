@@ -37,8 +37,6 @@ export function PremiumGate({
       <View importantForAccessibility="no-hide-descendants" accessibilityElementsHidden>
         {children}
       </View>
-      {/* Android renders no blur at all without `experimentalBlurMethod`, and samples the screen
-          the view sits in: inside a native Modal it would blur the screen under the modal. */}
       <BlurView
         intensity={BLUR_INTENSITY}
         tint={isDark ? 'dark' : 'light'}

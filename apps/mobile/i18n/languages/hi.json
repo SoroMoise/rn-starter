@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "हो सकता है आपकी सदस्यता खत्म हो गई हो",
-    "graceBannerMessage": "अपनी सदस्यता की पुष्टि के लिए {{date}} से पहले इंटरनेट से जुड़ें।",
-    "graceBannerCta": "सदस्यता की पुष्टि करें",
     "billingIssueTitle": "भुगतान में समस्या",
     "billingIssueMessage": "आपकी सदस्यता रिन्यू नहीं हो सकी। Pro बनाए रखने के लिए {{date}} से पहले भुगतान का तरीका अपडेट करें।"
   },

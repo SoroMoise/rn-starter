@@ -8,7 +8,6 @@ export type SubscriptionContextValue = {
   isPremium: boolean
   isInitialized: boolean
   isLoadingPurchase: boolean
-  isInGracePeriod: boolean
   billingIssue: BillingIssue | null
   managementUrl: string | null
   isPaywallVisible: boolean
@@ -29,7 +28,6 @@ const initial: SubscriptionContextValue = {
   isPremium: false,
   isInitialized: false,
   isLoadingPurchase: false,
-  isInGracePeriod: false,
   billingIssue: null,
   managementUrl: null,
   isPaywallVisible: false,

@@ -138,7 +138,6 @@ export default () => {
           androidApiKey: process.env.REVENUECAT_ANDROID_API_KEY ?? '',
           forceFree: process.env.FORCE_FREE === 'true',
           forcePro: process.env.FORCE_PRO === 'true',
-          gracePeriodDays: parseInt(process.env.SUBSCRIPTION_GRACE_PERIOD_DAYS || '7', 10),
         },
       },
     },

@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "訂閱可能已過期",
-    "graceBannerMessage": "在 {{date}} 之前連上網路，以驗證您的訂閱。",
-    "graceBannerCta": "驗證訂閱",
     "billingIssueTitle": "付款發生問題",
     "billingIssueMessage": "您的訂閱未能續訂。在 {{date}} 之前更新付款方式，才能繼續使用 Pro。"
   },

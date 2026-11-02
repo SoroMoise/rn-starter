@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "সাবস্ক্রিপশনের মেয়াদ হয়তো শেষ হয়ে গেছে",
-    "graceBannerMessage": "আপনার সাবস্ক্রিপশন যাচাই করতে {{date}}-এর আগে ইন্টারনেটে সংযুক্ত হন।",
-    "graceBannerCta": "সাবস্ক্রিপশন যাচাই করুন",
     "billingIssueTitle": "পেমেন্টে সমস্যা",
     "billingIssueMessage": "আপনার সাবস্ক্রিপশন নবায়ন করা যায়নি। Pro রাখতে {{date}}-এর আগে পেমেন্টের পদ্ধতি আপডেট করুন।"
   },

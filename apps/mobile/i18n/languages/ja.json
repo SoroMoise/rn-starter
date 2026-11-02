@@ -210,9 +210,6 @@
     "proBadge": "PRO"
   },
   "subscription": {
-    "graceBannerTitle": "サブスクリプションの期限が切れた可能性があります",
-    "graceBannerMessage": "{{date}}までにインターネットに接続して、サブスクリプションを確認してください。",
-    "graceBannerCta": "サブスクリプションを確認",
     "billingIssueTitle": "お支払いに問題があります",
     "billingIssueMessage": "サブスクリプションを更新できませんでした。Proを引き続き使うには、{{date}}までにお支払い方法を更新してください。"
   },

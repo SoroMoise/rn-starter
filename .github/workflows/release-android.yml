@@ -272,13 +272,16 @@ jobs:
             echo "KEY_PASSWORD=$KEY_PASSWORD"
           } > keystore.properties
 
+      # The build takes about 8 GB (measured); 20 GB free is enough to start, and the
+      # cleanup finishes behind it instead of holding the job for its last minutes.
       - name: Wait for the disk cleanup
         run: |
+          free_gb() { df --output=avail -BG / | tail -1 | tr -dc 0-9; }
           for _ in $(seq 1 90); do
-            [ -f /tmp/free-disk-done ] && break
+            { [ -f /tmp/free-disk-done ] || [ "$(free_gb)" -ge 20 ]; } && break
             sleep 2
           done
-          [ -f /tmp/free-disk-done ] || echo "::warning::The background disk cleanup has not finished after 3 minutes; building anyway."
+          [ -f /tmp/free-disk-done ] || [ "$(free_gb)" -ge 20 ] || echo "::warning::Under 20 GB free after 3 minutes of cleanup; building anyway."
           df -h / | tail -1
 
       - name: Generate the open-source licences list

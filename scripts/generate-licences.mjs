@@ -197,6 +197,7 @@ function bundleSources() {
       '--platform',
       'android',
       '--no-bytecode',
+      '--no-minify',
       '--source-maps',
       '--output-dir',
       outDir,
@@ -871,7 +872,6 @@ function androidReport() {
     [
       '-q',
       '--console=plain',
-      ...(process.env.CI === 'true' ? ['--no-daemon'] : []),
       '-I',
       INIT_SCRIPT,
       ':app:licencesReport',

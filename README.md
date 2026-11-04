@@ -221,7 +221,7 @@ pnpm --filter mobile preb:android --clean
 
 ## Android release (GitHub Actions)
 
-`.github/workflows/release-android.yml` versions, builds, signs and publishes the Android app to the Play Console's **internal** track, with no local machine. It runs when a pull request carrying the **`release`** label is **merged** into `main`, or by hand (`workflow_dispatch`). Closing a pull request, or merging one without the label, releases nothing.
+`.github/workflows/release-android.yml` versions, builds, signs and publishes the Android app to the Play Console's **internal** track, with no local machine. It runs when a pull request carrying the **`release`** label is **merged** into `main`, or by hand (`workflow_dispatch`). Closing a pull request, or merging one without the label, releases nothing. A labelled merge appears as two runs: a short relay, then the build it starts on `main`, whose Gradle, pnpm and compiler caches are shared between releases.
 
 ### Versioning
 

@@ -4,6 +4,8 @@ const withBackupRules = require('./plugins/withBackupRules')
 const withCrashlyticsMapping = require('./plugins/withCrashlyticsMapping')
 const withGradleBuildCache = require('./plugins/withGradleBuildCache')
 const withGradleMemory = require('./plugins/withGradleMemory')
+const withLintVitalOff = require('./plugins/withLintVitalOff')
+const withReleaseAbis = require('./plugins/withReleaseAbis')
 const withAndroidFontFilter = require('./plugins/withAndroidFontFilter')
 const withReleaseEnvGuard = require('./plugins/withReleaseEnvGuard')
 
@@ -77,6 +79,8 @@ export default () => {
         withBackupRules,
         withGradleMemory,
         withGradleBuildCache,
+        withReleaseAbis,
+        withLintVitalOff,
         withCrashlyticsMapping,
         withAndroidFontFilter,
         withReleaseEnvGuard,

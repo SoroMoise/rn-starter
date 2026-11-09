@@ -233,7 +233,7 @@ The next version comes from the Conventional Commits since `.last_release_commit
 | at least one `feat:` | minor (`1.1.0`) |
 | anything else | patch (`1.0.1`) |
 
-The base is `const version` in `apps/mobile/app.config.js`, and `versionCode` follows that file's formula. Once the build is on Play, the workflow pushes `chore(release): vX.Y.Z [skip ci]` to `main` with the new version and marker; the git history is the changelog (see `CHANGELOG.md`). The pull request's title becomes the release's name in the Play Console, cut at 50 characters, so lead with what the release does.
+The base is `const version` in `apps/mobile/app.config.js`, and `versionCode` follows that file's formula. Once the build is on Play, the workflow pushes `chore(release): vX.Y.Z [skip ci]` to `main` with the new version and marker; the git history is the changelog. The pull request's title becomes the release's name in the Play Console, cut at 50 characters, so lead with what the release does.
 
 ### First release
 

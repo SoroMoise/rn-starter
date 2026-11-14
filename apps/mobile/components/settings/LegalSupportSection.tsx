@@ -14,6 +14,7 @@ import { openExternalLink } from '@/utils/linking'
 import { router } from 'expo-router'
 import { Fragment, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSupportMail } from '@/hooks/useSupportMail'
 
 type LegalSupportItem = {
   id: string
@@ -25,6 +26,7 @@ type LegalSupportItem = {
 
 export function LegalSupportSection() {
   const { t } = useTranslation()
+  const openSupportMail = useSupportMail()
   const { arePrivacyOptionsRequired } = useAdsConsent()
   const legalSupportItems = useMemo<LegalSupportItem[]>(
     () => [
@@ -62,7 +64,7 @@ export function LegalSupportSection() {
         label: t('settings.support'),
         onPress: () => {
           analyticsService.track('external_link_opened', { link_type: 'support' })
-          void openExternalLink({ url: LEGAL_URLS.SUPPORT_EMAIL })
+          void openSupportMail()
         },
       },
       {
@@ -89,7 +91,7 @@ export function LegalSupportSection() {
           ]
         : []),
     ],
-    [t, arePrivacyOptionsRequired]
+    [t, openSupportMail, arePrivacyOptionsRequired]
   )
 
   return (

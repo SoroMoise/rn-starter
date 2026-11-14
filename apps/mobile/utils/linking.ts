@@ -7,26 +7,15 @@ export type OpenExternalLinkParams = {
   errorMessage?: string
 }
 
+// Linking.canOpenURL is never the gate: package visibility (Android 11+) hides the mail apps from its
+// query unless the manifest lists mailto, while openURL starts the intent regardless.
 export const openExternalLink = async ({
   url,
   errorTitle,
   errorMessage,
 }: OpenExternalLinkParams) => {
   try {
-    const canOpen = await Linking.canOpenURL(url)
-
-    if (canOpen) {
-      await Linking.openURL(url)
-      return
-    }
-
-    triggerError()
-    Alert.alert(
-      errorTitle || 'Error',
-      errorMessage || 'Cannot open this link on your device.',
-      undefined,
-      { cancelable: true }
-    )
+    await Linking.openURL(url)
   } catch (error: unknown) {
     triggerError()
     const message =

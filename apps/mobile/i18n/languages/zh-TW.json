@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "顯示或隱藏授權"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · 支援",
+    "mailFirstLine": "請在這裡描述您的問題。"
   }
 }

@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "लाइसेंस दिखाता या छिपाता है"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · सहायता",
+    "mailFirstLine": "अपना सवाल यहाँ लिखें।"
   }
 }

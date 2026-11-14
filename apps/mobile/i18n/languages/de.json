@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Blendet die Lizenz ein oder aus"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Support",
+    "mailFirstLine": "Beschreibe hier deine Frage."
   }
 }

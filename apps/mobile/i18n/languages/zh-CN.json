@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "显示或隐藏许可证"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · 支持",
+    "mailFirstLine": "请在此描述您的问题。"
   }
 }

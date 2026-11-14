@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Lisansı gösterir veya gizler"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Destek",
+    "mailFirstLine": "Sorunuzu buraya yazın."
   }
 }

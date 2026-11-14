@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Visar eller döljer licensen"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Support",
+    "mailFirstLine": "Beskriv din fråga här."
   }
 }

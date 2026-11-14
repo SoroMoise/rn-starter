@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "라이선스를 표시하거나 숨겨요"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · 지원",
+    "mailFirstLine": "여기에 문의 내용을 적어 주세요."
   }
 }

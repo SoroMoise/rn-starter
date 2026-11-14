@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Toont of verbergt de licentie"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Support",
+    "mailFirstLine": "Beschrijf hier je vraag."
   }
 }

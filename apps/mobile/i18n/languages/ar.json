@@ -257,5 +257,9 @@
     "a11y": {
       "toggle": "يعرض الترخيص أو يخفيه"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · الدعم",
+    "mailFirstLine": "اكتب سؤالك هنا."
   }
 }

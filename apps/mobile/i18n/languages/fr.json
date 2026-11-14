@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Affiche ou masque la licence"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Assistance",
+    "mailFirstLine": "Décrivez votre question ici."
   }
 }

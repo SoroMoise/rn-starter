@@ -252,5 +252,9 @@
     "a11y": {
       "toggle": "Hiện hoặc ẩn giấy phép"
     }
+  },
+  "support": {
+    "mailSubject": "{{appName}} · Hỗ trợ",
+    "mailFirstLine": "Mô tả câu hỏi của bạn tại đây."
   }
 }

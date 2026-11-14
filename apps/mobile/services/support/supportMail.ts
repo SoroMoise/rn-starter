@@ -18,10 +18,13 @@ export type BuildSupportMailtoParams = {
 
 const UNKNOWN = 'unknown'
 
-const readSystem = (): string =>
-  Platform.OS === 'android'
-    ? `Android API ${Platform.Version}`
-    : `${Platform.OS} ${Platform.Version}`
+const readSystem = (): string => {
+  if (Platform.OS !== 'android') return `${Platform.OS} ${Platform.Version}`
+  const release = (Platform.constants as { Release?: string }).Release?.trim()
+  return release
+    ? `Android ${release} (API ${Platform.Version})`
+    : `Android API ${Platform.Version}`
+}
 
 export const readSupportDiagnostics = ({ language }: { language: string }): SupportDiagnostics => {
   const model =

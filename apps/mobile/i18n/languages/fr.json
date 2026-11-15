@@ -119,7 +119,7 @@
       "bodyNoTrial": "Tout ce que Pro débloque, dès maintenant.\nSans engagement, résiliable à tout moment.",
       "ctaStartNoTrial": "Oui, débloquer Pro · {{price}}",
       "titleOneTime": "Un instant, débloquez Pro pour de bon",
-      "bodyOneTime": "Un seul paiement, acquis pour toujours.\nAucun abonnement.",
+      "bodyOneTime": "Un seul paiement, à vous pour de bon, futures fonctions Pro incluses.\nAucun abonnement.",
       "ctaOneTime": "Oui, débloquer pour de bon · {{price}}"
     },
     "proWelcome": {
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Débloquer pour {{price}}",
     "ctaSubscribe": "S'abonner · {{price}}",
     "legalNoteRecurring": "{{price}}, renouvellement automatique. Annulez à tout moment.",
-    "legalNoteOneTime": "{{price}}, paiement unique. Acquis définitivement.",
+    "legalNoteOneTime": "{{price}}, paiement unique. À vous pour de bon, futures fonctions Pro incluses.",
     "offerUnavailable": "Les formules sont indisponibles. Vérifiez votre connexion et réessayez.",
     "ctaSubscribeMonthly": "S'abonner · {{price}}/mois",
     "ctaSubscribeAnnual": "S'abonner · {{price}}/an",
@@ -215,7 +215,7 @@
     "trustOneTime": "Un seul paiement, aucun abonnement",
     "lifetimeOffer": {
       "title": "Pas fan des abonnements ?",
-      "body": "Payez une fois et gardez Pro pour de bon. Rien à renouveler, rien à résilier.",
+      "body": "Payez une fois et gardez Pro pour de bon, avec toutes les fonctions Pro à venir. Rien à renouveler, rien à résilier.",
       "decline": "Non merci"
     }
   },

@@ -119,7 +119,7 @@
       "bodyNoTrial": "Everything Pro unlocks, starting now.\nNo commitment, cancel anytime.",
       "ctaStartNoTrial": "Yes, unlock Pro · {{price}}",
       "titleOneTime": "Hold on, unlock Pro for good",
-      "bodyOneTime": "One payment, yours for good.\nNo subscription.",
+      "bodyOneTime": "One payment, yours for good, future Pro features included.\nNo subscription.",
       "ctaOneTime": "Yes, unlock for good · {{price}}"
     },
     "proWelcome": {
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Unlock for {{price}}",
     "ctaSubscribe": "Subscribe · {{price}}",
     "legalNoteRecurring": "{{price}}, renews automatically. Cancel anytime.",
-    "legalNoteOneTime": "{{price}}, one-time payment. Yours forever.",
+    "legalNoteOneTime": "{{price}}, one-time payment. Yours for good, future Pro features included.",
     "offerUnavailable": "Plans are unavailable right now. Check your connection and try again.",
     "ctaSubscribeMonthly": "Subscribe · {{price}}/month",
     "ctaSubscribeAnnual": "Subscribe · {{price}}/year",
@@ -215,7 +215,7 @@
     "trustOneTime": "One payment, no subscription",
     "lifetimeOffer": {
       "title": "Not into subscriptions?",
-      "body": "Pay once and keep Pro for good. Nothing to renew, nothing to cancel.",
+      "body": "Pay once and keep Pro for good, along with every Pro feature we add later. Nothing to renew, nothing to cancel.",
       "decline": "No thanks"
     }
   },

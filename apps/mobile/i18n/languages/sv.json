@@ -15,7 +15,7 @@
     "noResults": "Inga resultat hittades",
     "offline": "Offline",
     "back": "Tillbaka",
-    "clear": "Töm"
+    "clear": "Rensa"
   },
   "tabs": {
     "home": "Hem",
@@ -24,7 +24,7 @@
   "home": {
     "hero": {
       "title": "Premium-starter",
-      "subtitle": "Lansera en putsad, monetariserad React Native-app – tema, i18n, paywall och annonser är redan på plats."
+      "subtitle": "Lansera en välpolerad React Native-app med intäktsmodell – tema, i18n, paywall och annonser finns redan på plats."
     },
     "features": {
       "title": "Det här ingår i startern",
@@ -37,16 +37,16 @@
         "desc": "20 språk, RTL-stöd och översättningsfiler som laddas vid behov."
       },
       "paywall": {
-        "label": "Paywall & prenumerationer",
+        "label": "Paywall och prenumerationer",
         "desc": "RevenueCat-integration: en paywall byggd på butikens eget erbjudande, plus premiumåtkomst."
       },
       "ads": {
         "label": "Annonser (AdMob)",
-        "desc": "Banners, interstitials och belöningsannonser – avstängda för premiumanvändare."
+        "desc": "Banners, helskärmsannonser och belöningsannonser – alla avstängda för premiumanvändare."
       },
       "notifications": {
-        "label": "Notiser",
-        "desc": "En behörighetsförfrågan på skärmen som behöver den, banners i förgrunden, Android-kanalen och dagliga påminnelser – redo för notiserna din app skickar."
+        "label": "Aviseringar",
+        "desc": "En behörighetsfråga på den skärm som behöver den, banners i förgrunden, Android-kanalen och dagliga påminnelser – redo för de aviseringar din app skickar."
       }
     },
     "cta": {
@@ -59,7 +59,7 @@
   },
   "settings": {
     "title": "Inställningar",
-    "subtitle": "Anpassa utseende och inställningar",
+    "subtitle": "Anpassa utseende och preferenser",
     "appearance": "Utseende",
     "themeLight": "Ljust",
     "themeDark": "Mörkt",
@@ -78,13 +78,13 @@
     "removeAdsDescription": "Titta på en annons och få vila från resten",
     "watchAdButton": "Titta på en annons, få {{duration}} utan annonser",
     "adFreeActive": "Annonsfritt aktivt ({{duration}} kvar)",
-    "adNotAvailableTitle": "Annons ej tillgänglig",
+    "adNotAvailableTitle": "Ingen annons tillgänglig",
     "adNotAvailableMessage": "Det finns ingen annons redo just nu. Försök igen om några minuter.",
     "adRewardTitle": "Belöning upplåst!",
     "adRewardMessage": "{{duration}} utan en enda annons, från och med nu. Njut!",
     "adErrorTitle": "Fel",
     "adErrorMessage": "Annonsen kunde inte laddas. Försök igen om några minuter.",
-    "about": "Om",
+    "about": "Om appen",
     "version": "Version",
     "legalAndSupport": "Juridik och support",
     "privacyPolicy": "Integritetspolicy",
@@ -104,22 +104,22 @@
     },
     "premium": {
       "headline": "Kom längre med Pro",
-      "timelineHeader": "Så funkar din provperiod",
+      "timelineHeader": "Så fungerar din provperiod",
       "ctaSkip": "Fortsätt gratis",
-      "dayUnlock": "Dag 0 – Pro upplåst direkt",
-      "dayBilling": "Dag {{day}} – Betalningen startar, avsluta när du vill"
+      "dayUnlock": "Dag 0: Pro upplåst direkt",
+      "dayBilling": "Dag {{day}}: betalningen startar, avsluta när du vill"
     },
     "exitIntent": {
       "title": "Vänta – testa Pro gratis",
       "ctaStart": "Ja, starta min gratis provperiod",
       "ctaSkip": "Nej tack, fortsätt gratis",
-      "body": "{{days}} dagar gratis, inget att betala idag.\nAvsluta innan provperioden tar slut så dras inget.",
-      "bodyNoDays": "Testa gratis, inget att betala idag.\nAvsluta innan provperioden tar slut så dras inget.",
+      "body": "{{days}} dagar gratis, inget att betala idag.\nAvsluta innan provperioden tar slut så debiteras du inte.",
+      "bodyNoDays": "Testa gratis, inget att betala idag.\nAvsluta innan provperioden tar slut så debiteras du inte.",
       "titleNoTrial": "Vänta – lås upp Pro",
       "bodyNoTrial": "Allt som Pro låser upp, från och med nu.\nIngen bindning – avsluta när du vill.",
       "ctaStartNoTrial": "Ja, lås upp Pro – {{price}}",
       "titleOneTime": "Vänta – lås upp Pro för alltid",
-      "bodyOneTime": "En betalning, ditt för alltid.\nIngen prenumeration.",
+      "bodyOneTime": "En betalning, ditt för alltid, framtida Pro-funktioner ingår.\nIngen prenumeration.",
       "ctaOneTime": "Ja, lås upp för alltid – {{price}}"
     },
     "proWelcome": {
@@ -134,7 +134,7 @@
   },
   "error": {
     "networkError": "Det gick inte att ansluta. Kontrollera anslutningen och försök igen.",
-    "apiError": "Det gick inte att läsa in datan. Försök igen.",
+    "apiError": "Det gick inte att hämta informationen. Försök igen.",
     "serverError": "Något gick fel hos oss. Försök igen om en stund.",
     "unknownError": "Något gick fel"
   },
@@ -155,7 +155,7 @@
   },
   "appUpdate": {
     "ready": {
-      "title": "Uppdateringen är klar",
+      "title": "Uppdateringen är redo",
       "body": "Starta om appen för att slutföra installationen av den nya versionen.",
       "restart": "Starta om",
       "later": "Senare"
@@ -166,9 +166,9 @@
     "subtitle": "Lås upp alla funktioner",
     "planMonthly": "Månadsvis",
     "planAnnual": "Årsvis",
-    "savingsBadge": "-{{percent}}%",
+    "savingsBadge": "-{{percent}} %",
     "trialBadge": "{{days}} dagar gratis",
-    "ctaTrial": "Starta gratis provperiod på {{days}} dagar",
+    "ctaTrial": "Starta {{days}} dagars gratis provperiod",
     "billedMonthly": "faktureras varje månad",
     "restore": "Återställ köp",
     "restoreSuccess": "Prenumerationen har återställts!",
@@ -183,7 +183,7 @@
     "planWeekly": "Veckovis",
     "planLifetime": "Livstid",
     "planMonths": "{{months}} månader",
-    "planCustom": "Abonnemang",
+    "planCustom": "Plan",
     "billedWeekly": "faktureras varje vecka",
     "billedOnce": "engångsbetalning",
     "billedEveryMonths": "faktureras med {{months}} månaders mellanrum",
@@ -194,11 +194,11 @@
     "ctaBuyLifetime": "Lås upp för {{price}}",
     "ctaSubscribe": "Prenumerera – {{price}}",
     "legalNoteRecurring": "{{price}}, förnyas automatiskt. Avsluta när du vill.",
-    "legalNoteOneTime": "{{price}}, engångsbetalning. Ditt för alltid.",
+    "legalNoteOneTime": "{{price}}, engångsbetalning. Ditt för alltid, framtida Pro-funktioner ingår.",
     "offerUnavailable": "Planerna är inte tillgängliga just nu. Kontrollera anslutningen och försök igen.",
     "ctaSubscribeMonthly": "Prenumerera – {{price}}/månad",
     "ctaSubscribeAnnual": "Prenumerera – {{price}}/år",
-    "pricesUnavailable": "Priser inte tillgängliga.",
+    "pricesUnavailable": "Priserna är inte tillgängliga.",
     "pricesRetry": "Försök igen",
     "benefit": {
       "noAds": "Aldrig några annonser"
@@ -215,7 +215,7 @@
     "trustOneTime": "En betalning, ingen prenumeration",
     "lifetimeOffer": {
       "title": "Inte förtjust i prenumerationer?",
-      "body": "Betala en gång och behåll Pro för alltid. Inget att förnya, inget att avsluta.",
+      "body": "Betala en gång och behåll Pro för alltid, med alla Pro-funktioner vi lägger till längre fram. Inget att förnya, inget att avsluta.",
       "decline": "Nej tack"
     }
   },

@@ -76,7 +76,7 @@
     "manageSubscription": "Gestionar suscripción",
     "removeAds": "Quitar anuncios",
     "removeAdsDescription": "Mira un anuncio y descansa de los demás",
-    "watchAdButton": "Ver un anuncio y tener {{duration}} sin anuncios",
+    "watchAdButton": "Ver un anuncio: {{duration}} sin anuncios",
     "adFreeActive": "Sin anuncios activo (quedan {{duration}})",
     "adNotAvailableTitle": "Anuncio no disponible",
     "adNotAvailableMessage": "Ahora mismo no hay ningún anuncio listo. Inténtalo de nuevo en unos minutos.",
@@ -88,7 +88,7 @@
     "version": "Versión",
     "legalAndSupport": "Legal y soporte",
     "privacyPolicy": "Política de privacidad",
-    "termsOfService": "Términos de servicio",
+    "termsOfService": "Condiciones del servicio",
     "openSourceLicences": "Licencias de código abierto",
     "support": "Soporte",
     "rateApp": "Valorar esta app",
@@ -119,7 +119,7 @@
       "bodyNoTrial": "Todo lo que Pro desbloquea, desde ahora.\nSin compromiso: cancela cuando quieras.",
       "ctaStartNoTrial": "Sí, desbloquear Pro · {{price}}",
       "titleOneTime": "Espera, desbloquea Pro para siempre",
-      "bodyOneTime": "Un solo pago, tuyo para siempre.\nSin suscripción.",
+      "bodyOneTime": "Un solo pago y es tuyo para siempre, con las futuras funciones Pro incluidas.\nSin suscripción.",
       "ctaOneTime": "Sí, desbloquear para siempre · {{price}}"
     },
     "proWelcome": {
@@ -166,7 +166,7 @@
     "subtitle": "Desbloquea todas las funciones",
     "planMonthly": "Mensual",
     "planAnnual": "Anual",
-    "savingsBadge": "-{{percent}}%",
+    "savingsBadge": "-{{percent}} %",
     "trialBadge": "{{days}} días gratis",
     "ctaTrial": "Empezar prueba gratuita de {{days}} días",
     "billedMonthly": "facturado cada mes",
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Desbloquear por {{price}}",
     "ctaSubscribe": "Suscribirse · {{price}}",
     "legalNoteRecurring": "{{price}}, se renueva automáticamente. Cancela cuando quieras.",
-    "legalNoteOneTime": "{{price}}, pago único. Tuyo para siempre.",
+    "legalNoteOneTime": "{{price}}, pago único. Tuyo para siempre, con las futuras funciones Pro incluidas.",
     "offerUnavailable": "Los planes no están disponibles ahora mismo. Revisa tu conexión e inténtalo de nuevo.",
     "ctaSubscribeMonthly": "Suscribirse · {{price}}/mes",
     "ctaSubscribeAnnual": "Suscribirse · {{price}}/año",
@@ -215,7 +215,7 @@
     "trustOneTime": "Un solo pago, sin suscripción",
     "lifetimeOffer": {
       "title": "¿No te gustan las suscripciones?",
-      "body": "Paga una sola vez y quédate con Pro para siempre. Nada que renovar, nada que cancelar.",
+      "body": "Paga una sola vez y quédate con Pro para siempre, con todas las funciones Pro que añadamos más adelante. Nada que renovar, nada que cancelar.",
       "decline": "No, gracias"
     }
   },

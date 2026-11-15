@@ -30,15 +30,15 @@
       "title": "Ce qui est inclus",
       "theme": {
         "label": "Système de thème",
-        "desc": "Mode clair & sombre avec tokens NativeWind et composants design system."
+        "desc": "Modes clair et sombre, tokens NativeWind et composants du design system."
       },
       "i18n": {
         "label": "Internationalisation",
-        "desc": "20 langues, support RTL et fichiers de traduction chargés à la demande."
+        "desc": "20 langues, prise en charge du RTL et fichiers de traduction chargés à la demande."
       },
       "paywall": {
-        "label": "Paywall & abonnements",
-        "desc": "Intégration RevenueCat : un paywall construit à partir de l'offre du store, et l'accès premium."
+        "label": "Paywall et abonnements",
+        "desc": "Intégration RevenueCat : un paywall construit à partir de l'offre du store, et la gestion de l'accès premium."
       },
       "ads": {
         "label": "Pubs (AdMob)",
@@ -53,7 +53,7 @@
       "label": "Essayer Pro"
     },
     "demoAction": {
-      "label": "Effectuer une action d'exemple",
+      "label": "Lancer une action d'exemple",
       "sub": "Chaque action incrémente le compteur d'engagement qui pilote le paywall contextuel et la demande d'avis."
     }
   },
@@ -66,7 +66,7 @@
     "themeAuto": "Système",
     "display": "Affichage",
     "language": "Langue",
-    "selectLanguage": "Sélectionner la langue",
+    "selectLanguage": "Choisir la langue",
     "searchLanguage": "Rechercher une langue…",
     "ads": "Publicités",
     "goPremium": "Passer à Pro",
@@ -75,9 +75,9 @@
     "premiumLifetime": "Accès à vie",
     "manageSubscription": "Gérer l'abonnement",
     "removeAds": "Retirer les publicités",
-    "removeAdsDescription": "Regardez une pub, faites une pause sur toutes les autres",
+    "removeAdsDescription": "Regardez une pub, puis profitez d'une pause sans publicité",
     "watchAdButton": "Regarder une pub, gagner {{duration}} sans pub",
-    "adFreeActive": "Sans pub actif ({{duration}} restantes)",
+    "adFreeActive": "Sans pub : il reste {{duration}}",
     "adNotAvailableTitle": "Publicité non disponible",
     "adNotAvailableMessage": "Aucune publicité n'est prête pour le moment. Réessayez dans quelques minutes.",
     "adRewardTitle": "Récompense débloquée !",
@@ -86,19 +86,19 @@
     "adErrorMessage": "La publicité n'a pas pu se charger. Réessayez dans quelques minutes.",
     "about": "À propos",
     "version": "Version",
-    "legalAndSupport": "Légal et support",
+    "legalAndSupport": "Légal et assistance",
     "privacyPolicy": "Politique de confidentialité",
     "termsOfService": "Conditions d'utilisation",
     "openSourceLicences": "Licences open source",
-    "support": "Support",
+    "support": "Assistance",
     "rateApp": "Noter cette application",
     "languageChanged": "Langue mise à jour",
-    "adPrivacy": "Confidentialité publicitaire"
+    "adPrivacy": "Confidentialité des publicités"
   },
   "onboarding": {
     "previous": "Retour",
     "welcome": {
-      "subtitle": "Tout ce qu'il faut, soigneusement construit et prêt à publier.",
+      "subtitle": "Tout ce qu'il faut, soigneusement conçu et prêt à publier.",
       "cta": "Commencer",
       "reassurance": "Gratuit · Sans compte"
     },
@@ -106,7 +106,7 @@
       "headline": "Allez plus loin avec Pro",
       "timelineHeader": "Comment fonctionne l'essai",
       "ctaSkip": "Continuer gratuitement",
-      "dayUnlock": "Jour 0 : Pro débloqué immédiatement",
+      "dayUnlock": "Aujourd'hui : Pro est débloqué tout de suite",
       "dayBilling": "Jour {{day}} : début du prélèvement, résiliable à tout moment"
     },
     "exitIntent": {
@@ -140,7 +140,7 @@
   },
   "appRating": {
     "title": "Vous aimez RN Starter ?",
-    "message": "Une note 5 étoiles nous aide à garder l'app gratuite 😊 et à continuer de l'améliorer.",
+    "message": "Une note 5 étoiles nous aide à garder l'app gratuite et à continuer de l'améliorer.",
     "rateButton": "Noter maintenant",
     "laterButton": "Plus tard",
     "declineButton": "Non merci"
@@ -166,9 +166,9 @@
     "subtitle": "Débloquez toutes les fonctionnalités",
     "planMonthly": "Mensuel",
     "planAnnual": "Annuel",
-    "savingsBadge": "-{{percent}}%",
+    "savingsBadge": "-{{percent}} %",
     "trialBadge": "{{days}} jours offerts",
-    "ctaTrial": "Essai gratuit de {{days}} jours",
+    "ctaTrial": "Démarrer l'essai gratuit de {{days}} jours",
     "billedMonthly": "facturé mensuellement",
     "restore": "Restaurer mes achats",
     "restoreSuccess": "Abonnement restauré !",
@@ -187,15 +187,15 @@
     "billedWeekly": "facturé chaque semaine",
     "billedOnce": "paiement unique",
     "billedEveryMonths": "facturé tous les {{months}} mois",
-    "billedRecurring": "renouvelable",
+    "billedRecurring": "récurrent",
     "trialBadgeNoDays": "Essai offert",
     "ctaTrialNoDays": "Démarrer l'essai gratuit",
     "ctaSubscribeWeekly": "S'abonner · {{price}}/semaine",
     "ctaBuyLifetime": "Débloquer pour {{price}}",
     "ctaSubscribe": "S'abonner · {{price}}",
-    "legalNoteRecurring": "{{price}}, renouvellement automatique. Annulez à tout moment.",
+    "legalNoteRecurring": "{{price}}, renouvellement automatique. Résiliez à tout moment.",
     "legalNoteOneTime": "{{price}}, paiement unique. À vous pour de bon, futures fonctions Pro incluses.",
-    "offerUnavailable": "Les formules sont indisponibles. Vérifiez votre connexion et réessayez.",
+    "offerUnavailable": "Les formules sont indisponibles pour le moment. Vérifiez votre connexion et réessayez.",
     "ctaSubscribeMonthly": "S'abonner · {{price}}/mois",
     "ctaSubscribeAnnual": "S'abonner · {{price}}/an",
     "pricesUnavailable": "Prix indisponibles.",

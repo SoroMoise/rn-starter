@@ -24,10 +24,10 @@
   "home": {
     "hero": {
       "title": "Starter cao cấp",
-      "subtitle": "Phát hành một ứng dụng React Native chỉn chu, có kiếm tiền, với theme, i18n, paywall và quảng cáo đã sẵn sàng."
+      "subtitle": "Phát hành một ứng dụng React Native chỉn chu, sẵn sàng kiếm tiền, với theme, i18n, paywall và quảng cáo đã được tích hợp sẵn."
     },
     "features": {
-      "title": "Starter này có sẵn những gì",
+      "title": "Những gì có sẵn trong starter này",
       "theme": {
         "label": "Hệ thống theme",
         "desc": "Chế độ sáng & tối với token NativeWind và các thành phần design system."
@@ -38,7 +38,7 @@
       },
       "paywall": {
         "label": "Paywall & gói đăng ký",
-        "desc": "Tích hợp RevenueCat: paywall dựng từ chính ưu đãi trên cửa hàng, kèm chặn tính năng premium."
+        "desc": "Tích hợp RevenueCat: paywall dựng từ chính ưu đãi trên cửa hàng, kèm cơ chế khóa tính năng premium."
       },
       "ads": {
         "label": "Quảng cáo (AdMob)",
@@ -46,7 +46,7 @@
       },
       "notifications": {
         "label": "Thông báo",
-        "desc": "Hỏi quyền ngay ở màn hình cần đến, banner khi app đang mở, kênh Android và lời nhắc hằng ngày, sẵn sàng cho các thông báo app của bạn gửi đi."
+        "desc": "Xin quyền ngay tại màn hình cần dùng, banner khi ứng dụng đang mở, kênh thông báo Android và lời nhắc hằng ngày, sẵn sàng cho các thông báo ứng dụng của bạn gửi đi."
       }
     },
     "cta": {
@@ -54,7 +54,7 @@
     },
     "demoAction": {
       "label": "Thực hiện một hành động mẫu",
-      "sub": "Mỗi hành động tăng bộ đếm tương tác, thứ điều khiển paywall theo ngữ cảnh và lời mời đánh giá."
+      "sub": "Mỗi hành động làm tăng bộ đếm tương tác, dùng để quyết định khi nào hiện paywall theo ngữ cảnh và lời mời đánh giá."
     }
   },
   "settings": {
@@ -77,7 +77,7 @@
     "removeAds": "Gỡ quảng cáo",
     "removeAdsDescription": "Xem một quảng cáo, nghỉ ngơi khỏi những quảng cáo còn lại",
     "watchAdButton": "Xem quảng cáo, nhận {{duration}} không quảng cáo",
-    "adFreeActive": "Đang không quảng cáo (còn {{duration}})",
+    "adFreeActive": "Đang tắt quảng cáo (còn {{duration}})",
     "adNotAvailableTitle": "Chưa có quảng cáo",
     "adNotAvailableMessage": "Hiện chưa có quảng cáo nào sẵn sàng. Thử lại sau vài phút.",
     "adRewardTitle": "Đã nhận thưởng!",
@@ -112,14 +112,14 @@
     "exitIntent": {
       "title": "Khoan đã, dùng thử Pro miễn phí",
       "ctaStart": "Có, bắt đầu dùng thử miễn phí",
-      "ctaSkip": "Không cảm ơn, tiếp tục bản miễn phí",
+      "ctaSkip": "Không, cảm ơn, tiếp tục miễn phí",
       "body": "{{days}} ngày miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
       "bodyNoDays": "Dùng thử miễn phí, hôm nay không phải trả gì.\nHủy trước khi hết dùng thử và bạn sẽ không bị tính phí.",
       "titleNoTrial": "Khoan đã, mở khóa Pro",
       "bodyNoTrial": "Mọi thứ Pro mở khóa, ngay từ bây giờ.\nKhông ràng buộc, hủy bất cứ lúc nào.",
       "ctaStartNoTrial": "Có, mở khóa Pro · {{price}}",
       "titleOneTime": "Khoan đã, mở khóa Pro vĩnh viễn",
-      "bodyOneTime": "Trả một lần, của bạn mãi mãi.\nKhông cần đăng ký.",
+      "bodyOneTime": "Trả một lần, dùng mãi mãi, gồm cả các tính năng Pro thêm sau này.\nKhông cần đăng ký.",
       "ctaOneTime": "Có, mở khóa vĩnh viễn · {{price}}"
     },
     "proWelcome": {
@@ -129,7 +129,7 @@
       "ctaContinue": "Tiếp tục khám phá"
     },
     "a11y": {
-      "step": "Bước {{current}} trên {{total}}"
+      "step": "Bước {{current}} trong tổng số {{total}}"
     }
   },
   "error": {
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Mở khóa với giá {{price}}",
     "ctaSubscribe": "Đăng ký · {{price}}",
     "legalNoteRecurring": "{{price}}, tự động gia hạn. Hủy bất cứ lúc nào.",
-    "legalNoteOneTime": "{{price}}, thanh toán một lần. Của bạn mãi mãi.",
+    "legalNoteOneTime": "{{price}}, thanh toán một lần. Dùng mãi mãi, gồm cả các tính năng Pro thêm sau này.",
     "offerUnavailable": "Hiện chưa có gói nào. Kiểm tra kết nối của bạn rồi thử lại.",
     "ctaSubscribeMonthly": "Đăng ký · {{price}}/tháng",
     "ctaSubscribeAnnual": "Đăng ký · {{price}}/năm",
@@ -215,7 +215,7 @@
     "trustOneTime": "Trả một lần, không đăng ký",
     "lifetimeOffer": {
       "title": "Không thích gói đăng ký?",
-      "body": "Trả một lần và dùng Pro mãi mãi. Không phải gia hạn, không phải hủy.",
+      "body": "Trả một lần và dùng Pro mãi mãi, kèm mọi tính năng Pro chúng tôi bổ sung sau này. Không phải gia hạn, không phải hủy.",
       "decline": "Không, cảm ơn"
     }
   },

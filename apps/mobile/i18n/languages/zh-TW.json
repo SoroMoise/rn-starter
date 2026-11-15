@@ -119,7 +119,7 @@
       "bodyNoTrial": "Pro 的所有功能，現在就能用。\n無須綁約，隨時可取消。",
       "ctaStartNoTrial": "好，解鎖 Pro（{{price}}）",
       "titleOneTime": "等一下，永久解鎖 Pro",
-      "bodyOneTime": "付款一次，永久擁有。\n無須訂閱。",
+      "bodyOneTime": "付款一次，永久擁有，日後新增的 Pro 功能也包含在內。\n無須訂閱。",
       "ctaOneTime": "好，永久解鎖（{{price}}）"
     },
     "proWelcome": {
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "以 {{price}} 解鎖",
     "ctaSubscribe": "訂閱（{{price}}）",
     "legalNoteRecurring": "{{price}}，自動續訂，隨時可取消。",
-    "legalNoteOneTime": "{{price}}，一次性付款，永久擁有。",
+    "legalNoteOneTime": "{{price}}，一次性付款，永久擁有，日後新增的 Pro 功能也包含在內。",
     "offerUnavailable": "暫時無法取得訂閱方案。檢查網路後再試一次。",
     "ctaSubscribeMonthly": "訂閱（{{price}}/月）",
     "ctaSubscribeAnnual": "訂閱（{{price}}/年）",
@@ -215,7 +215,7 @@
     "trustOneTime": "一次付款，無須訂閱",
     "lifetimeOffer": {
       "title": "不喜歡訂閱？",
-      "body": "一次付費，永久擁有 Pro。無須續訂，也無須取消。",
+      "body": "一次付費，永久擁有 Pro，日後新增的 Pro 功能也一併包含。無須續訂，也無須取消。",
       "decline": "不用了"
     }
   },

@@ -38,7 +38,7 @@
       },
       "paywall": {
         "label": "Paywall e assinaturas",
-        "desc": "Integração com o RevenueCat: um paywall montado a partir da oferta da loja, e o acesso premium."
+        "desc": "Integração com o RevenueCat: um paywall montado a partir da oferta da própria loja e controle do acesso premium."
       },
       "ads": {
         "label": "Anúncios (AdMob)",
@@ -88,7 +88,7 @@
     "version": "Versão",
     "legalAndSupport": "Legal e suporte",
     "privacyPolicy": "Política de privacidade",
-    "termsOfService": "Termos de serviço",
+    "termsOfService": "Termos de uso",
     "openSourceLicences": "Licenças de código aberto",
     "support": "Suporte",
     "rateApp": "Avaliar este app",
@@ -119,7 +119,7 @@
       "bodyNoTrial": "Tudo o que o Pro desbloqueia, a partir de agora.\nSem compromisso: cancele quando quiser.",
       "ctaStartNoTrial": "Sim, desbloquear o Pro · {{price}}",
       "titleOneTime": "Só um instante, desbloqueie o Pro para sempre",
-      "bodyOneTime": "Um único pagamento, seu para sempre.\nSem assinatura.",
+      "bodyOneTime": "Pagamento único, seu para sempre, com os futuros recursos Pro incluídos.\nSem assinatura.",
       "ctaOneTime": "Sim, desbloquear para sempre · {{price}}"
     },
     "proWelcome": {
@@ -173,7 +173,7 @@
     "restore": "Restaurar compras",
     "restoreSuccess": "Assinatura restaurada!",
     "restoreNotFound": "Nenhuma assinatura ativa encontrada",
-    "welcomePro": "Bem-vindo ao Pro!",
+    "welcomePro": "Boas-vindas ao Pro!",
     "errorGeneric": "Algo deu errado. Tente de novo.",
     "errorNetwork": "Sem conexão. Verifique sua rede e tente de novo.",
     "errorStoreUnavailable": "As compras não estão disponíveis neste dispositivo no momento.",
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Desbloquear por {{price}}",
     "ctaSubscribe": "Assinar · {{price}}",
     "legalNoteRecurring": "{{price}}, renova automaticamente. Cancele quando quiser.",
-    "legalNoteOneTime": "{{price}}, pagamento único. Seu para sempre.",
+    "legalNoteOneTime": "{{price}}, pagamento único. Seu para sempre, com os futuros recursos Pro incluídos.",
     "offerUnavailable": "Os planos não estão disponíveis no momento. Verifique sua conexão e tente de novo.",
     "ctaSubscribeMonthly": "Assinar · {{price}}/mês",
     "ctaSubscribeAnnual": "Assinar · {{price}}/ano",
@@ -215,7 +215,7 @@
     "trustOneTime": "Um único pagamento, sem assinatura",
     "lifetimeOffer": {
       "title": "Não curte assinaturas?",
-      "body": "Pague uma vez e fique com o Pro para sempre. Nada para renovar, nada para cancelar.",
+      "body": "Pague uma vez e fique com o Pro para sempre, com todos os recursos Pro que chegarem depois. Nada para renovar, nada para cancelar.",
       "decline": "Não, obrigado"
     }
   },

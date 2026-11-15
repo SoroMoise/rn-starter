@@ -119,7 +119,7 @@
       "bodyNoTrial": "Pro 的全部功能，即刻可用。\n无需长期绑定，随时可取消。",
       "ctaStartNoTrial": "好的，解锁 Pro（{{price}}）",
       "titleOneTime": "等一下，永久解锁 Pro",
-      "bodyOneTime": "一次付款，永久拥有。\n无需订阅。",
+      "bodyOneTime": "一次付款，永久拥有，日后新增的 Pro 功能也包含在内。\n无需订阅。",
       "ctaOneTime": "好的，永久解锁（{{price}}）"
     },
     "proWelcome": {
@@ -149,7 +149,7 @@
     "title": "正在切换阅读方向",
     "message": "{{count}} 秒后重启以生效。",
     "restartNow": "立即重启",
-    "restartManually": "稍后手动重启",
+    "restartManually": "手动重启",
     "messageManual": "重启应用以生效。",
     "announcement": "正在切换阅读方向。重启应用以生效。"
   },
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "以 {{price}} 解锁",
     "ctaSubscribe": "订阅（{{price}}）",
     "legalNoteRecurring": "{{price}}，自动续订，可随时取消。",
-    "legalNoteOneTime": "{{price}}，一次性付款，永久拥有。",
+    "legalNoteOneTime": "{{price}}，一次性付款，永久拥有，日后新增的 Pro 功能也包含在内。",
     "offerUnavailable": "暂时无法获取订阅方案。检查网络后再试一次。",
     "ctaSubscribeMonthly": "订阅（{{price}}/月）",
     "ctaSubscribeAnnual": "订阅（{{price}}/年）",
@@ -215,7 +215,7 @@
     "trustOneTime": "一次付款，无需订阅",
     "lifetimeOffer": {
       "title": "不喜欢订阅？",
-      "body": "一次付费，永久拥有 Pro。无需续订，也无需取消。",
+      "body": "一次付费，永久拥有 Pro，日后新增的 Pro 功能也一并包含。无需续订，也无需取消。",
       "decline": "不用了"
     }
   },
@@ -255,6 +255,6 @@
   },
   "support": {
     "mailSubject": "{{appName}} · 支持",
-    "mailFirstLine": "请在此描述您的问题。"
+    "mailFirstLine": "在此描述您的问题。"
   }
 }

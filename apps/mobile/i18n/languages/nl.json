@@ -30,7 +30,7 @@
       "title": "Wat er in deze starter zit",
       "theme": {
         "label": "Themasysteem",
-        "desc": "Lichte en donkere modus met NativeWind-tokens en design-system-componenten."
+        "desc": "Lichte en donkere modus met NativeWind-tokens en componenten uit het designsysteem."
       },
       "i18n": {
         "label": "Internationalisering",
@@ -66,7 +66,7 @@
     "themeAuto": "Systeem",
     "display": "Weergave",
     "language": "Taal",
-    "selectLanguage": "Taal selecteren",
+    "selectLanguage": "Taal kiezen",
     "searchLanguage": "Talen zoeken…",
     "ads": "Advertenties",
     "goPremium": "Upgraden naar Pro",
@@ -76,8 +76,8 @@
     "manageSubscription": "Abonnement beheren",
     "removeAds": "Advertenties verwijderen",
     "removeAdsDescription": "Bekijk één advertentie en krijg rust van alle andere",
-    "watchAdButton": "Bekijk een advertentie en krijg {{duration}} zonder advertenties",
-    "adFreeActive": "Zonder advertenties actief (nog {{duration}})",
+    "watchAdButton": "Bekijk een advertentie voor {{duration}} zonder advertenties",
+    "adFreeActive": "Advertentievrij, nog {{duration}}",
     "adNotAvailableTitle": "Advertentie niet beschikbaar",
     "adNotAvailableMessage": "Er staat nu geen advertentie klaar. Probeer het over een paar minuten opnieuw.",
     "adRewardTitle": "Beloning ontgrendeld!",
@@ -106,25 +106,25 @@
       "headline": "Kom verder met Pro",
       "timelineHeader": "Zo werkt je proefperiode",
       "ctaSkip": "Gratis verdergaan",
-      "dayUnlock": "Dag 0 – Pro meteen ontgrendeld",
-      "dayBilling": "Dag {{day}} – De betaling start, op elk moment opzegbaar"
+      "dayUnlock": "Dag 0: Pro meteen ontgrendeld",
+      "dayBilling": "Dag {{day}}: de betaling start, opzeggen kan altijd"
     },
     "exitIntent": {
-      "title": "Wacht even – probeer Pro gratis",
+      "title": "Wacht even, probeer Pro gratis",
       "ctaStart": "Ja, start mijn gratis proefperiode",
       "ctaSkip": "Nee bedankt, gratis verdergaan",
-      "body": "{{days}} dagen gratis, vandaag betaal je niets.\nZeg op vóór het einde van de proefperiode en er wordt niets afgeschreven.",
-      "bodyNoDays": "Gratis uitproberen, vandaag betaal je niets.\nZeg op vóór het einde van de proefperiode en er wordt niets afgeschreven.",
-      "titleNoTrial": "Wacht even – ontgrendel Pro",
-      "bodyNoTrial": "Alles wat Pro ontgrendelt, vanaf nu.\nGeen verplichtingen – op elk moment opzegbaar.",
-      "ctaStartNoTrial": "Ja, Pro ontgrendelen – {{price}}",
-      "titleOneTime": "Wacht even – ontgrendel Pro voorgoed",
-      "bodyOneTime": "Eén betaling, voor altijd van jou.\nGeen abonnement.",
-      "ctaOneTime": "Ja, voorgoed ontgrendelen – {{price}}"
+      "body": "{{days}} dagen gratis, vandaag betaal je niets.\nZeg je op vóór het einde van de proefperiode, dan wordt er niets afgeschreven.",
+      "bodyNoDays": "Gratis uitproberen, vandaag betaal je niets.\nZeg je op vóór het einde van de proefperiode, dan wordt er niets afgeschreven.",
+      "titleNoTrial": "Wacht even, ontgrendel Pro",
+      "bodyNoTrial": "Alles wat Pro ontgrendelt, vanaf nu.\nGeen verplichtingen, op elk moment opzegbaar.",
+      "ctaStartNoTrial": "Ja, Pro ontgrendelen · {{price}}",
+      "titleOneTime": "Wacht even, ontgrendel Pro voorgoed",
+      "bodyOneTime": "Eén betaling, voor altijd van jou, toekomstige Pro-functies inbegrepen.\nGeen abonnement.",
+      "ctaOneTime": "Ja, voorgoed ontgrendelen · {{price}}"
     },
     "proWelcome": {
       "title": "Welkom terug!",
-      "body": "We hebben je Pro-abonnement gevonden – het is al actief op dit apparaat.",
+      "body": "We hebben je Pro-abonnement gevonden. Het is al actief op dit apparaat.",
       "ctaSkip": "Introductie overslaan",
       "ctaContinue": "Verder verkennen"
     },
@@ -190,14 +190,14 @@
     "billedRecurring": "terugkerend",
     "trialBadgeNoDays": "Gratis proefperiode",
     "ctaTrialNoDays": "Start gratis proefperiode",
-    "ctaSubscribeWeekly": "Abonneren – {{price}}/week",
+    "ctaSubscribeWeekly": "Abonneren · {{price}}/week",
     "ctaBuyLifetime": "Ontgrendelen voor {{price}}",
-    "ctaSubscribe": "Abonneren – {{price}}",
+    "ctaSubscribe": "Abonneren · {{price}}",
     "legalNoteRecurring": "{{price}}, wordt automatisch verlengd. Op elk moment opzegbaar.",
-    "legalNoteOneTime": "{{price}}, eenmalige betaling. Voor altijd van jou.",
+    "legalNoteOneTime": "{{price}}, eenmalige betaling. Voor altijd van jou, toekomstige Pro-functies inbegrepen.",
     "offerUnavailable": "De abonnementen zijn nu niet beschikbaar. Controleer je verbinding en probeer het opnieuw.",
-    "ctaSubscribeMonthly": "Abonneren – {{price}}/maand",
-    "ctaSubscribeAnnual": "Abonneren – {{price}}/jaar",
+    "ctaSubscribeMonthly": "Abonneren · {{price}}/maand",
+    "ctaSubscribeAnnual": "Abonneren · {{price}}/jaar",
     "pricesUnavailable": "Prijzen niet beschikbaar.",
     "pricesRetry": "Opnieuw proberen",
     "benefit": {
@@ -215,7 +215,7 @@
     "trustOneTime": "Eén betaling, geen abonnement",
     "lifetimeOffer": {
       "title": "Geen fan van abonnementen?",
-      "body": "Betaal één keer en houd Pro voorgoed. Niets te verlengen, niets op te zeggen.",
+      "body": "Betaal één keer en houd Pro voorgoed, met alle Pro-functies die we later toevoegen. Niets te verlengen, niets op te zeggen.",
       "decline": "Nee, bedankt"
     }
   },
@@ -240,11 +240,11 @@
       "fonts": "Lettertypen",
       "android": "Android-bibliotheken"
     },
-    "androidPending": "Deze build bevat de lijst met Android-bibliotheken niet: de releasebuild schrijft die.",
+    "androidPending": "Deze build bevat de lijst met Android-bibliotheken niet: de releasebuild maakt die aan.",
     "origin": {
       "repository": "Het pakket bevat geen licentiebestand: deze tekst komt uit de repository.",
-      "spdx": "Het pakket bevat geen licentietekst: dit is de standaardtekst van de licentie die het opgeeft, met de auteur als rechthebbende als het pakket er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
-      "spdxTemplate": "De standaardtekst van de licentie die de Maven POM opgeeft, met de uitgever als rechthebbende als de POM er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
+      "spdx": "Het pakket bevat geen licentietekst: dit is de standaardtekst van de licentie die het opgeeft, met de auteur als rechthebbende wanneer het pakket er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
+      "spdxTemplate": "De standaardtekst van de licentie die de Maven POM opgeeft, met de uitgever als rechthebbende wanneer de POM er een noemt. De eigen copyrightvermelding van het project staat in de broncode.",
       "pom": "De Maven POM noemt deze licentie zonder de tekst ervan."
     },
     "readTerms": "Voorwaarden lezen",

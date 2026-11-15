@@ -209,7 +209,7 @@ export const frLegal: LegalContent = {
         paragraphs: [
           'Pro débloque les fonctionnalités qui lui sont réservées, à commencer par la suppression de toute publicité. [Listez les autres fonctionnalités Pro.]',
           'Les formules proposées, leurs prix, leurs périodes de facturation et l’éventuel essai gratuit sont ceux qu’affiche l’application au moment de l’achat, dans votre devise, et que votre boutique confirme avant le paiement. La boutique débite le moyen de paiement associé à votre compte.',
-          'Un abonnement se renouvelle automatiquement à la fin de chaque période, au prix alors en vigueur, sauf résiliation avant la fin de cette période (sur l’App Store, au moins 24 heures avant). Si un prix change, votre boutique vous en informe à l’avance et, lorsque c’est requis, demande votre accord. Un achat unique débloque Pro sans paiement récurrent, tant que l’application reste disponible.',
+          'Un abonnement se renouvelle automatiquement à la fin de chaque période, au prix alors en vigueur, sauf résiliation avant la fin de cette période (sur l’App Store, au moins 24 heures avant). Si un prix change, votre boutique vous en informe à l’avance et, lorsque c’est requis, demande votre accord. Un achat unique (accès à vie) débloque Pro sans paiement récurrent, tant que l’application reste disponible, et comprend sans supplément les fonctions Pro ajoutées à l’application après l’achat.',
         ],
       },
       {

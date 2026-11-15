@@ -203,7 +203,7 @@ export const enLegal: LegalContent = {
         paragraphs: [
           'Pro unlocks the features reserved for it, starting with the removal of every ad. [List the other Pro features.]',
           'The plans on offer, their prices, billing periods and any free trial are those shown in the app at the moment you buy, in your currency, and confirmed by your store before you pay. The store charges the payment method on your account.',
-          'A subscription renews automatically at the end of each period, at the price then in force, unless you cancel before that period ends (on the App Store, at least 24 hours before). If a price changes, your store tells you beforehand and, where required, asks for your agreement. A one-time purchase unlocks Pro with no recurring charge, for as long as the app remains available.',
+          'A subscription renews automatically at the end of each period, at the price then in force, unless you cancel before that period ends (on the App Store, at least 24 hours before). If a price changes, your store tells you beforehand and, where required, asks for your agreement. A one-time purchase (lifetime access) unlocks Pro with no recurring charge, for as long as the app remains available, and includes the Pro features added to the app after the purchase at no extra cost.',
         ],
       },
       {

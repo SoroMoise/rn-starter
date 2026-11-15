@@ -38,7 +38,7 @@
       },
       "paywall": {
         "label": "Paywall e abbonamenti",
-        "desc": "Integrazione RevenueCat: un paywall costruito dall'offerta dello store, e l'accesso premium."
+        "desc": "Integrazione RevenueCat: un paywall costruito dall'offerta dello store e funzioni riservate agli utenti premium."
       },
       "ads": {
         "label": "Pubblicità (AdMob)",
@@ -77,7 +77,7 @@
     "removeAds": "Rimuovi la pubblicità",
     "removeAdsDescription": "Guarda una pubblicità e prenditi una pausa da tutte le altre",
     "watchAdButton": "Guarda una pubblicità, ottieni {{duration}} senza pubblicità",
-    "adFreeActive": "Senza pubblicità attivo ({{duration}} rimanenti)",
+    "adFreeActive": "Senza pubblicità · ancora {{duration}}",
     "adNotAvailableTitle": "Pubblicità non disponibile",
     "adNotAvailableMessage": "Al momento non c'è nessuna pubblicità pronta. Riprova tra qualche minuto.",
     "adRewardTitle": "Premio sbloccato!",
@@ -119,7 +119,7 @@
       "bodyNoTrial": "Tutto ciò che Pro sblocca, da subito.\nSenza impegno: annulla quando vuoi.",
       "ctaStartNoTrial": "Sì, sblocca Pro · {{price}}",
       "titleOneTime": "Un attimo, sblocca Pro per sempre",
-      "bodyOneTime": "Un solo pagamento, tuo per sempre.\nNessun abbonamento.",
+      "bodyOneTime": "Un solo pagamento, tuo per sempre, funzioni Pro future incluse.\nNessun abbonamento.",
       "ctaOneTime": "Sì, sblocca per sempre · {{price}}"
     },
     "proWelcome": {
@@ -135,7 +135,7 @@
   "error": {
     "networkError": "Impossibile connettersi. Controlla la connessione e riprova.",
     "apiError": "Impossibile caricare i dati. Riprova.",
-    "serverError": "Qualcosa non ha funzionato da parte nostra. Riprova tra poco.",
+    "serverError": "Si è verificato un problema da parte nostra. Riprova tra poco.",
     "unknownError": "Qualcosa è andato storto"
   },
   "appRating": {
@@ -173,7 +173,7 @@
     "restore": "Ripristina acquisti",
     "restoreSuccess": "Abbonamento ripristinato!",
     "restoreNotFound": "Nessun abbonamento attivo trovato",
-    "welcomePro": "Benvenuto in Pro!",
+    "welcomePro": "Ti diamo il benvenuto in Pro!",
     "errorGeneric": "Qualcosa è andato storto. Riprova.",
     "errorNetwork": "Nessuna connessione. Controlla la rete e riprova.",
     "errorStoreUnavailable": "Al momento gli acquisti non sono disponibili su questo dispositivo.",
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Sblocca per {{price}}",
     "ctaSubscribe": "Abbonati · {{price}}",
     "legalNoteRecurring": "{{price}}, si rinnova automaticamente. Annulla quando vuoi.",
-    "legalNoteOneTime": "{{price}}, pagamento unico. Tuo per sempre.",
+    "legalNoteOneTime": "{{price}}, pagamento unico. Tuo per sempre, funzioni Pro future incluse.",
     "offerUnavailable": "Al momento i piani non sono disponibili. Controlla la connessione e riprova.",
     "ctaSubscribeMonthly": "Abbonati · {{price}}/mese",
     "ctaSubscribeAnnual": "Abbonati · {{price}}/anno",
@@ -214,8 +214,8 @@
     "trustCancel": "Annulla quando vuoi, senza impegno",
     "trustOneTime": "Un solo pagamento, nessun abbonamento",
     "lifetimeOffer": {
-      "title": "Non ami gli abbonamenti?",
-      "body": "Paga una volta sola e tieni Pro per sempre. Niente da rinnovare, niente da annullare.",
+      "title": "Gli abbonamenti non fanno per te?",
+      "body": "Paga una volta sola e tieni Pro per sempre, con ogni funzione Pro che aggiungeremo in futuro. Niente da rinnovare, niente da annullare.",
       "decline": "No, grazie"
     }
   },

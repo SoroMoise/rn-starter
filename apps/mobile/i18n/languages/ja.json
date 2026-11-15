@@ -119,7 +119,7 @@
       "bodyNoTrial": "Proのすべての機能を、今すぐ。\n継続の義務はなく、いつでも解約できます。",
       "ctaStartNoTrial": "はい、Proをアンロック（{{price}}）",
       "titleOneTime": "その前に、Proを買い切りでアンロック",
-      "bodyOneTime": "1回のお支払いで、ずっとお使いいただけます。\nサブスクリプションはありません。",
+      "bodyOneTime": "1回のお支払いで、今後追加されるPro機能も含め、ずっとお使いいただけます。\nサブスクリプションはありません。",
       "ctaOneTime": "はい、買い切りでアンロック（{{price}}）"
     },
     "proWelcome": {
@@ -143,13 +143,13 @@
     "message": "5つ星の評価は、アプリを無料で提供し続け、改善していく力になります。",
     "rateButton": "今すぐ評価",
     "laterButton": "あとで",
-    "declineButton": "結構です"
+    "declineButton": "いいえ、結構です"
   },
   "rtlRestart": {
     "title": "文字の表示方向を切り替えています",
     "message": "{{count}}秒後に再起動して反映します。",
     "restartNow": "今すぐ再起動",
-    "restartManually": "あとで手動で再起動",
+    "restartManually": "手動で再起動",
     "messageManual": "アプリを再起動すると反映されます。",
     "announcement": "文字の表示方向を切り替えています。アプリを再起動すると反映されます。"
   },
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "{{price}}でアンロック",
     "ctaSubscribe": "登録する（{{price}}）",
     "legalNoteRecurring": "{{price}}、自動更新されます。いつでも解約できます。",
-    "legalNoteOneTime": "{{price}}、1回払い。ずっとお使いいただけます。",
+    "legalNoteOneTime": "{{price}}、1回払い。ずっとお使いいただけます。今後追加されるPro機能も含まれます。",
     "offerUnavailable": "現在、プランを表示できません。接続を確認して、もう一度お試しください。",
     "ctaSubscribeMonthly": "登録する（{{price}}/月）",
     "ctaSubscribeAnnual": "登録する（{{price}}/年）",
@@ -215,8 +215,8 @@
     "trustOneTime": "支払いは1回だけ、サブスクリプションなし",
     "lifetimeOffer": {
       "title": "サブスクリプションは苦手ですか？",
-      "body": "一度のお支払いで、Proをずっとお使いいただけます。更新も解約も不要です。",
-      "decline": "結構です"
+      "body": "一度のお支払いで、今後追加されるPro機能も含め、Proをずっとお使いいただけます。更新も解約も不要です。",
+      "decline": "いいえ、結構です"
     }
   },
   "premiumGate": {

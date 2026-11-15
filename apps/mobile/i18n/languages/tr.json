@@ -15,7 +15,7 @@
     "noResults": "Sonuç bulunamadı",
     "offline": "Çevrimdışı",
     "back": "Geri",
-    "clear": "Sil"
+    "clear": "Temizle"
   },
   "tabs": {
     "home": "Ana sayfa",
@@ -23,14 +23,14 @@
   },
   "home": {
     "hero": {
-      "title": "Premium starter",
-      "subtitle": "Özenli ve para kazandıran bir React Native uygulaması yayınlayın: tema, i18n, paywall ve reklamlar hazır kurulu."
+      "title": "Premium başlangıç şablonu",
+      "subtitle": "Tema, çoklu dil, paywall ve reklamlar hazır olarak gelen, özenle hazırlanmış ve gelir getiren bir React Native uygulaması yayınlayın."
     },
     "features": {
-      "title": "Bu starter ile gelenler",
+      "title": "Başlangıç şablonuyla gelenler",
       "theme": {
         "label": "Tema sistemi",
-        "desc": "NativeWind token'ları ve design system bileşenleriyle açık ve koyu mod."
+        "desc": "NativeWind token'ları ve tasarım sistemi bileşenleriyle açık ve koyu mod."
       },
       "i18n": {
         "label": "Çoklu dil desteği",
@@ -69,8 +69,8 @@
     "selectLanguage": "Dil seçin",
     "searchLanguage": "Dil ara…",
     "ads": "Reklamlar",
-    "goPremium": "Pro'ya yükselt",
-    "premiumActive": "Pro üyesisiniz",
+    "goPremium": "Pro'ya geç",
+    "premiumActive": "Pro üyesiniz",
     "premiumActiveUntil": "{{date}} tarihine kadar etkin",
     "premiumLifetime": "Ömür boyu erişim",
     "manageSubscription": "Aboneliği yönet",
@@ -78,7 +78,7 @@
     "removeAdsDescription": "Bir reklam izleyin, diğerlerine ara verin",
     "watchAdButton": "Reklam izle, {{duration}} reklamsız kullan",
     "adFreeActive": "Reklamsız mod etkin ({{duration}} kaldı)",
-    "adNotAvailableTitle": "Reklam mevcut değil",
+    "adNotAvailableTitle": "Reklam hazır değil",
     "adNotAvailableMessage": "Şu anda hazır bir reklam yok. Birkaç dakika sonra tekrar deneyin.",
     "adRewardTitle": "Ödül kazandınız!",
     "adRewardMessage": "Şu andan itibaren {{duration}} boyunca tek bir reklam yok. Keyfini çıkarın!",
@@ -88,7 +88,7 @@
     "version": "Sürüm",
     "legalAndSupport": "Yasal ve destek",
     "privacyPolicy": "Gizlilik Politikası",
-    "termsOfService": "Hizmet Şartları",
+    "termsOfService": "Kullanım Koşulları",
     "openSourceLicences": "Açık kaynak lisansları",
     "support": "Destek",
     "rateApp": "Uygulamayı değerlendir",
@@ -105,28 +105,28 @@
     "premium": {
       "headline": "Pro ile daha ileri gidin",
       "timelineHeader": "Deneme süreniz nasıl işler",
-      "ctaSkip": "Ücretsiz devam edin",
+      "ctaSkip": "Ücretsiz devam et",
       "dayUnlock": "0. gün: Pro anında açılır",
       "dayBilling": "{{day}}. gün: ödeme başlar, istediğiniz zaman iptal edin"
     },
     "exitIntent": {
       "title": "Bir saniye, Pro'yu ücretsiz deneyin",
       "ctaStart": "Evet, ücretsiz denememi başlat",
-      "ctaSkip": "Hayır teşekkürler, ücretsiz devam edeceğim",
+      "ctaSkip": "Hayır, teşekkürler, ücretsiz devam et",
       "body": "{{days}} gün ücretsiz, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
       "bodyNoDays": "Ücretsiz deneyin, bugün ödeme yok.\nDeneme bitmeden iptal ederseniz ücret alınmaz.",
       "titleNoTrial": "Bir saniye, Pro'nun kilidini açın",
-      "bodyNoTrial": "Pro'nun açtığı her şey, hemen şimdi.\nTaahhüt yok, istediğiniz zaman iptal edin.",
+      "bodyNoTrial": "Pro'nun sunduğu her şey hemen şimdi sizin.\nTaahhüt yok, istediğiniz zaman iptal edin.",
       "ctaStartNoTrial": "Evet, Pro'yu aç · {{price}}",
       "titleOneTime": "Bir saniye, Pro'yu kalıcı olarak açın",
-      "bodyOneTime": "Tek ödeme, sonsuza dek sizin.\nAbonelik yok.",
+      "bodyOneTime": "Tek ödeme, sonsuza dek sizin; sonradan eklenecek Pro özellikleri de dahil.\nAbonelik yok.",
       "ctaOneTime": "Evet, kalıcı olarak aç · {{price}}"
     },
     "proWelcome": {
       "title": "Tekrar hoş geldiniz!",
       "body": "Pro aboneliğinizi bulduk. Bu cihazda zaten etkin.",
       "ctaSkip": "Girişi atla",
-      "ctaContinue": "Keşfetmeye devam"
+      "ctaContinue": "Keşfetmeye devam et"
     },
     "a11y": {
       "step": "{{total}} adımdan {{current}}. adım"
@@ -194,14 +194,14 @@
     "ctaBuyLifetime": "{{price}} ile kilidi aç",
     "ctaSubscribe": "Abone ol · {{price}}",
     "legalNoteRecurring": "{{price}}, otomatik yenilenir. İstediğiniz zaman iptal edin.",
-    "legalNoteOneTime": "{{price}}, tek seferlik ödeme. Sonsuza dek sizin.",
+    "legalNoteOneTime": "{{price}}, tek seferlik ödeme. Sonsuza dek sizin; sonradan eklenecek Pro özellikleri de dahil.",
     "offerUnavailable": "Planlar şu anda kullanılamıyor. Bağlantınızı kontrol edip tekrar deneyin.",
     "ctaSubscribeMonthly": "Abone ol · {{price}}/ay",
     "ctaSubscribeAnnual": "Abone ol · {{price}}/yıl",
     "pricesUnavailable": "Fiyatlar kullanılamıyor.",
     "pricesRetry": "Tekrar dene",
     "benefit": {
-      "noAds": "Reklam yok, asla"
+      "noAds": "Hiç reklam yok"
     },
     "priceWeekly": "{{price}}/hafta",
     "priceMonthly": "{{price}}/ay",
@@ -214,8 +214,8 @@
     "trustCancel": "İstediğiniz zaman iptal edin, taahhüt yok",
     "trustOneTime": "Tek ödeme, abonelik yok",
     "lifetimeOffer": {
-      "title": "Abonelikleri sevmiyor musunuz?",
-      "body": "Bir kez ödeyin, Pro sonsuza dek sizin olsun. Yenilenecek ya da iptal edilecek bir şey yok.",
+      "title": "Abonelik istemiyor musunuz?",
+      "body": "Bir kez ödeyin, Pro sonsuza dek sizin olsun; sonradan eklenecek tüm Pro özellikleri de dahil. Yenilenecek ya da iptal edilecek bir şey yok.",
       "decline": "Hayır, teşekkürler"
     }
   },
@@ -233,14 +233,14 @@
   },
   "licences": {
     "title": "Açık kaynak lisansları",
-    "intro": "Uygulama aşağıdaki yazılımlarla geliştirildi. Yazarlarının yazdığı haliyle lisansını okumak için birine dokunun.",
+    "intro": "Uygulama aşağıdaki yazılımlarla geliştirildi. Lisans metnini yazarlarının yazdığı haliyle okumak için birine dokunun.",
     "sections": {
       "app": "Uygulama kütüphaneleri",
       "native": "Yerel kütüphaneler",
       "fonts": "Yazı tipleri",
       "android": "Android kütüphaneleri"
     },
-    "androidPending": "Bu derleme, Android kütüphanelerinin listesini içermiyor: listeyi yayın derlemesi yazar.",
+    "androidPending": "Bu derleme, Android kütüphanelerinin listesini içermiyor: listeyi yayın derlemesi oluşturur.",
     "origin": {
       "repository": "Paket bir lisans dosyası içermiyor: bu metin, deposundaki metindir.",
       "spdx": "Paket lisans metni içermiyor: bu, paketin beyan ettiği lisansın standart metnidir; paket bir yazar belirtiyorsa telif hakkı sahibi olarak o yazar gösterilir. Projenin kendi telif hakkı bildirimi kaynak kodundadır.",

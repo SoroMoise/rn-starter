@@ -46,7 +46,7 @@
       },
       "notifications": {
         "label": "Notifikasi",
-        "desc": "Permintaan izin di layar yang membutuhkannya, banner saat aplikasi di depan, kanal Android, dan pengingat harian, siap untuk notifikasi yang dikirim aplikasi Anda."
+        "desc": "Permintaan izin di layar yang membutuhkannya, banner saat aplikasi sedang terbuka, kanal Android, dan pengingat harian, siap untuk notifikasi yang dikirim aplikasi Anda."
       }
     },
     "cta": {
@@ -75,7 +75,7 @@
     "premiumLifetime": "Akses seumur hidup",
     "manageSubscription": "Kelola langganan",
     "removeAds": "Hapus iklan",
-    "removeAdsDescription": "Tonton satu iklan, bebas dari iklan lainnya",
+    "removeAdsDescription": "Tonton satu iklan, lalu nikmati jeda dari iklan lainnya",
     "watchAdButton": "Tonton iklan, dapatkan {{duration}} bebas iklan",
     "adFreeActive": "Bebas iklan aktif (sisa {{duration}})",
     "adNotAvailableTitle": "Iklan tidak tersedia",
@@ -119,7 +119,7 @@
       "bodyNoTrial": "Semua yang dibuka Pro, mulai sekarang.\nTanpa komitmen, batalkan kapan saja.",
       "ctaStartNoTrial": "Ya, buka Pro · {{price}}",
       "titleOneTime": "Sebentar, buka Pro selamanya",
-      "bodyOneTime": "Sekali bayar, milik Anda selamanya.\nTanpa langganan.",
+      "bodyOneTime": "Sekali bayar, milik Anda selamanya, termasuk fitur Pro yang ditambahkan nanti.\nTanpa langganan.",
       "ctaOneTime": "Ya, buka selamanya · {{price}}"
     },
     "proWelcome": {
@@ -194,7 +194,7 @@
     "ctaBuyLifetime": "Buka seharga {{price}}",
     "ctaSubscribe": "Berlangganan · {{price}}",
     "legalNoteRecurring": "{{price}}, diperpanjang otomatis. Batalkan kapan saja.",
-    "legalNoteOneTime": "{{price}}, sekali bayar. Milik Anda selamanya.",
+    "legalNoteOneTime": "{{price}}, sekali bayar. Milik Anda selamanya, termasuk fitur Pro yang ditambahkan nanti.",
     "offerUnavailable": "Paket sedang tidak tersedia. Periksa koneksi Anda, lalu coba lagi.",
     "ctaSubscribeMonthly": "Berlangganan · {{price}}/bulan",
     "ctaSubscribeAnnual": "Berlangganan · {{price}}/tahun",
@@ -215,7 +215,7 @@
     "trustOneTime": "Sekali bayar, tanpa langganan",
     "lifetimeOffer": {
       "title": "Tidak suka berlangganan?",
-      "body": "Bayar sekali dan miliki Pro selamanya. Tidak ada yang perlu diperpanjang atau dibatalkan.",
+      "body": "Bayar sekali dan miliki Pro selamanya, termasuk setiap fitur Pro yang kami tambahkan nanti. Tidak ada yang perlu diperpanjang atau dibatalkan.",
       "decline": "Tidak, terima kasih"
     }
   },
@@ -240,7 +240,7 @@
       "fonts": "Font",
       "android": "Pustaka Android"
     },
-    "androidPending": "Build ini tidak menyertakan daftar pustaka Android-nya: daftar tersebut ditulis oleh build rilis.",
+    "androidPending": "Build ini tidak memuat daftar pustaka Android: daftar itu dibuat oleh build rilis.",
     "origin": {
       "repository": "Paket ini tidak menyertakan berkas lisensi: teks ini diambil dari repositorinya.",
       "spdx": "Paket ini tidak menyertakan teks lisensi: ini adalah teks standar lisensi yang dinyatakannya, dengan penulisnya disebut sebagai pemegang hak cipta bila paket menyebutkannya. Pemberitahuan hak cipta milik proyek itu sendiri ada di kode sumbernya.",

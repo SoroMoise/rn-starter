@@ -20,6 +20,13 @@ export const common: CommonContent = {
     guides: 'Guides',
     faq: 'FAQ',
     menu: 'Menu',
+    language: 'Langue',
+  },
+  theme: {
+    label: 'Thème',
+    light: 'Clair',
+    dark: 'Sombre',
+    system: 'Système',
   },
   cta: {
     store: 'Disponible sur Google Play',

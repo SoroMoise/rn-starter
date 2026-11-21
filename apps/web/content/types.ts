@@ -95,6 +95,13 @@ export type CommonContent = {
     guides: string
     faq: string
     menu: string
+    language: string
+  }
+  theme: {
+    label: string
+    light: string
+    dark: string
+    system: string
   }
   cta: {
     store: string

@@ -285,6 +285,17 @@ What it ships, every page in both languages: home, features, pricing, FAQ, about
 and a guide hub (one example page each), privacy, terms; a share image per page, an RSS feed of the
 guides, `sitemap.xml` with hreflang, `robots.txt` naming the AI crawlers, `/llms.txt` and
 `/llms-full.txt`, and one JSON-LD graph per page (app, publisher, FAQ, breadcrumbs, article, how-to).
+The header carries a language switcher and a Light / Dark / System theme switcher (System by
+default, a forced choice remembered in the browser).
+
+### A starting point, not a frame
+
+The skeleton suits an app sold as a utility on Google Play, which is what Noise Remover and Deep
+Focus are. Some apps call for a different site altogether: another design, other pages, another
+structure. Reshape or replace it then, without forcing the app into this mould; the template is a
+mock-up to start from. What stays whatever the design: `/privacy` and `/terms` at those exact paths,
+nothing claimed beyond what the app does, no invented rating or price, and the SEO/GEO basics
+(metadata, hreflang, structured data, `llms.txt`, a sitemap).
 
 ### Making it your app's site
 

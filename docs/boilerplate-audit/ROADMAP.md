@@ -423,9 +423,12 @@ with one catch-all per locale, typed content blocks, features and figures as tab
 graph per page, OG images, an RSS feed of guides, `llms.txt`, and example pages a derived app fills
 or renames rather than deletes; every page is `noindex` until `SITE` holds no placeholder. Taken from
 Noise Remover: the routing, the blocks, the graph, `llms-full.txt`, `vercel.json`. From Deep Focus:
-the RSS feed, the crawler list, honest `lastmod`, the store referrer's locale, `turbo-ignore`. Left
-out: Deep Focus's MDX blog (a dependency set beside the pinned React; guides are typed content
-instead), its theme switcher, and launch prices (the site quotes none). English sits at the root
+the RSS feed, the crawler list, honest `lastmod`, the store referrer's locale, `turbo-ignore`, and
+its language and theme switchers (Light, Dark, System). Left out: Deep Focus's MDX blog (a
+dependency set beside the pinned React; guides are typed content instead) and launch prices (the
+site quotes none). The skeleton is a mock-up to start from, not a frame: an app whose kind calls
+for another site reshapes or replaces it without hesitating, keeping the paths contract, the
+honesty rules and the SEO/GEO basics. English sits at the root
 because bg-remover's `Accept-Language` redirect needs a server runtime. The open-source licences are
 an in-app screen (`licenses-registry`, shipped ahead of lot 22), not a page of the site, and
 `/licenses` is no part of the paths contract.

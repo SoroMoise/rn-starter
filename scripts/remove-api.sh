@@ -179,7 +179,6 @@ cat <<'NOTE'
   - Run `pnpm typecheck` and `pnpm lint`.
   - BACKEND_URL and BACKEND_API_KEY no longer mean anything: drop them from apps/mobile/.env and
     from the MOBILE_DOTENV repository secret, and delete the CLOUDFLARE_* secrets if you set them.
-  - Update the docs that describe the backend: CLAUDE.md (Project Overview, Commands, Continuous
-    delivery, API Layer, Data Fetching, Architecture (api), Code Style)
+  - Update the docs that describe the backend: CLAUDE.md (Project, Commands, Data fetching, API)
     and README.md.
 NOTE

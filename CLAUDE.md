@@ -130,6 +130,7 @@ Root: `pnpm dev | dev:mobile | dev:api | dev:web`, `build:web`, `android | ios`,
 Static export (README, *Website*); an app may reshape it freely, keeping `/privacy` and `/terms`.
 
 - **`apps/web/vercel.json` is the one copy of what the export can't carry; `lib/routes.ts` the only list of pages.**
+- **Its `ignoreCommand` (`scripts/vercel-ignore-build.sh`) deploys only when `apps/web` or a root install input changed** (Vercel's skip and `turbo-ignore` count any root file): a file above `apps/web` the site starts reading joins its list.
 - **Figures and features are constants, never typed into copy** (`lib/facts.ts`, `lib/features.ts`).
 - **The site never names a competitor, quotes a price or shows a rating; no `aggregateRating` or `offers` in JSON-LD.**
 - **The privacy policy describes what the app does** and changes in the same commit as a new SDK, permission or data sent. The site sets no cookie and loads nothing third-party.

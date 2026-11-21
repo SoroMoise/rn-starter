@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "ignoreCommand": "npx turbo-ignore web --fallback=main",
+  "ignoreCommand": "bash scripts/vercel-ignore-build.sh",
   "installCommand": "pnpm install --frozen-lockfile --filter web --config.node-linker=isolated",
   "buildCommand": "pnpm build",
   "cleanUrls": true,

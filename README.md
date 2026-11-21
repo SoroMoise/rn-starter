@@ -334,7 +334,8 @@ own, guides opening on the short answer: that first sentence is what an assistan
 The site is set up for **Vercel** (`apps/web/vercel.json`): create a project from the repository
 with **Root Directory** `apps/web` and **Include files outside the Root Directory** on, add the
 domain, and leave the rest to the file (install, build, clean URLs, security headers, caching, and
-`turbo-ignore`, which skips the preview of a push that doesn't touch the site).
+`scripts/vercel-ignore-build.sh`, which skips a deployment unless the site or a root install input
+changed since the last one, or since `main` on a branch's first push).
 
 Elsewhere `out/` is plain files, and the host must:
 

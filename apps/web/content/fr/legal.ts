@@ -1,3 +1,4 @@
+import { FACTS } from '@/lib/facts'
 import { SITE, STORE_URL } from '@/lib/site'
 import type { LegalContent } from '../types'
 
@@ -272,7 +273,7 @@ export const frLegal: LegalContent = {
       {
         title: 'Configuration requise',
         paragraphs: [
-          `L’application fonctionne sous Android 8.0 ou version ultérieure et est disponible sur Google Play (${STORE_URL}). Les frais de données mobiles liés à son utilisation restent à votre charge.`,
+          `L’application fonctionne sous Android ${FACTS.androidVersion} ou version ultérieure et est disponible sur Google Play (${STORE_URL}). Les frais de données mobiles liés à son utilisation restent à votre charge.`,
         ],
       },
       {

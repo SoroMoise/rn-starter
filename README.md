@@ -22,7 +22,7 @@ Stack: Expo SDK 54 / React Native 0.81.5 / React 19, Expo Router 6, NativeWind 4
 rn-starter/
 ├── apps/
 │   ├── mobile/          # Expo SDK 54 / React Native app (iOS + Android)
-│   ├── web/             # Next.js static site: home, privacy policy, terms (EN + FR)
+│   ├── web/             # Next.js static storefront (EN + FR): SEO/GEO pages, privacy, terms
 │   └── api/             # Cloudflare Workers API (Hono), optional
 ├── packages/
 │   └── shared/          # The API's TypeScript types (HealthResponse, ApiErrorResponse)
@@ -271,40 +271,80 @@ The AAB is kept as a build artifact only when no attempt landed; `.github/workfl
 
 ## Website (`apps/web`)
 
-A static Next.js site: English at the root, French under `/fr`, with a home page, the privacy
-policy and the terms. The app opens `/privacy` and `/terms` on it from Settings and beside every
-buy button, and Play requires a privacy policy that opens, so the site goes live before the first
-release.
+A static Next.js site, English at the root and French under `/fr`: the app's storefront, built to
+be found by search engines and quoted by AI assistants, and the privacy policy and terms the app
+opens from Settings and beside every buy button. Play requires a privacy policy that opens, so the
+site goes live before the first release.
 
 ```bash
 pnpm dev:web      # http://localhost:3000
 pnpm build:web    # writes apps/web/out/
 ```
 
+What it ships, every page in both languages: home, features, pricing, FAQ, about, a use-case hub
+and a guide hub (one example page each), privacy, terms; a share image per page, an RSS feed of the
+guides, `sitemap.xml` with hreflang, `robots.txt` naming the AI crawlers, `/llms.txt` and
+`/llms-full.txt`, and one JSON-LD graph per page (app, publisher, FAQ, breadcrumbs, article, how-to).
+The header carries a language switcher and a Light / Dark / System theme switcher (System by
+default, a forced choice remembered in the browser).
+
+### A starting point, not a frame
+
+The skeleton suits an app sold as a utility on Google Play, which is what Noise Remover and Deep
+Focus are. Some apps call for a different site altogether: another design, other pages, another
+structure. Reshape or replace it then, without forcing the app into this mould; the template is a
+mock-up to start from. What stays whatever the design: `/privacy` and `/terms` at those exact paths,
+nothing claimed beyond what the app does, no invented rating or price, and the SEO/GEO basics
+(metadata, hreflang, structured data, `llms.txt`, a sitemap).
+
+### Making it your app's site
+
+Pages are data. You fill content and tables; you write no page code.
+
+| To change | Edit |
+|---|---|
+| Identity: publisher, store title, legal date, schema.org category | `lib/site.ts` |
+| Figures the site states (minimum Android, languages, free limits) | `lib/facts.ts`, mirrored from the app |
+| The features, their tier and whether they ship | `lib/features.ts`, copy in `content/*/features.ts` |
+| The words on every page | `content/en/` and `content/fr/` (a key missing in French fails the typecheck) |
+| Add a page | a key in `lib/routes.ts` (both slugs), its place in `lib/pageTree.ts`, its content |
+| Screenshots in the hero and the structured data | `public/images/`, declared with their size in `lib/images.ts` |
+
+`content/*/common.ts` `appDefinition` is the one sentence that defines the app ("X is a free
+Android app that…"): the structured data, `llms.txt` and the footer open on it, and the home lead
+and the first FAQ answer say it again. Write each lead and each FAQ answer so it answers on its
+own, guides opening on the short answer: that first sentence is what an assistant quotes.
+
 ### Before it goes live
 
 - `scripts/setup.sh` has written the app's name, domain, package and support address into
-  `apps/web/lib/site.ts`. Fill in the publisher and the date the pages take effect there.
+  `apps/web/lib/site.ts`. Fill in the rest there. **Until no placeholder is left in `SITE`, every
+  page carries `noindex`**, so a half-filled site is never indexed.
 - Replace every bracketed passage in `apps/web/content/en/legal.ts` and `fr/legal.ts`, and make
   both documents say what your app does: remove a section it does not need (notifications, for an
   app that sends none), add one for every SDK, permission or server it adds. The text is written
   for the SDKs the starter ships (AdMob, Firebase Analytics and Crashlytics, RevenueCat) and
   follows the categories of Play's data safety form; it is a starting point, not legal advice, so
   have it reviewed. The pages show a template notice for as long as a placeholder remains.
-- Fill in the home page's copy in `apps/web/content/*/site.ts`.
+- Replace the bracketed copy of the other pages in `apps/web/content/*/`, rename the example
+  use case and guide (key, slugs, content) and add the ones your app's searches call for.
 
 ### Hosting
 
-`out/` is plain files. Whatever the host, it must:
+The site is set up for **Vercel** (`apps/web/vercel.json`): create a project from the repository
+with **Root Directory** `apps/web` and **Include files outside the Root Directory** on, add the
+domain, and leave the rest to the file (install, build, clean URLs, security headers, caching, and
+`turbo-ignore`, which skips the preview of a push that doesn't touch the site).
+
+Elsewhere `out/` is plain files, and the host must:
 
 - **Serve `/privacy` from `privacy.html`**, beside the `privacy/` folder the export also writes.
-  Cloudflare Pages, Netlify and Vercel do it on their own; Firebase Hosting needs
-  `"cleanUrls": true`.
-- **Send the security headers**, which a static export cannot set itself:
-  `X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`,
-  `Referrer-Policy: strict-origin-when-cross-origin`,
-  `Permissions-Policy: camera=(), microphone=(), geolocation=()` and, once the domain is
-  HTTPS-only for good, `Strict-Transport-Security: max-age=63072000; includeSubDomains`.
+  Cloudflare Pages and Netlify do it on their own; Firebase Hosting needs `"cleanUrls": true`.
+- **Send the security headers** listed in `vercel.json`, which a static export cannot set itself.
+
+`Strict-Transport-Security` in `vercel.json` carries `includeSubDomains` for two years: before the
+first deploy, make sure every subdomain of the site's domain is served over HTTPS for good, or drop
+`includeSubDomains` (or the header) until it is.
 
 ### The URLs are a contract
 

@@ -415,11 +415,23 @@ that migration knowingly.
 starter's hero is the converter's illustration with its currencies removed, drawn for the template.
 Replacing it is a design decision, not a structural one.
 
-**The site is a static export, and holds only what the app links to.** Home, privacy policy, terms:
-the pages Play and the app need, and nothing a derived app would have to delete on day one: no
-features, pricing or blog. English sits at the root because bg-remover's `Accept-Language` redirect
-needs a server runtime. The open-source licences are an in-app screen (`licenses-registry`, shipped
-ahead of lot 22), not a page of the site, and `/licenses` is no part of the paths contract.
+**The site is a static export, and a storefront built for search and answer engines (decided
+2026-11-21, overturning "only what the app links to").** The first site held home, privacy and terms
+so a derived app would delete nothing on day one; each app then rebuilt a storefront by hand, and
+Noise Remover and Deep Focus converged on the same skeleton. The starter now ships it: a route table
+with one catch-all per locale, typed content blocks, features and figures as tables, one JSON-LD
+graph per page, OG images, an RSS feed of guides, `llms.txt`, and example pages a derived app fills
+or renames rather than deletes; every page is `noindex` until `SITE` holds no placeholder. Taken from
+Noise Remover: the routing, the blocks, the graph, `llms-full.txt`, `vercel.json`. From Deep Focus:
+the RSS feed, the crawler list, honest `lastmod`, the store referrer's locale, `turbo-ignore`, and
+its language and theme switchers (Light, Dark, System). Left out: Deep Focus's MDX blog (a
+dependency set beside the pinned React; guides are typed content instead) and launch prices (the
+site quotes none). The skeleton is a mock-up to start from, not a frame: an app whose kind calls
+for another site reshapes or replaces it without hesitating, keeping the paths contract, the
+honesty rules and the SEO/GEO basics. English sits at the root
+because bg-remover's `Accept-Language` redirect needs a server runtime. The open-source licences are
+an in-app screen (`licenses-registry`, shipped ahead of lot 22), not a page of the site, and
+`/licenses` is no part of the paths contract.
 
 **The server's entitlement check lets everyone through until it is configured.** all-currency-converter's
 choice, kept: a Worker deployed before its RevenueCat secret refuses no subscriber, at the price of

@@ -19,7 +19,10 @@ export function lastModified({
   route: RouteKey
   locale: Locale
 }): string | undefined {
-  if (isGuide(route)) return getContent(locale).guides[route].updated
+  if (isGuide(route)) {
+    const { updated } = getContent(locale).guides[route]
+    return ISO_DATE.test(updated) ? updated : undefined
+  }
   if (route === 'guides') return newestGuide(locale)
   if (isLegal(route) && ISO_DATE.test(SITE.legalUpdated)) return SITE.legalUpdated
   return undefined

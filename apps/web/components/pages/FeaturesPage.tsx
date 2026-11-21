@@ -115,9 +115,16 @@ export function FeaturesPage({ locale }: { locale: Locale }) {
               <h2 id="soon-title" className="card-title">
                 <Typeset text={features.soonTitle} locale={locale} />
               </h2>
-              <p>
-                <RichText text={features.soonText} locale={locale} />
-              </p>
+              {IOS_STATUS === 'soon' ? (
+                <p>
+                  <Typeset text={common.iosSoon} locale={locale} />
+                </p>
+              ) : null}
+              {soon.length ? (
+                <p>
+                  <RichText text={features.soonText} locale={locale} />
+                </p>
+              ) : null}
               {soon.length ? (
                 <ul className="chips">
                   {soon.map((id) => (

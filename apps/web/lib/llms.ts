@@ -15,7 +15,7 @@ function md(text: string): string {
   return richToMarkdown({ text, locale: LOCALE })
 }
 
-function link(route: RouteKey, locale: Locale = LOCALE): string {
+function link({ route, locale = LOCALE }: { route: RouteKey; locale?: Locale }): string {
   const { h1, meta } = pageInfo({ key: route, locale })
   return `- [${h1}](${pageUrl({ route, locale })}): ${meta.description}`
 }
@@ -42,24 +42,24 @@ export function llmsIndex(): string {
     ...keyFacts().map((fact) => `- ${fact}`),
     '',
     '## Product',
-    ...CORE_KEYS.map((route) => link(route)),
+    ...CORE_KEYS.map((route) => link({ route })),
     ...HUB_KEYS.flatMap((hub) => [
       '',
       `## ${pageInfo({ key: hub, locale: LOCALE }).label}`,
-      link(hub),
-      ...HUB_CHILDREN[hub].map((route) => link(route)),
+      link({ route: hub }),
+      ...HUB_CHILDREN[hub].map((route) => link({ route })),
     ]),
     ...others.flatMap((locale) => [
       '',
       `## ${LOCALE_LABEL[locale]}`,
-      ...ROUTE_KEYS.filter((route) => !isLegal(route)).map((route) => link(route, locale)),
+      ...ROUTE_KEYS.filter((route) => !isLegal(route)).map((route) => link({ route, locale })),
     ]),
     '',
     '## Optional',
     `- [Full text of the ${LOCALE_LABEL[LOCALE]} pages](${SITE.url}/llms-full.txt): every page above but the legal ones, as Markdown`,
     `- [Guides feed](${absoluteUrl(feedPath(LOCALE))}): RSS`,
-    link('privacy'),
-    link('terms'),
+    link({ route: 'privacy' }),
+    link({ route: 'terms' }),
     '',
   ].join('\n')
 }
@@ -133,7 +133,7 @@ function pageBody(route: RouteKey): string[] {
     const page = content.hubs[route]
     return [
       md(page.lead),
-      HUB_CHILDREN[route].map((child) => link(child)).join('\n'),
+      HUB_CHILDREN[route].map((child) => link({ route: child })).join('\n'),
       sectionsToMarkdown(page.sections),
       faqToMarkdown(page.faq),
     ]
@@ -179,7 +179,8 @@ function pageBody(route: RouteKey): string[] {
         ...(IOS_STATUS === 'soon' || SOON_FEATURES.length
           ? [
               `## ${page.soonTitle}`,
-              md(page.soonText),
+              IOS_STATUS === 'soon' ? content.common.iosSoon : '',
+              SOON_FEATURES.length ? md(page.soonText) : '',
               SOON_FEATURES.map((id) => `- ${page.items[id].title}`).join('\n'),
             ]
           : []),
@@ -217,12 +218,15 @@ function pageBody(route: RouteKey): string[] {
       const page = content.faq
       return [
         md(page.lead),
-        ...page.groups.map((group) =>
-          [
-            `## ${group.title}`,
-            ...group.items.filter(isVisible).map((item) => `### ${item.q}\n\n${md(item.a)}`),
-          ].join('\n\n')
-        ),
+        ...page.groups
+          .map((group) => ({ ...group, items: group.items.filter(isVisible) }))
+          .filter((group) => group.items.length)
+          .map((group) =>
+            [
+              `## ${group.title}`,
+              ...group.items.map((item) => `### ${item.q}\n\n${md(item.a)}`),
+            ].join('\n\n')
+          ),
       ]
     }
     case 'about':

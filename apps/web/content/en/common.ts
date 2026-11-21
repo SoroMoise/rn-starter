@@ -4,6 +4,7 @@ import type { CommonContent } from '../types'
 
 export const common: CommonContent = {
   appDefinition: `${SITE.name} is a free Android app that [does what, for whom, in one sentence].`,
+  iosSoon: 'An iPhone version is not available yet.',
   skipToContent: 'Skip to content',
   pageNames: {
     home: 'Home',
@@ -62,7 +63,7 @@ export const common: CommonContent = {
   finalCta: {
     title: '[The promise, in a few words]',
     text: '[One sentence: what the user gets by installing now.]',
-    note: 'An iPhone version is not available yet · [Free and Pro](pricing)',
+    note: '[Free and Pro](pricing)',
   },
   legal: {
     updated: 'Last updated:',

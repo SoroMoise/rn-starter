@@ -85,6 +85,7 @@ export type ProPoint = Gated & { icon: IconName; title: string; text: Rich }
 
 export type CommonContent = {
   appDefinition: string
+  iosSoon: string
   skipToContent: string
   pageNames: Record<CoreKey, string>
   nav: {

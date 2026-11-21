@@ -12,7 +12,7 @@ export const SITE = {
 
 export const STORE_URL = `https://play.google.com/store/apps/details?id=${SITE.androidPackage}`
 
-const PLACEHOLDER = /\[|example\.com/
+const PLACEHOLDER = /\[[^\]]+\]|example\.com/
 
 export function isPlaceholder(text: string): boolean {
   return PLACEHOLDER.test(text)

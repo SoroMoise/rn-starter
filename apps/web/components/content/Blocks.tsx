@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getContent, pageInfo } from '@/content'
 import type { Block, QA, Section } from '@/content/types'
+import { IOS_STATUS } from '@/lib/features'
 import type { Locale } from '@/lib/i18n'
 import { ROUTES, type RouteKey } from '@/lib/routes'
 import { isVisible } from '@/lib/visibility'
@@ -248,7 +249,7 @@ export function RelatedCards({
 }
 
 export function FinalCta({ locale, route }: { locale: Locale; route: RouteKey }) {
-  const { finalCta } = getContent(locale).common
+  const { finalCta, iosSoon } = getContent(locale).common
   return (
     <section className="section section--tight">
       <div className="container">
@@ -262,6 +263,12 @@ export function FinalCta({ locale, route }: { locale: Locale; route: RouteKey })
             </p>
             <StoreCta locale={locale} route={route} placement="band" center />
             <p className="store-note">
+              {IOS_STATUS === 'soon' ? (
+                <>
+                  <Typeset text={iosSoon} locale={locale} />
+                  {' · '}
+                </>
+              ) : null}
               <RichText text={finalCta.note} locale={locale} />
             </p>
           </div>

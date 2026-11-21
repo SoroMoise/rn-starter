@@ -43,5 +43,5 @@ export const features: FeaturesContent = {
   ],
   soonTitle: 'Coming later',
   soonText:
-    'An iPhone version is not available yet. These features are planned, not shipped: the site lists them so nobody installs the app for them.',
+    'These features are planned, not shipped: the site lists them so nobody installs the app for them.',
 }

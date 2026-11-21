@@ -331,6 +331,10 @@ Elsewhere `out/` is plain files, and the host must:
   Cloudflare Pages and Netlify do it on their own; Firebase Hosting needs `"cleanUrls": true`.
 - **Send the security headers** listed in `vercel.json`, which a static export cannot set itself.
 
+`Strict-Transport-Security` in `vercel.json` carries `includeSubDomains` for two years: before the
+first deploy, make sure every subdomain of the site's domain is served over HTTPS for good, or drop
+`includeSubDomains` (or the header) until it is.
+
 ### The URLs are a contract
 
 Every build already installed opens `/privacy` and `/terms` on the domain it shipped with. So:

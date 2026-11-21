@@ -49,5 +49,5 @@ export const features: FeaturesContent = {
   ],
   soonTitle: 'Plus tard',
   soonText:
-    'Il n’existe pas encore de version iPhone. Ces fonctionnalités sont prévues, pas livrées : le site les cite pour que personne n’installe l’app pour elles.',
+    'Ces fonctionnalités sont prévues, pas livrées : le site les cite pour que personne n’installe l’app pour elles.',
 }

@@ -1,3 +1,4 @@
+import { FACTS } from '@/lib/facts'
 import { SITE, STORE_URL } from '@/lib/site'
 import type { LegalContent } from '../types'
 
@@ -266,7 +267,7 @@ export const enLegal: LegalContent = {
       {
         title: 'Technical requirements',
         paragraphs: [
-          `The app runs on Android 8.0 or later and is available on Google Play (${STORE_URL}). You are responsible for the data charges your use generates.`,
+          `The app runs on Android ${FACTS.androidVersion} or later and is available on Google Play (${STORE_URL}). You are responsible for the data charges your use generates.`,
         ],
       },
       {

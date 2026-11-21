@@ -1,17 +1,47 @@
 import type { Locale } from '@/lib/i18n'
-import { enLegal } from './en/legal'
-import { enSite } from './en/site'
-import { frLegal } from './fr/legal'
-import { frSite } from './fr/site'
-import type { LegalContent, SiteContent } from './types'
+import { isGuide, isHub, isLegal, isTopic } from '@/lib/pageTree'
+import type { RouteKey } from '@/lib/routes'
+import { SITE } from '@/lib/site'
+import { en } from './en'
+import { fr } from './fr'
+import type { PageInfo, SiteContent } from './types'
 
-const SITE_CONTENT: Record<Locale, SiteContent> = { en: enSite, fr: frSite }
-const LEGAL_CONTENT: Record<Locale, LegalContent> = { en: enLegal, fr: frLegal }
+const CONTENT: Record<Locale, SiteContent> = { en, fr }
 
-export function getSiteContent(locale: Locale): SiteContent {
-  return SITE_CONTENT[locale]
+export function getContent(locale: Locale): SiteContent {
+  return CONTENT[locale]
 }
 
-export function getLegalContent(locale: Locale): LegalContent {
-  return LEGAL_CONTENT[locale]
+export function pageInfo({ key, locale }: { key: RouteKey; locale: Locale }): PageInfo {
+  const content = CONTENT[locale]
+  if (isTopic(key) || isGuide(key)) {
+    const page = isTopic(key) ? content.topics[key] : content.guides[key]
+    return { meta: page.meta, h1: page.h1, label: page.breadcrumb, card: page.card }
+  }
+  if (isHub(key)) {
+    const page = content.hubs[key]
+    return {
+      meta: page.meta,
+      h1: page.h1,
+      label: page.breadcrumb,
+      card: { title: page.breadcrumb, text: page.meta.description },
+    }
+  }
+  if (isLegal(key)) {
+    const document = content.legal[key]
+    return {
+      meta: { title: `${document.title} · ${SITE.name}`, description: document.description },
+      h1: document.title,
+      label: document.title,
+      card: { title: document.title, text: document.description },
+    }
+  }
+  const page = content[key]
+  const label = key === 'home' ? content.common.breadcrumbHome : content.common.pageNames[key]
+  return {
+    meta: page.meta,
+    h1: page.h1,
+    label,
+    card: { title: content.common.pageNames[key], text: page.meta.description },
+  }
 }

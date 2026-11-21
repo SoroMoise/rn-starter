@@ -310,7 +310,7 @@ fi
 echo "     pnpm dev:web"
 echo ""
 echo "  Before the site goes live: fill in the publisher and the date in"
-echo "  apps/web/lib/site.ts and the bracketed passages of apps/web/content/*/legal.ts,"
+echo "  apps/web/lib/site.ts and the bracketed passages of apps/web/content/*/ (legal.ts first),"
 echo "  and make the legal pages say what the app actually does. See README.md, Website."
 echo ""
 echo "  7. Before the first release: generate the upload keystore, fill in"

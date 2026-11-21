@@ -335,7 +335,7 @@ The site is set up for **Vercel** (`apps/web/vercel.json`): create a project fro
 with **Root Directory** `apps/web` and **Include files outside the Root Directory** on, add the
 domain, and leave the rest to the file (install, build, clean URLs, security headers, caching, and
 `scripts/vercel-ignore-build.sh`, which skips a deployment unless the site or a root install input
-changed since the last one, or since `main` on a branch's first push).
+changed since the last one, or since the commit it left `main` from (the last one GitHub made in its history) on a branch's first push).
 
 Elsewhere `out/` is plain files, and the host must:
 

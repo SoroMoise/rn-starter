@@ -65,7 +65,7 @@ export default () => {
         // runtime, never at build time: a feature that needs one takes it off this list in the same
         // change: a media picker needs READ_EXTERNAL_STORAGE up to Android 12, beside the
         // READ_MEDIA_* its library declares. Never block POST_NOTIFICATIONS or
-        // RECEIVE_BOOT_COMPLETED: the notification system needs both (CLAUDE.md, Notifications).
+        // RECEIVE_BOOT_COMPLETED: the notification system needs both (CLAUDE.md, Services and analytics).
         blockedPermissions: [
           'android.permission.SYSTEM_ALERT_WINDOW',
           'android.permission.READ_EXTERNAL_STORAGE',

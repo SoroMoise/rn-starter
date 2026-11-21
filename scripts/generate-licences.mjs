@@ -467,7 +467,7 @@ function noticeOf(dir) {
   const file = path.join(dir, 'NOTICE.md')
   if (!fs.existsSync(file)) {
     throw new Error(
-      `${relative(dir)} is vendored without a NOTICE.md, so scripts/generate-licences.mjs cannot list it: write one (CLAUDE.md, Legal links)`
+      `${relative(dir)} is vendored without a NOTICE.md, so scripts/generate-licences.mjs cannot list it: write one (CLAUDE.md, Brand and legal)`
     )
   }
   const notice = read(file)
@@ -514,7 +514,7 @@ function vendoredDirectories(thirdParty) {
   )
   if (loose.length > 0) {
     throw new Error(
-      `${loose.map((dirent) => relative(path.join(thirdParty, dirent.name))).join(', ')} sits directly in ${relative(thirdParty)}, so scripts/generate-licences.mjs cannot tell which library it belongs to: vendor it in its own \`${relative(thirdParty)}/<lib>/\` folder, with its NOTICE.md (CLAUDE.md, Legal links)`
+      `${loose.map((dirent) => relative(path.join(thirdParty, dirent.name))).join(', ')} sits directly in ${relative(thirdParty)}, so scripts/generate-licences.mjs cannot tell which library it belongs to: vendor it in its own \`${relative(thirdParty)}/<lib>/\` folder, with its NOTICE.md (CLAUDE.md, Brand and legal)`
     )
   }
   return dirents

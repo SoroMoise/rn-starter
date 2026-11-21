@@ -1,308 +1,146 @@
 # CLAUDE.md
 
-Guidance for Claude Code in this repository. This file says why, and what not to do, plus a short Map of what exists and the Known gaps; the code is the rest. When a change alters something this file documents (routes, providers, stores, storage keys, premium gates, i18n policy, conventions), update it in the same change, surgically, without being asked. Keep it in English.
+The rules whose breach is a real mistake, and where the detail lives; the code is the rest. A change that alters something documented here updates it in the same change, surgically, without being asked. Keep it in English.
 
-Also: `apps/mobile/ADS.md` (every ad placement's unit, cadence, gates and invariants; update it in the same commit as any ad change) and `docs/boilerplate-audit/ROADMAP.md` §4 (decisions already taken: read it before re-opening one).
+Also: `README.md` (setup, release, website), `apps/mobile/ADS.md` (every ad placement; updated with any ad change), `docs/boilerplate-audit/ROADMAP.md` §4 (decisions already taken: read before re-opening one).
 
 ## Project
 
-Monorepo boilerplate for a premium React Native / Expo app (pnpm workspaces + Turborepo). Identity placeholders: `RN Starter` / `rn-starter` / `com.yourcompany.rnstarter` / scheme `rnstarter`.
+Template for a premium Expo app (placeholders `RN Starter` / `rn-starter` / `com.yourcompany.rnstarter`): `apps/mobile`, optional `apps/api` (Cloudflare Worker) with `packages/shared`, `apps/web` (static site).
 
-- **`apps/mobile`** (Expo SDK 54 / RN 0.81.5 / React 19): AdMob, RevenueCat, contextual paywall on a generic action counter, Firebase Analytics + Crashlytics, local notifications (unwired), rating prompt, Play's flexible in-app update, 20 languages, light/dark + RTL, onboarding (welcome → premium), open-source licences screen.
-- **`apps/api`**, a Cloudflare Worker (Hono), optional with `packages/shared`: `bash scripts/remove-api.sh` removes both (see Data fetching).
-- **`apps/web`**, a Next.js 16 static site (EN root, FR under `/fr`) built for ASO and GEO: home, features, pricing, FAQ, about, use-case and guide hubs with one example page each, privacy, terms, OG images, RSS, `llms.txt`.
-
-**`scripts/setup.sh` sweeps the identity everywhere it is written and must stay exhaustive**: `app.config.js`, `constants/rating.ts`, the MMKV instance id, `apps/mobile/package.json`, the 20 translation files, `google-services.json.example`, `apps/web/lib/site.ts`, `apps/api/wrangler.toml`, the root `package.json`, and every local module's Android package (`com.yourcompany.appenvironment`, `com.yourcompany.inappupdates`: Gradle `group`/`namespace`, Kotlin `package` and directory, the class `expo-module.config.json` registers, all moved together; the sweep walks every folder under `modules/`, so a new module takes the `com.yourcompany.<name>` prefix and needs nothing more). It also writes the site and support address into `constants/legal.ts` and starts `.last_release_commit` at the current commit. Anything new that hardcodes the name, slug, bundle id, site or support address joins the sweep in the same change.
+**`scripts/setup.sh` sweeps the identity and must stay exhaustive**: anything new that hardcodes the name, slug, package id, site or support address joins it; a local module's Android package is `com.yourcompany.<name>`.
 
 ## Commands
 
-Root: `pnpm dev | dev:mobile | dev:api | dev:web`, `build:web` (static export to `apps/web/out`), `android | ios`, `build`, `typecheck`, `lint`, `deploy:api`. In `apps/mobile`: `preb` / `preb:android` / `preb:ios`, `build:aab` (signed .aab), `build:install` (signed .apk on the device), `licences` / `licences:android` (rewrite the in-app licences list; the build scripts run it), `analyze` (bundle by package, `report.html`).
+Root: `pnpm dev | dev:mobile | dev:api | dev:web`, `build:web`, `android | ios`, `build`, `typecheck`, `lint`, `deploy:api`. In `apps/mobile`: `preb` / `preb:android` / `preb:ios`, `build:aab`, `build:install`, `licences` / `licences:android`, `analyze`.
 
-`ios/` and `android/` are NOT committed (CNG): `pnpm --filter mobile preb` generates them. **This stays a decision**: "never hand-edit `android/`" only holds while every prebuild regenerates it; a committed tree would need `--clean` at every change, restoring by the release workflow, and a `setup.sh` sweep.
-
-Local native modules live in `apps/mobile/modules/` (autolinked via `expo.autolinking.nativeModulesDir`); sources committed, Gradle output (`modules/*/android/build`, `.cxx`) gitignored.
+`ios/` and `android/` are NOT committed (CNG, a decision): `pnpm --filter mobile preb` generates them.
 
 ## Build & release
 
-- **Never hand-edit `android/`**: native needs go through a config plugin in `apps/mobile/plugins/`.
-- **Never `./gradlew clean`**: it cleans RN's modules under `node_modules/` (codegen included) and CMake fails far from the cause. Use `pnpm --filter mobile preb:android --clean`.
-- **Release signing is `withAndroidSigning`**, reading `apps/mobile/keystore.properties` at build time. Without it the template signs `release` with the debug keystore, which Play refuses; a release with neither the file nor EAS credentials fails on purpose. `keystore.properties`, `release.keystore`, `.env` and Firebase config are gitignored.
-- **A release build refuses a development override wherever built**: `withReleaseEnvGuard` runs `scripts/check-release-env.js` on `preReleaseBuild` and stops when `FORCE_FREE` / `FORCE_PRO` or a consent test aid is set (it evaluates env and config the way expo-constants does; a `.env` grep misses `.env.local`, shell vars, `KEY: value`). No bypass: a release that must show Pro gets it from a license tester's purchase.
-- **`withGradleMemory`** (`-Xmx4096m -XX:MaxMetaspaceSize=1024m`: past the template's budget R8 dies quietly and `bundleRelease` fails on missing intermediates; grep "out of JVM Metaspace") and **`withGradleBuildCache`** are plugins because prebuild regenerates `android/gradle.properties`. **`withReleaseAbis`** builds `armeabi-v7a` and `arm64-v8a` only: Play serves x86 to almost no device (Chromebooks run the ARM build) and each ABI is a full native compile on the 2-core CI runner; a debug `expo run:android` still builds for the connected device. **`withLintVitalOff`** sets `checkReleaseBuilds false` in `app/build.gradle`: lint vital ran on every library module, minutes per release, for a report nothing read.
-- **`withCrashlyticsMapping` uploads the R8 mapping only when `CI=true`** (a local build must not overwrite the live mapping; without one frames read `a.b.c(SourceFile:1)`; force with `CI=true ./gradlew bundleRelease`). Wrapped in `plugins.withId` because Crashlytics applies itself at the end of `app/build.gradle`.
-- **`withAndroidFontFilter` strips every `@expo/vector-icons` font outside `KEEP_FONTS`** and refuses a prebuild that would strip one the app imports (otherwise empty squares in release). Import a family by subpath (`@expo/vector-icons/Ionicons`); the index puts all 15 families (4 MB) in the bundle.
-- **A declared permission is a promise on the store listing.** `android.blockedPermissions` removes what nothing uses (`SYSTEM_ALERT_WINDOW`, `READ_EXTERNAL_STORAGE`, `WRITE_EXTERNAL_STORAGE`); a blocked permission fails at runtime, never at build, so a feature that needs one unblocks it in the same change (a media picker needs `READ_EXTERNAL_STORAGE` up to Android 12). `POST_NOTIFICATIONS` and `RECEIVE_BOOT_COMPLETED` never go on it.
+- **Never hand-edit `android/`** (prebuild regenerates it): a config plugin in `apps/mobile/plugins/`.
+- **Never `./gradlew clean`** (it wipes codegen under `node_modules/`): `pnpm --filter mobile preb:android --clean`.
+- **Release signing is `withAndroidSigning`** (`keystore.properties`; else the debug keystore, which Play refuses).
+- **A release build refuses `FORCE_FREE`/`FORCE_PRO` or a consent test aid** (`withReleaseEnvGuard`); no bypass: Pro in a release comes from a license tester's purchase.
+- **`withCrashlyticsMapping` uploads only when `CI=true`** (a local build must not replace the live mapping).
+- **Import an icon family by subpath** (`@expo/vector-icons/Ionicons`): `withAndroidFontFilter` strips fonts outside `KEEP_FONTS`.
+- **A declared permission is a promise on the store listing**: a permission in `android.blockedPermissions` fails at runtime, never at build; the feature needing it unblocks it. `POST_NOTIFICATIONS` and `RECEIVE_BOOT_COMPLETED` are never blocked.
+- **A Play declaration is a form, not a design constraint**: never narrow a feature to avoid one; what binds is a plain disclosure before the system dialog.
 
 ### Continuous delivery
 
-`.github/workflows/release-android.yml` fires on `workflow_dispatch` or on a PR **merged into `main` with the `release` label** (closing or merging without it releases nothing). A labelled merge only relays the release: its `dispatch` job starts a `workflow_dispatch` run on `main` with the PR's number and title (`inputs.pr_title` names the Play release), because a `pull_request` run's caches live in the closed PR's merge ref, where nothing is found and nothing can be saved (every save ended in `ReserveCacheError`, and each release rebuilt everything). The build run restores and saves `main`'s Gradle home (`setup-gradle`), pnpm store and ccache (`actions/cache`; the native compiles go through `CMAKE_C_COMPILER_LAUNCHER`/`CMAKE_CXX_COMPILER_LAUNCHER`, the compiler identified by `%compiler% --version` since the NDK is downloaded anew and hashing its clang on every compilation costs a minute); the runner's disk cleanup runs in the background and the build starts once 20 GB are free (it takes about 8); the two Gradle invocations share one daemon. `generate-licences.mjs --android` exports the bundle without minifying (only the source map's module list is read). `.github/scripts/compute-android-version.sh` derives the version from Conventional Commits since `.last_release_commit` (`feat` → minor, `!`/`BREAKING CHANGE` → major, else patch), from `const version` in `app.config.js` and its `versionCode` formula: **the two must stay in step**. The job versions, prebuilds `--clean`, signs, writes the licences list, `bundleRelease`s, uploads to the **internal** track (3 attempts, `.github/actions/publish-play/`) and pushes `chore(release): vX.Y.Z [skip ci]` with `app.config.js` and `.last_release_commit` staged by name (nothing of `android/`).
+`.github/workflows/release-android.yml` releases a PR merged into `main` with the `release` label to Play's internal track. README, *Android release*, is its human half: update both.
 
+- **`const version` and the `versionCode` formula in `app.config.js` stay in step** with `compute-android-version.sh`.
 - **The PR title becomes the Play release name** (`<version> - <title>`, cut at 50 chars): lead with subject and action.
-- The job **refuses** Google's sample AdMob app id, a `MOBILE_DOTENV` that forces a tier or sets a consent test aid, and placeholder legal links. The Play package id is **read from `app.config.js`**, never written in the workflow.
-- If all 3 publish attempts fail, read the **first** and the job summary before re-running: an attempt can commit its Play edit and still report failure, later ones die on `apkUpgradeVersionConflict`, and a re-run recomputes the same version. Recovery: hand bump `app.config.js` and `.last_release_commit` to what Play holds.
-- The bump is pushed with `GITHUB_TOKEN`, which no ruleset can exempt: on a `main` closed to direct pushes the build reaches Play and the bump is refused. A new app's first build goes up by hand.
-- Secrets: `MOBILE_DOTENV`, `GOOGLE_SERVICES_JSON`, `ANDROID_KEYSTORE_BASE64`/`_PASSWORD`, `ANDROID_KEY_ALIAS`/`_PASSWORD`, `PLAY_SERVICE_ACCOUNT_JSON`. The AAB is kept as an artifact only when no publish landed (`purge-artifacts.yml` clears it). The README's *Android release* section is the human half: update both.
-- `ci-api.yml` lints, typechecks, dry-run builds and deploys the Worker on the `release-api` label (`CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`); `remove-api.sh` deletes it.
+- If all 3 publish attempts fail, read the **first** before re-running (an attempt can land and still report failure).
+- The version bump pushes with `GITHUB_TOKEN`: a `main` closed to direct pushes refuses it after the build reached Play.
 
 ## Navigation
 
-Root `Stack` whose first screen is the `(tabs)` group; onboarding gated in `AppContent`.
-
-- **A screen that covers the tabs is a stack route beside `(tabs)`, never a tab** (a file in the group is a tab scene with no stack to dismiss, and `router.push` switches tabs). `unstable_settings.initialRouteName` keeps `(tabs)` under a route opened from a deep link or notification.
-- **The onboarding moves by step name, never by index**: device-gated steps join `buildSteps()` after the first frame. `goToStep(kind)` / `goNext()` resolve by name; the name travels with every onboarding event.
-- **A step that asks something is built on `OnboardingStepLayout`**: CTA inside the scroll view (usable at the largest font scale), pushed to the bottom (`grow`, `mt-auto`), `secondary` label and handler together.
-- **The onboarding is a pager; a swipe does what the step's button does, never more.** `OnboardingPager` mounts the current step and its two neighbours; per-step UI lives in its page. A swipe forward runs the action registered via `useOnboardingForward`; a step registering none resists the drag (`OnboardingStepLayout` withdraws its CTA while disabled or while `ctaOpensDialog` would open a system dialog; `PremiumValueStep` registers nothing, since a purchase is never a swipe). A neighbour mounts ahead of its visit, so a step does nothing on mount that only a visit may do (`goToStep` logs the view). Direction flips by `I18nManager.isRTL`, never a transform.
-- **Whatever owns the screen without being a route takes the back key itself** (a key left to the navigator exits the app): `OnboardingScreen` uses `BackHandler`; its sheets/modals are native `Modal`s and answer first. **A route uses `useHardwareBack(onBack)`** (a `useFocusEffect` listener; needs a navigator above it).
-- **A flow that ends resets the stack; never `replace` home**: `router.replace('/')` leaves earlier screens under Home. Use `resetToHome(href?)` (`utils/navigation.ts`); a route whose session is gone returns `<ExitToHome />`, never `<Redirect href="/" />`.
-- **The onboarding ends on the entitlement, never a purchase call**: `purchasePlan()` resolves before React commits the tier, and a restore has no callback. An effect keyed on `isPremium` completes the flow on the premium step and shows `ProWelcomeModal` once on an earlier one.
+- **A screen that covers the tabs is a stack route beside `(tabs)`, never a tab.**
+- **What owns the screen without being a route handles the back key** (`BackHandler`); a route uses `useHardwareBack`.
+- **A flow that ends resets the stack with `resetToHome()`** (`utils/navigation.ts`) or `<ExitToHome />`, never `router.replace('/')` or `<Redirect href="/" />`.
+- **The onboarding moves by step name, never index**; a swipe does what the step's button does, never more (a purchase is never a swipe); neighbour steps mount ahead, so nothing visit-only runs on mount.
+- **The onboarding ends on the entitlement, never a purchase call** (`purchasePlan()` resolves before React commits the tier).
 
 ## State and storage
 
-Zustand v5; persisted stores use `persist` + MMKV (`mmkvStateStorage`) and hydrate synchronously at module import: no async gate, no forced rehydration at boot. The onboarding's current step is never persisted.
-
-- **MMKV is the only key-value store; AsyncStorage does not come back** (it puts the boot gate back). `persist` wraps values in `{ state, version }`: a hand-written value under a store's key rehydrates to defaults; read from outside Zustand like `getActiveLanguageFromStorage` (`i18n/service.ts`).
-- **What a store's `merge` decides stays in memory until something writes it** (`persist` writes on `setState` only), so the symptom lands one launch after its cause. A store whose `merge` changes what was on disk raises a module flag and forces one write after hydration:
-
-  ```ts
-  onRehydrateStorage: () => () => {
-    if (!mergeResolvedSomething) return
-    mergeResolvedSomething = false
-    queueMicrotask(() => useStore.setState({}))
-  },
-  ```
-
-  The microtask is not optional (MMKV hydrates inside `create()`, before `useStore` is assigned). Normalise transient state in `partialize`. Neither starter store needs the flush.
-- **What grants something lives in its own encrypted instance only** (`secure.ts`: subscription cache, ad-free window). Obfuscation, not secrecy. The key's first 16 bytes are read and the key never changes once released. **Never encrypt the main instance.** A port onto a released build copies plaintext values across once, at import.
-- **No copy of that instance leaves the device**: `withBackupRules` excludes `mmkv/entitlements` (+ `.crc`) from cloud backup and device transfer (`dataExtractionRules`, `fullBackupContent`) and keeps expo-modules-core's record of permissions asked. Anything else a day-stale snapshot would resurrect is a separate decision.
-- **The action counter is fed by `recordAction()` (`useActionRating`), never `incrementAction()` alone**, and never reset (cooldown and lifetime cap pace it).
-- **A rewarded video watched during an ad-free window adds to what is left**, up to `AD_REWARDED_FREE_MAX_MINUTES`.
-- **A last-used setting is remembered per feature, never by default**: a choice made the same way every time (export format, brush size) gets its own storage domain; one taken from what is in front of the user (crop, tool) goes with the screen. A remembered setting a tier gates is a preference, not an entitlement, and is clamped on every read. The starter remembers theme and language only.
+- **MMKV is the only key-value store; no AsyncStorage** (it brings back the boot gate). `persist` wraps values in `{ state, version }`.
+- **What a store's `merge` changes is written once after hydration** (`persist` writes on `setState` only): raise a module flag in `merge`, then in `onRehydrateStorage` clear it and `queueMicrotask(() => useStore.setState({}))` (the microtask is required).
+- **What grants something lives in the encrypted instance only** (`secure.ts`, kept off backup by `withBackupRules`); its key never changes once released. **Never encrypt the main instance.**
+- **The action counter is fed by `recordAction()` only**, never reset.
+- **A last-used setting is remembered per feature, never by default**; one a tier gates is a preference, clamped on every read. **A free-tier limit applies on read, never on write.**
 
 ## Services and analytics
 
-`apps/mobile/services/api/` holds SDK wrappers and pure policies. `backendClient` throws by name when `.env` lacks `BACKEND_URL` or `BACKEND_API_KEY`.
-
-**A screen view is the route's pattern, never its pathname.** `TelemetryEffects` logs `useSegments()` without groups (`/reading/[id]`), and `/onboarding` while onboarding owns the screen; never `usePathname()` (double-counts, and a dynamic value would reach Analytics/Crashlytics). A route whose own name is sensitive takes a dynamic segment (`add/[kind]`), not one static file per value.
-
-### Notifications (`services/notifications/`)
-
-The starter asks for nothing and schedules nothing.
-
-- **The feature that needs the permission asks, where the user sees what it buys**, never at launch or from a scheduling path. `POST_NOTIFICATIONS` stays declared (Android 13+ drops notifications silently otherwise). A toggle defaulting to on can't be what asks; a refusal writes the intention back to off. After a permanent denial, `Linking.openSettings()`.
-- **Whether to ask is the OS's answer, never an app flag** (the main instance rides backup; expo-modules-core's `shared_prefs/expo.modules.permissions.asked.xml` is kept on the device by `withBackupRules`).
-- **The scheduler never asks and never fails quietly.** `syncDailyReminders` cancels its group then schedules one trigger per entry, queued so the latest call holds; no grant → `'permission_missing'`; native failure or out-of-range time (validated before cancelling) → `'failed'` + non-fatal, never a rejection. The syncing effect depends on the grant as well as the list; title/body freeze at scheduling, so a language change re-syncs. Reminders are inexact (Play grants `USE_EXACT_ALARM` to alarm/timer/calendar apps only).
-- **A channel's sound is frozen at creation.** A channel that must sound differently takes a new id (`defaultChannel` in `app.config.js` follows, the old one is deleted, triggers rescheduled). The foreground handler always asks for the sound (`shouldPlaySound: false` also drops the heads-up banner).
-- **Remote push is not wired** and `@react-native-firebase/messaging` is not installed. Adding it means the package, a handler at the JS entry (never a lazy route) and a token registered with the backend.
-- **`expo-notifications` carries a patch that must survive every bump** (`patches/expo-notifications@0.32.17.patch`: try/catch in `NotificationForwarderActivity.onCreate`, OEM ROMs drop the extras). `pnpm.patchedDependencies` pins the version; re-cut on a bump. It always writes the `aps-environment` entitlement (declared in `app.config.js`; the App ID needs Push Notifications or iOS signing fails).
-
-### Promo coordination (`services/promo/`)
-
-- **`promoCoordinator` is the single authority over interruptive surfaces** (`PromoSurface`): no stacking (`isSurfaceVisible`) and **one automatic interruption per session, all types** (`canPresentAutoPromo` / `markAutoPromoShown`). User-opened paywalls and the consent form register visibility but spend no budget. A new surface is a `PromoSurface` member and its setter. Play's in-app update sheet is no promo: it is not a `PromoSurface`, spends no budget, and only reads `isSurfaceVisible()` to wait (In-app updates).
-- **A failure the user just met mutes automatic promos**: `sessionSignals` holds one friction for `FRICTION_TTL_MS` (10 min); the contextual paywall and rating ask refuse as `friction`. Mark a purchase/restore that failed for a reason other than the user's own (cancelled sheet, pending payment) where the failure is shown; not a failed price load, boot sync or `configure`. An app marks its own failures with a `FrictionReason` and `markFriction(reason)`. No `resetSession()`: the process is the session.
-
-### In-app updates (`modules/in-app-updates`, Android)
-
-Play's In-App Updates, **flexible flow only**: Play's own sheet, the download runs while the app stays usable. The local module (`com.google.android.play:app-update` 2.1.0, no permission, no config plugin) exposes the update info, the flexible flow, its install states and `completeUpdate`; `appUpdateService` wraps it, `shouldOfferUpdate` (`appUpdatePolicy.ts`) decides.
-
-- **Nothing installs on its own**: `completeUpdate` restarts the app and would drop whatever the user had not saved, so only the card's *Restart* calls it. Once downloaded, `AppUpdateCard` ("Update ready", above the tab bar and the tab's banner): *Restart* → `completeUpdate`, *Later* hides it for the launch.
-- **Offered at once, once per version**: no staleness delay. `useInAppUpdate` asks Play 2 s after a launch or a return settles on the tabs and opens the sheet for a version code not yet offered; `@app_update_offered_version` is written as the sheet opens, accepted or declined, so that version never comes back and a later one does; a start that never showed the sheet (`unavailable`, a throw included) puts the previous code back.
-- **Never during the onboarding, off the tabs or over a promo surface**: mounted after the onboarding gate; stack routes are where an app's work happens, so the sheet and the card wait for `(tabs)`; a check that finds `promoCoordinator.isSurfaceVisible()` (paywall, interstitial, consent form) waits for it to close. **It is not a promo and spends no budget**: an update is no sale, and it must not eat the session's one interruption. An app whose tabs hold unsaved work, or a full-screen surface of its own, adds that to `isOpenToTheSheet` and to the card's visibility.
-- Play's codes meaning no update can come from it (`-3`, `-5`, `-6`, `-9`, `-10`: a sideloaded or debug build, no Play Store) are silent; others go to Crashlytics with their code. Kill switch `IN_APP_UPDATE_ENABLED` (`constants/config.ts`). Events `app_update_offered`, `app_update_answered` (`result`), `app_update_downloaded`, `app_update_restarted`: no version, nothing of the user's.
+- **A screen view is the route's pattern (`useSegments()`), never its pathname** (a dynamic value would reach Analytics); a route whose name is sensitive takes a dynamic segment (`add/[kind]`).
+- **Notifications**: the feature that needs the permission asks, where the user sees what it buys; whether to ask is the OS's answer, never an app flag (it rides backup). The scheduler never asks. A channel's sound is frozen at creation (new sound, new id). The foreground handler always asks for the sound (else no heads-up banner).
+- **`patches/expo-notifications@0.32.17.patch` must survive every bump** (re-cut it). It declares `aps-environment`: the iOS App ID needs Push Notifications or signing fails.
+- **`promoCoordinator` decides every interruptive surface**: no stacking, one automatic interruption per session; a user-opened paywall spends none. A failure not the user's own mutes automatic promos for 10 min (`markFriction`).
+- **Reminders are inexact**: Play grants `USE_EXACT_ALARM` only to alarm, timer and calendar apps.
+- **In-app updates: nothing installs on its own** (only the user's *Restart* calls `completeUpdate`).
 
 ## Data fetching
 
-TanStack Query v5 in `QueryProvider` (`PersistQueryClientProvider`, MMKV persister, app version as cache buster).
-
-- **Nothing is persisted until you say so**: `PERSISTED_QUERY_KEYS` is empty until an app adds prefixes.
-- **Connectivity is the app's own, whatever the backend.** `useNetworkStatus` holds the one NetInfo subscription (`getIsOnline()` / `subscribeToNetworkStatus()` outside React), reads "unknown" as online, and feeds `onlineManager` (RN has no browser `online` event), the rating ask and `OfflineBanner`. A query retries ≤3 times and never a status that can't succeed (`isNonRetryableError`, `utils/apiErrors.ts`, shared with `withRetry`). Connectivity never decides the entitlement. A networked screen mounts `<OfflineBanner />`, never its own NetInfo read.
-- **An app with no backend runs `bash scripts/remove-api.sh`**: removes `apps/api`, `packages/shared`, `ci-api.yml`, Worker scripts/turbo task and build allowances (`esbuild`, `workerd`), `QueryProvider`, `@tanstack/*`, `axios`, `withRetry`, `utils/apiErrors.ts` + their `error.*` keys, `backendClient`, `exampleService`; keeps `useNetworkStatus` and netinfo. It refuses a dirty tree and regenerates the licences list. **Anything added only for the backend joins its list in the same change.**
-- **`withRetry` is for calls outside a query**; a `queryFn` calls `getBackendClient()` directly (or attempts multiply). It throws `ApiRequestError` (`statusCode`, `code`): branch on those, never the translated message.
+- **Connectivity is `useNetworkStatus`'s one NetInfo subscription** (unknown = online); it never decides the entitlement.
+- **Anything added only for the backend joins `scripts/remove-api.sh`'s list in the same change.**
 
 ## Monetization
 
-- **AdMob** (`ADS.md`): lazy-init, off when premium or ad-free. `AdService.setPremium` has one writer, `SubscriptionProvider`.
-- **AdMob ids are literals, never `.env`, and a pending unit requests nothing.** App ids in `app.config.js` (Google's sample until the app has its own; the SDK crashes with none), unit ids and kill switches in `constants/admob.ts` (an incomplete env once shipped empty ids: no ad, no error). `pickUnitId` resolves a pending unit to `null`. Never lend a pending placement another's unit (revenue is reported by unit). `__DEV__` always resolves to `TestIds`.
-- **An action is counted first, then offered to one promo, in fixed order**: `recordAction()` increments the counter, offers the moment to the contextual paywall, then the interstitial (only an ad the user saw takes it), then arms the rating ask. First to take it ends the chain; all share the session's single interruption. The paywall comes first because it earns: don't flip it. `{ allowPromos: false }` counts a moment that must not be interrupted (first success, abandoned/failed action); `{ allowInterstitial: false }` lets the paywall but not the ad (action repeated inside a flow).
-- **A health or other sensitive audience gets non-personalized ads only**: `AD_NON_PERSONALIZED_ONLY` (`constants/admob.ts`) forces `AD_REQUEST_OPTIONS` non-personalized whatever consent allowed, `apps/mobile/firebase.json` turns off Analytics ad-personalization signals and adid collection, and the site's privacy policy is rewritten in the same change (`ADS.md` §9). No reading, value or condition reaches an ad or analytics SDK.
-- **The interstitial settles when it closes**: `showInterstitialAd()` resolves `true` on `CLOSED`, `false` on `ERROR`, a rejected `show()` or no `OPENED` within `PRESENTATION_TIMEOUT_MS` (a raised visibility flag would freeze every automatic promo). Failed instances are replaced; a late ad still pays its slot/reward on `onEnd`. Only a closed ad resets the cadence. Consent is re-read at show time.
-- **One predicate decides whether a placement runs**: `useAdPlacementActive({ unitId, enabled })` feeds `AdBanner` and the screen's reserve (`useAdBannerReserve({ isBannerVisible })`). **The room follows the banner, never a constant**: `AdBanner` reports the measured height (`onSizeChange`) into `adBannerStore`; `AD_BANNER_RESERVED_HEIGHT` (60) is only the pre-measure stand-in. The rewarded offer reads `useCanServeAd` (every gate but the ad-free window).
-- **A banner is mounted once per visit and unmounted on blur** (`useStageActive` in `AdBanner`); refreshing or rebuilt banners are impression inflation. A native `Modal` over the screen leaves it mounted and covered, on purpose.
-- **Nothing requests an ad on a Firebase Test Lab device** (invalid traffic → suspension): `modules/app-environment` reads `firebase.test.lab`; `adsAllowedInEnvironment()` gates the banner, both ad services and consent.
-- **Nothing requests an ad before consent.** `consentService` runs UMP and is the **only** caller of `mobileAds().initialize()`; default `canRequestAds: false`; the form is gathered at the frame onboarding ends on, never earlier, never for a subscriber. Where `arePrivacyOptionsRequired`, Settings shows a row to reopen it. `UMP_DEBUG_GEOGRAPHY` / `UMP_TEST_DEVICE_IDS` (`.env`, `__DEV__` only) are refused by release builds.
-- **RevenueCat**: `ENTITLEMENT_PREMIUM` (`constants/purchases.ts`) is hardcoded on purpose; SDK keys come from `.env`. `openPaywall({ source })` from `SubscriptionProvider`.
-- **`FORCE_FREE` / `FORCE_PRO` override the tier for dev and write nothing** (read inside `applyCustomerInfo`, never reaching `subscriptionStorage`); `FORCE_FREE` wins. Release builds refuse either.
-- **`openPaywall` is the single choke point**: it resolves `false`, opening/tracking nothing, for a subscriber and until onboarding completes. Surfaces still hide their own offer from a subscriber. The contextual paywall records its impression only after `openPaywall` resolves `true`.
-- **The offer is data, not code**: product ids, prices, periods, trial and plan count come from `offerings.current` (`buildOfferingPlans` → `OfferingPlan[]`); surfaces render from `usePremium().plans`/`defaultPlan`, phrase through `usePaywallPlans({ source, surface })` and buy through `purchasePlan({ plan, source, surface })`. Never hardcode a product id, a monthly+annual pair or a trial length. Only `offerings.current` is read.
-- **The paywall is built from reusable blocks** (`components/paywall/`) over `usePaywallPlans`; `PaywallTrustRow` states only what holds for the selected plan.
-- **A one-time purchase is offered when the subscription is turned down, never beside it**: `pickLifetimeOffer` takes it out of `usePaywallPlans().options`; the paywall's first close raises `LifetimeOfferCard` (once per opening). It stays listed when offering metadata sets `lifetimePlacement: 'inline'`, when the offering highlights it, or when nothing recurring is left. The card states its charge (`legalNote`), no urgency, no break-even claim; purchases carry `surface: 'lifetime_offer'`.
-- **`PremiumGate` blurs what it locks**: `BlurView` + 0.55 veil with `experimentalBlurMethod="dimezisBlurView"` (required on Android; it samples the screen the gate sits in, so inside a native `Modal` it would blur the screen under it). Locked content leaves the accessibility tree (`no-hide-descendants`); the unlock button is the only stop, so callers pass an `accessibilityLabel` ("Insights. Unlock with Pro").
-- **Every buy button states its charge beside it** (`usePaywallPlans().legalNote`: price, period, trial length and what it becomes), per Play's subscriptions policy. Exit-sheet copy follows the default plan, never a literal "7 days free".
-- **Every funnel step says where it came from**: `source` (`PaywallSource`; a new spelling splits the funnel silently) and `surface` (`PurchaseSurface`) ride on every `purchase_*`/`restore_*` event with `product_id`, `offering_id` and `currency`. `paywallAnalytics` composes the events; a surface that sells without `openPaywall` passes its own `PurchaseOrigin`.
-- **The purchase's own answer is the answer**: no throw ≠ granted. A purchase that resolves without `ENTITLEMENT_PREMIUM` (product never attached, template id left) is `purchase_failed` (`entitlement_inactive`) + a non-fatal naming active entitlements.
-- **Failures are classified by code; only the unknown is a non-fatal** (`purchaseService.reportFailure`, never by translated message; known reasons are breadcrumbs). Every provider catch goes through it. Ad failures likewise via `reportAdFailure`.
-- **Nothing interruptive fires without an offer, and an empty offer says so**: `useContextualPaywall` refuses while no plan has loaded (`isInitialized` is true even when `getOfferings()` failed). Selling surfaces show `paywall.offerUnavailable` + `PriceRetryNotice` (`retryPrices()`), never a disabled button over a missing price.
-- **Entitlement and prices are two independent calls** with their own error boundaries (never one `try` around `Promise.all`). Offerings refetch on foreground. A `configure` that throws ends price loading; `retryPrices`/`refreshSubscription` restart the store, a foreground doesn't.
-- **A free trial is only a trial when `introPrice.price === 0`, length off the product** (`readFreeTrial` → `hasTrial`/`trialDays`). Badge, CTA and onboarding frieze render from those, and promise only what happens on its own, never a reminder nothing sends.
-- **No social proof the store can't back** (no rating or user count on the paywall) and **no urgency the store doesn't enforce**.
-- **One list sells Pro and names only what the free tier can't do**: `PRO_BENEFITS` (`constants/purchases.ts`) feeds `PaywallPerks` and Settings' banner; each entry is a limit the free tier enforces, added with its gate. Key a build-dependent benefit off what delivers it, never `Platform.OS`. Interpolate a limit as `limit`, never `count` (i18next plural).
-- **A free-tier limit applies on read, never on write**: the store keeps everything; `useCappedByTier({ items, freeLimit })` returns what the tier allows, read by every screen, sync and scheduler. It reads the cached tier and never waits on `isInitialized`. A remembered setting outliving its gate is clamped on every read. The starter caps nothing yet.
-- **Contextual paywall**: fires at a value moment once the action count reaches `minActions`; the session count only holds it back in the first session. Never at launch, never while a friction is live. `rewarded_ad_dismissed` follows only a video closed before its reward.
-- **The grace period after a failed payment is the store's**: no local window. `persistFromEntitlement` writes only what the store answered; `BillingIssueBanner` is informational. `PremiumBanner` shows *Manage subscription* only when `purchaseService.managementUrl` is non-null.
-- **`subscriptionStorage.derive(now)` is the offline allowance and ends at the last expiry the store reported** (no window of the app's own: the grace period after a failed payment is configured in the Play Console), read only through `unverifiedIsPremium()`: to seed the tier before the store answers and in the `catch` of a `getCustomerInfo` that couldn't reach it. Never where the store answered. A failed request is the offline signal, never a connectivity flag.
-- **`applyCustomerInfo` is the single place a CustomerInfo becomes the tier** (boot, foreground, purchase, restore).
+- **AdMob ids are literals, never `.env`; a pending unit resolves to `null` and requests nothing**; never lend a placement another's unit; `__DEV__` uses `TestIds`.
+- **Nothing requests an ad on a Firebase Test Lab device** (invalid traffic) **or before consent**: `consentService` is the only caller of `mobileAds().initialize()`, never for a subscriber.
+- **A sensitive audience (health) gets non-personalized ads only**: `AD_NON_PERSONALIZED_ONLY`, an `apps/mobile/firebase.json` turning off Analytics ad-personalization and adid collection, and the privacy policy rewritten.
+- **An action is counted, then offered to one promo, in fixed order**: `recordAction()` → contextual paywall → interstitial → rating ask; the first that takes it ends the chain. Don't flip it.
+- **Only a closed interstitial resets the cadence**. A banner mounts once per visit.
+- **`openPaywall` is the single choke point** (resolves `false` for a subscriber and before onboarding ends).
+- **The offer is data, not code**: plans, prices and trials come from `offerings.current`; never hardcode a product id or a trial length. A trial is one only when `introPrice.price === 0`; an empty offer says so, never a disabled button.
+- **Every buy button states its charge beside it** (`legalNote`). **No social proof the store can't back, no urgency it doesn't enforce** (a countdown over a fixed price).
+- **A one-time purchase is offered when the subscription is turned down, never beside it** (unless `lifetimePlacement: 'inline'`).
+- **The purchase's own answer is the answer**: no `ENTITLEMENT_PREMIUM` is `purchase_failed`. Failures are classified by code; only the unknown is a non-fatal.
+- **Entitlement and prices are two independent calls**, never one `try` around `Promise.all`.
+- **`PRO_BENEFITS` names only limits the free tier enforces.** Interpolate a limit as `limit`, never `count`.
+- **`applyCustomerInfo` is the single place a CustomerInfo becomes the tier**; `unverifiedIsPremium()` only seeds it before the store answers or when it can't be reached; the grace period is Play's.
 
 ## App rating
 
-- **Play forbids pre-filtering the review**: a qualifying moment calls `requestNativeReview()` and Play's card is the whole ask. `AppRatingModal` compiles, is mounted nowhere, beside `SENTIMENT_GATE_ENABLED` (off, read by nothing): bringing it back means wiring it.
-- **One pure policy decides and names every refusal**: `useRatingPrompt().maybeAskForRating({ moment })` → `evaluateReviewRequest` (`reviewPolicy.ts`) asks or tracks `rating_ask_suppressed` with a `reason`. A `RatingMoment` is where the app just delivered something, never a step inside a task; only `STRONG_RATING_MOMENTS` open the card. The ask spends the session interruption (`promo_collision`) but registers no visibility. Friction → `friction`, offline → `offline`.
-- **An action arms the ask; the user's return raises it**: `recordAction()` only arms (`reviewStorage.setArmed`); `RatingAskHost` raises `action_completed` at a launch or a return after `RATING_ASK_MIN_AWAY_MS`, `RATING_ASK_SETTLE_MS` after the screen is back (Android reports ads, billing sheet and Play's card as backgrounds). Arming lasts until the ask launches or a refusal outlives the session (`refusalOutlivesSession`). The host mounts only after the session starts.
-- **Two store paths, not interchangeable**: `requestNativeReview()` for automatic flows only (undocumented, silent quota; never behind a button), waits `REVIEW_FLOW_SETTLE_MS` on a plain timer (not `InteractionManager`) and asks nothing once the app left the foreground (the library throws beyond any JS catch without an activity). `openStoreListing({ reason })` serves every explicit tap. Review-flow errors are neither shown nor allowed to change the flow; a device with no store card is `review_unavailable` before any budget is spent. App Store needs `APP_STORE_APP_ID` (`null` until iOS).
-- **No event can mean "the user rated"**: `rating_ask_shown` = a moment qualified; `review_flow_launched` = the API was called; `likely_displayed` is a dashboard heuristic. Truth is the Play Console count.
-- **Attempts are spaced, never spent once**: `reviewStorage.recordRequest` records an attempt. `softResetDays` **must** stay above `cooldownDays × backoffMultiplier^(requestCap − 1)` or the cap never binds. `isOptedOut()` still reads the old star-gate flags; nothing writes them.
+- **Play forbids pre-filtering the review**: `requestNativeReview()` and Play's card are the whole ask.
+- **One pure policy decides** (`evaluateReviewRequest`); ask where the app just delivered something, never inside a task.
+- **`requestNativeReview()` for automatic flows only**; a tap calls `openStoreListing()`.
+- **`softResetDays` must stay above `cooldownDays × backoffMultiplier^(requestCap − 1)`**, or the cap never binds.
 
 ## Brand and legal
 
-- **Every brand image is drawn from one mark by `scripts/generate-brand-assets.py`** (`pip install pillow`): edit the script, never a PNG. Constraints: store icon full bleed RGB; adaptive foreground over transparency at two thirds; splash over transparency (Android 12+ circles it); notification icon a pure white silhouette. The script's `BACKGROUND` equals `splash.backgroundColor` and `android.adaptiveIcon.backgroundColor`: change together. The shipped mark is a placeholder.
-- **Legal links are constants, never env**: `constants/legal.ts` builds `LEGAL_URLS` from `APP_WEBSITE_URL`, opened from Settings and beside every buy button. The release workflow refuses placeholders until `setup.sh` writes the app's own. **`/privacy` and `/terms` are a contract with every installed build**: never renamed, translated or locale-prefixed; a domain move edits the constant and `SITE.url` (`apps/web/lib/site.ts`) together.
-- **Open-source notices ship inside the app and their list is generated, never written** (`licences` route, offline, texts verbatim). `scripts/generate-licences.mjs` writes `constants/licences.generated.json` from: the bundle's npm packages off `expo export`'s source map (not a checker over `node_modules`), autolinked native packages, C/C++ in the `.so` files (RN/MMKV plus libraries vendored under a local module's `third_party/<lib>/` with a `NOTICE.md`: `# Name`, `- Licence:`, `- URL:`, plus `- Version:`/`- Text:` when its licence isn't in `COPYING`/`LICENSE`), fonts (one entry per family under `assets/fonts`, named off the name table), and with `--android` Gradle's `releaseRuntimeClasspath`. Never hand-edit the JSON or drop the generation from `build:aab`, `build:install` or the release workflow. Missing texts are fetched once with `--fetch` into `scripts/licences/texts/` and committed. The generator fails on what it can't read (vendored library without its own folder/`NOTICE.md`, font without licence text or readable name, unrecognised licence, kept icon family missing from `ICON_FONT_TEXTS`). A C++ library RN starts compiling in joins by hand.
+- **Brand images come from `scripts/generate-brand-assets.py`**, never a hand-edited PNG.
+- **`/privacy` and `/terms` are a contract with every installed build**: never renamed, translated or locale-prefixed; a domain move edits `constants/legal.ts` and `SITE.url` together.
+- **Open-source notices are generated, never written** (`scripts/generate-licences.mjs`): never hand-edit `licences.generated.json` or drop its generation from a build. Vendored C/C++ sits in `third_party/<lib>/` with a `NOTICE.md` (`# Name`, `- Licence:`, `- URL:`).
 
 ## Layout and styling
 
-NativeWind v4, dark mode `'class'`. `GradientButton` for primary CTAs. Reanimated 4 + Moti.
-
-- **One surface owns the bottom inset, and on a tab it is the tab bar.** `PremiumTabBar` is absolute and pads by `max(insets.bottom, 8)`, so `ScreenContainer` runs `edges={['top','left','right']}`. Bottom-anchored content adds the inset via `useTabBarPadding()`. A stack route has no tab bar: its controls add `insets.bottom` themselves. Sheets are their own window and add no bottom padding (content owns `insets.bottom`; a fixed `pb-8` buries the last row under a three-button bar).
-- **A large screen gets a centred column, never a second one.** Android 16 ignores `screenOrientation` above 600 dp; the portrait lock stays. `ScreenContainer` caps content at `UI_CONFIG.MAX_CONTENT_WIDTH`; anything outside it caps itself (a native `Modal` is its own window). The anchored banner is handed the column's width. Nothing inside the column is sized from `useWindowDimensions().width` (use `onLayout`); never `Dimensions.get()` at module scope. `useResponsiveLayout()` covers what a style can't express.
-- **Resizing must never recreate the activity**: `withAndroidConfigChanges` adds `smallestScreenSize` to `MainActivity`'s `configChanges` (the Expo template omits it; a destroy-without-finish crashes with a sheet open).
-- **A rem is 15 dp** (`inlineRem: 15` in `metro.config.js`). NativeWind's 14 renders everything at 7/8; 16 read as zoomed. Don't drop the option or raise it to 16 without a device check.
-- **A style that can be a class is one**, so the UI follows the rem: `inlineRem` converts `rem` only; a `style` value or arbitrary px class stays fixed. Scale sizes take their named class; others an arbitrary rem (`w-[2.875rem]`, px ÷ 16); a text size stays `text-[Nrem]` where it overrides a `ThemedText` variant. Px stays for: minimum touch targets (`min-h-[44px]`), border widths, and anything JS positions from. A `text-*` class carries its line height (`leading-[Nrem]` to keep an old one). `style` stays for Reanimated styles, runtime numbers (insets, measured sizes, `UI_CONFIG.MAX_CONTENT_WIDTH`), non-style props (icon `size`/`color`, `LinearGradient colors`), components with no `className` (`LinearGradient`, `BlurView`, `GradientButton` reads `height`/`borderRadius` from `style`), custom shadows, `fontVariant`, `direction`. `createAnimatedComponent` wrappers take a class as is (`AnimatedPressable`); **never wrap one in `cssInterop`** (it folds class and animated style into one object Reanimated reduces to animated values; the plan cards lost their layout that way).
-- **The theme setting stores an intention, never a scheme**: `DEFAULT_SETTINGS.theme` is `'auto'` (mapped to `'system'` by `applyColorScheme`); read the scheme on screen via `useThemedColor()`, never `settings.theme`.
-- **Brand colours are roles, never hues**: `constants/palette.js` (`accent`, `pro`, `success` scales; stays CommonJS for `tailwind.config.js`) feeds the Tailwind config, `UI_COLORS` and `Colors.ts`. A hue in a component (`bg-blue-500`, `'#8b5cf6'`) is the one place a rebrand misses. Status colours keep Tailwind names.
-- **Readable colour is chosen by step**: meaningful text/icons take 700+ in light, 400− in dark (a step further on tinted surfaces), never 500; a fill under white text takes 600+ in both themes (emerald from 700), and so does every gradient stop under white text; non-text state (switch track, radio ring, progress fill, selected border) reaches 3:1 against its surface. Gray text is 500+ on white/gray-50, 400− on gray-800/900; `muted` is gray-600 (gray-500 is 4.63:1 on gray-50 and falls under 4.5 on tints), `subtle` its alias. No text under 4.5:1 on its background; a decorative icon may stay at 500 where it holds 3:1.
-- **Every tab shares one gutter and heading line**: `paddingHorizontal: UI_CONFIG.SCREEN_GUTTER` (12) on the `ScrollView`'s content container, stack routes included (never a margin on the scroll view, nor per block) and `ScreenHeading` at `mt-3.5`.
-- **A screen that forces the system bars hands them back**: mount a second `AppSystemBars` with explicit styles; it stacks forced navigation styles itself (last mounted wins).
-- **A font size raised from `style` takes its line height with it**: `ThemedText` derives one; a plain `Text` doesn't, so set both.
-- **Silent traps:**
-  - Inside a vertical scroll, nothing grows to fill a parent with only a minimum height and no height is a percentage (Yoga measures against the rest of the viewport: a `GradientButton` becomes half a screen). `GradientButton` draws its gradient as an absolute fill behind sizing content; its `gradientStyle` never carries a height.
-  - **A `Pressable` never takes a `style` function** (NativeWind drops it: radius, margins and press feedback vanish). Use a class variant (`active:scale-[0.98]`) or `onPressIn`/`onPressOut` state.
-  - **State variants (`active:`, `hover:`, `focus:`) go on the `Pressable` itself, never a child `View`** (NativeWind makes it a `Pressable` that wins the responder; `onPress` never fires).
-  - **A horizontal `ScrollView` inside a column takes `flexGrow: 0`.**
-  - **A `BlurView` passes `experimentalBlurMethod="dimezisBlurView"` and pays for it** (re-blurs its nearest `Screen` on redraw). `PremiumTabBar` pays on purpose; if it shows in a trace, drop the prop there first.
-- **Gradients are tokens** (`GRADIENTS`, `constants/uiColors.ts`) named by role; `pro`, `rewarded`, `success` take stops from `palette`; `cta` and onboarding backgrounds are hand-drawn. Keep the `satisfies Record<string, readonly [string, string, ...string[]]>`.
-- **Toasts go through `ToastProvider`**; over a native modal mount `ModalToastViewport active={visible}` inside it.
-- **`ModalBottomSheet` is assembly only** (`useSheetSnap` owns springs/snaps/dismiss pan). A scrollable that is neither (wheel, carousel) reads the pan via `useModalSheetPanGesture()` and blocks it with `Gesture.Native().blocksExternalGesture(pan)`. Content that drags raises `dragLock`; a pan it held springs the sheet back rather than dismissing.
-- **A dialog is `ModalDialog`**, `footer` outside the body. **The keyboard doesn't resize a native modal on Android** (edge-to-edge), so `ModalDialog` pads by `useKeyboardHeight()`; a `KeyboardAvoidingView` inside a `Modal` doesn't cover it. Sheet and dialog mount their own `GestureHandlerRootView` (gestures in a native modal need a root view in that window).
-- **A view setting its own height from a measurement of its content ignores a report within a pixel of the height it just set** (Yoga rounding echoes noise on non-integer densities and the view shivers). The starter has none yet; the first carries the guard.
-- **A settings row is `SettingsRow`, the whole row the touch target**: a switch row passes `toggle` and draws `AppSwitch` (a decoration) under `accessibilityRole="switch"`; a row with neither `onPress` nor `toggle` is information; `disabled` when it can't act. `SettingsLinkRow` is a title and chevron (`link`, or `role="button"` when it opens something in-app).
-- **`WheelPicker` is turned with a thumb**: its touch column is wider than its digits, `unit` inside with `pointerEvents="none"`. Don't narrow columns or leave a gap. Inside a sheet the wheel blocks the pan.
-
-### Bundle size
-
-The JS bundle is part of the Play download and Metro doesn't tree-shake: run `pnpm --filter mobile analyze` before and after dependency changes.
-
-- The licences list (~230 KB) is required on first use of the licences screen (`loadLicences()`, `services/licences.ts`), never imported at a module top.
-- `date-fns` per function (`date-fns/format`), never the index (~250 KB).
-- `@revenuecat/purchases-js-hybrid-mappings` resolves to an empty module on `android` and `ios` by name (`metro.config.js`), never `platform !== 'web'` (web's only purchase path is that SDK; Metro can resolve with no platform).
-- Moti costs ~250 KB (framer-motion) for six entrances; it stays in the starter. An app using it only for entrances replaces it with a Reanimated-only view, and doesn't bring it back.
+- **One surface owns the bottom inset**: on a tab the tab bar (`useTabBarPadding()`); a stack route adds `insets.bottom` itself; sheets add none.
+- **A large screen gets a centred column (`UI_CONFIG.MAX_CONTENT_WIDTH`), never a second one**; nothing in it is sized from the window width; never `Dimensions.get()` at module scope.
+- **A rem is 15 dp** (`inlineRem: 15`); don't change it without a device check.
+- **A style that can be a class is one** (else the size ignores the rem); px only for touch targets, borders and JS positions. **Never wrap an animated component in `cssInterop`.**
+- **Read the colour scheme with `useThemedColor()`, never `settings.theme`** (it stores `'auto'`).
+- **Brand colours are roles, never hues** (`constants/palette.js`). Text: 700+ in light, never 500; no text under 4.5:1.
+- **Silent traps:** state variants (`active:`) go on the `Pressable` itself; a `Pressable` never takes a `style` function; a horizontal `ScrollView` in a column takes `flexGrow: 0`; a `BlurView` needs `experimentalBlurMethod="dimezisBlurView"`; a view sized from its content's measurement ignores a report within a pixel of its height; no `KeyboardAvoidingView` in a `Modal` (`ModalDialog` pads itself).
+- **Metro doesn't tree-shake**: run `pnpm --filter mobile analyze` around a dependency change; `date-fns` per function.
 
 ## Accessibility
 
-- **Every control says what it is, its state and what it does; nothing else is a stop.** A pressable carries a role (`button`; `link` for what leaves for a page/site; `radio` in a `radiogroup`; `switch`, `tab`, `adjustable`), a name (text, or an i18n `accessibilityLabel` for icon-only), its state (`checked`, `selected`, `disabled`, `busy`, `expanded`) and an `accessibilityValue` for sliders/running tasks. Headings are `ThemedText` in `display`/`title`/`sectionHeader` (they carry `header`). Decorative icons are hidden (`importantForAccessibility="no"`) or their row is one `accessible` sentence. A row showing a value without acting is a `View`, never a handler-less pressable. A sheet's backdrop is not a control; the first stop is its title.
-- **Nothing acts on a timer while a screen reader is on**: a countdown ending in an action waits for the tap (`useScreenReaderEnabled()`) and a reader turned on mid-countdown stops it. Self-dismissing messages last `AccessibilityInfo.getRecommendedTimeoutMillis`.
-- **Progress is announced politely, not per tick**: never a live region for fast-changing values; a running task is a `progressbar` announced each quarter (`useProgressAnnouncement`); a task that ends is announced once.
-- **No font-scale cap, ever** (`maxFontSizeMultiplier`, `allowFontScaling={false}` never appear; Android reaches 200 %). A height around text is a minimum (`GradientButton` reads `style.height` as one), labels wrap (`numberOfLines` only where an ellipsis loses nothing), text sharing a row with a control shrinks, screens with bottom actions scroll, the tab bar grows (`tabBarHeight(fontScale)`).
+- **Every control states its role, name and state; nothing else is a stop.**
+- **Nothing acts on a timer while a screen reader is on**; progress is announced each quarter, never per tick.
+- **No font-scale cap, ever** (no `maxFontSizeMultiplier`, no `allowFontScaling={false}`): heights around text are minimums, labels wrap.
 
 ## Internationalization
 
-20 languages (`i18n/service.ts`, `i18n/languages/`, lazy-loaded): en, fr, es, de, pt-BR, zh-CN, zh-TW, ja, ko, ar, hi, bn, ru, id, tr, it, nl, sv, pl, vi. RTL (`ar`) → `I18nManager.forceRTL` + restart.
-
-- **RTL mirrors the layout, never a transform**: a `translateX` still moves right in Arabic. Keep a sliding indicator's position logical and flip its travel by `I18nManager.isRTL` (`SlidingSelector`); flip directional glyphs by hand (`DirectionalIcon`).
-- **`common.*` is the shared UI vocabulary**, the one namespace that may hold a key with no reader. Elsewhere an unread key is dead and goes.
-- **Policy**: feature work provides **EN and FR only**; the other 18 are translated in **dedicated sessions**, never alongside features. A session brings every language to full parity with `en.json`: key for key, one value per plural category (`ar` 6; `ru`, `pl` 4; `fr`, `es`, `it`, `pt-BR` 3; `ja`, `ko`, `zh-*`, `id`, `vi` 1; others 2; `Intl.PluralRules(locale).resolvedOptions().pluralCategories`). `fallbackLng: 'en'` hides a gap as half-translated screens. A string interpolating `count` is a plural. Translations are adapted, not literal.
-- **One register per language, the whole app, onboarding included.** Formal: fr `vous`, ru `вы`, tr `siz`, id `Anda`, hi `आप`, bn `আপনি`, ar, zh-CN/zh-TW `您`, ja です・ます, ko. Informal: es `tú`, de `du`, it `tu`, nl `je`, pl `Twój`, pt-BR `você`, sv, vi `bạn`. An app may flip a language, but its whole file at once.
-- No "successfully"/"avec succès", no "Please"/"Veuillez" before a recovery action, no "Are you sure you want to…". Say what happened or what the next tap does. Errors name the problem in the user's terms, not the transport's (`server error`, `rate limit`, `timeout`).
-- EN labels are sentence case (proper nouns keep capitals). Clause separator `·`, ellipsis `…`.
-- **Dashes follow the language.** The em dash (U+2014) and the en dash (U+2013) read as machine-written text: use them only where a language uses them as ordinary punctuation, the em dash in Russian, Polish and Chinese (doubled in Chinese), the spaced en dash in German, Dutch and Swedish (and in Russian and Polish ranges). Everywhere else (English, French, the other languages, code, comments, docs, commit messages) write a period, comma, colon, parentheses or ` · `, never a spaced hyphen in their place; an empty value is `-`, and a range is written the way its language does (`70 to 80`, `de 70 à 80`, `70-80` in tables and docs).
-- Aliases (`apps/mobile/tsconfig.json`): `@/*`, `@components/*`, `@services/*`, `@stores/*`, `@hooks/*`, `@utils/*`, `@constants/*`, `@types/*`, `@i18n/*`, `@assets/*`; providers and contexts import as `@/providers/*`, `@/contexts/*`.
-
-**A translation reads as if a native copywriter wrote it for that screen, never as a translation.** A pass over a language (a dedicated session, or a new string's values) works like this:
-
-- **One agent per language**, each reading `en.json` (and `fr.json`, written beside it) against where every key is shown: grep the key in the code and read the screen and its design, so the text fits its place and the screen's purpose (a button takes a short verb, an error names the problem in the user's terms, a notification or an overlay reads at a glance, a disclosure stays plain and complete).
-- **Rewrite only what reads wrong to a native reader**: calques of English syntax or idioms ("in one tap", "has had its day"), English title case, a mistranslation, stiff or robotic phrasing, a register slip, a broken UI convention (button verbs, the language's quotation marks and spacing before `%` or `:`, the system's own name for a settings screen: Android's French says *Paramètres*, iOS's *Réglages*). A string that already reads well stays: no rewrite for taste.
-- **Translate everything a screen can show**, so nothing falls back to the source: leftover English, a value identical to English that a native app would translate; any string Android draws outside i18n (a service, widget or shortcut label in a `res/values/strings.xml`) gets one `res/values-<qualifier>/strings.xml` per language (Indonesian is `values-in`, Brazilian Portuguese `values-pt-rBR`, Chinese `values-zh-rCN`/`values-zh-rTW`). Brand names and `Pro` stay.
-- **Meaning, keys and variables are untouchable**: no key added or removed (plural forms excepted), every `{{placeholder}}` and `\n` kept, no promise added, no caveat dropped. A sentence about money (a charge, a renewal, a trial, what a one-time purchase includes), a permission disclosure or a store-policy line keeps every element of the English; a disclosure declared to Play is checked against its declaration before the next submission.
-- **One word per concept across the file**, the same on the button and in the sentence that names it, and the register this file names for the language on every screen; a file that mixed two registers moves whole to one. Where the language marks the user's gender, a neutral form (Spanish *Te damos la bienvenida*, not *Bienvenido*). A polite request form that is the language's ordinary way to ask (Japanese お試しください, Korean 해 주세요) is not the "Please" the wording rule refuses.
-- **The source holds still during a pass**: an English change waits, or the languages drift apart. A fault found in the source (a count without a plural, a leftover "Please", `...` for `…`) is reported to the publisher, not patched mid-pass.
-- **Each agent checks its own work before handing back**: the file's formatting kept, key parity with `en.json` per plural category (`Intl.PluralRules`), identical placeholders, the dash rule; then its whole diff reread as a native user on the phone, reverting any change that is not clearly better. It hands back every change (key, before, after, a literal English back-translation, why) and the choices it leaves to the publisher. The session reads every diff in a language it can judge and the back-translations of the rest before committing, language by language.
+- **Feature work provides EN and FR only**; the other 18 in dedicated sessions, at key parity with `en.json` and one value per plural category. A string interpolating `count` is a plural. `common.*` alone may hold an unread key.
+- **RTL mirrors the layout, never a transform** (flip travel by `I18nManager.isRTL`).
+- **One register per language, whole app.** Formal: fr `vous`, ru, tr, id, hi, bn, ar, zh `您`, ja, ko. Informal: es, de, it, nl, pl, pt-BR, sv, vi.
+- No "successfully", no "Please" before a recovery action, no "Are you sure you want to…"; errors in the user's terms; EN labels sentence case; ellipsis `…`.
+- **Dashes follow the language**: em/en dashes only where a language uses them as ordinary punctuation (Russian, Polish, Chinese; spaced en dash in German, Dutch, Swedish). Everywhere else, code, comments, docs and commits included: a period, comma, colon or parentheses, never a spaced hyphen.
+- **A translation reads as if a native copywriter wrote it for that screen**: one agent per language, each key read where it is shown; meaning, keys and placeholders never change, nor any element of a sentence about money, permissions or store policy; every change comes back with a back-translation.
 
 ## API (`apps/api`)
 
-Hono: `GET /health` (open), `GET /example`, `GET /example/premium` (`403 premium_required` for free). On `/example/*`: `rateLimiter` (30 req/IP/60 s) then `apiKeyAuth` (`x-api-key`). `Env` (`src/types.ts`): `API_KEY`, `FIREBASE_*`, `REVENUECAT_SECRET_API_KEY` (secret), `REVENUECAT_PROJECT_ID` (`[vars]`), `API_RATE_LIMITER`, `ENTITLEMENT_CACHE` (KV).
-
-**The server decides who is premium.** `entitlementContext` (`middleware/premium.ts`) reads `x-rc-customer-id`, resolves the tier once via `isPremiumCustomer` (REST API v2) and hands `isPremium` to the route.
-- The id's **format** is checked, not its owner (`CUSTOMER_ID_RE`): the API key ships in the APK; an anonymous id can't be guessed.
-- **Unknown is not "no"**: RevenueCat not answering is `503 entitlement_check_unavailable`.
-- **Inert until configured**: without `REVENUECAT_SECRET_API_KEY` and `REVENUECAT_PROJECT_ID` every caller is premium (logged once). The app's `FORCE_PRO` never reaches it.
-- Answers are cached in `ENTITLEMENT_CACHE` (yes ≤6 h and never past expiry; no 60 s); `wrangler.toml` has no namespace id, the first deploy creates it.
-- **One entitlement, or a filter**: v2 names an entitlement by internal id, so any active entitlement counts as premium; an app selling a second filters `entitlement_id` in `resolvePremium`. No server grace window.
+**The server decides who is premium** (`middleware/premium.ts`): RevenueCat not answering is `503`, never "no"; without its secret and project id every caller is premium.
 
 ## Web (`apps/web`)
 
-Next.js 16 App Router, **static export** into `apps/web/out/`: a storefront built for search and for answer engines (ASO and GEO) and the legal pages every installed build opens. English at the root, French under `/fr`. The skeleton is the one Noise Remover and Deep Focus converged on: a new app fills content and tables, it writes no page code.
+Static export (README, *Website*); an app may reshape it freely, keeping `/privacy` and `/terms`.
 
-**The skeleton is a starting point, not a frame.** It suits an app sold as a utility on Play. An app whose kind calls for another site (another design, other pages, another structure, a game's showcase, a web tool) reshapes or replaces it: whoever builds that app's site, Claude included, makes the change without hesitating and without forcing the app into this mould, and records in the app's own `CLAUDE.md` what its site does instead. What holds whatever the design: `/privacy` and `/terms` at those exact paths, nothing claimed beyond what the app does, no invented rating, review count or price, and the SEO/GEO basics (metadata, hreflang, structured data, `llms.txt`, a sitemap).
-
-- **The host is Vercel (Git integration); `apps/web/vercel.json` is the one copy of what an export can't carry**: clean URLs without a trailing-slash redirect (`/privacy` from `privacy.html`), security headers (CSP allowing no other origin), immutable caching of `/_next/static`, `X-Robots-Tag: noindex` on the files that aren't pages (manifest, `llms*.txt`). Root Directory `apps/web` with files outside it included; install with `--config.node-linker=isolated` (under `hoisted`, `--filter` installs the whole workspace); no `outputDirectory`; `ignoreCommand` runs `turbo-ignore web --fallback=main` so a PR that doesn't touch the site gets no preview. Another host must reproduce clean URLs and headers itself (README).
-- **`lib/routes.ts` is the only list of pages.** One optional catch-all per locale (`app/(en)/[[...slug]]`, `app/(fr)/fr/[[...slug]]`) with `generateStaticParams` from that table and `dynamicParams = false`; header, footer, breadcrumbs, in-text links, hreflang, sitemap, OG images, llms.txt read it. The home is the catch-all's empty match, whose params name `slug` as `undefined`. `lib/pageTree.ts` says which pages are hubs (`useCases`, `guides`), topics (keyword landing pages) and guides (articles); a new page is a key in `ROUTES`, its place in the tree, and its content; `content/index.ts` `pageInfo` is the one switch from a key to its meta, heading, label and card.
-- **Each locale is its own root layout** (`<html lang>`); `app/global-not-found.tsx` (`experimental.globalNotFound`) renders its own document (a plain `not-found.tsx` ships a second `<html>` inside `<body>`). Marketing slugs are translated (`/fr/fonctionnalites`); legal slugs are identical (`/fr/privacy`).
-- **Copy lives in typed dictionaries** (`content/{en,fr}/`, schema `content/types.ts`), EN and FR only; a key missing in French is a type error. Long pages are `Section`s of typed `Block`s (`components/content/Blocks.tsx`). Prose takes `**bold**` and `[label](routeKey)` (a route key, never a path; an unknown key fails the build). French typography (narrow no-break spaces before `: ; ! ?`, inside « ») is applied at render by `typeset`, never typed.
-- **A feature the site states comes from `lib/features.ts`** (status `available`/`soon`, tier `free`/`pro`): the features page, the home grid, JSON-LD `featureList`, llms.txt. A block, section, FAQ answer or table row whose sentence depends on one feature names it (`feature: '<id>'`) and drops while it isn't `available`; `soon` features are listed as planned, never sold. `IOS_STATUS` decides whether `common.iosSoon` (no iPhone version yet) is said, never a sentence typed into copy.
-- **Figures are constants, never typed into copy**: `lib/facts.ts` mirrors the app (minimum Android, app languages, any free-tier figure); a change there moves the mirror and the store listing in the same commit.
-- **Built for answer engines as much as search (GEO)**: `common.appDefinition` is the one-sentence definition ("X is a free Android app that…") the JSON-LD, llms.txt and footer open on, and the home lead and first FAQ answer say again: keep them in step. Leads answer first; FAQ answers stand alone and name the app; guides open on the short answer, carry `published`/`updated`, key takeaways, a table of contents and `howTo` steps. `/llms.txt` and `/llms-full.txt` (`lib/llms.ts`) are built from the same content; `robots.ts` names the search and AI crawlers one by one and allows them.
-- **One JSON-LD graph per page** (`lib/jsonLd.ts` via `lib/pageGraph.ts`): `Organization`, `WebSite`, `MobileApplication` with one `@id` each, the page node (`FAQPage` merged in when it has a FAQ), `BreadcrumbList`, `Article` and `HowTo` on guides. **No `aggregateRating` and no `offers`**: prices are RevenueCat's, a rating needs real reviews. `lib/images.ts` `SCREENSHOTS` (empty until the app has some, each with its pixel size) feeds the hero phone, JSON-LD `screenshot` and the sitemap.
-- **Every page has metadata from `buildMetadata`** (`lib/seo.ts`): canonical, reciprocal hreflang with `x-default` (also in the sitemap), Open Graph and Twitter with a 1200×630 image drawn per page and locale by `app/og/[file]/route.tsx` from the page's heading and the app icon, the RSS feed of the guides (`/guides/rss.xml`, `/fr/guides/rss.xml`, `lib/feed.ts`). **While `SITE` holds a placeholder (`SITE_READY` false) every page is `noindex`**, so a template deployed by mistake is never indexed. The sitemap's `lastmod` is written only where true: a guide's `updated`, the guides hub's newest guide, the legal date.
-- **Language and theme are two segmented controls in the header (the menu below 980 px), as in Deep Focus**: `LocaleSwitcher` links the same route in every locale (`EN | FR`, the current one `aria-current`); `ThemeSwitcher` offers Light, Dark and System, System the default. A forced choice is stored under `site-theme` in `localStorage` and sets `data-theme` on `<html>`, which pins `color-scheme` so every `light-dark()` token follows; System removes the key and the page follows the device live. `RootHtml`'s inline script (`THEME_SCRIPT`, `lib/theme.ts`) applies the stored choice before the first paint: the key, the attribute and the forced `theme-color` meta (its own element, prepended; never edit the metas Next renders, React re-inserts them) change together in `lib/theme.ts`.
-- **Every install link goes through `storeUrl({ locale, route, placement })`** (`lib/store.ts`): Play's campaign `referrer` (`utm_medium` the placement, `utm_campaign` the page, `utm_content` the locale) and `hl` trace an install to its page and button with nothing running on the site.
-- **The site never names a competitor, quotes a price or shows a rating**, and never claims more than the app does.
-- `lib/site.ts` holds the identity (name, store title, url, package, support address swept by `setup.sh`; publisher, publisher site, legal date, schema.org `applicationCategory` by hand); legal pages print a template notice while `SITE` or the document holds a bracketed placeholder or `example.com`.
-- **The privacy policy describes what the starter does** and changes in the same commit as a new SDK, permission or data sent to a server. The site sets no cookie and loads no web font, analytics or third-party script.
-- **The site shares the mobile app's React, to the version** (`node-linker=hoisted`): `react`/`react-dom` in `apps/web/package.json` pin the mobile's exact version. Any package both resolve follows the rule, hence plain CSS with `light-dark()` tokens (`app/globals.css`, colours from the app's `palette.js` roles) and no Tailwind v4 beside NativeWind's v3.
-- Favicon, home-screen icon and the header's mark are `app/icon.png`/`apple-icon.png` from `scripts/generate-brand-assets.py`. The Android release workflow installs the whole workspace and builds none of the site.
-
-## Store policy
-
-What costs a rejected release or suspended account. Most sits beside its code (pre-filtered review, social proof, charge beside buy buttons, ad consent and Test Lab, declared permissions, `aggregateRating`). Two have no code to sit beside:
-
-- **No urgency the store doesn't enforce**: a countdown, "today only" or "last chance" over an unchanging price is false scarcity (Play policies, EU Unfair Commercial Practices Directive). Only when a real store offer ends, and it states the date.
-- **A declaration is a form, not a design constraint**: where Play restricts a permission to certain app kinds, eligibility is a product decision taken once and the declaration filed at submission. Never narrow a feature or drop an API because "Play requires a declaration". What binds is an in-app disclosure in plain words before the system dialog, and a configuration no wider than the need.
-
-## Map
-
-Providers, outer to inner (`app/_layout.tsx`): `SafeAreaProvider > GestureHandlerRootView` (`TelemetryEffects`, `RTLRestartBanner` beside) `> QueryProvider > ThemeProvider` (mounts `AppSystemBars`) `> ToastProvider > SubscriptionProvider` (RevenueCat, `PaywallModal`) `> AdFreeProvider > AppContent` (onboarding gate, then the root Stack, `AppUpdateCard`, `RatingAskHost` once the session started).
-
-- Routes: `(tabs)` = `index` (premium showcase) and `settings` (lazy; `LegalSupportSection`), stack route `licences` (from Settings), `OnboardingScreen` (welcome → premium value) until `onboardingStore.isCompleted`.
-- Stores: `settingsStore` (theme `'auto'|'light'|'dark'`, language, RTL restart) and `onboardingStore` (`isCompleted`, `attemptedSkipTrial`, `hasSeenProWelcome`) persist; `adBannerStore` is in memory.
-- Storage: main MMKV instance id `rn-starter` (a literal `setup.sh` sweeps); `secure.ts` instance `entitlements` (subscription cache, ad-free window), excluded from backup; `keys.ts` lists every key; `domains/` has `adFree`, `ads`, `appUpdate` (`@app_update_offered_version`), `engagement`, `review`, `subscription`.
-- `versionCode` in `app.config.js` is `major*1000000 + minor*1000 + patch`.
-- Rating numbers (`REVIEW_REQUEST_CONFIG`, `constants/rating.ts`): 3 requests a streak, 42 then 126 days apart, `softResetDays` 180; not before 2 days since install, the second session and 7 actions; not within 2 minutes of an interstitial. `RatingAskHost`: `RATING_ASK_MIN_AWAY_MS` 5 min, `RATING_ASK_SETTLE_MS` 1.2 s. Contextual paywall limits: `CONTEXTUAL_PAYWALL_CONFIG` (lifetime-capped impressions, each arming a cooldown).
-- `reportAdFailure({ error, source })` sorts by the library's code: no fill, network, server, timeout, internal error, OS too old, `null-activity`/`nil-vc` are breadcrumbs; anything else is a non-fatal. `adsAllowedInEnvironment()` gates the banner, both ad services and consent.
-- Config plugins (`apps/mobile/plugins/`): `withAndroidSigning`, `withReleaseEnvGuard`, `withGradleMemory`, `withGradleBuildCache`, `withReleaseAbis`, `withLintVitalOff`, `withCrashlyticsMapping`, `withAndroidFontFilter`, `withBackupRules`, `withAndroidConfigChanges`; local modules (Android) `modules/app-environment` (reads `firebase.test.lab`) and `modules/in-app-updates` (Play's In-App Updates).
-- `PRO_BENEFITS` holds one entry (the ads); `ENTITLEMENT_PREMIUM = 'premium'`; `PurchaseSurface`: `paywall`, `lifetime_offer`, `onboarding_premium`, `onboarding_exit_intent`.
+- **`apps/web/vercel.json` is the one copy of what the export can't carry; `lib/routes.ts` the only list of pages.**
+- **Figures and features are constants, never typed into copy** (`lib/facts.ts`, `lib/features.ts`).
+- **The site never names a competitor, quotes a price or shows a rating; no `aggregateRating` or `offers` in JSON-LD.**
+- **The privacy policy describes what the app does** and changes in the same commit as a new SDK, permission or data sent. The site sets no cookie and loads nothing third-party.
+- **The site pins the mobile app's exact React** (`node-linker=hoisted`): no Tailwind v4.
 
 ## Known gaps: do not "fix" blindly
 
-Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
-
-- No onboarding step asks anything (`OnboardingStepLayout` has no caller); the starter asks for no permission and schedules nothing (`POST_NOTIFICATIONS` stays declared). Remote push isn't wired though `apps/api` ships the FCM sender; `aps-environment` is declared anyway.
-- `react-native-worklets` is 0.6.1 where SDK 54 expects 0.5.1: Reanimated 4.1.x supports both, so `expo.install.exclude` names `react-native-worklets@0.5.1` and `npx expo install --check` passes. A move to 0.5.1 is a native change of its own, never folded into another.
-- `AppRatingModal` compiles and is mounted nowhere.
-- Nothing has been heard with TalkBack or seen at 200 %: that pass is each app's before its first release. A long tab label can be ellipsised at the largest font.
-- No caller yet: `useCappedByTier`, `useDebounce`, `useProgressAnnouncement`, `OfflineBanner`, `exampleService` (the pattern a backend call copies); `PERSISTED_QUERY_KEYS` is empty.
-- The Worker's entitlement check lets everyone through until RevenueCat's secret and project id are set (it logs so).
-- The onboarding isn't width-capped on large screens (a design pass, not a structural one).
-- Every build opens `/privacy` and `/terms` in English whatever its language (choosing `/fr/privacy` would change the paths contract). `APP_STORE_APP_ID` is `null` until iOS.
-- The committed licences list says `pending` for Android libraries until a local `build:aab` (or `licences:android` on a prebuilt tree) writes them; never fill it by hand.
-- The starter ships no data migration (no installs): an app porting a storage change onto a released build owes its users one.
-- In-app updates were verified by `expo prebuild` only (the module autolinks, the manifest gains no permission): its Kotlin has not been compiled in the starter and nothing has run on a phone. Play answers only a build it installed (internal app sharing or a track): a sideloaded or debug build never sees the sheet.
+- `react-native-worklets` is 0.6.1 where SDK 54 expects 0.5.1, on purpose (`expo.install.exclude`).
+- Shipped with no caller yet: `AppRatingModal`, `useCappedByTier`, `useDebounce`, `OfflineBanner`, `exampleService`. Remote push isn't wired.
+- The committed licences list says `pending` for Android libraries until a local `build:aab`; never fill it by hand.
+- No data migration ships: an app changing storage on a released build owes its users one.
 
 ## Testing
 
@@ -310,10 +148,7 @@ Each has its reason in this file or `docs/boilerplate-audit/ROADMAP.md` §4.
 
 ## Code style
 
-- **Zero comments by default.** A design choice, naming rationale or "why it works" narration isn't reason enough, even if true. Keep a comment only for what the code can't say: a crash/OOM history, a security boundary, a store/legal constraint (Play, GDPR/UMP), or a platform/library trap (RN, NativeWind, Reanimated) that breaks silently once "simplified"; name the constraint and what breaks. Never what-comments, task traces, restatements, or repeats of an explanation at the definition.
-- **Three layers**: `services/` (storage, SDKs, pure policies; no React, `router` or `t()`), `hooks/` (React orchestration), `app/` + `components/` (assembly, JSX). `reviewPolicy.ts` and `contextualPaywall/policy.ts` are the shape: a pure decision handed its state. A screen past ~250 lines usually has logic settled into it. The one service calling `t()` is `channels.ts` (Android draws channel names in its own settings).
-- TypeScript strict (`strictNullChecks`, `noImplicitAny`); functional components with hooks.
-- Functions with 2+ parameters take a single object parameter (`fetchData({ id, signal })`).
-- Atomic Zustand selectors only (`useStore((s) => s.field)`).
-- **A memo keys on content, never on the identity of an array callers build**: key on `codes.join('|')`, with module-constant defaults (`const NO_CODES: readonly string[] = []`), never an inline `= []`.
-- Env: `apps/mobile/.env` (see `.env.example`), `apps/api/.dev.vars` (see `.dev.vars.example`).
+- **Zero comments by default**, bar what the code can't say: a crash history, a security boundary, a store or legal constraint, a platform trap that breaks silently once "simplified".
+- **Three layers**: `services/` (no React, `router` or `t()`, bar `channels.ts`), `hooks/` (orchestration), `app/` + `components/` (assembly). A pure decision is handed its state (`reviewPolicy.ts`).
+- Functions with 2+ parameters take one object; atomic Zustand selectors.
+- **A memo keys on content, never on the identity of an array callers build** (no inline `= []` default).

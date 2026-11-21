@@ -239,7 +239,7 @@ and the notes below are where that verification starts, not its result.
 `sessionSignals`, lot 17's `FeatureStep` and lot 19's cron raise the same question, and the
 decisions already taken answer it both ways: the persist flush is documented rather than shipped as
 a helper nobody calls (§4), while `OnboardingStepLayout` and the notification ask (§4) and
-`useCappedByTier` (CLAUDE.md, Monetization) ship ready with no caller. The line they draw: a helper
+`useCappedByTier` (CLAUDE.md, Known gaps) ship ready with no caller. The line they draw: a helper
 ships when it carries a trap its first caller would otherwise meet, and CLAUDE.md names it as the
 integration point; a rule that needs no code is written down instead; and nothing ships that a user
 of a derived app would see on day one. An item that fails the line is closed with its rule written
@@ -271,7 +271,7 @@ would ship without a caller (lot 10 left the channel table "later" for exactly t
 this lot is where the line above is drawn, one item at a time. `util-intl-cache` is the exception:
 `utils/time.ts` builds a formatter per call in three functions and `utils/pricing.ts` one per price.
 `Reveal` and `useMeasuredHeight` size themselves from their own content, so they are the first
-components that owe CLAUDE.md's one-pixel echo guard (Styling). Of `claude-render-path`'s five
+components that owe CLAUDE.md's one-pixel echo guard (Layout and styling). Of `claude-render-path`'s five
 rules, the memo one shipped with lot 13 (Code Style) and the banner's unmount on blur covers part of
 the fifth; the windowing preset is the fourth rule's constant.
 
@@ -306,7 +306,7 @@ ported from noise-remover, `app/licences.tsx` opened from Settings, over a list 
 `scripts/generate-licences.mjs` writes from what the build holds: the bundle's source map, the
 autolinked packages, the C/C++ React Native and MMKV compile in, vendored `third_party/` libraries,
 embedded fonts and, with `--android`, Gradle's release classpath, and that `build:aab`,
-`build:install` and the release workflow regenerate (CLAUDE.md, Legal links). There is no `apps/web`
+`build:install` and the release workflow regenerate (CLAUDE.md, Brand and legal). There is no `apps/web`
 page and no `/licenses` path contract: a page on the site would hand an old build a list it does not
 match, and a list kept by hand lies without failing. Hono, the Worker's, is not in the bundle and
 never enters it.
@@ -329,7 +329,7 @@ vestiges: they are generic infrastructure for a backend this repo ships, wired i
 `onlineManager` reads the NetInfo subscription, so `refetchOnReconnect` is no longer inert in
 React Native, and `exampleService` calls `/example` through `withRetry` and the one axios client.
 An app without a backend removes all of it together, with `scripts/remove-api.sh` (below, and
-CLAUDE.md, Data Fetching), all but connectivity: since 2026-09-26, the user's decision,
+CLAUDE.md, Data fetching), all but connectivity: since 2026-09-26, the user's decision,
 `@react-native-community/netinfo` and `useNetworkStatus` are the app's own, for lot 15's offline
 guard on the rating ask and its offline banner as much as for the query client, and they stay when
 the script takes the rest.
@@ -449,7 +449,7 @@ sheet already have their impressions (`onboarding_step_viewed`, `onboarding_exit
 **Moti stays, measured.** It costs ~250 KB of the starter's 4.0 MB bundle for six entrance
 animations: the case where all-currency-converter's Reanimated-only replacement pays. The starter
 keeps it anyway: it is where convenience wins, and deep-focus and bg-remover use it beyond entrances.
-CLAUDE.md (Bundle size) states the figure and the criterion, and `analyze` decides for an app.
+CLAUDE.md (Layout and styling) asks for `analyze`, and `analyze` decides for an app.
 
 **The comment rule has no one-line cap.** bg-remover caps even a justified comment at one line; here
 the comments that qualify say what breaks: why the entitlement and the prices are two calls, why a

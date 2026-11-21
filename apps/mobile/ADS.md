@@ -69,7 +69,7 @@ recordAction({ allowPromos, allowInterstitial })
   ├─ ad-free window open ───────────────────► skip the ad
   ├─ AdService.recordExecution()             (actions since the last ad, +1)
   ├─ shouldShowInterstitialAd() ────────────► show it; stop if it was seen
-  └─ arm the rating ask                      (raised once the user is back; CLAUDE.md, App Rating)
+  └─ arm the rating ask                      (raised once the user is back; CLAUDE.md, App rating)
 ```
 
 `shouldShowInterstitialAd()` says yes only when all of these hold:

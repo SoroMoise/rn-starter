@@ -91,6 +91,9 @@ export default () => {
               minSdkVersion: 26,
               enableProguardInReleaseBuilds: true,
               enableShrinkResourcesInReleaseBuilds: true,
+              // expo-notifications 0.32 ships this rule without consumerProguardFiles, so R8 strips
+              // NotificationContent's writeObject and every scheduled notification fails on its Uri.
+              extraProguardRules: '-keep class expo.modules.notifications.** { *; }',
             },
           },
         ],

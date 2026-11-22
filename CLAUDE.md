@@ -57,6 +57,7 @@ Root: `pnpm dev | dev:mobile | dev:api | dev:web`, `build:web`, `android | ios`,
 - **A screen view is the route's pattern (`useSegments()`), never its pathname** (a dynamic value would reach Analytics); a route whose name is sensitive takes a dynamic segment (`add/[kind]`).
 - **Notifications**: the feature that needs the permission asks, where the user sees what it buys; whether to ask is the OS's answer, never an app flag (it rides backup). The scheduler never asks. A channel's sound is frozen at creation (new sound, new id). The foreground handler always asks for the sound (else no heads-up banner).
 - **`patches/expo-notifications@0.32.17.patch` must survive every bump** (re-cut it). It declares `aps-environment`: the iOS App ID needs Push Notifications or signing fails.
+- **expo-notifications' keep rule goes through `extraProguardRules`** (`app.config.js`): 0.32 never hands it to R8, which then breaks every scheduled notification in a release only. Drop it once the package registers it as a consumer file (57.0.3).
 - **`promoCoordinator` decides every interruptive surface**: no stacking, one automatic interruption per session; a user-opened paywall spends none. A failure not the user's own mutes automatic promos for 10 min (`markFriction`).
 - **Reminders are inexact**: Play grants `USE_EXACT_ALARM` only to alarm, timer and calendar apps.
 - **In-app updates: nothing installs on its own** (only the user's *Restart* calls `completeUpdate`).
